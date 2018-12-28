@@ -75,6 +75,7 @@ public class Events extends ListenerAdapter {
         	EmbedBuilder eb = new EmbedBuilder();
         	eb.setTitle("MEMBERCOUNT");
         	eb.setColor(Color.WHITE);
+        	eb.addField("People", "**" + (total - bots) + "**", true);        	
         	eb.addField("People", "**" + (total - bots) + "**", true);
         	eb.addField("Bots", "**" + bots + "**", true);
         	eb.addField("Online", "**" + online + "**", true);
@@ -362,7 +363,7 @@ public class Events extends ListenerAdapter {
     				
     				u.openPrivateChannel().queue(ch -> { 
     					
-    					ch.sendMessage(":exclamation: You just got a warn on server **" + e.getGuild().getName() + "** from **" + e.getAuthor().getName() + "**. Reason - **" + reason.substring(0, reason.lastIndexOf(" ")) + "**.").queue();
+    					ch.sendMessage(":exclamation: You just got a warn on server **" + e.getGuild().getName() + "** from **" + e.getAuthor().getName() + "**. Reason - **" + reason + "**.").queue();
     					API.deleteMessage(msg);
     					EmbedBuilder eb = new EmbedBuilder();
     					eb.setTitle("NEW WARN");
