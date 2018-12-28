@@ -148,8 +148,8 @@ public class Events extends ListenerAdapter {
     		if (API.hasPerm(e.getGuild(), e.getAuthor(), Permission.ADMINISTRATOR)) {
     			
         		MySQL.createGuildTable(e.getGuild().getId());
-        		MySQL.saveLogChannel(e.getGuild().getId(), e.getTextChannel().getId());
-        		API.sendMessage(msgCh, ":white_check_mark: Log channel set to " + e.getTextChannel().getAsMention());
+        		MySQL.saveLogChannel(e.getGuild().getId(), msgCh.getId());
+        		API.sendMessage(msgCh, ":white_check_mark: Log channel set to " + msgCh.getAsMention());
     			
     		}
     		
