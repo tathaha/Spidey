@@ -98,12 +98,10 @@ public class MySQL {
 
 		    c = DriverManager.getConnection("jdbc:mysql://" + Secrets.host + ":" + Secrets.port + "/" + Secrets.database, Secrets.username, Secrets.pass);
 		
-		    PreparedStatement ps = c.prepareStatement("DELETE FROM `" + guildID + "` WHERE `ID`=?;");
-		    ps.setString(1, getLogChannel(guildID));
+		    PreparedStatement ps = c.prepareStatement("DROP TABLE `" + guildID + "`;");
 		
 		    ps.executeUpdate();
 			
-		
 		    ps.close();
 		    c.close();
 		
