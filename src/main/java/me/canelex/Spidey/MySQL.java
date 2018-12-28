@@ -15,7 +15,7 @@ public class MySQL {
 		try {
 			
 			Class.forName("com.mysql.cj.jdbc.Driver");			
-			c = DriverManager.getConnection("jdbc:mysql://" + Secrety.host + ":" + Secrety.port + "/" + Secrety.database, Secrety.username, Secrety.pass);
+			c = DriverManager.getConnection("jdbc:mysql://" + Secrets.host + ":" + Secrets.port + "/" + Secrets.database, Secrets.username, Secrets.pass);
 			PreparedStatement ps = c.prepareStatement("CREATE TABLE IF NOT EXISTS `" + guildID + "` (`ID` VARCHAR(25) not null)");
 			ps.executeUpdate();
 			ps.close();
@@ -36,7 +36,7 @@ public class MySQL {
 		try {
 			
 			Class.forName("com.mysql.cj.jdbc.Driver");			
-			c = DriverManager.getConnection("jdbc:mysql://" + Secrety.host + ":" + Secrety.port + "/" + Secrety.database, Secrety.username, Secrety.pass);
+			c = DriverManager.getConnection("jdbc:mysql://" + Secrets.host + ":" + Secrets.port + "/" + Secrets.database, Secrets.username, Secrets.pass);
 			
 			PreparedStatement ps = c.prepareStatement("INSERT INTO `"+ guildID +"` (`ID`) VALUES (?);");
 			
@@ -62,7 +62,7 @@ public class MySQL {
 		try {
 				
 			Class.forName("com.mysql.cj.jdbc.Driver");		
-			c = DriverManager.getConnection("jdbc:mysql://" + Secrety.host + ":" + Secrety.port + "/" + Secrety.database, Secrety.username, Secrety.pass);
+			c = DriverManager.getConnection("jdbc:mysql://" + Secrets.host + ":" + Secrets.port + "/" + Secrets.database, Secrets.username, Secrets.pass);
 			
 			PreparedStatement ps = c.prepareStatement("SELECT *, COUNT(*) AS total FROM `"+ guildID +"`;");
 			
@@ -96,7 +96,7 @@ public class MySQL {
 		
 	    try {
 
-		    c = DriverManager.getConnection("jdbc:mysql://" + Secrety.host + ":" + Secrety.port + "/" + Secrety.database, Secrety.username, Secrety.pass);
+		    c = DriverManager.getConnection("jdbc:mysql://" + Secrets.host + ":" + Secrets.port + "/" + Secrets.database, Secrets.username, Secrets.pass);
 		
 		    PreparedStatement ps = c.prepareStatement("DELETE FROM `" + guildID + "` WHERE `ID`=?;");
 		    ps.setString(1, getLogChannel(guildID));

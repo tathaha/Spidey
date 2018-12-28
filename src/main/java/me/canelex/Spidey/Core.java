@@ -12,7 +12,7 @@ public class Core {
     	@SuppressWarnings("unused")
 		JDA jda = new JDABuilder(AccountType.BOT)
     			.setToken(Secrets.token)
-    			.addEventListener(new Eventy())
+    			.addEventListener(new Events())
     			.setGame(Game.streaming("s!help", "https://twitch.tv/canelex_"))    			
     			.build().awaitReady();               
         
