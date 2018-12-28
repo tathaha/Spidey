@@ -147,10 +147,22 @@ public class Events extends ListenerAdapter {
     		
     		if (API.hasPerm(e.getGuild(), e.getAuthor(), Permission.ADMINISTRATOR)) {
     			
-        		MySQL.createGuildTable(e.getGuild().getId());
-        		MySQL.saveLogChannel(e.getGuild().getId(), msgCh.getId());
-        		API.sendMessage(msgCh, ":white_check_mark: Log channel set to " + msgCh.getAsMention());
+    			if (MySQL.getLogChannel(e.getGuild().getId()).equals(msgCh.getId())) {
+    				
+    				MySQL.deleteLogChannel(e.getGuild().getId());
+    				MySQL.saveLogChannel(e.getGuild().getId(), e.getGuild().getDefaultChannel().getId());
+    				API.sendMessage(msgCh, ":white_check_mark: Log channel set to " + e.getGuild().getDefaultChannel().getAsMention() + ". Type this command again in channel you want to be as log channel.");
+    				
+    			}
     			
+    			else {
+    				
+            		MySQL.createGuildTable(e.getGuild().getId());
+            		MySQL.saveLogChannel(e.getGuild().getId(), msgCh.getId());
+            		API.sendMessage(msgCh, ":white_check_mark: Log channel set to " + msgCh.getAsMention() + ". Type this command again to set log channel to default guild channel.");    				
+    				
+    			}
+
     		}
     		
     		else {
