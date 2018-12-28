@@ -533,6 +533,8 @@ public class Events extends ListenerAdapter {
 			
 		});
 		
+		e.getGuild().getManager().setSystemChannel(null).queue();
+		
 	}
 	
 	@Override
