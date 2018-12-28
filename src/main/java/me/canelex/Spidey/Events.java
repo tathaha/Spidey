@@ -7,6 +7,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -67,18 +68,22 @@ public class Events extends ListenerAdapter {
         
         if (msg.getContentRaw().equalsIgnoreCase("s!membercount")) {
         	
-        	int total = e.getGuild().getMembers().size();        	
-        	long online = e.getGuild().getMembers().stream().filter(member -> member.getOnlineStatus() == OnlineStatus.ONLINE || member.getOnlineStatus() == OnlineStatus.IDLE || member.getOnlineStatus() == OnlineStatus.DO_NOT_DISTURB).count();
+        	List<Member> tonline = e.getGuild().getMembers().stream().filter(member -> member.getOnlineStatus() == OnlineStatus.ONLINE || member.getOnlineStatus() == OnlineStatus.IDLE || member.getOnlineStatus() == OnlineStatus.DO_NOT_DISTURB).collect(Collectors.toList());
+        	long bonline = tonline.stream().filter(m -> m.getUser().isBot()).count();        	
+        	long total = e.getGuild().getMembers().size();        	
+        	long online = tonline.size();
         	long bots = e.getGuild().getMembers().stream().filter(member -> member.getUser().isBot()).count();
-        	online = online - bots;
+        	long ponline = online - bonline;
         	
         	EmbedBuilder eb = new EmbedBuilder();
         	eb.setTitle("MEMBERCOUNT");
         	eb.setColor(Color.WHITE);
-        	eb.addField("People", "**" + (total - bots) + "**", true);        	
+        	eb.addField("Total", "**" + total + "**", true);        	
         	eb.addField("People", "**" + (total - bots) + "**", true);
         	eb.addField("Bots", "**" + bots + "**", true);
-        	eb.addField("Online", "**" + online + "**", true);
+        	eb.addField("Total online", "**" + online + "**", true);
+        	eb.addField("People online", "**" + ponline + "**", true);
+        	eb.addField("Bots online", "**" + bonline + "**", true);        	
         	//TODO metoda v API na auto-footer
     		eb.setFooter("Command executed by " + e.getAuthor().getName() + "#" + e.getAuthor().getDiscriminator(), e.getAuthor().getAvatarUrl());        	
            	API.sendMessage(msgCh, eb.build());
