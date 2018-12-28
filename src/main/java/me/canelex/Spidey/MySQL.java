@@ -1,4 +1,4 @@
-package me.canelex.DiscordBOT;
+package me.canelex.Spidey;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
