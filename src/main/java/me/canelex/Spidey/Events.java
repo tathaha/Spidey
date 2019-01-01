@@ -183,6 +183,7 @@ public class Events extends ListenerAdapter {
     	if (msg.getContentRaw().startsWith("s!mute")) {  
     		
 			Guild guild = e.getGuild();    		
+			GuildController controller = guild.getController();			
 			TextChannel c = guild.getTextChannelById(MySQL.getLogChannel(guild.getId()));    		
     		
     		List<User> men = msg.getMentionedUsers();
@@ -193,8 +194,7 @@ public class Events extends ListenerAdapter {
     				
     				if (guild.getRolesByName("Muted", false).isEmpty()) {
     					
-    					GuildController gc = guild.getController();
-    					gc.createRole().setName("Muted").setColor(Color.GRAY).queue(r -> {
+    					controller.createRole().setName("Muted").setColor(Color.GRAY).queue(r -> {
     						
     						r.getManager().revokePermissions(EnumSet.of(Permission.MESSAGE_WRITE)).queue();
     						
@@ -217,9 +217,8 @@ public class Events extends ListenerAdapter {
             			
             			for (User user : men) {
             				
-            				Role muted = e.getGuild().getRolesByName("Muted", true).get(0);
+            				Role muted = e.getGuild().getRolesByName("Muted", false).get(0);
             				Member member = e.getGuild().getMember(user);
-            				GuildController controller = guild.getController();
             				
             	    		API.deleteMessage(msg);        				
             				controller.addSingleRoleToMember(member, muted).queue();
@@ -452,7 +451,7 @@ public class Events extends ListenerAdapter {
 	@Override
 	public void onGuildMemberRoleRemove(GuildMemberRoleRemoveEvent e) {
 		
-		Role muted = e.getGuild().getRolesByName("Muted", true).get(0);
+		Role muted = e.getGuild().getRolesByName("Muted", false).get(0);
 		
 		if (e.getRoles().contains(muted)) {
 			
