@@ -147,9 +147,16 @@ public class Events extends ListenerAdapter {
     		
     		if (API.hasPerm(e.getGuild(), e.getAuthor(), Permission.ADMINISTRATOR)) {
     			
+    			if (e.getGuild().getSystemChannel() != null) {
+    				
+    				e.getGuild().getManager().setSystemChannel(null).queue();    				
+    				
+    			}
+    			
     			if (MySQL.getLogChannel(e.getGuild().getId()).equals(msgCh.getId())) {
     				
     				MySQL.deleteLogChannel(e.getGuild().getId());
+    				MySQL.createGuildTable(e.getGuild().getId());
     				MySQL.saveLogChannel(e.getGuild().getId(), e.getGuild().getDefaultChannel().getId());
     				API.sendMessage(msgCh, ":white_check_mark: Log channel set to " + e.getGuild().getDefaultChannel().getAsMention() + ". Type this command again in channel you want to be as log channel.");
     				
@@ -157,6 +164,7 @@ public class Events extends ListenerAdapter {
     			
     			else {
     				
+    				MySQL.deleteLogChannel(e.getGuild().getId());    				
             		MySQL.createGuildTable(e.getGuild().getId());
             		MySQL.saveLogChannel(e.getGuild().getId(), msgCh.getId());
             		API.sendMessage(msgCh, ":white_check_mark: Log channel set to " + msgCh.getAsMention() + ". Type this command again to set log channel to default guild channel.");    				
@@ -527,7 +535,7 @@ public class Events extends ListenerAdapter {
 	public void onGuildJoin(GuildJoinEvent e) {
 		
 		GuildController gc = e.getGuild().getController();
-		gc.createRole().setName("Muted").setColor(Color.GRAY).queue(r -> {
+		gc.createRole().setName("Muted").setColor(Color.GRAY).queueAfter(5, TimeUnit.SECONDS, r -> {
 			
 			r.getManager().revokePermissions(EnumSet.of(Permission.MESSAGE_WRITE)).queue();
 			
