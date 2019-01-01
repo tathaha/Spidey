@@ -28,7 +28,6 @@ import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.guild.GuildBanEvent;
-import net.dv8tion.jda.core.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.core.events.guild.GuildUnbanEvent;
 import net.dv8tion.jda.core.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.core.events.guild.member.GuildMemberLeaveEvent;
@@ -191,6 +190,17 @@ public class Events extends ListenerAdapter {
     		if (!msg.getContentRaw().equals("s!mute")) {
     			
     			if (e.getGuild().getMember(e.getAuthor()).hasPermission(Permission.BAN_MEMBERS)) {
+    				
+    				if (guild.getRolesByName("Muted", false).isEmpty()) {
+    					
+    					GuildController gc = guild.getController();
+    					gc.createRole().setName("Muted").setColor(Color.GRAY).queue(r -> {
+    						
+    						r.getManager().revokePermissions(EnumSet.of(Permission.MESSAGE_WRITE)).queue();
+    						
+    					});    					
+    					
+    				}
     				
             		String length = msg.getContentRaw().substring(5 + 2);
             		length = length.substring(0, length.indexOf(" "));
@@ -530,20 +540,6 @@ public class Events extends ListenerAdapter {
 		API.sendMessage(log, eb.build());
 		
 	}	
-	
-	@Override
-	public void onGuildJoin(GuildJoinEvent e) {
-		
-		GuildController gc = e.getGuild().getController();
-		gc.createRole().setName("Muted").setColor(Color.GRAY).queueAfter(5, TimeUnit.SECONDS, r -> {
-			
-			r.getManager().revokePermissions(EnumSet.of(Permission.MESSAGE_WRITE)).queue();
-			
-		});
-		
-		e.getGuild().getManager().setSystemChannel(null).queue();
-		
-	}
 	
 	@Override
     public void onGuildMemberLeave(GuildMemberLeaveEvent e) {
