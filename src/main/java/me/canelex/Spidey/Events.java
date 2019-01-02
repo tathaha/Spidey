@@ -28,6 +28,7 @@ import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.guild.GuildBanEvent;
+import net.dv8tion.jda.core.events.guild.GuildLeaveEvent;
 import net.dv8tion.jda.core.events.guild.GuildUnbanEvent;
 import net.dv8tion.jda.core.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.core.events.guild.member.GuildMemberLeaveEvent;
@@ -593,5 +594,12 @@ public class Events extends ListenerAdapter {
         API.sendMessage(log, eb.build());    
 		
 	}	
+	
+    @Override
+    public void onGuildLeave(GuildLeaveEvent e) {
+    	
+    	MySQL.removeData(e.getGuild().getIdLong());
+    	
+    }
 		
 }
