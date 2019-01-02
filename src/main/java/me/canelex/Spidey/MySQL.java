@@ -69,7 +69,7 @@ public class MySQL {
 		try {
 			
 			c = DriverManager.getConnection("jdbc:mysql://" + Secrets.host + ":" + Secrets.port + "/" + Secrets.database, Secrets.username, Secrets.pass);
-			PreparedStatement ps = c.prepareStatement("DELETE * FROM `servers` WHERE `server_id`=?;");
+			PreparedStatement ps = c.prepareStatement("DELETE FROM `servers` WHERE `server_id`=?;");
 			ps.setLong(1, serverId);
 			ps.executeUpdate();
 			ps.close();
