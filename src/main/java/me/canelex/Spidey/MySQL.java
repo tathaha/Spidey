@@ -84,5 +84,34 @@ public class MySQL {
 		}
 		
 	}	
+	
+	public static synchronized boolean isInDatabase(Long serverId) {
+		try {
+			
+			c = DriverManager.getConnection("jdbc:mysql://" + Secrets.host + ":" + Secrets.port + "/" + Secrets.database, Secrets.username, Secrets.pass);
+			PreparedStatement ps = c.prepareStatement("SELECT *, COUNT(*) AS total FROM `servers` WHERE `server_id`=? LIMIT 1;");
+			ps.setLong(1, serverId);
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+			if (rs.getInt("total") != 0) {
+				
+				rs.close();
+				ps.close();
+				c.close();
+				return true;
+				
+			}
+			
+		} 
+		
+		catch (SQLException e) {
+			
+			e.printStackTrace();
+			
+		}
+				
+		return false;
+		
+	}	
 
 }
