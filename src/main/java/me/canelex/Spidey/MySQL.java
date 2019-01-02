@@ -8,81 +8,31 @@ import java.sql.SQLException;
 
 public class MySQL {
 	
-	public static Connection c;	
+	private static Connection c;		
 	
-	public static synchronized void createGuildTable(String guildID) {
+	public static synchronized Long getChannelId(Long serverId) {
 		
 		try {
 			
-			Class.forName("com.mysql.cj.jdbc.Driver");			
 			c = DriverManager.getConnection("jdbc:mysql://" + Secrets.host + ":" + Secrets.port + "/" + Secrets.database, Secrets.username, Secrets.pass);
-			PreparedStatement ps = c.prepareStatement("CREATE TABLE IF NOT EXISTS `" + guildID + "` (`ID` VARCHAR(25) not null)");
-			ps.executeUpdate();
-			ps.close();
-			c.close();
-						
-		} 
-		
-		catch (SQLException | ClassNotFoundException e) {
-			
-			e.printStackTrace();
-			
-		}
-		
-	}	
-	
-	public static synchronized void saveLogChannel(String guildID, String tcID) {
-		
-		try {
-			
-			Class.forName("com.mysql.cj.jdbc.Driver");			
-			c = DriverManager.getConnection("jdbc:mysql://" + Secrets.host + ":" + Secrets.port + "/" + Secrets.database, Secrets.username, Secrets.pass);
-			
-			PreparedStatement ps = c.prepareStatement("INSERT INTO `"+ guildID +"` (`ID`) VALUES (?);");
-			
-			ps.setString(1, tcID);
-			
-			ps.executeUpdate();
-			
-			ps.close();
-			c.close();
-						
-		} 
-		
-		catch (SQLException | ClassNotFoundException e) {
-			
-			e.printStackTrace();
-			
-		}
-		
-	}	
-	
-	public static synchronized String getLogChannel(String guildID) {
-		
-		try {
-				
-			Class.forName("com.mysql.cj.jdbc.Driver");		
-			c = DriverManager.getConnection("jdbc:mysql://" + Secrets.host + ":" + Secrets.port + "/" + Secrets.database, Secrets.username, Secrets.pass);
-			
-			PreparedStatement ps = c.prepareStatement("SELECT *, COUNT(*) AS total FROM `"+ guildID +"`;");
-			
+			PreparedStatement ps = c.prepareStatement("SELECT *, COUNT(*) AS total FROM `servers` WHERE `server_id`=? LIMIT 1;");
+			ps.setLong(1, serverId);
 			ResultSet rs = ps.executeQuery();
-			
 			rs.next();
 			
 			if (rs.getInt("total") != 0) {
 				
-                String s = rs.getString("ID");
+				Long l = rs.getLong("channel_id");
 				rs.close();
 				ps.close();
 				c.close();
-				return s;
+				return l;
 				
 			}
 			
 		} 
 		
-		catch (SQLException | ClassNotFoundException e) {
+		catch (SQLException e) {
 			
 			e.printStackTrace();
 			
@@ -90,29 +40,49 @@ public class MySQL {
 		
 		return null;
 		
-	}	
+	}
 	
-    public static synchronized void deleteLogChannel(String guildID) {
+	public static synchronized void insertData(Long serverId, Long channelId) {
 		
-	    try {
-
-		    c = DriverManager.getConnection("jdbc:mysql://" + Secrets.host + ":" + Secrets.port + "/" + Secrets.database, Secrets.username, Secrets.pass);
-		
-		    PreparedStatement ps = c.prepareStatement("DROP TABLE `" + guildID + "`;");
-		
-		    ps.executeUpdate();
+		try {
 			
-		    ps.close();
-		    c.close();
+			c = DriverManager.getConnection("jdbc:mysql://" + Secrets.host + ":" + Secrets.port + "/" + Secrets.database, Secrets.username, Secrets.pass);
+			PreparedStatement ps = c.prepareStatement("INSERT INTO `servers` (`server_id`, `channel_id`) VALUES (?, ?);");
+			ps.setLong(1, serverId);
+			ps.setLong(2, channelId);
+			ps.executeUpdate();
+			ps.close();
+			c.close();
+			
+		} 
 		
-	    } 
+		catch (SQLException e) {
+			
+			e.printStackTrace();
+			
+		}
+		
+	}
 	
-	    catch (SQLException e) {
-    	
-    	    e.printStackTrace();
-    	
-        } 
-	
-    }	
+	public static synchronized void removeData(Long serverId) {
+		
+		try {
+			
+			c = DriverManager.getConnection("jdbc:mysql://" + Secrets.host + ":" + Secrets.port + "/" + Secrets.database, Secrets.username, Secrets.pass);
+			PreparedStatement ps = c.prepareStatement("DELETE * FROM `servers` WHERE `server_id`=?;");
+			ps.setLong(1, serverId);
+			ps.executeUpdate();
+			ps.close();
+			c.close();
+			
+		} 
+		
+		catch (SQLException e) {
+			
+			e.printStackTrace();
+			
+		}
+		
+	}	
 
 }
