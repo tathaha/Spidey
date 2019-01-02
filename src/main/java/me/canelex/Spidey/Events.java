@@ -152,20 +152,18 @@ public class Events extends ListenerAdapter {
     				
     			}
     			
-    			if (MySQL.getLogChannel(e.getGuild().getId()).equals(msgCh.getId())) {
+    			if (MySQL.getChannelId(e.getGuild().getIdLong()).equals(msgCh.getIdLong())) {
     				
-    				MySQL.deleteLogChannel(e.getGuild().getId());
-    				MySQL.createGuildTable(e.getGuild().getId());
-    				MySQL.saveLogChannel(e.getGuild().getId(), e.getGuild().getDefaultChannel().getId());
+    				MySQL.removeData(e.getGuild().getIdLong());
+    				MySQL.insertData(e.getGuild().getIdLong(), e.getGuild().getDefaultChannel().getIdLong());
     				API.sendMessage(msgCh, ":white_check_mark: Log channel set to " + e.getGuild().getDefaultChannel().getAsMention() + ". Type this command again in channel you want to be as log channel.");
     				
     			}
     			
     			else {
     				
-    				MySQL.deleteLogChannel(e.getGuild().getId());    				
-            		MySQL.createGuildTable(e.getGuild().getId());
-            		MySQL.saveLogChannel(e.getGuild().getId(), msgCh.getId());
+    				MySQL.removeData(e.getGuild().getIdLong());    				
+            		MySQL.insertData(e.getGuild().getIdLong(), msgCh.getIdLong());
             		API.sendMessage(msgCh, ":white_check_mark: Log channel set to " + msgCh.getAsMention() + ". Type this command again to set log channel to default guild channel.");    				
     				
     			}
@@ -184,7 +182,7 @@ public class Events extends ListenerAdapter {
     		
 			Guild guild = e.getGuild();    		
 			GuildController controller = guild.getController();			
-			TextChannel c = guild.getTextChannelById(MySQL.getLogChannel(guild.getId()));    		
+			TextChannel c = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));    		
     		
     		List<User> men = msg.getMentionedUsers();
     		
@@ -405,7 +403,7 @@ public class Events extends ListenerAdapter {
     					eb.addField("User", u.getAsMention(), true);
     					eb.addField("Moderator", e.getAuthor().getAsMention(), true);
     					eb.addField("Reason", "**" + reason + "**", true);
-    					TextChannel log = e.getGuild().getTextChannelById(MySQL.getLogChannel(e.getGuild().getId()));
+    					TextChannel log = e.getGuild().getTextChannelById(MySQL.getChannelId(e.getGuild().getIdLong()));
     					API.sendMessage(log, eb.build());    
     					
     				});
@@ -455,7 +453,7 @@ public class Events extends ListenerAdapter {
 		
 		if (e.getRoles().contains(muted)) {
 			
-			TextChannel log = e.getGuild().getTextChannelById(MySQL.getLogChannel(e.getGuild().getId()));
+			TextChannel log = e.getGuild().getTextChannelById(MySQL.getChannelId(e.getGuild().getIdLong()));
 			EmbedBuilder eb = new EmbedBuilder();
 			eb.setTitle("UNMUTE");
 			eb.setColor(Color.GREEN);
@@ -483,7 +481,7 @@ public class Events extends ListenerAdapter {
     public void onGuildBan(GuildBanEvent e) {
 		
 		User user = e.getUser();
-		TextChannel log = e.getGuild().getTextChannelById(MySQL.getLogChannel(e.getGuild().getId()));	
+		TextChannel log = e.getGuild().getTextChannelById(MySQL.getChannelId(e.getGuild().getIdLong()));
         
         Ban ban = e.getGuild().getBan(user).complete();
         List<AuditLogEntry> auditbans = e.getGuild().getAuditLogs().type(ActionType.BAN).complete();
@@ -516,7 +514,7 @@ public class Events extends ListenerAdapter {
     public void onGuildUnban(GuildUnbanEvent e) {
 		
 		User user = e.getUser();
-		TextChannel log = e.getGuild().getTextChannelById(MySQL.getLogChannel(e.getGuild().getId()));	
+		TextChannel log = e.getGuild().getTextChannelById(MySQL.getChannelId(e.getGuild().getIdLong()));
         
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("UNBAN");
@@ -544,7 +542,7 @@ public class Events extends ListenerAdapter {
     public void onGuildMemberLeave(GuildMemberLeaveEvent e) {
 		
 		User user = e.getUser();
-        TextChannel channel = e.getGuild().getTextChannelById(MySQL.getLogChannel(e.getGuild().getId()));	
+		TextChannel log = e.getGuild().getTextChannelById(MySQL.getChannelId(e.getGuild().getIdLong()));	
         
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("USER HAS LEFT");
@@ -564,7 +562,7 @@ public class Events extends ListenerAdapter {
         eb.setColor(Color.RED);
         eb.addField("User", "**" + user.getName() + "**", true);
         eb.addField("ID", "**" + user.getId() + "**", true);
-        API.sendMessage(channel, eb.build());        	
+        API.sendMessage(log, eb.build());        	
 		
 	}	
 	
@@ -572,7 +570,7 @@ public class Events extends ListenerAdapter {
     public void onGuildMemberJoin(GuildMemberJoinEvent e) {
 		
 		User user = e.getUser();
-        TextChannel channel = e.getGuild().getTextChannelById(MySQL.getLogChannel(e.getGuild().getId()));	
+		TextChannel log = e.getGuild().getTextChannelById(MySQL.getChannelId(e.getGuild().getIdLong()));	
         
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("USER HAS JOINED");
@@ -592,7 +590,7 @@ public class Events extends ListenerAdapter {
         eb.setColor(Color.GREEN);
         eb.addField("User", "**" + user.getName() + "**", true);
         eb.addField("ID", "**" + user.getId() + "**", true);        
-        API.sendMessage(channel, eb.build());    
+        API.sendMessage(log, eb.build());    
 		
 	}	
 		
