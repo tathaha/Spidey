@@ -153,21 +153,25 @@ public class Events extends ListenerAdapter {
     				
     			}
     			
-    			if (MySQL.getChannelId(e.getGuild().getIdLong()).equals(msgCh.getIdLong())) {
+    			if (MySQL.isInDatabase(e.getGuild().getIdLong())) {
     				
-    				MySQL.removeData(e.getGuild().getIdLong());
-    				MySQL.insertData(e.getGuild().getIdLong(), e.getGuild().getDefaultChannel().getIdLong());
-    				API.sendMessage(msgCh, ":white_check_mark: Log channel set to " + e.getGuild().getDefaultChannel().getAsMention() + ". Type this command again in channel you want to be as log channel.");
+        			if (MySQL.getChannelId(e.getGuild().getIdLong()).equals(msgCh.getIdLong())) {
+        				
+        				MySQL.removeData(e.getGuild().getIdLong());
+        				MySQL.insertData(e.getGuild().getIdLong(), e.getGuild().getDefaultChannel().getIdLong());
+        				API.sendMessage(msgCh, ":white_check_mark: Log channel set to " + e.getGuild().getDefaultChannel().getAsMention() + ". Type this command again in channel you want to be as log channel.");
+        				
+        			}
+        			
+        			else {
+        				
+        				MySQL.removeData(e.getGuild().getIdLong());    				
+                		MySQL.insertData(e.getGuild().getIdLong(), msgCh.getIdLong());
+                		API.sendMessage(msgCh, ":white_check_mark: Log channel set to " + msgCh.getAsMention() + ". Type this command again to set log channel to default guild channel.");    				
+        				
+        			}    				
     				
-    			}
-    			
-    			else {
-    				
-    				MySQL.removeData(e.getGuild().getIdLong());    				
-            		MySQL.insertData(e.getGuild().getIdLong(), msgCh.getIdLong());
-            		API.sendMessage(msgCh, ":white_check_mark: Log channel set to " + msgCh.getAsMention() + ". Type this command again to set log channel to default guild channel.");    				
-    				
-    			}
+    			}    			
 
     		}
     		
@@ -598,7 +602,11 @@ public class Events extends ListenerAdapter {
     @Override
     public void onGuildLeave(GuildLeaveEvent e) {
     	
-    	MySQL.removeData(e.getGuild().getIdLong());
+    	if (MySQL.isInDatabase(e.getGuild().getIdLong())) {
+    		
+        	MySQL.removeData(e.getGuild().getIdLong());    		
+    		
+    	}    	
     	
     }
 		
