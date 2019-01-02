@@ -153,7 +153,14 @@ public class Events extends ListenerAdapter {
     				
     			}
     			
-    			if (MySQL.isInDatabase(e.getGuild().getIdLong())) {
+    			if (!MySQL.isInDatabase(e.getGuild().getIdLong())) {    			
+        				    				
+                	MySQL.insertData(e.getGuild().getIdLong(), msgCh.getIdLong());
+                	API.sendMessage(msgCh, ":white_check_mark: Log channel set to " + msgCh.getAsMention() + ". Type this command again to set log channel to default guild channel.");    				    				
+    				
+    			}
+    			
+    			else {
     				
         			if (MySQL.getChannelId(e.getGuild().getIdLong()).equals(msgCh.getIdLong())) {
         				
@@ -169,9 +176,9 @@ public class Events extends ListenerAdapter {
                 		MySQL.insertData(e.getGuild().getIdLong(), msgCh.getIdLong());
                 		API.sendMessage(msgCh, ":white_check_mark: Log channel set to " + msgCh.getAsMention() + ". Type this command again to set log channel to default guild channel.");    				
         				
-        			}    				
+        			}        			
     				
-    			}    			
+    			}
 
     		}
     		
