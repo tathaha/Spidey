@@ -3,7 +3,6 @@ package me.canelex.Spidey;
 import java.awt.Color;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -204,11 +203,7 @@ public class Events extends ListenerAdapter {
     				
     				if (guild.getRolesByName("Muted", false).isEmpty()) {
     					
-    					controller.createRole().setName("Muted").setColor(Color.GRAY).queue(r -> {
-    						
-    						r.getManager().revokePermissions(EnumSet.of(Permission.MESSAGE_WRITE)).queue();
-    						
-    					});    					
+    					controller.createRole().setName("Muted").setColor(Color.GRAY).complete();    					
     					
     				}
     				
