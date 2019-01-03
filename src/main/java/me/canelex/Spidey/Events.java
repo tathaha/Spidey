@@ -14,27 +14,27 @@ import javax.script.ScriptEngineManager;
 import org.apache.commons.lang3.StringUtils;
 
 import me.canelex.Spidey.api.API;
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.OnlineStatus;
-import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.audit.ActionType;
-import net.dv8tion.jda.core.audit.AuditLogEntry;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Guild.Ban;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.Role;
-import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
-import net.dv8tion.jda.core.events.guild.GuildBanEvent;
-import net.dv8tion.jda.core.events.guild.GuildLeaveEvent;
-import net.dv8tion.jda.core.events.guild.GuildUnbanEvent;
-import net.dv8tion.jda.core.events.guild.member.GuildMemberJoinEvent;
-import net.dv8tion.jda.core.events.guild.member.GuildMemberLeaveEvent;
-import net.dv8tion.jda.core.events.guild.member.GuildMemberRoleRemoveEvent;
-import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
-import net.dv8tion.jda.core.managers.GuildController;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.OnlineStatus;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.audit.ActionType;
+import net.dv8tion.jda.api.audit.AuditLogEntry;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Guild.Ban;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.guild.GuildBanEvent;
+import net.dv8tion.jda.api.events.guild.GuildLeaveEvent;
+import net.dv8tion.jda.api.events.guild.GuildUnbanEvent;
+import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
+import net.dv8tion.jda.api.events.guild.member.GuildMemberLeaveEvent;
+import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleRemoveEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.managers.GuildController;
 
 public class Events extends ListenerAdapter {
 	
@@ -53,7 +53,7 @@ public class Events extends ListenerAdapter {
         
         if (msg.getContentRaw().equalsIgnoreCase("s!info")) {   
             
-        	User dev = e.getJDA().asBot().getApplicationInfo().complete().getOwner();
+        	User dev = e.getJDA().getApplicationInfo().complete().getOwner();
     		EmbedBuilder eb = new EmbedBuilder();
     		eb.setAuthor("About bot", "https://canelex.ymastersk.net", e.getJDA().getSelfUser().getAvatarUrl());
     		eb.setColor(Color.WHITE);
@@ -97,7 +97,7 @@ public class Events extends ListenerAdapter {
         	if (msg.getMentionedUsers().isEmpty()) {
         		
         		Member member = API.getMember(e.getGuild(), e.getAuthor());
-        		cal.setTimeInMillis(member.getJoinDate().toInstant().toEpochMilli());        		
+        		cal.setTimeInMillis(member.getTimeJoined().toInstant().toEpochMilli());        		
         		API.sendPrivateMessage(e.getAuthor(), "Date and time of joining to this guild: **" + joindate + "** | **" + jointime + "**!");
         		
         	}
@@ -109,7 +109,7 @@ public class Events extends ListenerAdapter {
         		for (User user : mentioned) {
         			
         			Member member = API.getMember(e.getGuild(), user);
-            		cal.setTimeInMillis(member.getJoinDate().toInstant().toEpochMilli());
+            		cal.setTimeInMillis(member.getTimeJoined().toInstant().toEpochMilli());
             		API.sendPrivateMessage(e.getAuthor(), "(**" + member.getEffectiveName() + "**) " + "Date and time of joining to this guild: **" + joindate + "** | **" + jointime + "**!");          		
         		
         		}
@@ -127,12 +127,12 @@ public class Events extends ListenerAdapter {
         	    		
     		eb.addField("Owner", "**" + e.getGuild().getOwner().getAsMention() + "**", true);
     		
-        	cal.setTimeInMillis(e.getGuild().getCreationTime().toInstant().toEpochMilli());
+        	cal.setTimeInMillis(e.getGuild().getTimeCreated().toInstant().toEpochMilli());
     		String creatdate = date.format(cal.getTime()).toString();   
     		String creattime = time.format(cal.getTime()).toString();   
         	eb.addField("Created", "**" + creatdate + "** | **" + creattime + "**", true);
         	
-    		cal.setTimeInMillis(API.getMember(e.getGuild(), e.getJDA().getSelfUser()).getJoinDate().toInstant().toEpochMilli());
+    		cal.setTimeInMillis(API.getMember(e.getGuild(), e.getJDA().getSelfUser()).getTimeJoined().toInstant().toEpochMilli());
     		String joindate = date.format(cal.getTime()).toString();   
     		String jointime = time.format(cal.getTime()).toString();    		
         	eb.addField("Bot connected", "**" + joindate + "** | ** " + jointime + "**", true);

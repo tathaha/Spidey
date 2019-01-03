@@ -1,9 +1,9 @@
 package me.canelex.Spidey;
 
-import net.dv8tion.jda.core.AccountType;
-import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.JDABuilder;
-import net.dv8tion.jda.core.entities.Game;
+import net.dv8tion.jda.api.AccountType;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.Activity;
 
 public class Core {	
 							
@@ -12,8 +12,8 @@ public class Core {
     	@SuppressWarnings("unused")
 		JDA jda = new JDABuilder(AccountType.BOT)
     			.setToken(Secrets.token)
-    			.addEventListener(new Events())
-    			.setGame(Game.streaming("s!help", "https://twitch.tv/canelex_"))    			
+    			.addEventListeners(new Events())
+    			.setActivity(Activity.streaming("s!help", "https://twitch.tv/canelex_"))    			
     			.build().awaitReady();               
         
     }                        

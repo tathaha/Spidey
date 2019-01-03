@@ -24,7 +24,7 @@
 	<dependency>
       <groupId>net.dv8tion</groupId>
       <artifactId>JDA</artifactId>
-      <version>3.8.1_450</version>
+      <version>4.ALPHA.0_5</version>
       <exclusions>
         <exclusion>
           <groupId>club.minnced</groupId>
