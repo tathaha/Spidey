@@ -127,17 +127,34 @@ public class Events extends ListenerAdapter {
         	eb.setColor(Color.ORANGE);
         	eb.setThumbnail(e.getGuild().getIconUrl());
         	    		
-    		eb.addField("Owner", "**" + e.getGuild().getOwner().getAsMention() + "**", true);
+    		eb.addField("Owner", "**" + e.getGuild().getOwner().getAsMention() + "**", false);
     		
         	cal.setTimeInMillis(e.getGuild().getTimeCreated().toInstant().toEpochMilli());
     		String creatdate = date.format(cal.getTime()).toString();   
     		String creattime = time.format(cal.getTime()).toString();   
-        	eb.addField("Created", "**" + creatdate + "** | **" + creattime + "**", true);
+        	eb.addField("Created", "**" + creatdate + "** | **" + creattime + "**", false);
         	
     		cal.setTimeInMillis(API.getMember(e.getGuild(), e.getJDA().getSelfUser()).getTimeJoined().toInstant().toEpochMilli());
     		String joindate = date.format(cal.getTime()).toString();   
     		String jointime = time.format(cal.getTime()).toString();    		
-        	eb.addField("Bot connected", "**" + joindate + "** | ** " + jointime + "**", true);
+        	eb.addField("Bot connected", "**" + joindate + "** | ** " + jointime + "**", false);
+        	
+        	String s = ""; //by @maasterkoo
+            int i = 0;
+            for (Role role : e.getGuild().getRoles()) {
+            	
+                i++;
+                
+                if (i == e.getGuild().getRoles().size())
+                	
+                    s += role.getName();
+                
+                else
+                	
+                    s += role.getName() + ", ";
+                
+            }
+        	eb.addField("Roles [**" + i + "**]", s, false);
         	
     		eb.setFooter("Command executed by " + e.getAuthor().getName() + "#" + e.getAuthor().getDiscriminator(), e.getAuthor().getAvatarUrl());        	
 			API.sendMessage(msgCh, eb.build());
