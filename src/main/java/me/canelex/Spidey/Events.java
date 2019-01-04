@@ -37,11 +37,11 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.managers.GuildController;
 
 public class Events extends ListenerAdapter {
-	
-	Calendar cal = Calendar.getInstance();	
-	Locale locale = new Locale("en", "EN");    	
+		
+	Locale locale = new Locale("en", "EN");  
+	Calendar cal = Calendar.getInstance();        	
 	SimpleDateFormat date = new SimpleDateFormat("EEEE, d.LLLL Y", locale);      
-	SimpleDateFormat time = new SimpleDateFormat("HH:mm:ss", locale);	
+	SimpleDateFormat time = new SimpleDateFormat("HH:mm:ss", locale); 	
     ScriptEngineManager manager = new ScriptEngineManager();
     ScriptEngine engine = manager.getEngineByName("groovy");  
 	
@@ -90,14 +90,14 @@ public class Events extends ListenerAdapter {
         }
         
         if (msg.getContentRaw().startsWith("s!joindate")) {
-        	    	    					   	
-    		String joindate = date.format(cal.getTime()).toString();
-    		String jointime = time.format(cal.getTime()).toString();    		
+        	    	    					   	       	    	
         	
         	if (msg.getMentionedUsers().isEmpty()) {
         		
         		Member member = API.getMember(e.getGuild(), e.getAuthor());
-        		cal.setTimeInMillis(member.getTimeJoined().toInstant().toEpochMilli());        		
+        		cal.setTimeInMillis(member.getTimeJoined().toInstant().toEpochMilli()); 
+        		String joindate = date.format(cal.getTime()).toString();
+        		String jointime = time.format(cal.getTime()).toString();        		
         		API.sendPrivateMessage(e.getAuthor(), "Date and time of joining to this guild: **" + joindate + "** | **" + jointime + "**!");
         		
         	}
@@ -110,6 +110,8 @@ public class Events extends ListenerAdapter {
         			
         			Member member = API.getMember(e.getGuild(), user);
             		cal.setTimeInMillis(member.getTimeJoined().toInstant().toEpochMilli());
+            		String joindate = date.format(cal.getTime()).toString();
+            		String jointime = time.format(cal.getTime()).toString();            		
             		API.sendPrivateMessage(e.getAuthor(), "(**" + member.getEffectiveName() + "**) " + "Date and time of joining to this guild: **" + joindate + "** | **" + jointime + "**!");          		
         		
         		}
@@ -120,7 +122,7 @@ public class Events extends ListenerAdapter {
         
         if (msg.getContentRaw().equalsIgnoreCase("s!server")) {
         	
-        	EmbedBuilder eb = new EmbedBuilder();
+        	EmbedBuilder eb = new EmbedBuilder();         	
         	eb.setTitle(e.getGuild().getName());
         	eb.setColor(Color.ORANGE);
         	eb.setThumbnail(e.getGuild().getIconUrl());
