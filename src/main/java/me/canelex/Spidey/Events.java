@@ -421,18 +421,19 @@ public class Events extends ListenerAdapter {
     				
     				u.openPrivateChannel().queue(ch -> { 
     					
-    					ch.sendMessage(":exclamation: You just got a warn on server **" + e.getGuild().getName() + "** from **" + e.getAuthor().getName() + "**. Reason - **" + reason + "**.").queue();
-    					API.deleteMessage(msg);
-    					EmbedBuilder eb = new EmbedBuilder();
-    					eb.setTitle("NEW WARN");
-    					eb.setColor(Color.ORANGE);
-    					eb.addField("User", u.getAsMention(), true);
-    					eb.addField("Moderator", e.getAuthor().getAsMention(), true);
-    					eb.addField("Reason", "**" + reason + "**", true);
-    					TextChannel log = e.getGuild().getTextChannelById(MySQL.getChannelId(e.getGuild().getIdLong()));
-    					API.sendMessage(log, eb.build());    
+    					ch.sendMessage(":exclamation: You have been warned on guild **" + e.getGuild().getName() + "** from **" + e.getAuthor().getName() + "**. Reason - **" + reason + "**.").queue();    
     					
     				});
+    				
+					API.deleteMessage(msg);
+					EmbedBuilder eb = new EmbedBuilder();
+					eb.setTitle("NEW WARN");
+					eb.setColor(Color.ORANGE);
+					eb.addField("User", u.getAsMention(), true);
+					eb.addField("Moderator", e.getAuthor().getAsMention(), true);
+					eb.addField("Reason", "**" + reason + "**", true);
+					TextChannel log = e.getGuild().getTextChannelById(MySQL.getChannelId(e.getGuild().getIdLong()));
+					API.sendMessage(log, eb.build());    				
     				
     			}}
     			
