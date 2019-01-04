@@ -126,6 +126,7 @@ public class Events extends ListenerAdapter {
         	eb.setTitle(e.getGuild().getName());
         	eb.setColor(Color.ORANGE);
         	eb.setThumbnail(e.getGuild().getIconUrl());
+        	eb.setDescription("Server ID: **" + e.getGuild().getId() + "**");
         	    		
     		eb.addField("Owner", "**" + e.getGuild().getOwner().getAsMention() + "**", false);
     		
