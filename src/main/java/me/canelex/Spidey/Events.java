@@ -98,7 +98,7 @@ public class Events extends ListenerAdapter {
         		cal.setTimeInMillis(member.getTimeJoined().toInstant().toEpochMilli()); 
         		String joindate = date.format(cal.getTime()).toString();
         		String jointime = time.format(cal.getTime()).toString();        		
-        		API.sendPrivateMessage(e.getAuthor(), "Date and time of joining to this guild: **" + joindate + "** | **" + jointime + "**!");
+        		API.sendPrivateMessage(e.getAuthor(), "Date and time of joining to guild **" + e.getGuild().getName() + "**: **" + joindate + "** | **" + jointime + "**!");
         		
         	}
         	
@@ -112,7 +112,7 @@ public class Events extends ListenerAdapter {
             		cal.setTimeInMillis(member.getTimeJoined().toInstant().toEpochMilli());
             		String joindate = date.format(cal.getTime()).toString();
             		String jointime = time.format(cal.getTime()).toString();            		
-            		API.sendPrivateMessage(e.getAuthor(), "(**" + member.getEffectiveName() + "**) " + "Date and time of joining to this guild: **" + joindate + "** | **" + jointime + "**!");          		
+            		API.sendPrivateMessage(e.getAuthor(), "(**" + member.getEffectiveName() + "**) " + "Date and time of joining to guild **" + e.getGuild().getName() + "**: **" + joindate + "** | **" + jointime + "**!");          		
         		
         		}
         		
