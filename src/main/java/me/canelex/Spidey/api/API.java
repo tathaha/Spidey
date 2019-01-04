@@ -116,5 +116,11 @@ public class API {
 		msg.delete().queue();
 		
 	}
+	
+	public static boolean isPartnered(Guild g) {
+		
+		return g.getFeatures().contains("VIP_REGIONS"); 	
+		
+	}	
 
 }
