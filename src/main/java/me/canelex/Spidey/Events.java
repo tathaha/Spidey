@@ -140,6 +140,18 @@ public class Events extends ListenerAdapter {
     		String jointime = time.format(cal.getTime()).toString();    		
         	eb.addField("Bot connected", "**" + joindate + "** | ** " + jointime + "**", false);
         	
+        	if (API.isPartnered(e.getGuild())) {
+        		
+        		eb.addField("Custom invite URL", e.getGuild().getVanityUrl().complete(), false);
+        		
+        	}
+        	
+        	else {
+        		
+        		eb.addField("Custom invite URL", "Guild is not partnered", false);        		
+        		
+        	}
+        	
         	String s = ""; //by @maasterkoo
             int i = 0;
             for (Role role : e.getGuild().getRoles()) {
