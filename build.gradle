@@ -26,7 +26,13 @@ repositories {
 dependencies {
 
     compile 'mysql:mysql-connector-java:8.0.14'
-    compile 'net.dv8tion:JDA:4.ALPHA.0_23'
+    
+    compile ('net.dv8tion:JDA:4.ALPHA.0_23') {
+    
+       exclude module: 'opus-java'
+       
+    }   
+    
     compile 'ch.qos.logback:logback-classic:1.2.3'
     compile 'org.apache.commons:commons-lang3:3.8.1'
     
