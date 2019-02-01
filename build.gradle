@@ -5,19 +5,37 @@ plugins {
     
 }
 
+task fatJar(type: Jar) {
+
+	manifest {
+	
+        attributes 'Main-Class': 'me.canelex.Spidey.Core'
+        	
+    }
+    
+    baseName = project.name + '-all'
+    
+    from { 
+    
+        configurations.compile.collect { 
+        
+            it.isDirectory() ? it : zipTree(it) 
+            
+        } 
+        
+    }
+            
+    with jar
+    
+}
+
 repositories {
 
-    mavenLocal()
+    mavenCentral()
     
     maven {
     
         url = 'http://jcenter.bintray.com'
-        
-    }
-
-    maven {
-    
-        url = 'http://repo.maven.apache.org/maven2'
         
     }
     
@@ -41,7 +59,7 @@ dependencies {
 group = 'me.canelex'
 version = 'STABLE'
 description = 'Spidey'
-sourceCompatibility = '1.8'
+sourceCompatibility = '11'
 
 tasks.withType(JavaCompile) {
 
