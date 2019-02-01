@@ -2,6 +2,7 @@ package me.canelex.Spidey;
 
 import java.awt.Color;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -153,20 +154,30 @@ public class Events extends ListenerAdapter {
         	}
         	
         	String s = ""; //by @maasterkoo
+        	
             int i = 0;
-            for (Role role : e.getGuild().getRoles()) {
+            
+            List<Role> roles = e.getGuild().getRoles().stream().collect(Collectors.toCollection(ArrayList::new));
+            roles.remove(e.getGuild().getPublicRole());
+            
+            for (Role role : roles) {
             	
                 i++;
                 
-                if (i == e.getGuild().getRoles().size())
+                if (i == roles.size()) {
                 	
                     s += role.getName();
+                    
+                }    
                 
-                else
+                else {
                 	
                     s += role.getName() + ", ";
+                 
+                }    
                 
             }
+            
         	eb.addField("Roles [**" + i + "**]", s, false);
         	
     		eb.setFooter("Command executed by " + e.getAuthor().getName() + "#" + e.getAuthor().getDiscriminator(), e.getAuthor().getAvatarUrl());        	
