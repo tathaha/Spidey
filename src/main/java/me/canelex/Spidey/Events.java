@@ -556,7 +556,7 @@ public class Events extends ListenerAdapter {
             String uptime = (years == 0 ? "" : "**" + years + "**r, ") + (months == 0 ? "" : "**" + months + "**mo, ") + (days == 0 ? "" : "**" + days + "**d, ") + (hours == 0 ? "" : "**" + hours + "**h, ") + (minutes == 0 ? "" : "**" + minutes + "**m, ") + (seconds == 0 ? "" : "**" + seconds + "**s, ");
 
             uptime = API.replaceLast(uptime, ", ", "");
-            uptime = API.replaceLast(uptime, ",", " a");
+            uptime = API.replaceLast(uptime, ",", " and");
 
             API.sendMessage(msgCh, "Uptime: " + uptime + "");    		
     		
