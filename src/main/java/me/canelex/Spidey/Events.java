@@ -62,7 +62,7 @@ public class Events extends ListenerAdapter {
     		eb.addField("Developer", dev.getAsMention(), true);
     		eb.addField("Release channel", "**STABLE**", true);
     		eb.setThumbnail(e.getGuild().getIconUrl());
-    		eb.setFooter("Command executed by " + e.getAuthor().getName() + "#" + e.getAuthor().getDiscriminator(), e.getAuthor().getAvatarUrl());    		
+    		eb.setFooter("Command executed by " + e.getAuthor().getAsTag(), e.getAuthor().getAvatarUrl());    		
     		API.sendMessage(msgCh, eb.build());        		   		
       	   	    		
     	}               
@@ -86,7 +86,7 @@ public class Events extends ListenerAdapter {
         	eb.addField("People online", "**" + ponline + "**", true);
         	eb.addField("Bots online", "**" + bonline + "**", true);        	
         	//TODO metoda v API na auto-footer
-    		eb.setFooter("Command executed by " + e.getAuthor().getName() + "#" + e.getAuthor().getDiscriminator(), e.getAuthor().getAvatarUrl());        	
+    		eb.setFooter("Command executed by " + e.getAuthor().getAsTag(), e.getAuthor().getAvatarUrl());        	
            	API.sendMessage(msgCh, eb.build());
            	
         }
@@ -181,7 +181,7 @@ public class Events extends ListenerAdapter {
             
         	eb.addField("Roles [**" + i + "**]", s, false);
         	
-    		eb.setFooter("Command executed by " + e.getAuthor().getName() + "#" + e.getAuthor().getDiscriminator(), e.getAuthor().getAvatarUrl());        	
+    		eb.setFooter("Command executed by " + e.getAuthor().getAsTag(), e.getAuthor().getAvatarUrl());        	
 			API.sendMessage(msgCh, eb.build());
         
         }               
