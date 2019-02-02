@@ -538,7 +538,7 @@ public class Events extends ListenerAdapter {
     	if (msg.getContentRaw().equalsIgnoreCase("s!help")) {
     		
     		API.deleteMessage(msg);
-    		API.sendPrivateMessage(e.getAuthor(), "**Soon**", false);
+    		API.sendPrivateMessage(e.getAuthor(), e.getJDA().getEmoteById(541391545136447488L).getAsMention(), false);
     		
     	} 
     	
