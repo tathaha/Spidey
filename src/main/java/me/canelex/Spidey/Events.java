@@ -496,7 +496,7 @@ public class Events extends ListenerAdapter {
     		
     	} 
     	
-    	if (msg.getContentRaw().startsWith("p!poll")) {
+    	if (msg.getContentRaw().startsWith("s!poll")) {
     		
     		TextChannel log = e.getGuild().getTextChannelById(MySQL.getChannelId(e.getGuild().getIdLong()));	   		
     		
@@ -526,7 +526,13 @@ public class Events extends ListenerAdapter {
         		   			
     		}
     		    		
-    	}    	
+    	} 
+    	
+    	if (msg.getContentRaw().equalsIgnoreCase("s!ping")) {
+    		
+    		API.sendMessage(msgCh, "**Gateway**/**WebSocket**: **" + e.getJDA().getGatewayPing() + "**ms\n**REST**: **" + e.getJDA().getRestPing().complete() + "**ms");
+    		
+    	}
         
 	}
 	
