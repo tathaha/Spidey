@@ -15,6 +15,7 @@ import javax.script.ScriptEngineManager;
 import org.apache.commons.lang3.StringUtils;
 
 import me.canelex.Spidey.utils.API;
+import me.canelex.Spidey.utils.Emoji;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.Permission;
@@ -493,6 +494,38 @@ public class Events extends ListenerAdapter {
     			
     		}
     		
+    	} 
+    	
+    	if (msg.getContentRaw().startsWith("p!poll")) {
+    		
+    		TextChannel log = e.getGuild().getTextChannelById(MySQL.getChannelId(e.getGuild().getIdLong()));	   		
+    		
+    		if (!API.hasPerm(e.getGuild(), e.getAuthor(), Permission.BAN_MEMBERS)) {
+    			
+				API.sendMessage(msgCh, ":no_entry: Action can't be completed due to missing permission **BAN_MEMBERS**.");      			
+    			
+    		}
+    		
+    		else {
+    			
+        		String question = msg.getContentRaw().substring(7);
+        		API.deleteMessage(msg);
+        		e.getChannel().sendMessage("Poll: **" + question + "**").queue(m -> {
+        			
+        			m.addReaction(Emoji.like).queue();
+        			m.addReaction(Emoji.shrug).queue();
+        			m.addReaction(Emoji.dislike).queue();
+            		EmbedBuilder eb = new EmbedBuilder();
+            		eb.setTitle("NEW POLL");
+            		eb.setColor(Color.ORANGE);             		
+            		eb.addField("Question", "**" + question + "**", false);
+            		eb.setFooter("Poll created by " + e.getAuthor().getAsTag(), e.getAuthor().getAvatarUrl());             		
+            		API.sendMessage(log, eb.build());
+        			        			
+        		});    			
+        		   			
+    		}
+    		    		
     	}    	
         
 	}
