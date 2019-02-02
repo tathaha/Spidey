@@ -533,6 +533,13 @@ public class Events extends ListenerAdapter {
     		API.sendMessage(msgCh, "**Gateway**/**WebSocket**: **" + e.getJDA().getGatewayPing() + "**ms\n**REST**: **" + e.getJDA().getRestPing().complete() + "**ms");
     		
     	}
+    	
+    	if (msg.getContentRaw().equalsIgnoreCase("s!help")) {
+    		
+    		API.deleteMessage(msg);
+    		API.sendPrivateMessage(e.getAuthor(), "**Soon**");
+    		
+    	}    	
         
 	}
 	
