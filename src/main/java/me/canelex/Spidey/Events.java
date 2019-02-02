@@ -14,7 +14,7 @@ import javax.script.ScriptEngineManager;
 
 import org.apache.commons.lang3.StringUtils;
 
-import me.canelex.Spidey.api.API;
+import me.canelex.Spidey.utils.API;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.Permission;

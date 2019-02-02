@@ -1,4 +1,4 @@
-package me.canelex.Spidey.api;
+package me.canelex.Spidey.utils;
 
 import java.io.BufferedInputStream;
 import java.io.File;
