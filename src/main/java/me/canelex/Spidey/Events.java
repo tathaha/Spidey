@@ -588,7 +588,7 @@ public class Events extends ListenerAdapter {
 	        	
 	        }			
 			
-			eb.addField("User", "**" + e.getUser().getName() + "**", false);
+			eb.addField("User", "**" + e.getUser().getAsTag() + "**", false);
 			API.sendMessage(log, eb.build());
 			
 		}
@@ -620,7 +620,7 @@ public class Events extends ListenerAdapter {
         }        
         
         eb.setColor(Color.RED);
-        eb.addField("User", "**" + user.getName() + "**", true);
+        eb.addField("User", "**" + user.getAsTag() + "**", true);
         eb.addField("ID", "**" + user.getId() + "**", true);        
         eb.addField("Moderator", banner.getAsMention(), true);
         eb.addField("Reason", "**" + ban.getReason() + "**", true);        
@@ -650,7 +650,7 @@ public class Events extends ListenerAdapter {
         	
         }        
                
-        eb.addField("User", "**" + user.getName() + "**", true);
+        eb.addField("User", "**" + user.getAsTag() + "**", true);
         eb.addField("ID", "**" + user.getId() + "**", true);        
 		API.sendMessage(log, eb.build());
 		
@@ -678,7 +678,7 @@ public class Events extends ListenerAdapter {
         }        
         
         eb.setColor(Color.RED);
-        eb.addField("User", "**" + user.getName() + "**", true);
+        eb.addField("User", "**" + user.getAsTag() + "**", true);
         eb.addField("ID", "**" + user.getId() + "**", true);
         API.sendMessage(log, eb.build());        	
 		
@@ -706,7 +706,7 @@ public class Events extends ListenerAdapter {
         }        
               
         eb.setColor(Color.GREEN);
-        eb.addField("User", "**" + user.getName() + "**", true);
+        eb.addField("User", "**" + user.getAsTag() + "**", true);
         eb.addField("ID", "**" + user.getId() + "**", true);        
         API.sendMessage(log, eb.build());    
 		
