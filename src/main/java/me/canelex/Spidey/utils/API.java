@@ -39,9 +39,19 @@ public class API {
 		
 	}
 	
-	public static void sendMessage(MessageChannel ch, String toSend) {
+	public static void sendMessage(MessageChannel ch, String toSend, boolean isSpoiler) {
 		
-		ch.sendMessage(toSend).queue();
+		if (isSpoiler) {
+			
+			ch.sendMessage("||" + toSend + "||").queue();
+			
+		}
+		
+		else {
+			
+			ch.sendMessage(toSend).queue();				
+			
+		}
 		
 	}
 
@@ -57,12 +67,24 @@ public class API {
 		
 	}		
 	
-	public static void sendImage(MessageChannel ch, String link) {
+	public static void sendImage(MessageChannel ch, String link, boolean isSpoiler) {
 		
 		try {
 			
-			InputStream in = new BufferedInputStream(new URL(link).openStream());		
-			ch.sendFile(in, link.substring(link.lastIndexOf("/") + 1)).queue();						
+			InputStream in = new BufferedInputStream(new URL(link).openStream());	
+			
+			if (isSpoiler) {
+				
+				ch.sendFile(in, "SPOILER_" + link.substring(link.lastIndexOf("/") + 1)).queue();					
+				
+			}
+			
+			else {
+				
+				ch.sendFile(in, link.substring(link.lastIndexOf("/") + 1)).queue();					
+				
+			}
+								
 			in.close();
 			
 		}		
@@ -75,9 +97,23 @@ public class API {
 		
 	}	
 
-	public static void sendPrivateMessage(User user, String toSend) {
+	public static void sendPrivateMessage(User user, String toSend, boolean isSpoiler) {
 
-		user.openPrivateChannel().queue(channel -> channel.sendMessage(toSend).queue());		
+		user.openPrivateChannel().queue(channel -> {
+			
+			if (isSpoiler) {
+				
+				channel.sendMessage("||" + toSend + "||").queue();
+				
+			}
+			
+			else {
+				
+				channel.sendMessage(toSend).queue();				
+				
+			}							
+			
+		});		
 		
 	}
 	
