@@ -101,7 +101,7 @@ public class Events extends ListenerAdapter {
         		cal.setTimeInMillis(member.getTimeJoined().toInstant().toEpochMilli()); 
         		String joindate = date.format(cal.getTime()).toString();
         		String jointime = time.format(cal.getTime()).toString();        		
-        		API.sendPrivateMessage(e.getAuthor(), "Date and time of joining to guild **" + e.getGuild().getName() + "**: **" + joindate + "** | **" + jointime + "**!");
+        		API.sendPrivateMessage(e.getAuthor(), "Date and time of joining to guild **" + e.getGuild().getName() + "**: **" + joindate + "** | **" + jointime + "**!", false);
         		
         	}
         	
@@ -115,7 +115,7 @@ public class Events extends ListenerAdapter {
             		cal.setTimeInMillis(member.getTimeJoined().toInstant().toEpochMilli());
             		String joindate = date.format(cal.getTime()).toString();
             		String jointime = time.format(cal.getTime()).toString();            		
-            		API.sendPrivateMessage(e.getAuthor(), "(**" + member.getEffectiveName() + "**) " + "Date and time of joining to guild **" + e.getGuild().getName() + "**: **" + joindate + "** | **" + jointime + "**!");          		
+            		API.sendPrivateMessage(e.getAuthor(), "(**" + member.getEffectiveName() + "**) " + "Date and time of joining to guild **" + e.getGuild().getName() + "**: **" + joindate + "** | **" + jointime + "**!", false);          		
         		
         		}
         		
@@ -200,7 +200,7 @@ public class Events extends ListenerAdapter {
     			if (!MySQL.isInDatabase(e.getGuild().getIdLong())) {    			
         				    				
                 	MySQL.insertData(e.getGuild().getIdLong(), msgCh.getIdLong());
-                	API.sendMessage(msgCh, ":white_check_mark: Log channel set to " + msgCh.getAsMention() + ". Type this command again to set log channel to default guild channel.");    				    				
+                	API.sendMessage(msgCh, ":white_check_mark: Log channel set to " + msgCh.getAsMention() + ". Type this command again to set log channel to default guild channel.", false);    				    				
     				
     			}
     			
@@ -210,7 +210,7 @@ public class Events extends ListenerAdapter {
         				
         				MySQL.removeData(e.getGuild().getIdLong());
         				MySQL.insertData(e.getGuild().getIdLong(), e.getGuild().getDefaultChannel().getIdLong());
-        				API.sendMessage(msgCh, ":white_check_mark: Log channel set to " + e.getGuild().getDefaultChannel().getAsMention() + ". Type this command again in channel you want to be as log channel.");
+        				API.sendMessage(msgCh, ":white_check_mark: Log channel set to " + e.getGuild().getDefaultChannel().getAsMention() + ". Type this command again in channel you want to be as log channel.", false);
         				
         			}
         			
@@ -218,7 +218,7 @@ public class Events extends ListenerAdapter {
         				
         				MySQL.removeData(e.getGuild().getIdLong());    				
                 		MySQL.insertData(e.getGuild().getIdLong(), msgCh.getIdLong());
-                		API.sendMessage(msgCh, ":white_check_mark: Log channel set to " + msgCh.getAsMention() + ". Type this command again to set log channel to default guild channel.");    				
+                		API.sendMessage(msgCh, ":white_check_mark: Log channel set to " + msgCh.getAsMention() + ". Type this command again to set log channel to default guild channel.", false);    				
         				
         			}        			
     				
@@ -228,7 +228,7 @@ public class Events extends ListenerAdapter {
     		
     		else {
     			
-        		API.sendMessage(msgCh, ":no_entry: Action can't be completed due to missing permission **ADMINISTRATOR**.");    			
+        		API.sendMessage(msgCh, ":no_entry: Action can't be completed due to missing permission **ADMINISTRATOR**.", false);    			
     			
     		}
     		    		
@@ -390,7 +390,7 @@ public class Events extends ListenerAdapter {
                         				
                         				else {
                         					
-                        					API.sendMessage(msgCh, "Unknown time value. Value must be **d**ay(s), **w**eek(s) or **m**inute(s).");
+                        					API.sendMessage(msgCh, "Unknown time value. Value must be **d**ay(s), **w**eek(s) or **m**inute(s).", false);
                         					
                         				}
                     					
@@ -402,7 +402,7 @@ public class Events extends ListenerAdapter {
             				
             				else {
             					
-            					API.sendMessage(msgCh, "Given value is not a number.");         					
+            					API.sendMessage(msgCh, "Given value is not a number.", false);         					
             					
             				}        				       				
             				
@@ -412,7 +412,7 @@ public class Events extends ListenerAdapter {
             		
             		else {
             			
-        				API.sendMessage(msgCh, "Unknown arguments..");        			
+        				API.sendMessage(msgCh, "Unknown arguments..", false);        			
             			
             		}     				
     				
@@ -420,7 +420,7 @@ public class Events extends ListenerAdapter {
     			
     			else {
     				
-    				API.sendMessage(msgCh, ":no_entry: Action can't be completed due to missing permission **BAN_MEMBERS**.");      				
+    				API.sendMessage(msgCh, ":no_entry: Action can't be completed due to missing permission **BAN_MEMBERS**.", false);      				
     				
     			}
     			
@@ -428,7 +428,7 @@ public class Events extends ListenerAdapter {
     		
     		else {
     			
-				API.sendMessage(msgCh, "Unknown arguments..");    			
+				API.sendMessage(msgCh, "Unknown arguments..", false);    			
     			
     		}   	
 		    	
@@ -465,7 +465,7 @@ public class Events extends ListenerAdapter {
     			
     			else {
     				
-    				API.sendMessage(msgCh, ":no_entry: Action can't be completed due to missing permission **BAN_MEMBERS**.");    				
+    				API.sendMessage(msgCh, ":no_entry: Action can't be completed due to missing permission **BAN_MEMBERS**.", false);    				
     				
     			}
     			
@@ -489,7 +489,7 @@ public class Events extends ListenerAdapter {
     			
     			else {
     				
-    				API.sendMessage(msgCh, ":no_entry: Action can't be completed due to missing permission **BAN_MEMBERS**.");    				
+    				API.sendMessage(msgCh, ":no_entry: Action can't be completed due to missing permission **BAN_MEMBERS**.", false);    				
     				
     			}    			
     			
@@ -503,7 +503,7 @@ public class Events extends ListenerAdapter {
     		
     		if (!API.hasPerm(e.getGuild(), e.getAuthor(), Permission.BAN_MEMBERS)) {
     			
-				API.sendMessage(msgCh, ":no_entry: Action can't be completed due to missing permission **BAN_MEMBERS**.");      			
+				API.sendMessage(msgCh, ":no_entry: Action can't be completed due to missing permission **BAN_MEMBERS**.", false);      			
     			
     		}
     		
@@ -531,14 +531,14 @@ public class Events extends ListenerAdapter {
     	
     	if (msg.getContentRaw().equalsIgnoreCase("s!ping")) {
     		
-    		API.sendMessage(msgCh, "**Gateway**/**WebSocket**: **" + e.getJDA().getGatewayPing() + "**ms\n**REST**: **" + e.getJDA().getRestPing().complete() + "**ms");
+    		API.sendMessage(msgCh, "**Gateway**/**WebSocket**: **" + e.getJDA().getGatewayPing() + "**ms\n**REST**: **" + e.getJDA().getRestPing().complete() + "**ms", false);
     		
     	}
     	
     	if (msg.getContentRaw().equalsIgnoreCase("s!help")) {
     		
     		API.deleteMessage(msg);
-    		API.sendPrivateMessage(e.getAuthor(), "**Soon**");
+    		API.sendPrivateMessage(e.getAuthor(), "**Soon**", false);
     		
     	} 
     	
@@ -558,7 +558,7 @@ public class Events extends ListenerAdapter {
             uptime = API.replaceLast(uptime, ", ", "");
             uptime = API.replaceLast(uptime, ",", " and");
 
-            API.sendMessage(msgCh, "Uptime: " + uptime + "");    		
+            API.sendMessage(msgCh, "Uptime: " + uptime + "", false);    		
     		
     	}    	
         
