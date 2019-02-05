@@ -53,6 +53,7 @@ dependencies {
     
     compile 'ch.qos.logback:logback-classic:1.2.3'
     compile 'org.apache.commons:commons-lang3:3.8.1'
+    compile 'org.codehaus.groovy:groovy-jsr223:3.0.0-alpha-4'
     
 }
 
