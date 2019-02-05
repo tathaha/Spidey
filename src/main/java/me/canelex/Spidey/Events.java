@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -559,6 +560,48 @@ public class Events extends ListenerAdapter {
             uptime = API.replaceLast(uptime, ",", " and");
 
             API.sendMessage(msgCh, "Uptime: " + uptime + "", false);    		
+    		
+    	} 
+    	
+    	if (msg.getContentRaw().startsWith("s!eval")) {
+    		
+    		if (!API.hasPerm(e.getGuild(), e.getAuthor(), Permission.ADMINISTRATOR)) {
+    			
+				API.sendMessage(msgCh, ":no_entry: Action can't be completed due to missing permission **ADMINISTRATOR**.", false);      			
+    			
+    		}  
+    		
+    		else {
+    			
+    			try {
+    				
+        			String toEval = msg.getContentRaw().substring(7);
+        			EmbedBuilder eb = new EmbedBuilder();
+        			engine.put("e", e);
+        			engine.put("guild", e.getGuild());
+        			engine.put("author", e.getAuthor());
+        			engine.put("jda", e.getJDA());
+        			engine.put("channel", e.getChannel());
+        			eb.setTitle("CODE EVALUATION WAS SUCCESSFUL");
+        			eb.setFooter("Command executed by " + e.getAuthor().getAsTag(), e.getAuthor().getAvatarUrl());
+        			eb.addField("Result", "```java\n" + engine.eval(toEval) + "\n```", true);
+        			eb.setColor(Color.WHITE);
+        			API.sendMessage(e.getChannel(), eb.build());
+    				
+    			}
+    			
+    			catch (ScriptException ex) {
+    				
+    				ex.printStackTrace();
+    				EmbedBuilder eb = new EmbedBuilder();
+    				eb.setTitle("CODE EVALUATION WAS UNSUCCESSFUL");
+    				eb.addField("Problem", ex.getMessage(), true);
+    				eb.setColor(Color.RED);
+    				API.sendMessage(e.getChannel(), eb.build());
+    				
+    			}    			
+    			
+    		}
     		
     	}    	
         
