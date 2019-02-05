@@ -43,7 +43,7 @@ repositories {
 
 dependencies {
 
-    compile 'mysql:mysql-connector-java:8.0.14'
+    compile 'mysql:mysql-connector-java:8.0.15'
     
     compile ('net.dv8tion:JDA:4.ALPHA.0_32') {
     
