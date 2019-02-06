@@ -554,7 +554,7 @@ public class Events extends ListenerAdapter {
             final long minutes = duration / 60000L % 60;
             final long seconds = duration / 1000L % 60;
 
-            String uptime = (years == 0 ? "" : "**" + years + "**r, ") + (months == 0 ? "" : "**" + months + "**mo, ") + (days == 0 ? "" : "**" + days + "**d, ") + (hours == 0 ? "" : "**" + hours + "**h, ") + (minutes == 0 ? "" : "**" + minutes + "**m, ") + (seconds == 0 ? "" : "**" + seconds + "**s, ");
+            String uptime = (years == 0 ? "" : "**" + years + "**y, ") + (months == 0 ? "" : "**" + months + "**mo, ") + (days == 0 ? "" : "**" + days + "**d, ") + (hours == 0 ? "" : "**" + hours + "**h, ") + (minutes == 0 ? "" : "**" + minutes + "**m, ") + (seconds == 0 ? "" : "**" + seconds + "**s, ");
 
             uptime = API.replaceLast(uptime, ", ", "");
             uptime = API.replaceLast(uptime, ",", " and");
