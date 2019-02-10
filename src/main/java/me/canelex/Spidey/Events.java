@@ -58,7 +58,7 @@ public class Events extends ListenerAdapter {
         if (msg.getContentRaw().equalsIgnoreCase("s!info")) {   
             
         	User dev = e.getJDA().getApplicationInfo().complete().getOwner();
-    		EmbedBuilder eb = new EmbedBuilder();
+    		EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
     		eb.setAuthor("About bot", "https://canelex.ymastersk.net", e.getJDA().getSelfUser().getAvatarUrl());
     		eb.setColor(Color.WHITE);
     		eb.addField("Developer", dev.getAsMention(), true);
@@ -78,7 +78,7 @@ public class Events extends ListenerAdapter {
         	long bots = e.getGuild().getMembers().stream().filter(member -> member.getUser().isBot()).count();
         	long ponline = online - bonline;
         	
-        	EmbedBuilder eb = new EmbedBuilder();
+        	EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
         	eb.setTitle("MEMBERCOUNT");
         	eb.setColor(Color.WHITE);
         	eb.addField("Total", "**" + total + "**", true);        	
@@ -126,7 +126,7 @@ public class Events extends ListenerAdapter {
         
         if (msg.getContentRaw().equalsIgnoreCase("s!server")) {
         	
-        	EmbedBuilder eb = new EmbedBuilder();         	
+        	EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());         	
         	eb.setTitle(e.getGuild().getName());
         	eb.setColor(Color.ORANGE);
         	eb.setThumbnail(e.getGuild().getIconUrl());
@@ -278,7 +278,7 @@ public class Events extends ListenerAdapter {
             					
                 				if (time.equalsIgnoreCase("d")) {
                 					
-                    				EmbedBuilder eb = new EmbedBuilder();
+                    				EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
                     				eb.setTitle("NEW MUTE");
                     				eb.setThumbnail(user.getAvatarUrl());
                     				eb.setColor(Color.RED);
@@ -308,7 +308,7 @@ public class Events extends ListenerAdapter {
                 					
                     				if (time.equalsIgnoreCase("w")) {
                     					
-                        				EmbedBuilder eb = new EmbedBuilder();
+                        				EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
                         				eb.setTitle("NEW MUTE");
                         				
                         		        if (user.getAvatarUrl() == null) {
@@ -350,7 +350,7 @@ public class Events extends ListenerAdapter {
                     					
                         				if (time.equalsIgnoreCase("m")) {
                         					
-                            				EmbedBuilder eb = new EmbedBuilder();
+                            				EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
                             				eb.setTitle("NEW MUTE");
                             				
                             		        if (user.getAvatarUrl() == null) {
@@ -453,7 +453,7 @@ public class Events extends ListenerAdapter {
     				});
     				
 					API.deleteMessage(msg);
-					EmbedBuilder eb = new EmbedBuilder();
+					EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
 					eb.setTitle("NEW WARN");
 					eb.setColor(Color.ORANGE);
 					eb.addField("User", u.getAsMention(), true);
@@ -517,7 +517,7 @@ public class Events extends ListenerAdapter {
         			m.addReaction(Emoji.like).submit();
         			m.addReaction(Emoji.shrug).submit();
         			m.addReaction(Emoji.dislike).submit();
-            		EmbedBuilder eb = new EmbedBuilder();
+            		EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
             		eb.setTitle("NEW POLL");
             		eb.setColor(Color.ORANGE);             		
             		eb.addField("Question", "**" + question + "**", false);
@@ -576,7 +576,7 @@ public class Events extends ListenerAdapter {
     			try {
     				
         			String toEval = msg.getContentRaw().substring(7);
-        			EmbedBuilder eb = new EmbedBuilder();
+        			EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
         			engine.put("e", e);
         			engine.put("guild", e.getGuild());
         			engine.put("author", e.getAuthor());
@@ -593,7 +593,7 @@ public class Events extends ListenerAdapter {
     			catch (ScriptException ex) {
     				
     				ex.printStackTrace();
-    				EmbedBuilder eb = new EmbedBuilder();
+    				EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
     				eb.setTitle("CODE EVALUATION WAS UNSUCCESSFUL");
     				eb.addField("Problem", ex.getMessage(), true);
     				eb.setColor(Color.RED);
