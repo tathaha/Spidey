@@ -745,7 +745,19 @@ public class Events extends ListenerAdapter {
         eb.addField("User", "**" + user.getAsTag() + "**", true);
         eb.addField("ID", "**" + user.getId() + "**", true);        
         eb.addField("Moderator", banner.getAsMention(), true);
-        eb.addField("Reason", "**" + ban.getReason() + "**", true);        
+        
+        if (ban.getReason() == null) {
+        	
+            eb.addField("Reason", "**Unknown**", true);         	
+        	
+        }
+        
+        else {
+        	
+            eb.addField("Reason", "**" + ban.getReason() + "**", true);         	
+        	
+        }
+               
 		API.sendMessage(log, eb.build());
 		
 	}	
