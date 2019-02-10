@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -164,5 +165,11 @@ public class API {
         return text.replaceFirst("(?s)(.*)" + regex, "$1" + replacement);
         
     }  	
+    
+    public static EmbedBuilder createEmbedBuilder(User u) { //by maasterkoo
+    	
+        return new EmbedBuilder().setFooter("Command executed by " + u.getAsTag(), u.getEffectiveAvatarUrl());
+        
+    }    
 
 }
