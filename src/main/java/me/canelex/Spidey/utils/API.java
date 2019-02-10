@@ -21,14 +21,14 @@ public class API {
 	public static void addRole(Member m, Role r) {
 		
 		Guild g = r.getGuild();
-		g.getController().addSingleRoleToMember(m, r).queue();
+		g.getController().addSingleRoleToMember(m, r).submit();
 		
 	}	
 	
 	public static void removeRole(Member m, Role r) {
 		
 		Guild g = r.getGuild();
-		g.getController().removeSingleRoleFromMember(m, r).queue();
+		g.getController().removeSingleRoleFromMember(m, r).submit();
 		
 	}		
 	
@@ -43,13 +43,13 @@ public class API {
 		
 		if (isSpoiler) {
 			
-			ch.sendMessage("||" + toSend + "||").queue();
+			ch.sendMessage("||" + toSend + "||").submit();
 			
 		}
 		
 		else {
 			
-			ch.sendMessage(toSend).queue();				
+			ch.sendMessage(toSend).submit();				
 			
 		}
 		
@@ -57,13 +57,13 @@ public class API {
 
 	public static void sendMessage(MessageChannel ch, MessageEmbed embed) {
 		
-		ch.sendMessage(embed).queue();		
+		ch.sendMessage(embed).submit();		
 		
 	}	
 	
 	public static void sendFile(MessageChannel ch, File file) {
 		
-		ch.sendFile(file).queue();
+		ch.sendFile(file).submit();
 		
 	}		
 	
@@ -75,13 +75,13 @@ public class API {
 			
 			if (isSpoiler) {
 				
-				ch.sendFile(in, "SPOILER_" + link.substring(link.lastIndexOf("/") + 1)).queue();					
+				ch.sendFile(in, "SPOILER_" + link.substring(link.lastIndexOf("/") + 1)).submit();					
 				
 			}
 			
 			else {
 				
-				ch.sendFile(in, link.substring(link.lastIndexOf("/") + 1)).queue();					
+				ch.sendFile(in, link.substring(link.lastIndexOf("/") + 1)).submit();					
 				
 			}
 								
@@ -103,13 +103,13 @@ public class API {
 			
 			if (isSpoiler) {
 				
-				channel.sendMessage("||" + toSend + "||").queue();
+				channel.sendMessage("||" + toSend + "||").submit();
 				
 			}
 			
 			else {
 				
-				channel.sendMessage(toSend).queue();				
+				channel.sendMessage(toSend).submit();				
 				
 			}							
 			
@@ -119,7 +119,7 @@ public class API {
 	
 	public static void sendPrivateMessage(User user, MessageEmbed embed) {
 
-		user.openPrivateChannel().queue(channel -> channel.sendMessage(embed).queue());		
+		user.openPrivateChannel().queue(channel -> channel.sendMessage(embed).submit());		
 		
 	}	
 	
@@ -149,7 +149,7 @@ public class API {
 	
 	public static void deleteMessage(Message msg) {
 		
-		msg.delete().queue();
+		msg.delete().submit();
 		
 	}
 	
