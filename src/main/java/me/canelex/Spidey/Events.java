@@ -63,8 +63,7 @@ public class Events extends ListenerAdapter {
     		eb.setColor(Color.WHITE);
     		eb.addField("Developer", dev.getAsMention(), true);
     		eb.addField("Release channel", "**STABLE**", true);
-    		eb.setThumbnail(e.getGuild().getIconUrl());
-    		eb.setFooter("Command executed by " + e.getAuthor().getAsTag(), e.getAuthor().getAvatarUrl());    		
+    		eb.setThumbnail(e.getGuild().getIconUrl());		
     		API.sendMessage(msgCh, eb.build());        		   		
       	   	    		
     	}               
@@ -87,8 +86,7 @@ public class Events extends ListenerAdapter {
         	eb.addField("Total online", "**" + online + "**", true);
         	eb.addField("People online", "**" + ponline + "**", true);
         	eb.addField("Bots online", "**" + bonline + "**", true);        	
-        	//TODO metoda v API na auto-footer
-    		eb.setFooter("Command executed by " + e.getAuthor().getAsTag(), e.getAuthor().getAvatarUrl());        	
+        	//TODO metoda v API na auto-footer     	
            	API.sendMessage(msgCh, eb.build());
            	
         }
@@ -182,8 +180,7 @@ public class Events extends ListenerAdapter {
             }
             
         	eb.addField("Roles [**" + i + "**]", s, false);
-        	
-    		eb.setFooter("Command executed by " + e.getAuthor().getAsTag(), e.getAuthor().getAvatarUrl());        	
+        	       	
 			API.sendMessage(msgCh, eb.build());
         
         }               
@@ -583,7 +580,6 @@ public class Events extends ListenerAdapter {
         			engine.put("jda", e.getJDA());
         			engine.put("channel", e.getChannel());
         			eb.setTitle("CODE EVALUATION WAS SUCCESSFUL");
-        			eb.setFooter("Command executed by " + e.getAuthor().getAsTag(), e.getAuthor().getAvatarUrl());
         			eb.addField("Result", "```java\n" + engine.eval(toEval) + "\n```", true);
         			eb.setColor(Color.WHITE);
         			API.sendMessage(e.getChannel(), eb.build());
