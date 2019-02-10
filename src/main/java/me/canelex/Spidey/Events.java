@@ -194,7 +194,7 @@ public class Events extends ListenerAdapter {
     			
     			if (e.getGuild().getSystemChannel() != null) {
     				
-    				e.getGuild().getManager().setSystemChannel(null).queue();    				
+    				e.getGuild().getManager().setSystemChannel(null).submit();    				
     				
     			}
     			
@@ -272,7 +272,7 @@ public class Events extends ListenerAdapter {
             				Member member = e.getGuild().getMember(user);
             				
             	    		API.deleteMessage(msg);        				
-            				controller.addSingleRoleToMember(member, muted).queue();
+            				controller.addSingleRoleToMember(member, muted).submit();
             				
             				if (StringUtils.isNumeric(length) && lengthV != 0) {
             					
@@ -448,7 +448,7 @@ public class Events extends ListenerAdapter {
     				
     				u.openPrivateChannel().queue(ch -> { 
     					
-    					ch.sendMessage(":exclamation: You have been warned on guild **" + e.getGuild().getName() + "** from **" + e.getAuthor().getName() + "**. Reason - **" + reason + "**.").queue();    
+    					ch.sendMessage(":exclamation: You have been warned on guild **" + e.getGuild().getName() + "** from **" + e.getAuthor().getName() + "**. Reason - **" + reason + "**.").submit();    
     					
     				});
     				
@@ -484,7 +484,7 @@ public class Events extends ListenerAdapter {
             		
             		String reason = msg.getContentRaw().substring((7 + id.length()));
             		
-    				e.getGuild().getController().ban(id, 0, reason).queue();   				    				
+    				e.getGuild().getController().ban(id, 0, reason).submit();   				    				
     				
     			}
     			
@@ -514,9 +514,9 @@ public class Events extends ListenerAdapter {
         		API.deleteMessage(msg);
         		e.getChannel().sendMessage("Poll: **" + question + "**").queue(m -> {
         			
-        			m.addReaction(Emoji.like).queue();
-        			m.addReaction(Emoji.shrug).queue();
-        			m.addReaction(Emoji.dislike).queue();
+        			m.addReaction(Emoji.like).submit();
+        			m.addReaction(Emoji.shrug).submit();
+        			m.addReaction(Emoji.dislike).submit();
             		EmbedBuilder eb = new EmbedBuilder();
             		eb.setTitle("NEW POLL");
             		eb.setColor(Color.ORANGE);             		
@@ -604,6 +604,89 @@ public class Events extends ListenerAdapter {
     		}
     		
     	}    	
+    	
+    	if (msg.getContentRaw().startsWith("s!delete")) {
+    		
+    		String[] args = msg.getContentRaw().split("\\s+");
+    		int amount = Integer.parseInt(args[1]);  
+    		int count;
+    		API.deleteMessage(msg);
+    		
+    		if (!API.hasPerm(e.getGuild(), e.getAuthor(), Permission.BAN_MEMBERS)) {
+    			
+				API.sendMessage(msgCh, ":no_entry: Action can't be completed due to missing permission **BAN_MEMBERS**.", false);      			
+    			
+    		}
+    		
+    		else {
+    			
+        		if (msg.getMentionedUsers().isEmpty()) {
+        			
+        			amount++;
+            		List<Message> messages = msgCh.getIterableHistory().cache(false).stream().filter(m -> !m.getAuthor().equals(e.getJDA().getSelfUser())).limit(amount).collect(Collectors.toList());        			
+        			count = messages.size() - 1;        			
+        			
+        			if (messages.size() == 1) {
+        				
+        				messages.get(0).delete().queue();
+        				msgCh.sendMessage(":white_check_mark: Deleted **1** message.").queue(m -> m.delete().queueAfter(5, TimeUnit.SECONDS));        				
+        				
+        			}
+        			
+        			else {
+        				
+        				if (messages.size() == 0) {
+        					
+        					API.sendMessage(msgCh, ":no_entry: There were no messages to delete.", false);        					
+        					
+        				}
+        				
+        				else {
+        					
+        					msgCh.purgeMessages(messages);
+        					msgCh.sendMessage(":white_check_mark: Deleted **" + count + "** messages.").queue(m -> m.delete().queueAfter(5, TimeUnit.SECONDS));        					
+        					
+        				}
+        				
+        			}        			        		        		
+        			
+        		}        		          	
+        		
+        		else {        			
+        			      			
+            		List<Message> messagesByUser = msgCh.getIterableHistory().cache(false).stream().filter(m -> m.getAuthor().equals(msg.getMentionedUsers().get(0)) && !m.getAuthor().equals(e.getJDA().getSelfUser())).limit(amount).collect(Collectors.toList());    
+            				
+                	int uCount = messagesByUser.size();     
+                	
+        			if (messagesByUser.size() == 1) {
+        				
+        				messagesByUser.get(0).delete().queue();
+        				msgCh.sendMessage(":white_check_mark: Deleted **1** message by user **" + msg.getMentionedUsers().get(0).getName() + "**.").queue(m -> m.delete().queueAfter(5, TimeUnit.SECONDS));        				
+        				
+        			}
+        			
+        			else {
+        				
+        				if (messagesByUser.size() == 0) {
+        					
+        					API.sendMessage(msgCh, ":no_entry: There were no messages to delete.", false);        					
+        					
+        				}
+        				
+        				else {
+        					
+        					msgCh.purgeMessages(messagesByUser);
+        					msgCh.sendMessage(":white_check_mark: Deleted **" + uCount + "** messages by user **" + msg.getMentionedUsers().get(0).getName() + "**.").queue(m -> m.delete().queueAfter(5, TimeUnit.SECONDS));        					
+        					
+        				}
+        				
+        			}                	
+
+        		}        		          	
+    			
+    		}    		
+    		
+    	}
         
 	}
 	
