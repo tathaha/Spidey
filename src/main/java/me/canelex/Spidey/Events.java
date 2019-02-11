@@ -720,38 +720,38 @@ public class Events extends ListenerAdapter {
         		
         		eb.addField("User joined", "**" + joindate + "** | " + "**" + jointime + "** UTC", false); 
         		
-                int i = 0;
-            	String s = "";
-            		
-                for (Role role : e.getGuild().getMember(e.getAuthor()).getRoles()) {
-                    	
-                     i++;
-                        
-                     if (i == e.getGuild().getMember(e.getAuthor()).getRoles().size()) {
+        		if (e.getGuild().getMember(e.getAuthor()).getRoles().size() == 0) {
+        			
+                	eb.addField("Roles [**0**]", "None", false);         			
+        			
+        		}
+        		
+        		else {
+        		
+                    int i = 0;
+                	String s = "";
+                		
+                    for (Role role : e.getGuild().getMember(e.getAuthor()).getRoles()) {
                         	
-                         s += role.getName();
+                         i++;
                             
-                     }    
-                        
-                     else {
-                        	
-                         s += role.getName() + ", ";
-                         
-                      }    
-                        
-                }
-                
-                if (i == 0) {
-                	
-                	eb.addField("Roles [**" + i + "**]", "None", false);                	
-                	
-                }
-                
-                else {
-                	
-                	eb.addField("Roles [**" + i + "**]", s, false);                	
-                	
-                }  
+                         if (i == e.getGuild().getMember(e.getAuthor()).getRoles().size()) {
+                            	
+                             s += role.getName();
+                                
+                         }    
+                            
+                         else {
+                            	
+                             s += role.getName() + ", ";
+                             
+                          }    
+                            
+                    }  
+                    
+                    eb.addField("Roles [**" + i + "**]", s, false);                    
+        			
+        		}        		                	                	 
             	
             	API.sendMessage(msgCh, eb.build());
     			
@@ -792,38 +792,38 @@ public class Events extends ListenerAdapter {
         		
         		eb.addField("User joined", "**" + joindate + "** | " + "**" + jointime + "** UTC", false);         		
         			
-                int i = 0;
-            	String s = "";
-            		
-                for (Role role : e.getGuild().getMember(user).getRoles()) {
-                    	
-                     i++;
-                        
-                     if (i == e.getGuild().getMember(user).getRoles().size()) {
+        		if (e.getGuild().getMember(user).getRoles().size() == 0) {
+        			
+                	eb.addField("Roles [**0**]", "None", false);         			
+        			
+        		}
+        		
+        		else {
+        		
+                    int i = 0;
+                	String s = "";
+                		
+                    for (Role role : e.getGuild().getMember(user).getRoles()) {
                         	
-                         s += role.getName();
+                         i++;
                             
-                     }    
-                        
-                     else {
-                        	
-                         s += role.getName() + ", ";
-                         
-                      }    
-                        
-                }
-                
-                if (i == 0) {
-                	
-                	eb.addField("Roles [**" + i + "**]", "None", false);                	
-                	
-                }
-                
-                else {
-                	
-                	eb.addField("Roles [**" + i + "**]", s, false);                	
-                	
-                }                                           		
+                         if (i == e.getGuild().getMember(user).getRoles().size()) {
+                            	
+                             s += role.getName();
+                                
+                         }    
+                            
+                         else {
+                            	
+                             s += role.getName() + ", ";
+                             
+                          }    
+                            
+                    }  
+                    
+                    eb.addField("Roles [**" + i + "**]", s, false);                    
+        			
+        		}                                           		
         		
             	API.sendMessage(msgCh, eb.build());            	
     	
