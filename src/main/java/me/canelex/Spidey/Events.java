@@ -143,17 +143,7 @@ public class Events extends ListenerAdapter {
     		String jointime = time.format(cal.getTime()).toString();    		
         	eb.addField("Bot connected", "**" + joindate + "** | ** " + jointime + "**", false);
         	
-        	if (API.isPartnered(e.getGuild())) {
-        		
-        		eb.addField("Custom invite URL", e.getGuild().getVanityUrl().complete(), false);
-        		
-        	}
-        	
-        	else {
-        		
-        		eb.addField("Custom invite URL", "Guild is not partnered", false);        		
-        		
-        	}
+	        eb.addField("Custom invite URL", (!API.isPartnered(e.getGuild()) ? "Guild is not partnered" : e.getGuild().getVanityUrl().complete()), false);
         	
         	String s = ""; //by @maasterkoo
         	
@@ -277,8 +267,8 @@ public class Events extends ListenerAdapter {
                 				if (time.equalsIgnoreCase("d")) {
                 					
                     				EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
-                    				eb.setTitle("NEW MUTE");
-                    				eb.setThumbnail(user.getAvatarUrl());
+                    				eb.setTitle("NEW MUTE");                    				
+                    		        eb.setThumbnail((user.getAvatarUrl() == null ? user.getDefaultAvatarUrl() : user.getAvatarUrl()));                    				                    				
                     				eb.setColor(Color.RED);
                     				eb.addField("User", user.getAsMention(), true);
                     				eb.addField("Moderator", e.getAuthor().getAsMention(), true);
@@ -307,20 +297,8 @@ public class Events extends ListenerAdapter {
                     				if (time.equalsIgnoreCase("w")) {
                     					
                         				EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
-                        				eb.setTitle("NEW MUTE");
-                        				
-                        		        if (user.getAvatarUrl() == null) {
-                        		        	
-                        		        	eb.setThumbnail(user.getDefaultAvatarUrl());
-                        		        	
-                        		        }
-                        		        
-                        		        else {
-                        		        	
-                        		            eb.setThumbnail(user.getAvatarUrl());        	
-                        		        	
-                        		        }
-                        		        
+                        				eb.setTitle("NEW MUTE");                        				
+                        		        eb.setThumbnail((user.getAvatarUrl() == null ? user.getDefaultAvatarUrl() : user.getAvatarUrl()));                        		        
                         				eb.setColor(Color.RED);
                         				eb.addField("User", user.getAsMention(), true);
                         				eb.addField("Moderator", e.getAuthor().getAsMention(), true);
@@ -349,20 +327,8 @@ public class Events extends ListenerAdapter {
                         				if (time.equalsIgnoreCase("m")) {
                         					
                             				EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
-                            				eb.setTitle("NEW MUTE");
-                            				
-                            		        if (user.getAvatarUrl() == null) {
-                            		        	
-                            		        	eb.setThumbnail(user.getDefaultAvatarUrl());
-                            		        	
-                            		        }
-                            		        
-                            		        else {
-                            		        	
-                            		            eb.setThumbnail(user.getAvatarUrl());        	
-                            		        	
-                            		        }
-                            		        
+                            				eb.setTitle("NEW MUTE");                            				
+                            		        eb.setThumbnail((user.getAvatarUrl() == null ? user.getDefaultAvatarUrl() : user.getAvatarUrl()));                            		        
                             				eb.setColor(Color.RED);
                             				eb.addField("User", user.getAsMention(), true);
                             				eb.addField("Moderator", e.getAuthor().getAsMention(), true);
@@ -690,23 +656,14 @@ public class Events extends ListenerAdapter {
     		if (msg.getMentionedUsers().isEmpty()) {
     			
     			EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
+    			Member mem = e.getGuild().getMember(e.getAuthor());
     			
     			eb.setAuthor("USER INFO - " + e.getAuthor().getAsTag());
     			eb.setColor(Color.WHITE);
     			eb.setThumbnail(e.getAuthor().getAvatarUrl());    			
     			eb.addField("ID", "**" + e.getAuthor().getId() + "**", false);
     			
-    			if (e.getGuild().getMember(e.getAuthor()).getNickname() == null) {
-    				
-    				eb.addField("Nickname for this guild", "**None**", false);    				
-    				
-    			}
-    			
-    			else {
-    				
-    				eb.addField("Nickname for this guild", "**" + e.getGuild().getMember(e.getAuthor()).getNickname() + "**", false);    				
-    				
-    			}
+    			eb.addField("Nickname for this guild", "**" + (mem.getNickname() == null ? "None" : mem.getNickname()) + "**", false);
     			
             	cal.setTimeInMillis(e.getAuthor().getTimeCreated().toInstant().toEpochMilli());
         		String creatdate = date.format(cal.getTime()).toString();   
@@ -755,11 +712,12 @@ public class Events extends ListenerAdapter {
             	
             	API.sendMessage(msgCh, eb.build());
     			
-    		}
+    		}    		
     		
     		else {
     			
     			User user = msg.getMentionedUsers().get(0);
+    			Member mem = e.getGuild().getMember(user);
     			
     			EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
     			
@@ -768,17 +726,7 @@ public class Events extends ListenerAdapter {
     			eb.setThumbnail(user.getAvatarUrl());
     			eb.addField("ID", "**" + user.getId() + "**", false);
     			
-    			if (e.getGuild().getMember(user).getNickname() == null) {
-    				
-    				eb.addField("Nickname for this guild", "**None**", false);    				
-    				
-    			}
-    			
-    			else {
-    				
-    				eb.addField("Nickname for this guild", "**" + e.getGuild().getMember(user).getNickname() + "**", false);    				
-    				
-    			}
+    			eb.addField("Nickname for this guild", "**" + (mem.getNickname() == null ? "None" : mem.getNickname()) + "**", false);
     			
             	cal.setTimeInMillis(user.getTimeCreated().toInstant().toEpochMilli());
         		String creatdate = date.format(cal.getTime()).toString();   
@@ -843,20 +791,8 @@ public class Events extends ListenerAdapter {
 			TextChannel log = e.getGuild().getTextChannelById(MySQL.getChannelId(e.getGuild().getIdLong()));
 			EmbedBuilder eb = new EmbedBuilder();
 			eb.setTitle("UNMUTE");
-			eb.setColor(Color.GREEN);
-			
-	        if (e.getUser().getAvatarUrl() == null) {
-	        	
-	        	eb.setThumbnail(e.getUser().getDefaultAvatarUrl());
-	        	
-	        }
-	        
-	        else {
-	        	
-	            eb.setThumbnail(e.getUser().getAvatarUrl());        	
-	        	
-	        }			
-			
+			eb.setColor(Color.GREEN);			
+	        eb.setThumbnail((e.getUser().getAvatarUrl() == null ? e.getUser().getDefaultAvatarUrl() : e.getUser().getAvatarUrl()));						
 			eb.addField("User", "**" + e.getUser().getAsTag() + "**", false);
 			API.sendMessage(log, eb.build());
 			
@@ -874,36 +810,13 @@ public class Events extends ListenerAdapter {
         List<AuditLogEntry> auditbans = e.getGuild().getAuditLogs().type(ActionType.BAN).complete();
         User banner = auditbans.get(0).getUser();
         EmbedBuilder eb = new EmbedBuilder();
-        eb.setTitle("NEW BAN");
-        
-        if (user.getAvatarUrl() == null) {
-        	
-        	eb.setThumbnail(user.getDefaultAvatarUrl());
-        	
-        }
-        
-        else {
-        	
-            eb.setThumbnail(user.getAvatarUrl());        	
-        	
-        }        
-        
+        eb.setTitle("NEW BAN");        
+        eb.setThumbnail((user.getAvatarUrl() == null ? user.getDefaultAvatarUrl() : user.getAvatarUrl()));                
         eb.setColor(Color.RED);
         eb.addField("User", "**" + user.getAsTag() + "**", true);
         eb.addField("ID", "**" + user.getId() + "**", true);        
-        eb.addField("Moderator", banner.getAsMention(), true);
-        
-        if (ban.getReason() == null) {
-        	
-            eb.addField("Reason", "**Unknown**", true);         	
-        	
-        }
-        
-        else {
-        	
-            eb.addField("Reason", "**" + ban.getReason() + "**", true);         	
-        	
-        }
+        eb.addField("Moderator", banner.getAsMention(), true);        
+        eb.addField("Reason", "**" + (ban.getReason() == null ? "Unknown" : ban.getReason()) + "**", true);
                
 		API.sendMessage(log, eb.build());
 		
@@ -917,20 +830,8 @@ public class Events extends ListenerAdapter {
         
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("UNBAN");
-        eb.setColor(Color.GREEN);
-        
-        if (user.getAvatarUrl() == null) {
-        	
-        	eb.setThumbnail(user.getDefaultAvatarUrl());
-        	
-        }
-        
-        else {
-        	
-            eb.setThumbnail(user.getAvatarUrl());        	
-        	
-        }        
-               
+        eb.setColor(Color.GREEN);        
+        eb.setThumbnail((user.getAvatarUrl() == null ? user.getDefaultAvatarUrl() : user.getAvatarUrl()));                      
         eb.addField("User", "**" + user.getAsTag() + "**", true);
         eb.addField("ID", "**" + user.getId() + "**", true);        
 		API.sendMessage(log, eb.build());
@@ -944,20 +845,8 @@ public class Events extends ListenerAdapter {
 		TextChannel log = e.getGuild().getTextChannelById(MySQL.getChannelId(e.getGuild().getIdLong()));	
         
         EmbedBuilder eb = new EmbedBuilder();
-        eb.setTitle("USER HAS LEFT");
-        
-        if (user.getAvatarUrl() == null) {
-        	
-        	eb.setThumbnail(user.getDefaultAvatarUrl());
-        	
-        }
-        
-        else {
-        	
-            eb.setThumbnail(user.getAvatarUrl());        	
-        	
-        }        
-        
+        eb.setTitle("USER HAS LEFT");        
+        eb.setThumbnail((user.getAvatarUrl() == null ? user.getDefaultAvatarUrl() : user.getAvatarUrl()));                
         eb.setColor(Color.RED);
         eb.addField("User", "**" + user.getAsTag() + "**", true);
         eb.addField("ID", "**" + user.getId() + "**", true);
@@ -972,20 +861,8 @@ public class Events extends ListenerAdapter {
 		TextChannel log = e.getGuild().getTextChannelById(MySQL.getChannelId(e.getGuild().getIdLong()));	
         
         EmbedBuilder eb = new EmbedBuilder();
-        eb.setTitle("USER HAS JOINED");
-        
-        if (user.getAvatarUrl() == null) {
-        	
-        	eb.setThumbnail(user.getDefaultAvatarUrl());
-        	
-        }
-        
-        else {
-        	
-            eb.setThumbnail(user.getAvatarUrl());        	
-        	
-        }        
-              
+        eb.setTitle("USER HAS JOINED");        
+        eb.setThumbnail((user.getAvatarUrl() == null ? user.getDefaultAvatarUrl() : user.getAvatarUrl()));                     
         eb.setColor(Color.GREEN);
         eb.addField("User", "**" + user.getAsTag() + "**", true);
         eb.addField("ID", "**" + user.getId() + "**", true);        
