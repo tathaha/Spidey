@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -43,7 +44,7 @@ import net.dv8tion.jda.api.managers.GuildController;
 public class Events extends ListenerAdapter {
 		
 	Locale locale = new Locale("en", "EN");  
-	Calendar cal = Calendar.getInstance();        	
+	Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/London"));        	
 	SimpleDateFormat date = new SimpleDateFormat("EEEE, d.LLLL Y", locale);      
 	SimpleDateFormat time = new SimpleDateFormat("HH:mm:ss", locale); 	
     ScriptEngineManager manager = new ScriptEngineManager();
@@ -100,7 +101,7 @@ public class Events extends ListenerAdapter {
         		cal.setTimeInMillis(member.getTimeJoined().toInstant().toEpochMilli()); 
         		String joindate = date.format(cal.getTime()).toString();
         		String jointime = time.format(cal.getTime()).toString();        		
-        		API.sendPrivateMessage(e.getAuthor(), "Date and time of joining to guild **" + e.getGuild().getName() + "**: **" + joindate + "** | **" + jointime + "**!", false);
+        		API.sendPrivateMessage(e.getAuthor(), "Date and time of joining to guild **" + e.getGuild().getName() + "**: **" + joindate + "** | **" + jointime + "** UTC", false);
         		
         	}
         	
@@ -114,7 +115,7 @@ public class Events extends ListenerAdapter {
             		cal.setTimeInMillis(member.getTimeJoined().toInstant().toEpochMilli());
             		String joindate = date.format(cal.getTime()).toString();
             		String jointime = time.format(cal.getTime()).toString();            		
-            		API.sendPrivateMessage(e.getAuthor(), "(**" + member.getEffectiveName() + "**) " + "Date and time of joining to guild **" + e.getGuild().getName() + "**: **" + joindate + "** | **" + jointime + "**!", false);          		
+            		API.sendPrivateMessage(e.getAuthor(), "(**" + member.getEffectiveName() + "**) " + "Date and time of joining to guild **" + e.getGuild().getName() + "**: **" + joindate + "** | **" + jointime + "** UTC", false);          		
         		
         		}
         		
@@ -681,6 +682,152 @@ public class Events extends ListenerAdapter {
         		}        		          	
     			
     		}    		
+    		
+    	}
+    	
+    	if (msg.getContentRaw().startsWith("s!user")) {
+    		
+    		if (msg.getMentionedUsers().isEmpty()) {
+    			
+    			EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
+    			
+    			eb.setAuthor("USER INFO - " + e.getAuthor().getAsTag());
+    			eb.setColor(Color.WHITE);
+    			eb.setThumbnail(e.getAuthor().getAvatarUrl());    			
+    			eb.addField("ID", "**" + e.getAuthor().getId() + "**", false);
+    			
+    			if (e.getGuild().getMember(e.getAuthor()).getNickname() == null) {
+    				
+    				eb.addField("Nickname for this guild", "**None**", false);    				
+    				
+    			}
+    			
+    			else {
+    				
+    				eb.addField("Nickname for this guild", "**" + e.getGuild().getMember(e.getAuthor()).getNickname() + "**", false);    				
+    				
+    			}
+    			
+            	cal.setTimeInMillis(e.getAuthor().getTimeCreated().toInstant().toEpochMilli());
+        		String creatdate = date.format(cal.getTime()).toString();   
+        		String creattime = time.format(cal.getTime()).toString(); 
+        		
+        		eb.addField("Account created", "**" + creatdate + "** | " + "**" + creattime + "** UTC", false);
+        		
+            	cal.setTimeInMillis(e.getGuild().getMember(e.getAuthor()).getTimeJoined().toInstant().toEpochMilli());
+        		String joindate = date.format(cal.getTime()).toString();   
+        		String jointime = time.format(cal.getTime()).toString(); 
+        		
+        		eb.addField("User joined", "**" + joindate + "** | " + "**" + jointime + "** UTC", false); 
+        		
+                int i = 0;
+            	String s = "";
+            		
+                for (Role role : e.getGuild().getMember(e.getAuthor()).getRoles()) {
+                    	
+                     i++;
+                        
+                     if (i == e.getGuild().getMember(e.getAuthor()).getRoles().size()) {
+                        	
+                         s += role.getName();
+                            
+                     }    
+                        
+                     else {
+                        	
+                         s += role.getName() + ", ";
+                         
+                      }    
+                        
+                }
+                
+                if (i == 0) {
+                	
+                	eb.addField("Roles [**" + i + "**]", "None", false);                	
+                	
+                }
+                
+                else {
+                	
+                	eb.addField("Roles [**" + i + "**]", s, false);                	
+                	
+                }  
+            	
+            	API.sendMessage(msgCh, eb.build());
+    			
+    		}
+    		
+    		else {
+    			
+    			User user = msg.getMentionedUsers().get(0);
+    			
+    			EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
+    			
+    			eb.setAuthor("USER INFO - " + user.getAsTag());
+    			eb.setColor(Color.WHITE);    			
+    			eb.setThumbnail(user.getAvatarUrl());
+    			eb.addField("ID", "**" + user.getId() + "**", false);
+    			
+    			if (e.getGuild().getMember(user).getNickname() == null) {
+    				
+    				eb.addField("Nickname for this guild", "**None**", false);    				
+    				
+    			}
+    			
+    			else {
+    				
+    				eb.addField("Nickname for this guild", "**" + e.getGuild().getMember(user).getNickname() + "**", false);    				
+    				
+    			}
+    			
+            	cal.setTimeInMillis(user.getTimeCreated().toInstant().toEpochMilli());
+        		String creatdate = date.format(cal.getTime()).toString();   
+        		String creattime = time.format(cal.getTime()).toString(); 
+        		
+        		eb.addField("Account created", "**" + creatdate + "** | " + "**" + creattime + "** UTC", false);
+        		
+            	cal.setTimeInMillis(e.getGuild().getMember(user).getTimeJoined().toInstant().toEpochMilli());
+        		String joindate = date.format(cal.getTime()).toString();   
+        		String jointime = time.format(cal.getTime()).toString(); 
+        		
+        		eb.addField("User joined", "**" + joindate + "** | " + "**" + jointime + "** UTC", false);         		
+        			
+                int i = 0;
+            	String s = "";
+            		
+                for (Role role : e.getGuild().getMember(user).getRoles()) {
+                    	
+                     i++;
+                        
+                     if (i == e.getGuild().getMember(user).getRoles().size()) {
+                        	
+                         s += role.getName();
+                            
+                     }    
+                        
+                     else {
+                        	
+                         s += role.getName() + ", ";
+                         
+                      }    
+                        
+                }
+                
+                if (i == 0) {
+                	
+                	eb.addField("Roles [**" + i + "**]", "None", false);                	
+                	
+                }
+                
+                else {
+                	
+                	eb.addField("Roles [**" + i + "**]", s, false);                	
+                	
+                }                                           		
+        		
+            	API.sendMessage(msgCh, eb.build());            	
+    	
+    		}
     		
     	}
         
