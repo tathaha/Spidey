@@ -135,12 +135,12 @@ public class Events extends ListenerAdapter {
         	cal.setTimeInMillis(e.getGuild().getTimeCreated().toInstant().toEpochMilli());
     		String creatdate = date.format(cal.getTime()).toString();   
     		String creattime = time.format(cal.getTime()).toString();   
-        	eb.addField("Created", "**" + creatdate + "** | **" + creattime + "**", false);
+        	eb.addField("Created", "**" + creatdate + "** | **" + creattime + "** UTC", false);
         	
     		cal.setTimeInMillis(API.getMember(e.getGuild(), e.getJDA().getSelfUser()).getTimeJoined().toInstant().toEpochMilli());
     		String joindate = date.format(cal.getTime()).toString();   
     		String jointime = time.format(cal.getTime()).toString();    		
-        	eb.addField("Bot connected", "**" + joindate + "** | ** " + jointime + "**", false);
+        	eb.addField("Bot connected", "**" + joindate + "** | ** " + jointime + "** UTC", false);
         	
 	        eb.addField("Custom invite URL", (!API.isPartnered(e.getGuild()) ? "Guild is not partnered" : e.getGuild().getVanityUrl().complete()), false);
         	
