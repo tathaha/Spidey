@@ -92,8 +92,7 @@ public class Events extends ListenerAdapter {
            	
         }
         
-        if (msg.getContentRaw().startsWith("s!joindate")) {
-        	    	    					   	       	    	
+        if (msg.getContentRaw().startsWith("s!joindate")) {        	    	    					   	       	    	
         	
         	if (msg.getMentionedUsers().isEmpty()) {
         		
