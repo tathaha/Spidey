@@ -409,23 +409,21 @@ public class Events extends ListenerAdapter {
     				
     				for (User u : msg.getMentionedUsers()) {
     				
-    				u.openPrivateChannel().queue(ch -> { 
-    					
-    					ch.sendMessage(":exclamation: You have been warned on guild **" + e.getGuild().getName() + "** from **" + e.getAuthor().getName() + "**. Reason - **" + reason + "**.").submit();    
-    					
-    				});
+    				  u.openPrivateChannel().queue(ch -> ch.sendMessage(":exclamation: You have been warned on guild **" + e.getGuild().getName() + "** from **" + e.getAuthor().getName() + "**. Reason - **" + reason + "**.").submit());
     				
-					API.deleteMessage(msg);
-					EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
-					eb.setTitle("NEW WARN");
-					eb.setColor(Color.ORANGE);
-					eb.addField("User", u.getAsMention(), true);
-					eb.addField("Moderator", e.getAuthor().getAsMention(), true);
-					eb.addField("Reason", "**" + reason + "**", true);
-					TextChannel log = e.getGuild().getTextChannelById(MySQL.getChannelId(e.getGuild().getIdLong()));
-					API.sendMessage(log, eb.build());    				
+					  API.deleteMessage(msg);
+					  EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
+					  eb.setTitle("NEW WARN");
+					  eb.setColor(Color.ORANGE);
+					  eb.addField("User", u.getAsMention(), true);
+					  eb.addField("Moderator", e.getAuthor().getAsMention(), true);
+					  eb.addField("Reason", "**" + reason + "**", true);
+					  TextChannel log = e.getGuild().getTextChannelById(MySQL.getChannelId(e.getGuild().getIdLong()));
+					  API.sendMessage(log, eb.build());    				
     				
-    			}}
+    			  }
+    				
+    			}
     			
     			else {
     				
