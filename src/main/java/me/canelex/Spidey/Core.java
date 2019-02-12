@@ -14,7 +14,7 @@ public class Core {
 		jda = new JDABuilder(AccountType.BOT)
     			.setToken(Secrets.token)
     			.addEventListeners(new Events())
-    			.setActivity(Activity.streaming("s!help", "https://twitch.tv/canelex_"))    			
+    			.setActivity(Activity.streaming("discord.gg/cnAgKrv", "https://twitch.tv/canelex_"))    			
     			.build().awaitReady();               
         
     }                        
