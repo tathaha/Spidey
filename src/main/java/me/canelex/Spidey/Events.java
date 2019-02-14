@@ -21,6 +21,7 @@ import me.canelex.Spidey.utils.API;
 import me.canelex.Spidey.utils.Emoji;
 import me.canelex.Spidey.utils.PermissionError;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.audit.ActionType;
@@ -58,27 +59,29 @@ public class Events extends ListenerAdapter {
     	final TextChannel msgCh = e.getChannel();
     	final Member mem = e.getMember();
     	final User author = e.getAuthor();
+    	final Guild guild = e.getGuild();
+    	final JDA jda = e.getJDA();
         
         if (msg.getContentRaw().equalsIgnoreCase("s!info")) {   
             
-        	User dev = e.getJDA().retrieveApplicationInfo().complete().getOwner();
+        	User dev = jda.retrieveApplicationInfo().complete().getOwner();
     		EmbedBuilder eb = API.createEmbedBuilder(author);
-    		eb.setAuthor("About bot", "https://canelex.ymastersk.net", e.getJDA().getSelfUser().getAvatarUrl());
+    		eb.setAuthor("About bot", "https://canelex.ymastersk.net", jda.getSelfUser().getAvatarUrl());
     		eb.setColor(Color.WHITE);
     		eb.addField("Developer", dev.getAsMention(), true);
     		eb.addField("Release channel", "**STABLE**", true);
-    		eb.setThumbnail(e.getGuild().getIconUrl());		
+    		eb.setThumbnail(guild.getIconUrl());		
     		API.sendMessage(msgCh, eb.build());        		   		
       	   	    		
     	}               
         
         if (msg.getContentRaw().equalsIgnoreCase("s!membercount")) {
         	
-        	List<Member> tonline = e.getGuild().getMembers().stream().filter(member -> member.getOnlineStatus() == OnlineStatus.ONLINE || member.getOnlineStatus() == OnlineStatus.IDLE || member.getOnlineStatus() == OnlineStatus.DO_NOT_DISTURB).collect(Collectors.toList());
+        	List<Member> tonline = guild.getMembers().stream().filter(member -> member.getOnlineStatus() == OnlineStatus.ONLINE || member.getOnlineStatus() == OnlineStatus.IDLE || member.getOnlineStatus() == OnlineStatus.DO_NOT_DISTURB).collect(Collectors.toList());
         	long bonline = tonline.stream().filter(m -> m.getUser().isBot()).count();        	
-        	long total = e.getGuild().getMembers().size();        	
+        	long total = guild.getMembers().size();        	
         	long online = tonline.size();
-        	long bots = e.getGuild().getMembers().stream().filter(member -> member.getUser().isBot()).count();
+        	long bots = guild.getMembers().stream().filter(member -> member.getUser().isBot()).count();
         	long ponline = online - bonline;
         	
         	EmbedBuilder eb = API.createEmbedBuilder(author);
@@ -90,7 +93,6 @@ public class Events extends ListenerAdapter {
         	eb.addField("Total online", "**" + online + "**", true);
         	eb.addField("People online", "**" + ponline + "**", true);
         	eb.addField("Bots online", "**" + bonline + "**", true);        	
-        	//TODO metoda v API na auto-footer     	
            	API.sendMessage(msgCh, eb.build());
            	
         }
@@ -99,11 +101,11 @@ public class Events extends ListenerAdapter {
         	
         	if (msg.getMentionedUsers().isEmpty()) {
         		
-        		Member member = API.getMember(e.getGuild(), author);
+        		Member member = API.getMember(guild, author);
         		cal.setTimeInMillis(member.getTimeJoined().toInstant().toEpochMilli()); 
         		String joindate = date.format(cal.getTime()).toString();
         		String jointime = time.format(cal.getTime()).toString();        		
-        		API.sendPrivateMessage(author, "Date and time of joining to guild **" + e.getGuild().getName() + "**: **" + joindate + "** | **" + jointime + "** UTC", false);
+        		API.sendPrivateMessage(author, "Date and time of joining to guild **" + guild.getName() + "**: **" + joindate + "** | **" + jointime + "** UTC", false);
         		
         	}
         	
@@ -113,11 +115,11 @@ public class Events extends ListenerAdapter {
         		
         		for (User user : mentioned) {
         			
-        			Member member = API.getMember(e.getGuild(), user);
+        			Member member = API.getMember(guild, user);
             		cal.setTimeInMillis(member.getTimeJoined().toInstant().toEpochMilli());
             		String joindate = date.format(cal.getTime()).toString();
             		String jointime = time.format(cal.getTime()).toString();            		
-            		API.sendPrivateMessage(author, "(**" + member.getEffectiveName() + "**) " + "Date and time of joining to guild **" + e.getGuild().getName() + "**: **" + joindate + "** | **" + jointime + "** UTC", false);          		
+            		API.sendPrivateMessage(author, "(**" + member.getEffectiveName() + "**) " + "Date and time of joining to guild **" + guild.getName() + "**: **" + joindate + "** | **" + jointime + "** UTC", false);          		
         		
         		}
         		
@@ -128,31 +130,31 @@ public class Events extends ListenerAdapter {
         if (msg.getContentRaw().equalsIgnoreCase("s!server")) {
         	
         	EmbedBuilder eb = API.createEmbedBuilder(author);         	
-        	eb.setTitle(e.getGuild().getName());
+        	eb.setTitle(guild.getName());
         	eb.setColor(Color.ORANGE);
-        	eb.setThumbnail(e.getGuild().getIconUrl());
-        	eb.setDescription("Server ID: **" + e.getGuild().getId() + "**");
+        	eb.setThumbnail(guild.getIconUrl());
+        	eb.setDescription("Server ID: **" + guild.getId() + "**");
         	    		
-    		eb.addField("Owner", "**" + e.getGuild().getOwner().getAsMention() + "**", false);
+    		eb.addField("Owner", "**" + guild.getOwner().getAsMention() + "**", false);
     		
-        	cal.setTimeInMillis(e.getGuild().getTimeCreated().toInstant().toEpochMilli());
+        	cal.setTimeInMillis(guild.getTimeCreated().toInstant().toEpochMilli());
     		String creatdate = date.format(cal.getTime()).toString();   
     		String creattime = time.format(cal.getTime()).toString();   
         	eb.addField("Created", "**" + creatdate + "** | **" + creattime + "** UTC", false);
         	
-    		cal.setTimeInMillis(API.getMember(e.getGuild(), e.getJDA().getSelfUser()).getTimeJoined().toInstant().toEpochMilli());
+    		cal.setTimeInMillis(API.getMember(guild, jda.getSelfUser()).getTimeJoined().toInstant().toEpochMilli());
     		String joindate = date.format(cal.getTime()).toString();   
     		String jointime = time.format(cal.getTime()).toString();    		
         	eb.addField("Bot connected", "**" + joindate + "** | ** " + jointime + "** UTC", false);
         	
-	        eb.addField("Custom invite URL", (!API.isPartnered(e.getGuild()) ? "Guild is not partnered" : e.getGuild().retrieveVanityUrl().complete()), false);
+	        eb.addField("Custom invite URL", (!API.isPartnered(guild) ? "Guild is not partnered" : guild.retrieveVanityUrl().complete()), false);
         	
         	String s = ""; //by @maasterkoo
         	
             int i = 0;
             
-            List<Role> roles = e.getGuild().getRoles().stream().collect(Collectors.toCollection(ArrayList::new));
-            roles.remove(e.getGuild().getPublicRole());
+            List<Role> roles = guild.getRoles().stream().collect(Collectors.toCollection(ArrayList::new));
+            roles.remove(guild.getPublicRole());
             
             for (Role role : roles) {
             	
@@ -184,33 +186,33 @@ public class Events extends ListenerAdapter {
     		
     		if (API.hasPerm(mem, Permission.valueOf(neededPerm))) {
     			
-    			if (e.getGuild().getSystemChannel() != null) {
+    			if (guild.getSystemChannel() != null) {
     				
-    				e.getGuild().getManager().setSystemChannel(null).submit();    				
+    				guild.getManager().setSystemChannel(null).submit();    				
     				
     			}
     			
-    			if (!MySQL.isInDatabase(e.getGuild().getIdLong())) {    			
+    			if (!MySQL.isInDatabase(guild.getIdLong())) {    			
         				    				
-                	MySQL.insertData(e.getGuild().getIdLong(), msgCh.getIdLong());
+                	MySQL.insertData(guild.getIdLong(), msgCh.getIdLong());
                 	API.sendMessage(msgCh, ":white_check_mark: Log channel set to " + msgCh.getAsMention() + ". Type this command again to set log channel to default guild channel.", false);    				    				
     				
     			}
     			
     			else {
     				
-        			if (MySQL.getChannelId(e.getGuild().getIdLong()).equals(msgCh.getIdLong())) {
+        			if (MySQL.getChannelId(guild.getIdLong()).equals(msgCh.getIdLong())) {
         				
-        				MySQL.removeData(e.getGuild().getIdLong());
-        				MySQL.insertData(e.getGuild().getIdLong(), e.getGuild().getDefaultChannel().getIdLong());
-        				API.sendMessage(msgCh, ":white_check_mark: Log channel set to " + e.getGuild().getDefaultChannel().getAsMention() + ". Type this command again in channel you want to be as log channel.", false);
+        				MySQL.removeData(guild.getIdLong());
+        				MySQL.insertData(guild.getIdLong(), guild.getDefaultChannel().getIdLong());
+        				API.sendMessage(msgCh, ":white_check_mark: Log channel set to " + guild.getDefaultChannel().getAsMention() + ". Type this command again in channel you want to be as log channel.", false);
         				
         			}
         			
         			else {
         				
-        				MySQL.removeData(e.getGuild().getIdLong());    				
-                		MySQL.insertData(e.getGuild().getIdLong(), msgCh.getIdLong());
+        				MySQL.removeData(guild.getIdLong());    				
+                		MySQL.insertData(guild.getIdLong(), msgCh.getIdLong());
                 		API.sendMessage(msgCh, ":white_check_mark: Log channel set to " + msgCh.getAsMention() + ". Type this command again to set log channel to default guild channel.", false);    				
         				
         			}        			
@@ -228,16 +230,16 @@ public class Events extends ListenerAdapter {
     	}
     	
     	if (msg.getContentRaw().startsWith("s!mute")) {  
-    		
-			Guild guild = e.getGuild();    		
+    		   		
 			GuildController controller = guild.getController();			
-			TextChannel c = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));    		
+			TextChannel c = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));
+    		final String neededPerm = "BAN_MEMBERS";			
     		
     		List<User> men = msg.getMentionedUsers();
     		
     		if (!msg.getContentRaw().equals("s!mute")) {
     			
-    			if (e.getGuild().getMember(author).hasPermission(Permission.BAN_MEMBERS)) {
+    			if (API.hasPerm(mem, Permission.valueOf(neededPerm))) {
     				
     				if (guild.getRolesByName("Muted", false).isEmpty()) {
     					
@@ -260,8 +262,8 @@ public class Events extends ListenerAdapter {
             			
             			for (User user : men) {
             				
-            				Role muted = e.getGuild().getRolesByName("Muted", false).get(0);
-            				Member member = e.getGuild().getMember(user);
+            				Role muted = guild.getRolesByName("Muted", false).get(0);
+            				Member member = guild.getMember(user);
             				
             	    		API.deleteMessage(msg);        				
             				controller.addSingleRoleToMember(member, muted).submit();
@@ -389,7 +391,7 @@ public class Events extends ListenerAdapter {
     			
     			else {
     				
-    				API.sendMessage(msgCh, PermissionError.getErrorMessage("BAN_MEMBERS"), false);      				
+    				API.sendMessage(msgCh, PermissionError.getErrorMessage(neededPerm), false);      				
     				
     			}
     			
@@ -405,16 +407,18 @@ public class Events extends ListenerAdapter {
     	
     	if (msg.getContentRaw().startsWith("s!warn")) {
     		
+    		final String neededPerm = "BAN_MEMBERS";    		
+    		
     		if (!msg.getContentRaw().equals("s!warn")) {
     			
-    			if (e.getMember().hasPermission(Permission.BAN_MEMBERS)) {
+    			if (API.hasPerm(mem, Permission.valueOf(neededPerm))) {
     				
     				final String reason;
     				reason = msg.getContentRaw().substring(7, msg.getContentRaw().lastIndexOf(" "));
     				
     				for (User u : msg.getMentionedUsers()) {
     				
-    				  u.openPrivateChannel().queue(ch -> ch.sendMessage(":exclamation: You have been warned on guild **" + e.getGuild().getName() + "** from **" + author.getName() + "**. Reason - **" + reason + "**.").submit());
+    				  u.openPrivateChannel().queue(ch -> ch.sendMessage(":exclamation: You have been warned on guild **" + guild.getName() + "** from **" + author.getName() + "**. Reason - **" + reason + "**.").submit());
     				
 					  API.deleteMessage(msg);
 					  EmbedBuilder eb = API.createEmbedBuilder(author);
@@ -423,7 +427,7 @@ public class Events extends ListenerAdapter {
 					  eb.addField("User", u.getAsMention(), true);
 					  eb.addField("Moderator", author.getAsMention(), true);
 					  eb.addField("Reason", "**" + reason + "**", true);
-					  TextChannel log = e.getGuild().getTextChannelById(MySQL.getChannelId(e.getGuild().getIdLong()));
+					  TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));
 					  API.sendMessage(log, eb.build());    				
     				
     			  }
@@ -432,7 +436,7 @@ public class Events extends ListenerAdapter {
     			
     			else {
     				
-    				API.sendMessage(msgCh, PermissionError.getErrorMessage("BAN_MEMBERS"), false);    				
+    				API.sendMessage(msgCh, PermissionError.getErrorMessage(neededPerm), false);    				
     				
     			}
     			
@@ -441,22 +445,24 @@ public class Events extends ListenerAdapter {
     	
     	if (msg.getContentRaw().startsWith("s!ban")) {
     		
+    		final String neededPerm = "BAN_MEMBERS";    		
+    		
     		if (!msg.getContentRaw().equals("s!ban")) {
     			
-    			if (e.getMember().hasPermission(Permission.BAN_MEMBERS)) {
+    			if (e.getMember().hasPermission(Permission.valueOf(neededPerm))) {
     				
             		String id = msg.getContentRaw().substring(6);
             		id = id.substring(0, id.indexOf(" "));
             		
             		String reason = msg.getContentRaw().substring((7 + id.length()));
             		
-    				e.getGuild().getController().ban(id, 0, reason).submit();   				    				
+    				guild.getController().ban(id, 0, reason).submit();   				    				
     				
     			}
     			
     			else {
     				
-    				API.sendMessage(msgCh, PermissionError.getErrorMessage("BAN_MEMBERS"), false);    				
+    				API.sendMessage(msgCh, PermissionError.getErrorMessage(neededPerm), false);    				
     				
     			}    			
     			
@@ -468,7 +474,7 @@ public class Events extends ListenerAdapter {
     		
     		final String neededPerm = "BAN_MEMBERS";    		
     		
-    		TextChannel log = e.getGuild().getTextChannelById(MySQL.getChannelId(e.getGuild().getIdLong()));	   		
+    		TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));	   		
     		
     		if (!API.hasPerm(mem, Permission.valueOf(neededPerm))) {
     			
@@ -500,14 +506,14 @@ public class Events extends ListenerAdapter {
     	
     	if (msg.getContentRaw().equalsIgnoreCase("s!ping")) {
     		
-    		API.sendMessage(msgCh, "**Gateway**/**WebSocket**: **" + e.getJDA().getGatewayPing() + "**ms\n**REST**: **" + e.getJDA().getRestPing().complete() + "**ms", false);
+    		API.sendMessage(msgCh, "**Gateway**/**WebSocket**: **" + jda.getGatewayPing() + "**ms\n**REST**: **" + jda.getRestPing().complete() + "**ms", false);
     		
     	}
     	
     	if (msg.getContentRaw().equalsIgnoreCase("s!help")) {
     		
     		API.deleteMessage(msg);
-    		API.sendPrivateMessage(author, e.getJDA().getEmoteById(541391545136447488L).getAsMention(), false);
+    		API.sendPrivateMessage(author, jda.getEmoteById(541391545136447488L).getAsMention(), false);
     		
     	} 
     	
@@ -548,9 +554,9 @@ public class Events extends ListenerAdapter {
         			String toEval = msg.getContentRaw().substring(7);
         			EmbedBuilder eb = API.createEmbedBuilder(author);
         			engine.put("e", e);
-        			engine.put("guild", e.getGuild());
+        			engine.put("guild", guild);
         			engine.put("author", author);
-        			engine.put("jda", e.getJDA());
+        			engine.put("jda", jda);
         			engine.put("channel", e.getChannel());
         			eb.setTitle("CODE EVALUATION WAS SUCCESSFUL");
         			eb.addField("Result", "```java\n" + engine.eval(toEval) + "\n```", true);
@@ -594,7 +600,7 @@ public class Events extends ListenerAdapter {
         		if (msg.getMentionedUsers().isEmpty()) {
         			
         			amount++;
-            		List<Message> messages = msgCh.getIterableHistory().cache(false).stream().filter(m -> !m.getAuthor().equals(e.getJDA().getSelfUser())).limit(amount).collect(Collectors.toList());        			
+            		List<Message> messages = msgCh.getIterableHistory().cache(false).stream().filter(m -> !m.getAuthor().equals(jda.getSelfUser())).limit(amount).collect(Collectors.toList());        			
         			count = messages.size() - 1;        			
         			
         			if (messages.size() == 1) {
@@ -625,7 +631,7 @@ public class Events extends ListenerAdapter {
         		
         		else {        			
         			      			
-            		List<Message> messagesByUser = msgCh.getIterableHistory().cache(false).stream().filter(m -> m.getAuthor().equals(msg.getMentionedUsers().get(0)) && !m.getAuthor().equals(e.getJDA().getSelfUser())).limit(amount).collect(Collectors.toList());    
+            		List<Message> messagesByUser = msgCh.getIterableHistory().cache(false).stream().filter(m -> m.getAuthor().equals(msg.getMentionedUsers().get(0)) && !m.getAuthor().equals(jda.getSelfUser())).limit(amount).collect(Collectors.toList());    
             				
                 	int uCount = messagesByUser.size();     
                 	
@@ -678,13 +684,13 @@ public class Events extends ListenerAdapter {
         		
         		eb.addField("Account created", "**" + creatdate + "** | " + "**" + creattime + "** UTC", false);
         		
-            	cal.setTimeInMillis(e.getGuild().getMember(author).getTimeJoined().toInstant().toEpochMilli());
+            	cal.setTimeInMillis(guild.getMember(author).getTimeJoined().toInstant().toEpochMilli());
         		String joindate = date.format(cal.getTime()).toString();   
         		String jointime = time.format(cal.getTime()).toString(); 
         		
         		eb.addField("User joined", "**" + joindate + "** | " + "**" + jointime + "** UTC", false); 
         		
-        		if (e.getGuild().getMember(author).getRoles().size() == 0) {
+        		if (guild.getMember(author).getRoles().size() == 0) {
         			
                 	eb.addField("Roles [**0**]", "None", false);         			
         			
@@ -695,11 +701,11 @@ public class Events extends ListenerAdapter {
                     int i = 0;
                 	String s = "";
                 		
-                    for (Role role : e.getGuild().getMember(author).getRoles()) {
+                    for (Role role : guild.getMember(author).getRoles()) {
                         	
                          i++;
                             
-                         if (i == e.getGuild().getMember(author).getRoles().size()) {
+                         if (i == guild.getMember(author).getRoles().size()) {
                             	
                              s += role.getName();
                                 
@@ -740,13 +746,13 @@ public class Events extends ListenerAdapter {
         		
         		eb.addField("Account created", "**" + creatdate + "** | " + "**" + creattime + "** UTC", false);
         		
-            	cal.setTimeInMillis(e.getGuild().getMember(user).getTimeJoined().toInstant().toEpochMilli());
+            	cal.setTimeInMillis(guild.getMember(user).getTimeJoined().toInstant().toEpochMilli());
         		String joindate = date.format(cal.getTime()).toString();   
         		String jointime = time.format(cal.getTime()).toString(); 
         		
         		eb.addField("User joined", "**" + joindate + "** | " + "**" + jointime + "** UTC", false);         		
         			
-        		if (e.getGuild().getMember(user).getRoles().size() == 0) {
+        		if (guild.getMember(user).getRoles().size() == 0) {
         			
                 	eb.addField("Roles [**0**]", "None", false);         			
         			
@@ -757,11 +763,11 @@ public class Events extends ListenerAdapter {
                     int i = 0;
                 	String s = "";
                 		
-                    for (Role role : e.getGuild().getMember(user).getRoles()) {
+                    for (Role role : guild.getMember(user).getRoles()) {
                         	
                          i++;
                             
-                         if (i == e.getGuild().getMember(user).getRoles().size()) {
+                         if (i == guild.getMember(user).getRoles().size()) {
                             	
                              s += role.getName();
                                 
@@ -790,11 +796,12 @@ public class Events extends ListenerAdapter {
 	@Override
 	public void onGuildMemberRoleRemove(GuildMemberRoleRemoveEvent e) {
 		
-		Role muted = e.getGuild().getRolesByName("Muted", false).get(0);
+		Guild guild = e.getGuild();
+		Role muted = guild.getRolesByName("Muted", false).get(0);
 		
 		if (e.getRoles().contains(muted)) {
 			
-			TextChannel log = e.getGuild().getTextChannelById(MySQL.getChannelId(e.getGuild().getIdLong()));
+			TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));
 			EmbedBuilder eb = new EmbedBuilder();
 			eb.setTitle("UNMUTE");
 			eb.setColor(Color.GREEN);			
@@ -810,10 +817,11 @@ public class Events extends ListenerAdapter {
     public void onGuildBan(GuildBanEvent e) {
 		
 		User user = e.getUser();
-		TextChannel log = e.getGuild().getTextChannelById(MySQL.getChannelId(e.getGuild().getIdLong()));
+		Guild guild = e.getGuild();		
+		TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));
         
-        Ban ban = e.getGuild().retrieveBan(user).complete();
-        List<AuditLogEntry> auditbans = e.getGuild().retrieveAuditLogs().type(ActionType.BAN).complete();
+        Ban ban = guild.retrieveBan(user).complete();
+        List<AuditLogEntry> auditbans = guild.retrieveAuditLogs().type(ActionType.BAN).complete();
         User banner = auditbans.get(0).getUser();
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("NEW BAN");        
@@ -832,7 +840,8 @@ public class Events extends ListenerAdapter {
     public void onGuildUnban(GuildUnbanEvent e) {
 		
 		User user = e.getUser();
-		TextChannel log = e.getGuild().getTextChannelById(MySQL.getChannelId(e.getGuild().getIdLong()));
+		Guild guild = e.getGuild();		
+		TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));
         
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("UNBAN");
@@ -848,7 +857,8 @@ public class Events extends ListenerAdapter {
     public void onGuildMemberLeave(GuildMemberLeaveEvent e) {
 		
 		User user = e.getUser();
-		TextChannel log = e.getGuild().getTextChannelById(MySQL.getChannelId(e.getGuild().getIdLong()));	
+		Guild guild = e.getGuild();		
+		TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));	
         
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("USER HAS LEFT");        
@@ -864,7 +874,8 @@ public class Events extends ListenerAdapter {
     public void onGuildMemberJoin(GuildMemberJoinEvent e) {
 		
 		User user = e.getUser();
-		TextChannel log = e.getGuild().getTextChannelById(MySQL.getChannelId(e.getGuild().getIdLong()));	
+		Guild guild = e.getGuild();		
+		TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));	
         
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("USER HAS JOINED");        
@@ -879,9 +890,11 @@ public class Events extends ListenerAdapter {
     @Override
     public void onGuildLeave(GuildLeaveEvent e) {
     	
-    	if (MySQL.isInDatabase(e.getGuild().getIdLong())) {
+		Guild guild = e.getGuild();    	
+    	
+    	if (MySQL.isInDatabase(guild.getIdLong())) {
     		
-        	MySQL.removeData(e.getGuild().getIdLong());    		
+        	MySQL.removeData(guild.getIdLong());    		
     		
     	}    	
     	
