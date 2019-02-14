@@ -11,7 +11,7 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
@@ -40,7 +40,7 @@ public class API {
 		
 	}
 	
-	public static void sendMessage(final MessageChannel ch, final String toSend, final boolean isSpoiler) {
+	public static void sendMessage(final TextChannel ch, final String toSend, final boolean isSpoiler) {
 		
 		if (isSpoiler) {
 			
@@ -56,19 +56,19 @@ public class API {
 		
 	}
 
-	public static void sendMessage(final MessageChannel ch, final MessageEmbed embed) {
+	public static void sendMessage(final TextChannel ch, final MessageEmbed embed) {
 		
 		ch.sendMessage(embed).submit();		
 		
 	}	
 	
-	public static void sendFile(final MessageChannel ch, final File file) {
+	public static void sendFile(final TextChannel ch, final File file) {
 		
 		ch.sendFile(file).submit();
 		
 	}		
 	
-	public static void sendImage(final MessageChannel ch, final String link, final boolean isSpoiler) {
+	public static void sendImage(final TextChannel ch, final String link, final boolean isSpoiler) {
 		
 		try {
 			

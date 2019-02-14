@@ -684,13 +684,13 @@ public class Events extends ListenerAdapter {
         		
         		eb.addField("Account created", "**" + creatdate + "** | " + "**" + creattime + "** UTC", false);
         		
-            	cal.setTimeInMillis(guild.getMember(author).getTimeJoined().toInstant().toEpochMilli());
+            	cal.setTimeInMillis(mem.getTimeJoined().toInstant().toEpochMilli());
         		String joindate = date.format(cal.getTime()).toString();   
         		String jointime = time.format(cal.getTime()).toString(); 
         		
         		eb.addField("User joined", "**" + joindate + "** | " + "**" + jointime + "** UTC", false); 
         		
-        		if (guild.getMember(author).getRoles().size() == 0) {
+        		if (mem.getRoles().size() == 0) {
         			
                 	eb.addField("Roles [**0**]", "None", false);         			
         			
@@ -701,11 +701,11 @@ public class Events extends ListenerAdapter {
                     int i = 0;
                 	String s = "";
                 		
-                    for (Role role : guild.getMember(author).getRoles()) {
+                    for (Role role : mem.getRoles()) {
                         	
                          i++;
                             
-                         if (i == guild.getMember(author).getRoles().size()) {
+                         if (i == mem.getRoles().size()) {
                             	
                              s += role.getName();
                                 
@@ -730,6 +730,7 @@ public class Events extends ListenerAdapter {
     		else {
     			
     			User user = msg.getMentionedUsers().get(0);
+    			Member member = API.getMember(guild, user);
     			
     			EmbedBuilder eb = API.createEmbedBuilder(author);
     			
@@ -738,7 +739,7 @@ public class Events extends ListenerAdapter {
     			eb.setThumbnail(user.getAvatarUrl());
     			eb.addField("ID", "**" + user.getId() + "**", false);
     			
-    			eb.addField("Nickname for this guild", "**" + (mem.getNickname() == null ? "None" : mem.getNickname()) + "**", false);
+    			eb.addField("Nickname for this guild", "**" + (member.getNickname() == null ? "None" : member.getNickname()) + "**", false);
     			
             	cal.setTimeInMillis(user.getTimeCreated().toInstant().toEpochMilli());
         		String creatdate = date.format(cal.getTime()).toString();   
@@ -746,13 +747,13 @@ public class Events extends ListenerAdapter {
         		
         		eb.addField("Account created", "**" + creatdate + "** | " + "**" + creattime + "** UTC", false);
         		
-            	cal.setTimeInMillis(guild.getMember(user).getTimeJoined().toInstant().toEpochMilli());
+            	cal.setTimeInMillis(member.getTimeJoined().toInstant().toEpochMilli());
         		String joindate = date.format(cal.getTime()).toString();   
         		String jointime = time.format(cal.getTime()).toString(); 
         		
         		eb.addField("User joined", "**" + joindate + "** | " + "**" + jointime + "** UTC", false);         		
         			
-        		if (guild.getMember(user).getRoles().size() == 0) {
+        		if (member.getRoles().size() == 0) {
         			
                 	eb.addField("Roles [**0**]", "None", false);         			
         			
@@ -763,11 +764,11 @@ public class Events extends ListenerAdapter {
                     int i = 0;
                 	String s = "";
                 		
-                    for (Role role : guild.getMember(user).getRoles()) {
+                    for (Role role : member.getRoles()) {
                         	
                          i++;
                             
-                         if (i == guild.getMember(user).getRoles().size()) {
+                         if (i == member.getRoles().size()) {
                             	
                              s += role.getName();
                                 
