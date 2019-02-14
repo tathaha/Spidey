@@ -101,8 +101,7 @@ public class Events extends ListenerAdapter {
         	
         	if (msg.getMentionedUsers().isEmpty()) {
         		
-        		Member member = API.getMember(guild, author);
-        		cal.setTimeInMillis(member.getTimeJoined().toInstant().toEpochMilli()); 
+        		cal.setTimeInMillis(mem.getTimeJoined().toInstant().toEpochMilli()); 
         		String joindate = date.format(cal.getTime()).toString();
         		String jointime = time.format(cal.getTime()).toString();        		
         		API.sendPrivateMessage(author, "Date and time of joining to guild **" + guild.getName() + "**: **" + joindate + "** | **" + jointime + "** UTC", false);
@@ -449,7 +448,7 @@ public class Events extends ListenerAdapter {
     		
     		if (!msg.getContentRaw().equals("s!ban")) {
     			
-    			if (e.getMember().hasPermission(Permission.valueOf(neededPerm))) {
+    			if (mem.hasPermission(Permission.valueOf(neededPerm))) {
     				
             		String id = msg.getContentRaw().substring(6);
             		id = id.substring(0, id.indexOf(" "));
