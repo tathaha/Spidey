@@ -54,13 +54,15 @@ public class Events extends ListenerAdapter {
 	@Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent e) {
     	
-    	Message msg = e.getMessage();
-    	TextChannel msgCh = e.getChannel();
+    	final Message msg = e.getMessage();
+    	final TextChannel msgCh = e.getChannel();
+    	final Member mem = e.getMember();
+    	final User author = e.getAuthor();
         
         if (msg.getContentRaw().equalsIgnoreCase("s!info")) {   
             
         	User dev = e.getJDA().retrieveApplicationInfo().complete().getOwner();
-    		EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
+    		EmbedBuilder eb = API.createEmbedBuilder(author);
     		eb.setAuthor("About bot", "https://canelex.ymastersk.net", e.getJDA().getSelfUser().getAvatarUrl());
     		eb.setColor(Color.WHITE);
     		eb.addField("Developer", dev.getAsMention(), true);
@@ -79,7 +81,7 @@ public class Events extends ListenerAdapter {
         	long bots = e.getGuild().getMembers().stream().filter(member -> member.getUser().isBot()).count();
         	long ponline = online - bonline;
         	
-        	EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
+        	EmbedBuilder eb = API.createEmbedBuilder(author);
         	eb.setTitle("MEMBERCOUNT");
         	eb.setColor(Color.WHITE);
         	eb.addField("Total", "**" + total + "**", true);        	
@@ -97,11 +99,11 @@ public class Events extends ListenerAdapter {
         	
         	if (msg.getMentionedUsers().isEmpty()) {
         		
-        		Member member = API.getMember(e.getGuild(), e.getAuthor());
+        		Member member = API.getMember(e.getGuild(), author);
         		cal.setTimeInMillis(member.getTimeJoined().toInstant().toEpochMilli()); 
         		String joindate = date.format(cal.getTime()).toString();
         		String jointime = time.format(cal.getTime()).toString();        		
-        		API.sendPrivateMessage(e.getAuthor(), "Date and time of joining to guild **" + e.getGuild().getName() + "**: **" + joindate + "** | **" + jointime + "** UTC", false);
+        		API.sendPrivateMessage(author, "Date and time of joining to guild **" + e.getGuild().getName() + "**: **" + joindate + "** | **" + jointime + "** UTC", false);
         		
         	}
         	
@@ -115,7 +117,7 @@ public class Events extends ListenerAdapter {
             		cal.setTimeInMillis(member.getTimeJoined().toInstant().toEpochMilli());
             		String joindate = date.format(cal.getTime()).toString();
             		String jointime = time.format(cal.getTime()).toString();            		
-            		API.sendPrivateMessage(e.getAuthor(), "(**" + member.getEffectiveName() + "**) " + "Date and time of joining to guild **" + e.getGuild().getName() + "**: **" + joindate + "** | **" + jointime + "** UTC", false);          		
+            		API.sendPrivateMessage(author, "(**" + member.getEffectiveName() + "**) " + "Date and time of joining to guild **" + e.getGuild().getName() + "**: **" + joindate + "** | **" + jointime + "** UTC", false);          		
         		
         		}
         		
@@ -125,7 +127,7 @@ public class Events extends ListenerAdapter {
         
         if (msg.getContentRaw().equalsIgnoreCase("s!server")) {
         	
-        	EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());         	
+        	EmbedBuilder eb = API.createEmbedBuilder(author);         	
         	eb.setTitle(e.getGuild().getName());
         	eb.setColor(Color.ORANGE);
         	eb.setThumbnail(e.getGuild().getIconUrl());
@@ -178,7 +180,9 @@ public class Events extends ListenerAdapter {
     	
     	if (msg.getContentRaw().equalsIgnoreCase("s!log")) {
     		
-    		if (API.hasPerm(e.getGuild(), e.getAuthor(), Permission.ADMINISTRATOR)) {
+    		final String neededPerm = "ADMINISTRATOR";
+    		
+    		if (API.hasPerm(mem, Permission.valueOf(neededPerm))) {
     			
     			if (e.getGuild().getSystemChannel() != null) {
     				
@@ -217,7 +221,7 @@ public class Events extends ListenerAdapter {
     		
     		else {
     			
-        		API.sendMessage(msgCh, PermissionError.getErrorMessage("ADMINISTRATOR"), false);    			
+        		API.sendMessage(msgCh, PermissionError.getErrorMessage(neededPerm), false);    			
     			
     		}
     		    		
@@ -233,7 +237,7 @@ public class Events extends ListenerAdapter {
     		
     		if (!msg.getContentRaw().equals("s!mute")) {
     			
-    			if (e.getGuild().getMember(e.getAuthor()).hasPermission(Permission.BAN_MEMBERS)) {
+    			if (e.getGuild().getMember(author).hasPermission(Permission.BAN_MEMBERS)) {
     				
     				if (guild.getRolesByName("Muted", false).isEmpty()) {
     					
@@ -266,12 +270,12 @@ public class Events extends ListenerAdapter {
             					
                 				if (time.equalsIgnoreCase("d")) {
                 					
-                    				EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
+                    				EmbedBuilder eb = API.createEmbedBuilder(author);
                     				eb.setTitle("NEW MUTE");                    				
                     		        eb.setThumbnail((user.getAvatarUrl() == null ? user.getDefaultAvatarUrl() : user.getAvatarUrl()));                    				                    				
                     				eb.setColor(Color.RED);
                     				eb.addField("User", user.getAsMention(), true);
-                    				eb.addField("Moderator", e.getAuthor().getAsMention(), true);
+                    				eb.addField("Moderator", author.getAsMention(), true);
                     				eb.addField("Reason", "**" + reason + "**", true);              				
                     				
                     				if (lengthV == 1) {
@@ -296,12 +300,12 @@ public class Events extends ListenerAdapter {
                 					
                     				if (time.equalsIgnoreCase("w")) {
                     					
-                        				EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
+                        				EmbedBuilder eb = API.createEmbedBuilder(author);
                         				eb.setTitle("NEW MUTE");                        				
                         		        eb.setThumbnail((user.getAvatarUrl() == null ? user.getDefaultAvatarUrl() : user.getAvatarUrl()));                        		        
                         				eb.setColor(Color.RED);
                         				eb.addField("User", user.getAsMention(), true);
-                        				eb.addField("Moderator", e.getAuthor().getAsMention(), true);
+                        				eb.addField("Moderator", author.getAsMention(), true);
                         				eb.addField("Reason", "**" + reason + "**", true);           				
                         				
                         				if (lengthV == 1) {
@@ -326,12 +330,12 @@ public class Events extends ListenerAdapter {
                     					
                         				if (time.equalsIgnoreCase("m")) {
                         					
-                            				EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
+                            				EmbedBuilder eb = API.createEmbedBuilder(author);
                             				eb.setTitle("NEW MUTE");                            				
                             		        eb.setThumbnail((user.getAvatarUrl() == null ? user.getDefaultAvatarUrl() : user.getAvatarUrl()));                            		        
                             				eb.setColor(Color.RED);
                             				eb.addField("User", user.getAsMention(), true);
-                            				eb.addField("Moderator", e.getAuthor().getAsMention(), true);
+                            				eb.addField("Moderator", author.getAsMention(), true);
                             				eb.addField("Reason", "**" + reason + "**", true);                              				
                             				
                             				if (lengthV == 1) {
@@ -410,14 +414,14 @@ public class Events extends ListenerAdapter {
     				
     				for (User u : msg.getMentionedUsers()) {
     				
-    				  u.openPrivateChannel().queue(ch -> ch.sendMessage(":exclamation: You have been warned on guild **" + e.getGuild().getName() + "** from **" + e.getAuthor().getName() + "**. Reason - **" + reason + "**.").submit());
+    				  u.openPrivateChannel().queue(ch -> ch.sendMessage(":exclamation: You have been warned on guild **" + e.getGuild().getName() + "** from **" + author.getName() + "**. Reason - **" + reason + "**.").submit());
     				
 					  API.deleteMessage(msg);
-					  EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
+					  EmbedBuilder eb = API.createEmbedBuilder(author);
 					  eb.setTitle("NEW WARN");
 					  eb.setColor(Color.ORANGE);
 					  eb.addField("User", u.getAsMention(), true);
-					  eb.addField("Moderator", e.getAuthor().getAsMention(), true);
+					  eb.addField("Moderator", author.getAsMention(), true);
 					  eb.addField("Reason", "**" + reason + "**", true);
 					  TextChannel log = e.getGuild().getTextChannelById(MySQL.getChannelId(e.getGuild().getIdLong()));
 					  API.sendMessage(log, eb.build());    				
@@ -462,11 +466,13 @@ public class Events extends ListenerAdapter {
     	
     	if (msg.getContentRaw().startsWith("s!poll")) {
     		
+    		final String neededPerm = "BAN_MEMBERS";    		
+    		
     		TextChannel log = e.getGuild().getTextChannelById(MySQL.getChannelId(e.getGuild().getIdLong()));	   		
     		
-    		if (!API.hasPerm(e.getGuild(), e.getAuthor(), Permission.BAN_MEMBERS)) {
+    		if (!API.hasPerm(mem, Permission.valueOf(neededPerm))) {
     			
-				API.sendMessage(msgCh, PermissionError.getErrorMessage("BAN_MEMBERS"), false);      			
+				API.sendMessage(msgCh, PermissionError.getErrorMessage(neededPerm), false);      			
     			
     		}
     		
@@ -479,11 +485,11 @@ public class Events extends ListenerAdapter {
         			m.addReaction(Emoji.like).submit();
         			m.addReaction(Emoji.shrug).submit();
         			m.addReaction(Emoji.dislike).submit();
-            		EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
+            		EmbedBuilder eb = API.createEmbedBuilder(author);
             		eb.setTitle("NEW POLL");
             		eb.setColor(Color.ORANGE);             		
             		eb.addField("Question", "**" + question + "**", false);
-            		eb.setFooter("Poll created by " + e.getAuthor().getAsTag(), e.getAuthor().getAvatarUrl());             		
+            		eb.setFooter("Poll created by " + author.getAsTag(), author.getAvatarUrl());             		
             		API.sendMessage(log, eb.build());
         			        			
         		});    			
@@ -501,7 +507,7 @@ public class Events extends ListenerAdapter {
     	if (msg.getContentRaw().equalsIgnoreCase("s!help")) {
     		
     		API.deleteMessage(msg);
-    		API.sendPrivateMessage(e.getAuthor(), e.getJDA().getEmoteById(541391545136447488L).getAsMention(), false);
+    		API.sendPrivateMessage(author, e.getJDA().getEmoteById(541391545136447488L).getAsMention(), false);
     		
     	} 
     	
@@ -527,9 +533,11 @@ public class Events extends ListenerAdapter {
     	
     	if (msg.getContentRaw().startsWith("s!eval")) {
     		
-    		if (!API.hasPerm(e.getGuild(), e.getAuthor(), Permission.ADMINISTRATOR)) {
+    		final String neededPerm = "ADMINISTRATOR";	
+    		
+    		if (!API.hasPerm(mem, Permission.valueOf(neededPerm))) {
     			
-				API.sendMessage(msgCh, PermissionError.getErrorMessage("ADMINISTRATOR"), false);      			
+				API.sendMessage(msgCh, PermissionError.getErrorMessage(neededPerm), false);      			
     			
     		}  
     		
@@ -538,10 +546,10 @@ public class Events extends ListenerAdapter {
     			try {
     				
         			String toEval = msg.getContentRaw().substring(7);
-        			EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
+        			EmbedBuilder eb = API.createEmbedBuilder(author);
         			engine.put("e", e);
         			engine.put("guild", e.getGuild());
-        			engine.put("author", e.getAuthor());
+        			engine.put("author", author);
         			engine.put("jda", e.getJDA());
         			engine.put("channel", e.getChannel());
         			eb.setTitle("CODE EVALUATION WAS SUCCESSFUL");
@@ -554,7 +562,7 @@ public class Events extends ListenerAdapter {
     			catch (ScriptException ex) {
     				
     				ex.printStackTrace();
-    				EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
+    				EmbedBuilder eb = API.createEmbedBuilder(author);
     				eb.setTitle("CODE EVALUATION WAS UNSUCCESSFUL");
     				eb.addField("Problem", ex.getMessage(), true);
     				eb.setColor(Color.RED);
@@ -568,14 +576,16 @@ public class Events extends ListenerAdapter {
     	
     	if (msg.getContentRaw().startsWith("s!delete")) {
     		
+    		final String neededPerm = "BAN_MEMBERS";	    		
+    		
     		String[] args = msg.getContentRaw().split("\\s+");
     		int amount = Integer.parseInt(args[1]);  
     		int count;
     		API.deleteMessage(msg);
     		
-    		if (!API.hasPerm(e.getGuild(), e.getAuthor(), Permission.BAN_MEMBERS)) {
+    		if (!API.hasPerm(mem, Permission.valueOf(neededPerm))) {
     			
-				API.sendMessage(msgCh, PermissionError.getErrorMessage("BAN_MEMBERS"), false);      			
+				API.sendMessage(msgCh, PermissionError.getErrorMessage(neededPerm), false);      			
     			
     		}
     		
@@ -653,29 +663,28 @@ public class Events extends ListenerAdapter {
     		
     		if (msg.getMentionedUsers().isEmpty()) {
     			
-    			EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
-    			Member mem = e.getGuild().getMember(e.getAuthor());
+    			EmbedBuilder eb = API.createEmbedBuilder(author);
     			
-    			eb.setAuthor("USER INFO - " + e.getAuthor().getAsTag());
+    			eb.setAuthor("USER INFO - " + author.getAsTag());
     			eb.setColor(Color.WHITE);
-    			eb.setThumbnail(e.getAuthor().getAvatarUrl());    			
-    			eb.addField("ID", "**" + e.getAuthor().getId() + "**", false);
+    			eb.setThumbnail(author.getAvatarUrl());    			
+    			eb.addField("ID", "**" + author.getId() + "**", false);
     			
     			eb.addField("Nickname for this guild", "**" + (mem.getNickname() == null ? "None" : mem.getNickname()) + "**", false);
     			
-            	cal.setTimeInMillis(e.getAuthor().getTimeCreated().toInstant().toEpochMilli());
+            	cal.setTimeInMillis(author.getTimeCreated().toInstant().toEpochMilli());
         		String creatdate = date.format(cal.getTime()).toString();   
         		String creattime = time.format(cal.getTime()).toString(); 
         		
         		eb.addField("Account created", "**" + creatdate + "** | " + "**" + creattime + "** UTC", false);
         		
-            	cal.setTimeInMillis(e.getGuild().getMember(e.getAuthor()).getTimeJoined().toInstant().toEpochMilli());
+            	cal.setTimeInMillis(e.getGuild().getMember(author).getTimeJoined().toInstant().toEpochMilli());
         		String joindate = date.format(cal.getTime()).toString();   
         		String jointime = time.format(cal.getTime()).toString(); 
         		
         		eb.addField("User joined", "**" + joindate + "** | " + "**" + jointime + "** UTC", false); 
         		
-        		if (e.getGuild().getMember(e.getAuthor()).getRoles().size() == 0) {
+        		if (e.getGuild().getMember(author).getRoles().size() == 0) {
         			
                 	eb.addField("Roles [**0**]", "None", false);         			
         			
@@ -686,11 +695,11 @@ public class Events extends ListenerAdapter {
                     int i = 0;
                 	String s = "";
                 		
-                    for (Role role : e.getGuild().getMember(e.getAuthor()).getRoles()) {
+                    for (Role role : e.getGuild().getMember(author).getRoles()) {
                         	
                          i++;
                             
-                         if (i == e.getGuild().getMember(e.getAuthor()).getRoles().size()) {
+                         if (i == e.getGuild().getMember(author).getRoles().size()) {
                             	
                              s += role.getName();
                                 
@@ -715,9 +724,8 @@ public class Events extends ListenerAdapter {
     		else {
     			
     			User user = msg.getMentionedUsers().get(0);
-    			Member mem = e.getGuild().getMember(user);
     			
-    			EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
+    			EmbedBuilder eb = API.createEmbedBuilder(author);
     			
     			eb.setAuthor("USER INFO - " + user.getAsTag());
     			eb.setColor(Color.WHITE);    			

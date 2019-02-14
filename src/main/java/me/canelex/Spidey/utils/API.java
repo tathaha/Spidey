@@ -34,9 +34,9 @@ public class API {
 	}		
 	
 	
-	public static boolean hasPerm(final Guild g, final User toCheck, final Permission perm) {
+	public static boolean hasPerm(final Member toCheck, final Permission perm) {
 		
-		return g.getMember(toCheck).hasPermission(perm);
+		return toCheck.hasPermission(perm);
 		
 	}
 	
