@@ -58,7 +58,7 @@ public class Events extends ListenerAdapter {
         
         if (msg.getContentRaw().equalsIgnoreCase("s!info")) {   
             
-        	User dev = e.getJDA().getApplicationInfo().complete().getOwner();
+        	User dev = e.getJDA().retrieveApplicationInfo().complete().getOwner();
     		EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
     		eb.setAuthor("About bot", "https://canelex.ymastersk.net", e.getJDA().getSelfUser().getAvatarUrl());
     		eb.setColor(Color.WHITE);
@@ -142,7 +142,7 @@ public class Events extends ListenerAdapter {
     		String jointime = time.format(cal.getTime()).toString();    		
         	eb.addField("Bot connected", "**" + joindate + "** | ** " + jointime + "** UTC", false);
         	
-	        eb.addField("Custom invite URL", (!API.isPartnered(e.getGuild()) ? "Guild is not partnered" : e.getGuild().getVanityUrl().complete()), false);
+	        eb.addField("Custom invite URL", (!API.isPartnered(e.getGuild()) ? "Guild is not partnered" : e.getGuild().retrieveVanityUrl().complete()), false);
         	
         	String s = ""; //by @maasterkoo
         	
@@ -803,8 +803,8 @@ public class Events extends ListenerAdapter {
 		User user = e.getUser();
 		TextChannel log = e.getGuild().getTextChannelById(MySQL.getChannelId(e.getGuild().getIdLong()));
         
-        Ban ban = e.getGuild().getBan(user).complete();
-        List<AuditLogEntry> auditbans = e.getGuild().getAuditLogs().type(ActionType.BAN).complete();
+        Ban ban = e.getGuild().retrieveBan(user).complete();
+        List<AuditLogEntry> auditbans = e.getGuild().retrieveAuditLogs().type(ActionType.BAN).complete();
         User banner = auditbans.get(0).getUser();
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("NEW BAN");        
