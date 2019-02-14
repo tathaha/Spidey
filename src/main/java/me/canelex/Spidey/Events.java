@@ -19,6 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import me.canelex.Spidey.utils.API;
 import me.canelex.Spidey.utils.Emoji;
+import me.canelex.Spidey.utils.PermissionError;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.Permission;
@@ -216,7 +217,7 @@ public class Events extends ListenerAdapter {
     		
     		else {
     			
-        		API.sendMessage(msgCh, ":no_entry: Action can't be completed due to missing permission **ADMINISTRATOR**.", false);    			
+        		API.sendMessage(msgCh, PermissionError.getErrorMessage("ADMINISTRATOR"), false);    			
     			
     		}
     		    		
@@ -384,7 +385,7 @@ public class Events extends ListenerAdapter {
     			
     			else {
     				
-    				API.sendMessage(msgCh, ":no_entry: Action can't be completed due to missing permission **BAN_MEMBERS**.", false);      				
+    				API.sendMessage(msgCh, PermissionError.getErrorMessage("BAN_MEMBERS"), false);      				
     				
     			}
     			
@@ -427,7 +428,7 @@ public class Events extends ListenerAdapter {
     			
     			else {
     				
-    				API.sendMessage(msgCh, ":no_entry: Action can't be completed due to missing permission **BAN_MEMBERS**.", false);    				
+    				API.sendMessage(msgCh, PermissionError.getErrorMessage("BAN_MEMBERS"), false);    				
     				
     			}
     			
@@ -451,7 +452,7 @@ public class Events extends ListenerAdapter {
     			
     			else {
     				
-    				API.sendMessage(msgCh, ":no_entry: Action can't be completed due to missing permission **BAN_MEMBERS**.", false);    				
+    				API.sendMessage(msgCh, PermissionError.getErrorMessage("BAN_MEMBERS"), false);    				
     				
     			}    			
     			
@@ -465,7 +466,7 @@ public class Events extends ListenerAdapter {
     		
     		if (!API.hasPerm(e.getGuild(), e.getAuthor(), Permission.BAN_MEMBERS)) {
     			
-				API.sendMessage(msgCh, ":no_entry: Action can't be completed due to missing permission **BAN_MEMBERS**.", false);      			
+				API.sendMessage(msgCh, PermissionError.getErrorMessage("BAN_MEMBERS"), false);      			
     			
     		}
     		
@@ -528,7 +529,7 @@ public class Events extends ListenerAdapter {
     		
     		if (!API.hasPerm(e.getGuild(), e.getAuthor(), Permission.ADMINISTRATOR)) {
     			
-				API.sendMessage(msgCh, ":no_entry: Action can't be completed due to missing permission **ADMINISTRATOR**.", false);      			
+				API.sendMessage(msgCh, PermissionError.getErrorMessage("ADMINISTRATOR"), false);      			
     			
     		}  
     		
@@ -574,7 +575,7 @@ public class Events extends ListenerAdapter {
     		
     		if (!API.hasPerm(e.getGuild(), e.getAuthor(), Permission.BAN_MEMBERS)) {
     			
-				API.sendMessage(msgCh, ":no_entry: Action can't be completed due to missing permission **BAN_MEMBERS**.", false);      			
+				API.sendMessage(msgCh, PermissionError.getErrorMessage("BAN_MEMBERS"), false);      			
     			
     		}
     		
