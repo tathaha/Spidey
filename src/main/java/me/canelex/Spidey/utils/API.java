@@ -16,20 +16,19 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
 
-
 public class API {
 	
 	public static void addRole(final Member m, final Role r) {
 		
 		Guild g = r.getGuild();
-		g.getController().addSingleRoleToMember(m, r).submit();
+		g.getController().addSingleRoleToMember(m, r).queue();
 		
 	}	
 	
 	public static void removeRole(final Member m, final Role r) {
 		
 		Guild g = r.getGuild();
-		g.getController().removeSingleRoleFromMember(m, r).submit();
+		g.getController().removeSingleRoleFromMember(m, r).queue();
 		
 	}		
 	
@@ -44,13 +43,13 @@ public class API {
 		
 		if (isSpoiler) {
 			
-			ch.sendMessage("||" + toSend + "||").submit();
+			ch.sendMessage("||" + toSend + "||").queue();
 			
 		}
 		
 		else {
 			
-			ch.sendMessage(toSend).submit();				
+			ch.sendMessage(toSend).queue();				
 			
 		}
 		
@@ -58,13 +57,13 @@ public class API {
 
 	public static void sendMessage(final TextChannel ch, final MessageEmbed embed) {
 		
-		ch.sendMessage(embed).submit();		
+		ch.sendMessage(embed).queue();		
 		
 	}	
 	
 	public static void sendFile(final TextChannel ch, final File file) {
 		
-		ch.sendFile(file).submit();
+		ch.sendFile(file).queue();
 		
 	}		
 	
@@ -76,13 +75,13 @@ public class API {
 			
 			if (isSpoiler) {
 				
-				ch.sendFile(in, "SPOILER_" + link.substring(link.lastIndexOf("/") + 1)).submit();					
+				ch.sendFile(in, "SPOILER_" + link.substring(link.lastIndexOf("/") + 1)).queue();					
 				
 			}
 			
 			else {
 				
-				ch.sendFile(in, link.substring(link.lastIndexOf("/") + 1)).submit();					
+				ch.sendFile(in, link.substring(link.lastIndexOf("/") + 1)).queue();					
 				
 			}
 								
@@ -104,13 +103,13 @@ public class API {
 			
 			if (isSpoiler) {
 				
-				channel.sendMessage("||" + toSend + "||").submit();
+				channel.sendMessage("||" + toSend + "||").queue();
 				
 			}
 			
 			else {
 				
-				channel.sendMessage(toSend).submit();				
+				channel.sendMessage(toSend).queue();				
 				
 			}							
 			
@@ -120,7 +119,7 @@ public class API {
 	
 	public static void sendPrivateMessage(final User user, final MessageEmbed embed) {
 
-		user.openPrivateChannel().queue(channel -> channel.sendMessage(embed).submit());		
+		user.openPrivateChannel().queue(channel -> channel.sendMessage(embed).queue());		
 		
 	}	
 	
@@ -150,7 +149,7 @@ public class API {
 	
 	public static void deleteMessage(final Message msg) {
 		
-		msg.delete().submit();
+		msg.delete().queue();
 		
 	}
 	
