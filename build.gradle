@@ -45,7 +45,7 @@ dependencies {
 
     compile 'mysql:mysql-connector-java:8.0.15'
     
-    compile ('net.dv8tion:JDA:4.ALPHA.0_42') {
+    compile ('net.dv8tion:JDA:4.ALPHA.0_45') {
     
        exclude module: 'opus-java'
        
