@@ -187,7 +187,7 @@ public class Events extends ListenerAdapter {
     			
     			if (guild.getSystemChannel() != null) {
     				
-    				guild.getManager().setSystemChannel(null).submit();    				
+    				guild.getManager().setSystemChannel(null).queue();    				
     				
     			}
     			
@@ -265,7 +265,7 @@ public class Events extends ListenerAdapter {
             				Member member = guild.getMember(user);
             				
             	    		API.deleteMessage(msg);        				
-            				controller.addSingleRoleToMember(member, muted).submit();
+            				controller.addSingleRoleToMember(member, muted).queue();
             				
             				if (StringUtils.isNumeric(length) && lengthV != 0) {
             					
@@ -417,7 +417,7 @@ public class Events extends ListenerAdapter {
     				
     				for (User u : msg.getMentionedUsers()) {
     				
-    				  u.openPrivateChannel().queue(ch -> ch.sendMessage(":exclamation: You have been warned on guild **" + guild.getName() + "** from **" + author.getName() + "**. Reason - **" + reason + "**.").submit());
+    				  u.openPrivateChannel().queue(ch -> ch.sendMessage(":exclamation: You have been warned on guild **" + guild.getName() + "** from **" + author.getName() + "**. Reason - **" + reason + "**.").queue());
     				
 					  API.deleteMessage(msg);
 					  EmbedBuilder eb = API.createEmbedBuilder(author);
@@ -455,7 +455,7 @@ public class Events extends ListenerAdapter {
             		
             		String reason = msg.getContentRaw().substring((7 + id.length()));
             		
-    				guild.getController().ban(id, 0, reason).submit();   				    				
+    				guild.getController().ban(id, 0, reason).queue();   				    				
     				
     			}
     			
@@ -487,9 +487,9 @@ public class Events extends ListenerAdapter {
         		API.deleteMessage(msg);
         		e.getChannel().sendMessage("Poll: **" + question + "**").queue(m -> {
         			
-        			m.addReaction(Emoji.like).submit();
-        			m.addReaction(Emoji.shrug).submit();
-        			m.addReaction(Emoji.dislike).submit();
+        			m.addReaction(Emoji.like).queue();
+        			m.addReaction(Emoji.shrug).queue();
+        			m.addReaction(Emoji.dislike).queue();
             		EmbedBuilder eb = API.createEmbedBuilder(author);
             		eb.setTitle("NEW POLL");
             		eb.setColor(Color.ORANGE);             		
