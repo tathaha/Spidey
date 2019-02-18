@@ -60,7 +60,7 @@ dependencies {
 group = 'me.canelex'
 version = 'STABLE'
 description = 'Spidey'
-sourceCompatibility = '11'
+sourceCompatibility = '8'
 
 tasks.withType(JavaCompile) {
 
