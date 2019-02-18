@@ -141,7 +141,7 @@ public class API {
 		
 	}
 	
-	public static Role getRoleById(final Guild g, final String id) {
+	public static Role getRoleById(final Guild g, final long id) {
 		
 		return g.getRoleById(id);
 		
