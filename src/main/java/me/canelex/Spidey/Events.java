@@ -790,6 +790,29 @@ public class Events extends ListenerAdapter {
     		}
     		
     	}
+    	
+    	if (msg.getContentRaw().startsWith("s!avatar")) {
+    		
+    		if (msg.getMentionedUsers().isEmpty()) {
+    			
+    			EmbedBuilder eb = API.createEmbedBuilder(author);
+    			eb.setAuthor("Avatar of user " + author.getAsTag());
+    			eb.setImage(author.getEffectiveAvatarUrl());
+    			eb.setColor(Color.WHITE);
+    			
+    		}
+    		
+    		else {
+    			
+    			User u = msg.getMentionedUsers().get(0);
+    			EmbedBuilder eb = API.createEmbedBuilder(u);
+    			eb.setAuthor("Avatar of user " + u.getAsTag()); 
+    			eb.setImage(u.getEffectiveAvatarUrl());
+    			eb.setColor(Color.WHITE);    			
+    			
+    		}
+    		
+    	}
         
 	}
 	
