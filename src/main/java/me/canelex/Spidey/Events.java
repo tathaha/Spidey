@@ -185,6 +185,8 @@ public class Events extends ListenerAdapter {
     		
     		if (API.hasPerm(mem, Permission.valueOf(neededPerm))) {
     			
+    			API.deleteMessage(msg);
+    			
     			if (guild.getSystemChannel() != null) {
     				
     				guild.getManager().setSystemChannel(null).queue();    				
@@ -194,7 +196,7 @@ public class Events extends ListenerAdapter {
     			if (!MySQL.isInDatabase(guild.getIdLong())) {    			
         				    				
                 	MySQL.insertData(guild.getIdLong(), msgCh.getIdLong());
-                	API.sendMessage(msgCh, ":white_check_mark: Log channel set to " + msgCh.getAsMention() + ". Type this command again to set log channel to default guild channel.", false);    				    				
+                	msgCh.sendMessage(":white_check_mark: Log channel set to " + msgCh.getAsMention() + ". Type this command again to set log channel to default guild channel.").queue(m -> m.delete().queueAfter(5,  TimeUnit.SECONDS));
     				
     			}
     			
@@ -204,7 +206,7 @@ public class Events extends ListenerAdapter {
         				
         				MySQL.removeData(guild.getIdLong());
         				MySQL.insertData(guild.getIdLong(), guild.getDefaultChannel().getIdLong());
-        				API.sendMessage(msgCh, ":white_check_mark: Log channel set to " + guild.getDefaultChannel().getAsMention() + ". Type this command again in channel you want to be as log channel.", false);
+        				msgCh.sendMessage(":white_check_mark: Log channel set to " + guild.getDefaultChannel().getAsMention() + ". Type this command again in channel you want to be as log channel.").queue(m -> m.delete().queueAfter(5,  TimeUnit.SECONDS));
         				
         			}
         			
@@ -212,7 +214,7 @@ public class Events extends ListenerAdapter {
         				
         				MySQL.removeData(guild.getIdLong());    				
                 		MySQL.insertData(guild.getIdLong(), msgCh.getIdLong());
-                		API.sendMessage(msgCh, ":white_check_mark: Log channel set to " + msgCh.getAsMention() + ". Type this command again to set log channel to default guild channel.", false);    				
+                		msgCh.sendMessage(":white_check_mark: Log channel set to " + msgCh.getAsMention() + ". Type this command again to set log channel to default guild channel.").queue(m -> m.delete().queueAfter(5,  TimeUnit.SECONDS));  				
         				
         			}        			
     				
@@ -799,6 +801,7 @@ public class Events extends ListenerAdapter {
     			eb.setAuthor("Avatar of user " + author.getAsTag());
     			eb.setImage(author.getEffectiveAvatarUrl());
     			eb.setColor(Color.WHITE);
+    			API.sendMessage(msgCh, eb.build());
     			
     		}
     		
@@ -808,7 +811,8 @@ public class Events extends ListenerAdapter {
     			EmbedBuilder eb = API.createEmbedBuilder(u);
     			eb.setAuthor("Avatar of user " + u.getAsTag()); 
     			eb.setImage(u.getEffectiveAvatarUrl());
-    			eb.setColor(Color.WHITE);    			
+    			eb.setColor(Color.WHITE);
+    			API.sendMessage(msgCh, eb.build());    			
     			
     		}
     		
@@ -816,28 +820,53 @@ public class Events extends ListenerAdapter {
     	
     	if (msg.getContentRaw().equalsIgnoreCase("s!leave")) {
     		
-    		API.sendMessage(msgCh, "Bye.", false);
-    		API.sendPrivateMessage(guild.getOwner().getUser(), "I've left your server **" + guild.getName() + "**. If you'll want to invite me back, please use this URL: ||https://discordapp.com/oauth2/authorize?client_id=468523263853592576&scope=bot&permissions=268446884||. Thanks for using **Spidey**!", false);
-    		guild.leave().queue();
-    		
-    	}
-    	
-    	if (msg.getContentRaw().startsWith("s!say")) {
-    		
-    		String toSay = msg.getContentRaw().substring(6, msg.getContentRaw().lastIndexOf(" "));
-    		
-    		if (msg.getMentionedChannels().isEmpty()) {
+    		if (mem != guild.getOwner()) {
     			
-    			API.sendMessage(msgCh, toSay, false);
+    			API.sendMessage(msgCh, author.getAsMention() + ", you have to be the guild owner to do this.", false);
     			
     		}
     		
     		else {
     			
-    			TextChannel ch = msg.getMentionedChannels().get(0);
-    			API.sendMessage(ch, toSay, false);
+        		API.sendMessage(msgCh, "Bye.", false);
+        		API.sendPrivateMessage(guild.getOwner().getUser(), "I've left your server **" + guild.getName() + "**. If you'll want to invite me back, please use this URL: ||https://discordapp.com/oauth2/authorize?client_id=468523263853592576&scope=bot&permissions=268446884||. Thanks for using **Spidey**!", false);
+        		MySQL.removeData(guild.getIdLong());
+        		guild.leave().queue();    			
+    			
+    		}    		
+    		
+    	}
+    	
+    	if (msg.getContentRaw().startsWith("s!say")) {
+    		
+    		final String neededPerm = "BAN_MEMBERS";
+    		
+    		if (!API.hasPerm(mem, Permission.valueOf(neededPerm))) {
+    			
+    			API.sendMessage(msgCh, PermissionError.getErrorMessage(neededPerm), false);
     			
     		}
+    		
+    		else {
+    			
+    			API.deleteMessage(msg);
+        		String toSay = msg.getContentRaw().substring(6);
+        		
+        		if (msg.getMentionedChannels().isEmpty()) {
+        			
+        			API.sendMessage(msgCh, toSay, false);
+        			
+        		}
+        		
+        		else {
+        			
+        			TextChannel ch = msg.getMentionedChannels().get(0);
+        			toSay = toSay.substring(0, toSay.lastIndexOf(" "));
+        			API.sendMessage(ch, toSay, false);
+        			
+        		}    			
+    			
+    		}    		
     		
     	}
         
@@ -937,17 +966,15 @@ public class Events extends ListenerAdapter {
 		
 	}	
 	
-    @Override
-    public void onGuildLeave(GuildLeaveEvent e) {
-    	
-		Guild guild = e.getGuild();    	
-    	
-    	if (MySQL.isInDatabase(guild.getIdLong())) {
-    		
-        	MySQL.removeData(guild.getIdLong());    		
-    		
-    	}    	
-    	
-    }
+	@Override
+	public void onGuildLeave(GuildLeaveEvent e) {
+		
+		if (MySQL.isInDatabase(e.getGuild().getIdLong())) {
+			
+			MySQL.removeData(e.getGuild().getIdLong());
+			
+		}
+		
+	}
 		
 }
