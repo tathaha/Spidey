@@ -4,7 +4,7 @@ plugins {
     
 }
 
-task fatJar(type: Jar) {
+task shadowJar(type: Jar) {
 
 	manifest {
 	
@@ -36,17 +36,17 @@ repositories {
 
 dependencies {
 
-    compile 'mysql:mysql-connector-java:8.0.15'
+    compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.15'
     
-    compile ('net.dv8tion:JDA:4.ALPHA.0_45') {
+    compile (group: 'net.dv8tion', name: 'JDA', version: '4.ALPHA.0_47') {
     
-       exclude module: 'opus-java'
+       exclude group: 'club.minnced', module: 'opus-java'
        
     }   
     
-    compile 'ch.qos.logback:logback-classic:1.2.3'
-    compile 'org.apache.commons:commons-lang3:3.8.1'
-    compile 'org.codehaus.groovy:groovy-jsr223:3.0.0-alpha-4'
+    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+    compile group: 'org.codehaus.groovy', name: 'groovy-jsr223', version: '3.0.0-alpha-4'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
     
 }
 
