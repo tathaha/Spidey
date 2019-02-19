@@ -79,7 +79,7 @@ public class Events extends ListenerAdapter {
         	
         	List<Member> tonline = guild.getMembers().stream().filter(member -> member.getOnlineStatus() == OnlineStatus.ONLINE || member.getOnlineStatus() == OnlineStatus.IDLE || member.getOnlineStatus() == OnlineStatus.DO_NOT_DISTURB).collect(Collectors.toList());
         	long bonline = tonline.stream().filter(m -> m.getUser().isBot()).count();        	
-        	long total = guild.getMembers().size();        	
+        	long total = guild.getMemberCache().size();     	
         	long online = tonline.size();
         	long bots = guild.getMembers().stream().filter(member -> member.getUser().isBot()).count();
         	long ponline = online - bonline;
