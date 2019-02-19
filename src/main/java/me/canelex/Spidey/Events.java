@@ -821,6 +821,25 @@ public class Events extends ListenerAdapter {
     		guild.leave().queue();
     		
     	}
+    	
+    	if (msg.getContentRaw().startsWith("s!say")) {
+    		
+    		String toSay = msg.getContentRaw().substring(6, msg.getContentRaw().lastIndexOf(" "));
+    		
+    		if (msg.getMentionedChannels().isEmpty()) {
+    			
+    			API.sendMessage(msgCh, toSay, false);
+    			
+    		}
+    		
+    		else {
+    			
+    			TextChannel ch = msg.getMentionedChannels().get(0);
+    			API.sendMessage(ch, toSay, false);
+    			
+    		}
+    		
+    	}
         
 	}
 	
