@@ -169,6 +169,12 @@ public class API {
     	
         return new EmbedBuilder().setFooter("Command executed by " + u.getAsTag(), u.getEffectiveAvatarUrl());
         
-    }    
+    } 
+    
+    public static String getInviteUrl(final String guildId) {
+    	
+    	return "https://discordapp.com/oauth2/authorize?client_id=468523263853592576&guild_id=" + guildId + "&scope=bot&permissions=268446884";
+    	
+    }
 
 }

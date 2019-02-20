@@ -829,7 +829,7 @@ public class Events extends ListenerAdapter {
     		else {
     			
         		API.sendMessage(msgCh, "Bye.", false);
-        		API.sendPrivateMessage(guild.getOwner().getUser(), "I've left your server **" + guild.getName() + "**. If you'll want to invite me back, please use this URL: ||https://discordapp.com/oauth2/authorize?client_id=468523263853592576&scope=bot&permissions=268446884||. Thanks for using **Spidey**!", false);
+        		API.sendPrivateMessage(guild.getOwner().getUser(), "I've left your server **" + guild.getName() + "**. If you'll want to invite me back, please use this URL: ||" + API.getInviteUrl(guild.getId()) + "||. Thanks for using **Spidey**!", false);
         		MySQL.removeData(guild.getIdLong());
         		guild.leave().queue();    			
     			
