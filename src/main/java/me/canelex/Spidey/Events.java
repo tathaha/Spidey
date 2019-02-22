@@ -104,7 +104,7 @@ public class Events extends ListenerAdapter {
         		cal.setTimeInMillis(mem.getTimeJoined().toInstant().toEpochMilli()); 
         		String joindate = date.format(cal.getTime()).toString();
         		String jointime = time.format(cal.getTime()).toString();        		
-        		API.sendPrivateMessage(author, "Date and time of joining to guild **" + guild.getName() + "**: **" + joindate + "** | **" + jointime + "** UTC", false);
+        		API.sendPrivateMessage(author, String.format("Date and time of joining to guild **%s**: **%s** | **%s** UTC", guild.getName(), joindate, jointime), false);
         		
         	}
         	
@@ -118,7 +118,7 @@ public class Events extends ListenerAdapter {
             		cal.setTimeInMillis(member.getTimeJoined().toInstant().toEpochMilli());
             		String joindate = date.format(cal.getTime()).toString();
             		String jointime = time.format(cal.getTime()).toString();            		
-            		API.sendPrivateMessage(author, "(**" + member.getEffectiveName() + "**) " + "Date and time of joining to guild **" + guild.getName() + "**: **" + joindate + "** | **" + jointime + "** UTC", false);          		
+            		API.sendPrivateMessage(author, "(**" + member.getEffectiveName() + "**) " + String.format("Date and time of joining to guild **%s**: **%s** | **%s** UTC", guild.getName(), joindate, jointime), false);          		
         		
         		}
         		
@@ -139,12 +139,12 @@ public class Events extends ListenerAdapter {
         	cal.setTimeInMillis(guild.getTimeCreated().toInstant().toEpochMilli());
     		String creatdate = date.format(cal.getTime()).toString();   
     		String creattime = time.format(cal.getTime()).toString();   
-        	eb.addField("Created", "**" + creatdate + "** | **" + creattime + "** UTC", false);
+        	eb.addField("Created", String.format( "**%s** | **%s** UTC", creatdate, creattime), false);
         	
     		cal.setTimeInMillis(API.getMember(guild, jda.getSelfUser()).getTimeJoined().toInstant().toEpochMilli());
     		String joindate = date.format(cal.getTime()).toString();   
     		String jointime = time.format(cal.getTime()).toString();    		
-        	eb.addField("Bot connected", "**" + joindate + "** | ** " + jointime + "** UTC", false);
+        	eb.addField("Bot connected", String.format( "**%s** | **%s** UTC", joindate, jointime), false);
         	
 	        eb.addField("Custom invite URL", (!API.isPartnered(guild) ? "Guild is not partnered" : guild.retrieveVanityUrl().complete()), false);
         	
@@ -233,176 +233,187 @@ public class Events extends ListenerAdapter {
     	if (msg.getContentRaw().startsWith("s!mute")) {  
     		   		
 			GuildController controller = guild.getController();			
-			TextChannel c = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));
-    		final String neededPerm = "BAN_MEMBERS";			
-    		
-    		List<User> men = msg.getMentionedUsers();
-    		
-    		if (!msg.getContentRaw().equals("s!mute")) {
-    			
-    			if (API.hasPerm(mem, Permission.valueOf(neededPerm))) {
-    				
-    				if (guild.getRolesByName("Muted", false).isEmpty()) {
-    					
-    					controller.createRole().setName("Muted").setColor(Color.GRAY).complete();    					
-    					
-    				}
-    				
-            		String length = msg.getContentRaw().substring(5 + 2);
-            		length = length.substring(0, length.indexOf(" "));
-            		
-            		String time = msg.getContentRaw().substring((6 + 2 + length.length()));
-            		time = time.substring(0, time.indexOf(" "));
-            		
-            		String reason = msg.getContentRaw().substring((7 + 2 + length.length() + time.length()));
-            		reason = reason.substring(0, reason.lastIndexOf(" "));
-            		
-            		int lengthV = Integer.valueOf(length);
-            		
-            		if (!men.isEmpty()) {
-            			
-            			for (User user : men) {
-            				
-            				Role muted = guild.getRolesByName("Muted", false).get(0);
-            				Member member = guild.getMember(user);
-            				
-            	    		API.deleteMessage(msg);        				
-            				controller.addSingleRoleToMember(member, muted).queue();
-            				
-            				if (StringUtils.isNumeric(length) && lengthV != 0) {
-            					
-                				if (time.equalsIgnoreCase("d")) {
-                					
-                    				EmbedBuilder eb = API.createEmbedBuilder(author);
-                    				eb.setTitle("NEW MUTE");                    				
-                    		        eb.setThumbnail(user.getEffectiveAvatarUrl());                    				                    				
-                    				eb.setColor(Color.RED);
-                    				eb.addField("User", user.getAsMention(), true);
-                    				eb.addField("Moderator", author.getAsMention(), true);
-                    				eb.addField("Reason", "**" + reason + "**", true);              				
-                    				
-                    				if (lengthV == 1) {
-                    					
-                    					eb.addField("Length", "**1** day", true);            					
-                    					
-                    				}
-                    				
-                    				else {
-                    					
-                    					eb.addField("Length", "**" + lengthV + "** days", true);                   					
-                    					
-                    				}
-                    				
-                    				API.sendMessage(c, eb.build());           					
-                					
-                    				controller.removeSingleRoleFromMember(member, muted).queueAfter(lengthV, TimeUnit.DAYS);  
-                					
-                				}
-                				
-                				else {
-                					
-                    				if (time.equalsIgnoreCase("w")) {
-                    					
-                        				EmbedBuilder eb = API.createEmbedBuilder(author);
-                        				eb.setTitle("NEW MUTE");                        				
-                        		        eb.setThumbnail(user.getEffectiveAvatarUrl());                        		        
-                        				eb.setColor(Color.RED);
-                        				eb.addField("User", user.getAsMention(), true);
-                        				eb.addField("Moderator", author.getAsMention(), true);
-                        				eb.addField("Reason", "**" + reason + "**", true);           				
-                        				
-                        				if (lengthV == 1) {
-                        					
-                        					eb.addField("Length", "**1** week", true);                      					
-                        					
-                        				}
-                        				
-                        				else {
-                        					
-                        					eb.addField("Length", "**" + lengthV + "** weeks", true);                        					
-                        					
-                        				}                
-                        				
-                        				API.sendMessage(c, eb.build());                   				
-                    					
-                        				controller.removeSingleRoleFromMember(member, muted).queueAfter((lengthV * 7), TimeUnit.DAYS);                     				
-                    					
-                    				}
-                    				
-                    				else {
-                    					
-                        				if (time.equalsIgnoreCase("m")) {
-                        					
-                            				EmbedBuilder eb = API.createEmbedBuilder(author);
-                            				eb.setTitle("NEW MUTE");                            				
-                            		        eb.setThumbnail(user.getEffectiveAvatarUrl());                            		        
-                            				eb.setColor(Color.RED);
-                            				eb.addField("User", user.getAsMention(), true);
-                            				eb.addField("Moderator", author.getAsMention(), true);
-                            				eb.addField("Reason", "**" + reason + "**", true);                              				
-                            				
-                            				if (lengthV == 1) {
-                            					
-                            					eb.addField("Length", "**1** minute", true);                           					
-                                				API.sendMessage(c, eb.build());                              					                              				
-                            					
-                            				}
-                            				
-                            				else {                            					
-                            						
-                                				eb.addField("Length", "**" + lengthV + "** minut", true);                        						                                					
-                            					
-                                				API.sendMessage(c, eb.build());                    					                                  				
-                            					
-                            				}                    					                    					
-                            				
-                            				controller.removeSingleRoleFromMember(member, muted).queueAfter(lengthV, TimeUnit.MINUTES);                             				                        				
-                        					
-                        				}
-                        				
-                        				else {
-                        					
-                        					API.sendMessage(msgCh, "Unknown time value. Value must be **d**ay(s), **w**eek(s) or **m**inute(s).", false);
-                        					
-                        				}
-                    					
-                    				}        				    					
-                					
-                				}        					
-            					
-            				}
-            				
-            				else {
-            					
-            					API.sendMessage(msgCh, "Given value is not a number.", false);         					
-            					
-            				}        				       				
-            				
-            			}
-            			
-            		}
-            		
-            		else {
-            			
-        				API.sendMessage(msgCh, "Unknown arguments..", false);        			
-            			
-            		}     				
-    				
-    			}
-    			
-    			else {
-    				
-    				API.sendMessage(msgCh, PermissionError.getErrorMessage(neededPerm), false);      				
-    				
-    			}
-    			
-    		} 
-    		
-    		else {
-    			
-				API.sendMessage(msgCh, "Unknown arguments..", false);    			
-    			
-    		}   	
+			
+			if (guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong())) == null) {
+				
+				return;
+				
+			}
+			
+			else {
+				
+				TextChannel c = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));
+	    		final String neededPerm = "BAN_MEMBERS";			
+	    		
+	    		List<User> men = msg.getMentionedUsers();
+	    		
+	    		if (!msg.getContentRaw().equals("s!mute")) {
+	    			
+	    			if (API.hasPerm(mem, Permission.valueOf(neededPerm))) {
+	    				
+	    				if (guild.getRolesByName("Muted", false).isEmpty()) {
+	    					
+	    					controller.createRole().setName("Muted").setColor(Color.GRAY).complete();    					
+	    					
+	    				}
+	    				
+	            		String length = msg.getContentRaw().substring(5 + 2);
+	            		length = length.substring(0, length.indexOf(" "));
+	            		
+	            		String time = msg.getContentRaw().substring((6 + 2 + length.length()));
+	            		time = time.substring(0, time.indexOf(" "));
+	            		
+	            		String reason = msg.getContentRaw().substring((7 + 2 + length.length() + time.length()));
+	            		reason = reason.substring(0, reason.lastIndexOf(" "));
+	            		
+	            		int lengthV = Integer.valueOf(length);
+	            		
+	            		if (!men.isEmpty()) {
+	            			
+	            			for (User user : men) {
+	            				
+	            				Role muted = guild.getRolesByName("Muted", false).get(0);
+	            				Member member = guild.getMember(user);
+	            				
+	            	    		API.deleteMessage(msg);        				
+	            				controller.addSingleRoleToMember(member, muted).queue();
+	            				
+	            				if (StringUtils.isNumeric(length) && lengthV != 0) {
+	            					
+	                				if (time.equalsIgnoreCase("d")) {
+	                					
+	                    				EmbedBuilder eb = API.createEmbedBuilder(author);
+	                    				eb.setTitle("NEW MUTE");                    				
+	                    		        eb.setThumbnail(user.getEffectiveAvatarUrl());                    				                    				
+	                    				eb.setColor(Color.RED);
+	                    				eb.addField("User", user.getAsMention(), true);
+	                    				eb.addField("Moderator", author.getAsMention(), true);
+	                    				eb.addField("Reason", "**" + reason + "**", true);              				
+	                    				
+	                    				if (lengthV == 1) {
+	                    					
+	                    					eb.addField("Length", "**1** day", true);            					
+	                    					
+	                    				}
+	                    				
+	                    				else {
+	                    					
+	                    					eb.addField("Length", "**" + lengthV + "** days", true);                   					
+	                    					
+	                    				}
+	                    				
+	                    				API.sendMessage(c, eb.build());           					
+	                					
+	                    				controller.removeSingleRoleFromMember(member, muted).queueAfter(lengthV, TimeUnit.DAYS);  
+	                					
+	                				}
+	                				
+	                				else {
+	                					
+	                    				if (time.equalsIgnoreCase("w")) {
+	                    					
+	                        				EmbedBuilder eb = API.createEmbedBuilder(author);
+	                        				eb.setTitle("NEW MUTE");                        				
+	                        		        eb.setThumbnail(user.getEffectiveAvatarUrl());                        		        
+	                        				eb.setColor(Color.RED);
+	                        				eb.addField("User", user.getAsMention(), true);
+	                        				eb.addField("Moderator", author.getAsMention(), true);
+	                        				eb.addField("Reason", "**" + reason + "**", true);           				
+	                        				
+	                        				if (lengthV == 1) {
+	                        					
+	                        					eb.addField("Length", "**1** week", true);                      					
+	                        					
+	                        				}
+	                        				
+	                        				else {
+	                        					
+	                        					eb.addField("Length", "**" + lengthV + "** weeks", true);                        					
+	                        					
+	                        				}                
+	                        				
+	                        				API.sendMessage(c, eb.build());                   				
+	                    					
+	                        				controller.removeSingleRoleFromMember(member, muted).queueAfter((lengthV * 7), TimeUnit.DAYS);                     				
+	                    					
+	                    				}
+	                    				
+	                    				else {
+	                    					
+	                        				if (time.equalsIgnoreCase("m")) {
+	                        					
+	                            				EmbedBuilder eb = API.createEmbedBuilder(author);
+	                            				eb.setTitle("NEW MUTE");                            				
+	                            		        eb.setThumbnail(user.getEffectiveAvatarUrl());                            		        
+	                            				eb.setColor(Color.RED);
+	                            				eb.addField("User", user.getAsMention(), true);
+	                            				eb.addField("Moderator", author.getAsMention(), true);
+	                            				eb.addField("Reason", "**" + reason + "**", true);                              				
+	                            				
+	                            				if (lengthV == 1) {
+	                            					
+	                            					eb.addField("Length", "**1** minute", true);                           					
+	                                				API.sendMessage(c, eb.build());                              					                              				
+	                            					
+	                            				}
+	                            				
+	                            				else {                            					
+	                            						
+	                                				eb.addField("Length", "**" + lengthV + "** minut", true);                        						                                					
+	                            					
+	                                				API.sendMessage(c, eb.build());                    					                                  				
+	                            					
+	                            				}                    					                    					
+	                            				
+	                            				controller.removeSingleRoleFromMember(member, muted).queueAfter(lengthV, TimeUnit.MINUTES);                             				                        				
+	                        					
+	                        				}
+	                        				
+	                        				else {
+	                        					
+	                        					API.sendMessage(msgCh, "Unknown time value. Value must be **d**ay(s), **w**eek(s) or **m**inute(s).", false);
+	                        					
+	                        				}
+	                    					
+	                    				}        				    					
+	                					
+	                				}        					
+	            					
+	            				}
+	            				
+	            				else {
+	            					
+	            					API.sendMessage(msgCh, "Given value is not a number.", false);         					
+	            					
+	            				}        				       				
+	            				
+	            			}
+	            			
+	            		}
+	            		
+	            		else {
+	            			
+	        				API.sendMessage(msgCh, "Unknown arguments..", false);        			
+	            			
+	            		}     				
+	    				
+	    			}
+	    			
+	    			else {
+	    				
+	    				API.sendMessage(msgCh, PermissionError.getErrorMessage(neededPerm), false);      				
+	    				
+	    			}
+	    			
+	    		} 
+	    		
+	    		else {
+	    			
+					API.sendMessage(msgCh, "Unknown arguments..", false);    			
+	    			
+	    		}				
+				
+			}   	
 		    	
     	}
     	
@@ -414,22 +425,32 @@ public class Events extends ListenerAdapter {
     			
     			if (API.hasPerm(mem, Permission.valueOf(neededPerm))) {
     				
-    				final String reason;
-    				reason = msg.getContentRaw().substring(7, msg.getContentRaw().lastIndexOf(" "));
+    				if (guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong())) == null) {
+    					
+    					return;
+    					
+    				}
     				
-    				for (User u : msg.getMentionedUsers()) {
+    				else {
+    					
+  					  TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));
+  					  final String reason;
+    				  reason = msg.getContentRaw().substring(7, msg.getContentRaw().lastIndexOf(" "));
     				
-    				  u.openPrivateChannel().queue(ch -> ch.sendMessage(":exclamation: You have been warned on guild **" + guild.getName() + "** from **" + author.getName() + "**. Reason - **" + reason + "**.").queue());
+    				  for (User u : msg.getMentionedUsers()) {
     				
-					  API.deleteMessage(msg);
-					  EmbedBuilder eb = API.createEmbedBuilder(author);
-					  eb.setTitle("NEW WARN");
-					  eb.setColor(Color.ORANGE);
-					  eb.addField("User", u.getAsMention(), true);
-					  eb.addField("Moderator", author.getAsMention(), true);
-					  eb.addField("Reason", "**" + reason + "**", true);
-					  TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));
-					  API.sendMessage(log, eb.build());    				
+    				    u.openPrivateChannel().queue(ch -> ch.sendMessage(String.format(":exclamation: You have been warned on guild **%s** from **%s**. Reason - **%s**.", guild.getName(), author.getName(), author.getName())).queue());
+    				
+					    API.deleteMessage(msg);
+					    EmbedBuilder eb = API.createEmbedBuilder(author);
+					    eb.setTitle("NEW WARN");
+					    eb.setColor(Color.ORANGE);
+					    eb.addField("User", u.getAsMention(), true);
+					    eb.addField("Moderator", author.getAsMention(), true);
+					    eb.addField("Reason", "**" + reason + "**", true);
+					    API.sendMessage(log, eb.build());     					  
+  					      					
+    	             }    				    			 			
     				
     			  }
     				
@@ -683,13 +704,13 @@ public class Events extends ListenerAdapter {
         		String creatdate = date.format(cal.getTime()).toString();   
         		String creattime = time.format(cal.getTime()).toString(); 
         		
-        		eb.addField("Account created", "**" + creatdate + "** | " + "**" + creattime + "** UTC", false);
+        		eb.addField("Account created", String.format( "**%s** | **%s** UTC", creatdate, creattime), false);
         		
             	cal.setTimeInMillis(mem.getTimeJoined().toInstant().toEpochMilli());
         		String joindate = date.format(cal.getTime()).toString();   
         		String jointime = time.format(cal.getTime()).toString(); 
         		
-        		eb.addField("User joined", "**" + joindate + "** | " + "**" + jointime + "** UTC", false); 
+        		eb.addField("User joined", String.format( "**%s** | **%s** UTC", joindate, jointime), false);
         		
         		if (mem.getRoles().size() == 0) {
         			
@@ -746,13 +767,13 @@ public class Events extends ListenerAdapter {
         		String creatdate = date.format(cal.getTime()).toString();   
         		String creattime = time.format(cal.getTime()).toString(); 
         		
-        		eb.addField("Account created", "**" + creatdate + "** | " + "**" + creattime + "** UTC", false);
+        		eb.addField("Account created", String.format( "**%s** | **%s** UTC", creatdate, creattime), false);
         		
             	cal.setTimeInMillis(member.getTimeJoined().toInstant().toEpochMilli());
         		String joindate = date.format(cal.getTime()).toString();   
         		String jointime = time.format(cal.getTime()).toString(); 
         		
-        		eb.addField("User joined", "**" + joindate + "** | " + "**" + jointime + "** UTC", false);         		
+        		eb.addField("User joined", String.format( "**%s** | **%s** UTC", joindate, jointime), false);       		
         			
         		if (member.getRoles().size() == 0) {
         			
@@ -829,7 +850,7 @@ public class Events extends ListenerAdapter {
     		else {
     			
         		API.sendMessage(msgCh, "Bye.", false);
-        		API.sendPrivateMessage(guild.getOwner().getUser(), "I've left your server **" + guild.getName() + "**. If you'll want to invite me back, please use this URL: ||" + API.getInviteUrl(guild.getId()) + "||. Thanks for using **Spidey**!", false);
+        		API.sendPrivateMessage(guild.getOwner().getUser(), String.format("I've left your server **%s**. If you'll want to invite me back, please use this URL: ||%s||. Thanks for using **Spidey**!", guild.getName(), API.getInviteUrl(guild.getIdLong())), false);
         		MySQL.removeData(guild.getIdLong());
         		guild.leave().queue();    			
     			
@@ -880,13 +901,23 @@ public class Events extends ListenerAdapter {
 		
 		if (e.getRoles().contains(muted)) {
 			
-			TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));
-			EmbedBuilder eb = new EmbedBuilder();
-			eb.setTitle("UNMUTE");
-			eb.setColor(Color.GREEN);			
-	        eb.setThumbnail(e.getUser().getEffectiveAvatarUrl());						
-			eb.addField("User", "**" + e.getUser().getAsTag() + "**", false);
-			API.sendMessage(log, eb.build());
+			if (guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong())) == null) {
+				
+				return;
+				
+			}
+			
+			else {
+				
+				TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));				
+				EmbedBuilder eb = new EmbedBuilder();
+				eb.setTitle("UNMUTE");
+				eb.setColor(Color.GREEN);			
+		        eb.setThumbnail(e.getUser().getEffectiveAvatarUrl());						
+				eb.addField("User", "**" + e.getUser().getAsTag() + "**", false);
+				API.sendMessage(log, eb.build());				
+				
+			}
 			
 		}
 		
@@ -896,22 +927,32 @@ public class Events extends ListenerAdapter {
     public void onGuildBan(GuildBanEvent e) {
 		
 		User user = e.getUser();
-		Guild guild = e.getGuild();		
-		TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));
-        
-        Ban ban = guild.retrieveBan(user).complete();
-        List<AuditLogEntry> auditbans = guild.retrieveAuditLogs().type(ActionType.BAN).complete();
-        User banner = auditbans.get(0).getUser();
-        EmbedBuilder eb = new EmbedBuilder();
-        eb.setTitle("NEW BAN");        
-        eb.setThumbnail(user.getEffectiveAvatarUrl());                
-        eb.setColor(Color.RED);
-        eb.addField("User", "**" + user.getAsTag() + "**", true);
-        eb.addField("ID", "**" + user.getId() + "**", true);        
-        eb.addField("Moderator", banner.getAsMention(), true);        
-        eb.addField("Reason", "**" + (ban.getReason() == null ? "Unknown" : ban.getReason()) + "**", true);
-               
-		API.sendMessage(log, eb.build());
+		Guild guild = e.getGuild();
+		
+		if (guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong())) == null) {
+			
+			return;
+			
+		}
+		
+		else {
+			
+			TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));				
+	        Ban ban = guild.retrieveBan(user).complete();
+	        List<AuditLogEntry> auditbans = guild.retrieveAuditLogs().type(ActionType.BAN).complete();
+	        User banner = auditbans.get(0).getUser();
+	        EmbedBuilder eb = new EmbedBuilder();
+	        eb.setTitle("NEW BAN");        
+	        eb.setThumbnail(user.getEffectiveAvatarUrl());                
+	        eb.setColor(Color.RED);
+	        eb.addField("User", "**" + user.getAsTag() + "**", true);
+	        eb.addField("ID", "**" + user.getId() + "**", true);        
+	        eb.addField("Moderator", banner.getAsMention(), true);        
+	        eb.addField("Reason", "**" + (ban.getReason() == null ? "Unknown" : ban.getReason()) + "**", true);
+	               
+			API.sendMessage(log, eb.build());			
+			
+		}        
 		
 	}	
 	
@@ -920,15 +961,25 @@ public class Events extends ListenerAdapter {
 		
 		User user = e.getUser();
 		Guild guild = e.getGuild();		
-		TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));
-        
-        EmbedBuilder eb = new EmbedBuilder();
-        eb.setTitle("UNBAN");
-        eb.setColor(Color.GREEN);        
-        eb.setThumbnail(user.getEffectiveAvatarUrl());                      
-        eb.addField("User", "**" + user.getAsTag() + "**", true);
-        eb.addField("ID", "**" + user.getId() + "**", true);        
-		API.sendMessage(log, eb.build());
+		
+		if (guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong())) == null) {
+			
+			return;
+			
+		}
+		
+		else {
+			
+			TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));			
+	        EmbedBuilder eb = new EmbedBuilder();
+	        eb.setTitle("UNBAN");
+	        eb.setColor(Color.GREEN);        
+	        eb.setThumbnail(user.getEffectiveAvatarUrl());                      
+	        eb.addField("User", "**" + user.getAsTag() + "**", true);
+	        eb.addField("ID", "**" + user.getId() + "**", true);        
+			API.sendMessage(log, eb.build());			
+			
+		}        
 		
 	}	
 	
@@ -936,16 +987,26 @@ public class Events extends ListenerAdapter {
     public void onGuildMemberLeave(GuildMemberLeaveEvent e) {
 		
 		User user = e.getUser();
-		Guild guild = e.getGuild();		
-		TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));	
-        
-        EmbedBuilder eb = new EmbedBuilder();
-        eb.setTitle("USER HAS LEFT");        
-        eb.setThumbnail(user.getEffectiveAvatarUrl());                
-        eb.setColor(Color.RED);
-        eb.addField("User", "**" + user.getAsTag() + "**", true);
-        eb.addField("ID", "**" + user.getId() + "**", true);
-        API.sendMessage(log, eb.build());        	
+		Guild guild = e.getGuild();	
+		
+		if (guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong())) == null) {
+			
+			return;
+			
+		}
+		
+		else {
+			
+			TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));
+	        EmbedBuilder eb = new EmbedBuilder();
+	        eb.setTitle("USER HAS LEFT");        
+	        eb.setThumbnail(user.getEffectiveAvatarUrl());                
+	        eb.setColor(Color.RED);
+	        eb.addField("User", "**" + user.getAsTag() + "**", true);
+	        eb.addField("ID", "**" + user.getId() + "**", true);
+	        API.sendMessage(log, eb.build());			
+			
+		}                
 		
 	}	
 	
@@ -954,15 +1015,25 @@ public class Events extends ListenerAdapter {
 		
 		User user = e.getUser();
 		Guild guild = e.getGuild();		
-		TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));	
-        
-        EmbedBuilder eb = new EmbedBuilder();
-        eb.setTitle("USER HAS JOINED");        
-        eb.setThumbnail(user.getEffectiveAvatarUrl());                     
-        eb.setColor(Color.GREEN);
-        eb.addField("User", "**" + user.getAsTag() + "**", true);
-        eb.addField("ID", "**" + user.getId() + "**", true);        
-        API.sendMessage(log, eb.build());    
+		
+		if (guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong())) == null) {
+			
+			return;
+			
+		}
+		
+		else {
+			
+			TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));					
+	        EmbedBuilder eb = new EmbedBuilder();
+	        eb.setTitle("USER HAS JOINED");        
+	        eb.setThumbnail(user.getEffectiveAvatarUrl());                     
+	        eb.setColor(Color.GREEN);
+	        eb.addField("User", "**" + user.getAsTag() + "**", true);
+	        eb.addField("ID", "**" + user.getId() + "**", true);        
+	        API.sendMessage(log, eb.build());			
+			
+		}    
 		
 	}	
 	
