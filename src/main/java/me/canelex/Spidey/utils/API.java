@@ -171,9 +171,9 @@ public class API {
         
     } 
     
-    public static String getInviteUrl(final String guildId) {
+    public static String getInviteUrl(final long guildId) {
     	
-    	return "https://discordapp.com/oauth2/authorize?client_id=468523263853592576&guild_id=" + guildId + "&scope=bot&permissions=268446884";
+    	return String.format("https://discordapp.com/oauth2/authorize?client_id=468523263853592576&guild_id=%s&scope=bot&permissions=268446884", guildId);
     	
     }
 
