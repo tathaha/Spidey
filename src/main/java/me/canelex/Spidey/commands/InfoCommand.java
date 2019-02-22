@@ -33,7 +33,7 @@ public class InfoCommand implements Command {
 		eb.setAuthor("About bot", "https://canelex.ymastersk.net", jda.getSelfUser().getEffectiveAvatarUrl());
 		eb.setColor(Color.WHITE);
 		eb.addField("Developer", dev.getAsMention(), true);
-		eb.addField("Release channel", "**ALPHA**", true);
+		eb.addField("Release channel", "**STABLE**", true);
 		eb.setThumbnail(guild.getIconUrl());		
 		API.sendMessage(msgCh, eb.build());		
 		
