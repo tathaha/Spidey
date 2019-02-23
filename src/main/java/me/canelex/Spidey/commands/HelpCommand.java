@@ -24,11 +24,15 @@ public class HelpCommand implements Command {
 				.setColor(Color.WHITE)
 				.setAuthor("Spidey's Commands", "https://github.com/caneleex/Spidey", e.getJDA().getSelfUser().getEffectiveAvatarUrl());
 		
+		StringBuilder sb = new StringBuilder();		
+		
 		for (String cmd : Core.commands.keySet()) {
 			
 			if (!Core.commands.get(cmd).help().equals(null)) {
 				
-				eb.addField("s!" + cmd, Core.commands.get(cmd).help(), false);
+				sb.append("`s!" + cmd + "` - " + Core.commands.get(cmd).help() + "\n");
+				final String help = sb.toString();
+				eb.setDescription(help);
 				
 			}
 		}
@@ -40,7 +44,7 @@ public class HelpCommand implements Command {
 	@Override
 	public String help() {
 
-		return "Shows you help";
+		return "Shows you this message";
 		
 	}
 
