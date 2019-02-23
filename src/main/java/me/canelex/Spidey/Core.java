@@ -17,6 +17,7 @@ import me.canelex.Spidey.commands.MuteCommand;
 import me.canelex.Spidey.commands.PingCommand;
 import me.canelex.Spidey.commands.PollCommand;
 import me.canelex.Spidey.commands.SayCommand;
+import me.canelex.Spidey.commands.SupportGuildsCommand;
 import me.canelex.Spidey.commands.UptimeCommand;
 import me.canelex.Spidey.commands.UserCommand;
 import me.canelex.Spidey.commands.WarnCommand;
@@ -66,6 +67,7 @@ public class Core {
 		commands.put("avatar", new AvatarCommand());
 		commands.put("leave", new LeaveCommand());
 		commands.put("say", new SayCommand());
+		commands.put("sguilds", new SupportGuildsCommand());
 		
 	}
 	
