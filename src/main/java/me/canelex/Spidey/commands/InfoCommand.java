@@ -6,6 +6,7 @@ import me.canelex.Spidey.objects.command.Command;
 import me.canelex.Spidey.utils.API;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.JDAInfo;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
@@ -34,6 +35,7 @@ public class InfoCommand implements Command {
 		eb.setColor(Color.WHITE);
 		eb.addField("Developer", dev.getAsMention(), true);
 		eb.addField("Release channel", "**STABLE**", true);
+		eb.addField("I'm running on JDA version", JDAInfo.VERSION, true);
 		eb.setThumbnail(guild.getIconUrl());		
 		API.sendMessage(msgCh, eb.build());		
 		
