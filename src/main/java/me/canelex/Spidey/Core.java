@@ -30,11 +30,11 @@ import net.dv8tion.jda.api.entities.Activity;
 
 public class Core {	
 	
-	public static JDA jda;
+	private final JDA jda;
 	public static final CommandParser parser = new CommandParser();
 	public static HashMap<String, Command> commands = new HashMap<String, Command>();	
-							
-	public static void main( String[] args ) throws Exception {
+	
+	public Core() throws Exception {
     	
 		jda = new JDABuilder(AccountType.BOT)
     			.setToken(Secrets.token)
@@ -44,7 +44,19 @@ public class Core {
 		
 		setupCommands();
         
-    }  
+    } 	
+	
+	public static void main(String[] args) throws Exception {
+		
+		new Core();
+		
+	}
+							
+	public JDA getJDA() {
+		
+		return jda;
+		
+	}	  
 	
 	public static void setupCommands() {
 		
