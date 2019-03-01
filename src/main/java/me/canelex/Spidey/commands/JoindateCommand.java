@@ -29,6 +29,8 @@ public class JoindateCommand implements Command {
 	@Override
 	public void action(GuildMessageReceivedEvent e) {
 		
+		API.deleteMessage(e.getMessage());
+		
     	if (e.getMessage().getMentionedUsers().isEmpty()) {
     		
     		cal.setTimeInMillis(e.getMember().getTimeJoined().toInstant().toEpochMilli()); 
