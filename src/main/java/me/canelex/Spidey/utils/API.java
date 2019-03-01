@@ -177,13 +177,13 @@ public class API {
     	
     }
     
-    public static void sendMessageFormat(final TextChannel ch, final String message, final Object... args) {
+    public static void sendMessageFormat(final TextChannel ch, final String message, final boolean isSpoiler, final Object... args) {
     	
     	sendMessage(ch, String.format(message, args), false);
     	
     }
     
-    public static void sendPrivateMessageFormat(final User u, final String message, final Object... args) {
+    public static void sendPrivateMessageFormat(final User u, final String message, final boolean isSpoiler, final Object... args) {
     	
     	sendPrivateMessage(u, String.format(message, args), false);
     	
