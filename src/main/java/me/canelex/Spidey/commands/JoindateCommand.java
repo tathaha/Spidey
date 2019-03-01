@@ -34,7 +34,7 @@ public class JoindateCommand implements Command {
     		cal.setTimeInMillis(e.getMember().getTimeJoined().toInstant().toEpochMilli()); 
     		String joindate = date.format(cal.getTime()).toString();
     		String jointime = time.format(cal.getTime()).toString();        		
-    		API.sendPrivateMessage(e.getAuthor(), String.format("Date and time of joining to guild **%s**: **%s** | **%s** UTC", e.getGuild().getName(), joindate, jointime), false);
+    		API.sendPrivateMessageFormat(e.getAuthor(), "Date and time of joining to guild **%s**: **%s** | **%s** UTC", false, e.getGuild().getName(), joindate, jointime);
     		
     	}
     	
@@ -48,7 +48,7 @@ public class JoindateCommand implements Command {
         		cal.setTimeInMillis(member.getTimeJoined().toInstant().toEpochMilli());
         		String joindate = date.format(cal.getTime()).toString();
         		String jointime = time.format(cal.getTime()).toString();            		
-        		API.sendPrivateMessage(e.getAuthor(), "(**" + member.getEffectiveName() + "**) " + String.format("Date and time of joining to guild **%s**: **%s** | **%s** UTC", e.getGuild().getName(), joindate, jointime), false);          		
+        		API.sendPrivateMessageFormat(e.getAuthor(), "(**" + member.getEffectiveName() + "**) " + "Date and time of joining to guild **%s**: **%s** | **%s** UTC", false,  e.getGuild().getName(), joindate, jointime);          		
     		
     		}
     		

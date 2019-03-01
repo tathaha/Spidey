@@ -26,7 +26,7 @@ public class LeaveCommand implements Command {
 		else {
 			
     		API.sendMessage(e.getChannel(), "Bye.", false);
-    		API.sendPrivateMessage(e.getGuild().getOwner().getUser(), String.format("I've left your server **%s**. If you'll want to invite me back, please use this URL: ||%s||. Thanks for using **Spidey**!", e.getGuild().getName(), API.getInviteUrl(e.getGuild().getIdLong())), false);
+    		API.sendPrivateMessageFormat(e.getGuild().getOwner().getUser(), "I've left your server **%s**. If you'll want to invite me back, please use this URL: ||%s||. Thanks for using **Spidey**!", false, e.getGuild().getName(), API.getInviteUrl(e.getGuild().getIdLong()));
     		MySQL.removeData(e.getGuild().getIdLong());
     		e.getGuild().leave().queue();    			
 			

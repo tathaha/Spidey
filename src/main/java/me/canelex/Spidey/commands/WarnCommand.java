@@ -44,7 +44,7 @@ public class WarnCommand implements Command {
 				
 				      for (User u : e.getMessage().getMentionedUsers()) {
 				
-				        API.sendPrivateMessageFormat(u, ":exclamation: You have been warned on guild **%s** from **%s** for **%s**.", e.getGuild().getName(), e.getAuthor().getName(), e.getAuthor().getName(), false);
+				        API.sendPrivateMessageFormat(u, ":exclamation: You have been warned on guild **%s** from **%s** for **%s**.", false, e.getGuild().getName(), e.getAuthor().getName(), e.getAuthor().getName());
 				
 				        API.deleteMessage(e.getMessage());
 				        EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
