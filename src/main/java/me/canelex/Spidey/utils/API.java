@@ -182,5 +182,11 @@ public class API {
     	sendMessage(ch, String.format(message, args), false);
     	
     }
+    
+    public static void sendPrivateMessageFormat(final User u, final String message, final Object... args) {
+    	
+    	sendPrivateMessage(u, String.format(message, args), false);
+    	
+    }    
 
 }
