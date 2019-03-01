@@ -176,5 +176,11 @@ public class API {
     	return String.format("https://discordapp.com/oauth2/authorize?client_id=468523263853592576&guild_id=%s&scope=bot&permissions=268446884", guildId);
     	
     }
+    
+    public static void sendMessageFormat(final TextChannel ch, final String message, final Object... args) {
+    	
+    	sendMessage(ch, String.format(message, args), false);
+    	
+    }
 
 }
