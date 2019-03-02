@@ -1,6 +1,8 @@
 package me.canelex.Spidey.commands;
 
 import java.awt.Color;
+import java.util.HashMap;
+import java.util.Map;
 
 import me.canelex.Spidey.Core;
 import me.canelex.Spidey.objects.command.Command;
@@ -26,15 +28,37 @@ public class HelpCommand implements Command {
 		
 		StringBuilder sb = new StringBuilder();		
 		
-		for (String cmd : Core.commands.keySet()) {
+		HashMap<String, Command> commands = new HashMap<String, Command>();
+		
+		for (Map.Entry<String, Command> entry : Core.commands.entrySet()) {
+			
+			commands.put(entry.getKey(), entry.getValue());
+			
+		}
+		
+		commands.remove("yt");
+				
+		for (String cmd : commands.keySet()) {
 			
 			if (!Core.commands.get(cmd).help().equals(null)) {
 				
-				sb.append("`s!" + cmd + "` - " + Core.commands.get(cmd).help() + "\n");
+				if (cmd.equals("g")) {
+					
+					sb.append("`s!" + cmd + "` | `s!yt` - " + Core.commands.get(cmd).help() + "\n");					
+					
+				}
+				
+				else {
+					
+					sb.append("`s!" + cmd + "` - " + Core.commands.get(cmd).help() + "\n");					
+					
+				}
+				
 				final String help = sb.toString();
 				eb.setDescription(help);
 				
 			}
+			
 		}
 		
 		API.sendMessage(e.getChannel(), eb.build());
