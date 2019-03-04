@@ -16,6 +16,7 @@ import me.canelex.Spidey.commands.MembercountCommand;
 import me.canelex.Spidey.commands.MuteCommand;
 import me.canelex.Spidey.commands.PingCommand;
 import me.canelex.Spidey.commands.PollCommand;
+import me.canelex.Spidey.commands.RedditCommand;
 import me.canelex.Spidey.commands.SayCommand;
 import me.canelex.Spidey.commands.SearchCommand;
 import me.canelex.Spidey.commands.SupportGuildsCommand;
@@ -82,7 +83,8 @@ public class Core {
 		commands.put("say", new SayCommand());
 		commands.put("sguilds", new SupportGuildsCommand());
 		commands.put("g", new SearchCommand());
-		commands.put("yt", new SearchCommand());		
+		commands.put("yt", new SearchCommand());
+		commands.put("reddit", new RedditCommand());		
 		
 	}
 	
