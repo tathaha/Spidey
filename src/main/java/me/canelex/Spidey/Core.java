@@ -23,6 +23,7 @@ import me.canelex.Spidey.commands.SupportGuildsCommand;
 import me.canelex.Spidey.commands.UptimeCommand;
 import me.canelex.Spidey.commands.UserCommand;
 import me.canelex.Spidey.commands.WarnCommand;
+import me.canelex.Spidey.commands.YouTubeChannelCommand;
 import me.canelex.Spidey.objects.command.Command;
 import me.canelex.Spidey.objects.command.CommandParser;
 import net.dv8tion.jda.api.AccountType;
@@ -84,7 +85,8 @@ public class Core {
 		commands.put("sguilds", new SupportGuildsCommand());
 		commands.put("g", new SearchCommand());
 		commands.put("yt", new SearchCommand());
-		commands.put("reddit", new RedditCommand());		
+		commands.put("reddit", new RedditCommand());
+		commands.put("ytchannel", new YouTubeChannelCommand());		
 		
 	}
 	
