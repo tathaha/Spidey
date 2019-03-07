@@ -30,20 +30,32 @@ public class RedditCommand implements Command {
 		UserAgent ua = new UserAgent("bot", "me.canelex.Spidey", "STABLE", "canelex_");
 		OkHttpNetworkAdapter adapter = new OkHttpNetworkAdapter(ua);
 		RedditClient reddit = OAuthHelper.automatic(adapter, credentials);
-		Subreddit sr = reddit.subreddit(subreddit).about();
-		int subs = sr.getSubscribers();
-		int active = sr.getAccountsActive();
-		String desc = sr.getPublicDescription();
 		
-		EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
-		eb.setAuthor(sr.getTitle(), "https://reddit.com/r/" + subreddit, "https://i.ymastersk.net/LRjhvy");
-		eb.setColor(16727832);				
-		eb.addField("Subscribers", "**" + subs + "**", false);
-		eb.addField("Active users", "**" + active + "**", false);
-		eb.addField("Description", desc, false);
-		eb.addField("NSFW", "**" + (sr.isNsfw() ? "Yes" : "No") + "**", false);
-		
-		API.sendMessage(e.getChannel(), eb.build());
+	    try {
+	    	
+			Subreddit sr = reddit.subreddit(subreddit).about();			
+			
+			int subs = sr.getSubscribers();
+			int active = sr.getAccountsActive();
+			String desc = sr.getPublicDescription();
+				
+			EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
+			eb.setAuthor(sr.getTitle(), "https://reddit.com/r/" + subreddit, "https://i.ymastersk.net/LRjhvy");
+			eb.setColor(16727832);				
+			eb.addField("Subscribers", "**" + subs + "**", false);
+			eb.addField("Active users", "**" + active + "**", false);
+			eb.addField("Description", (desc.length() == 0 ? "**None**" : desc), false);
+			eb.addField("NSFW", "**" + (sr.isNsfw() ? "Yes" : "No") + "**", false);
+				
+			API.sendMessage(e.getChannel(), eb.build());		    	
+	    	
+	    }		
+	    
+	    catch (NullPointerException ex) {
+	    	
+	    	API.sendMessage(e.getChannel(), ":no_entry: Subreddit not found.", false);
+	    	
+	    }
 		
 	}
 
