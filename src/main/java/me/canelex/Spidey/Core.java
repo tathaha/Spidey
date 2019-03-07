@@ -5,7 +5,9 @@ import java.util.HashMap;
 import me.canelex.Spidey.commands.AvatarCommand;
 import me.canelex.Spidey.commands.BanCommand;
 import me.canelex.Spidey.commands.DeleteCommand;
+import me.canelex.Spidey.commands.EightBallCommand;
 import me.canelex.Spidey.commands.EvalCommand;
+import me.canelex.Spidey.commands.GifCommand;
 import me.canelex.Spidey.commands.GuildCommand;
 import me.canelex.Spidey.commands.HelpCommand;
 import me.canelex.Spidey.commands.InfoCommand;
@@ -21,6 +23,7 @@ import me.canelex.Spidey.commands.SayCommand;
 import me.canelex.Spidey.commands.SearchCommand;
 import me.canelex.Spidey.commands.SupportGuildsCommand;
 import me.canelex.Spidey.commands.UptimeCommand;
+import me.canelex.Spidey.commands.UrbanDictionaryCommand;
 import me.canelex.Spidey.commands.UserCommand;
 import me.canelex.Spidey.commands.WarnCommand;
 import me.canelex.Spidey.commands.YouTubeChannelCommand;
@@ -42,7 +45,7 @@ public class Core {
 		jda = new JDABuilder(AccountType.BOT)
     			.setToken(Secrets.token)
     			.addEventListeners(new Events())
-    			.setActivity(Activity.streaming("discord.gg/cnAgKrv", "https://twitch.tv/canelex_"))    
+    			.setActivity(Activity.streaming("discord.gg/sR4ygqU", "https://twitch.tv/canelex_"))    
     			.build().awaitReady();      
 		
 		setupCommands();
@@ -59,7 +62,7 @@ public class Core {
 		
 		return jda;
 		
-	}	  
+	}
 	
 	public static void setupCommands() {
 		
@@ -84,9 +87,12 @@ public class Core {
 		commands.put("say", new SayCommand());
 		commands.put("sguilds", new SupportGuildsCommand());
 		commands.put("g", new SearchCommand());
-		commands.put("yt", new SearchCommand());
+		commands.put("yt", new SearchCommand());	
 		commands.put("reddit", new RedditCommand());
-		commands.put("ytchannel", new YouTubeChannelCommand());		
+		commands.put("ytchannel", new YouTubeChannelCommand());
+		commands.put("ud", new UrbanDictionaryCommand());
+		commands.put("8ball", new EightBallCommand());
+		commands.put("gif", new GifCommand());
 		
 	}
 	

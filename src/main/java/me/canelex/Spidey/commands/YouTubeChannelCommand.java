@@ -14,6 +14,7 @@ import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.YouTubeRequestInitializer;
 import com.google.api.services.youtube.model.Channel;
 import com.google.api.services.youtube.model.SearchListResponse;
+import com.mashape.unirest.http.Unirest;
 
 import me.canelex.Spidey.Secrets;
 import me.canelex.Spidey.objects.command.Command;
@@ -61,7 +62,7 @@ public class YouTubeChannelCommand implements Command {
 		        SearchListResponse searchResponse = search.execute();
 		        
 		        if (!searchResponse.getItems().isEmpty()) {        	
-	            	
+		            	
 		            String channelId = searchResponse.getItems().get(0).getSnippet().getChannelId();
 
 		            YouTube.Channels.List channels = youtube.channels().list("snippet, statistics");
@@ -75,7 +76,7 @@ public class YouTubeChannelCommand implements Command {
 		    		String creattime = time.format(cal.getTime()).toString();   		            
 
 		            EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
-		            eb.setAuthor(c.getSnippet().getTitle(), null, "https://i.ymastersk.net/vo96zG");
+		            eb.setAuthor(c.getSnippet().getTitle(), "https://youtube.com/channel/" + channelId, "https://i.ymastersk.net/vo96zG");
 		            eb.setColor(14765121);
 		            eb.setThumbnail(c.getSnippet().getThumbnails().getHigh().getUrl());
 		            eb.addField("Subscribers", "**" + c.getStatistics().getSubscriberCount() + "**", false);
@@ -84,16 +85,17 @@ public class YouTubeChannelCommand implements Command {
 		            eb.addField("Created", String.format( "**%s** | **%s** UTC", creatdate, creattime), false);
 		            eb.addField("Description", (c.getSnippet().getDescription().length() == 0 ? "**None**" : "**" + c.getSnippet().getDescription() + "**"), false);
 		            eb.addField("Country", (c.getSnippet().getCountry() == null ? "**Unknown**" : "**" + c.getSnippet().getCountry() + "**"), false);
-		                
+		            eb.addField("Latest video", Unirest.get("https://beta.decapi.me/youtube/latest_video/?id=" + channelId).asStringAsync().get().getBody(), false);
+		            
 		            API.sendMessage(e.getChannel(), eb.build());
 		            
 		        }			
 		        
 		        else {
 		        	
-		        	API.sendMessage(e.getChannel(), ":no_entry: No results found.", false);		        	
+		        	API.sendMessage(e.getChannel(), ":no_entry: No results found", false);		        	
 		        	
-		        }						
+		        }
 			
 		}
 		
