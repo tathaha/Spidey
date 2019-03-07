@@ -3,7 +3,6 @@ package me.canelex.Spidey.commands;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -15,7 +14,6 @@ import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.YouTubeRequestInitializer;
 import com.google.api.services.youtube.model.Channel;
 import com.google.api.services.youtube.model.SearchListResponse;
-import com.google.api.services.youtube.model.SearchResult;
 
 import me.canelex.Spidey.Secrets;
 import me.canelex.Spidey.objects.command.Command;
@@ -61,11 +59,10 @@ public class YouTubeChannelCommand implements Command {
 		        search.setType("channel");
 
 		        SearchListResponse searchResponse = search.execute();
-		        List<SearchResult> searchResultList = searchResponse.getItems();
 		        
-		        if (searchResultList != null) {
-		            	
-		            String channelId = searchResultList.get(0).getSnippet().getChannelId();
+		        if (!searchResponse.getItems().isEmpty()) {        	
+	            	
+		            String channelId = searchResponse.getItems().get(0).getSnippet().getChannelId();
 
 		            YouTube.Channels.List channels = youtube.channels().list("snippet, statistics");
 		            channels.setId(channelId);
@@ -85,11 +82,17 @@ public class YouTubeChannelCommand implements Command {
 		            eb.addField("Views", "**" + c.getStatistics().getViewCount() + "**", false);
 		            eb.addField("Videos", "**" + c.getStatistics().getVideoCount() + "**", false);
 		            eb.addField("Created", String.format( "**%s** | **%s** UTC", creatdate, creattime), false);
-		            eb.addField("Description", "**" + (c.getSnippet().getDescription() == null ? "None" : c.getSnippet().getDescription()) + "**", false);
-		            eb.addField("Country", "**" + c.getSnippet().getCountry() + "**", false);
+		            eb.addField("Description", (c.getSnippet().getDescription().length() == 0 ? "**None**" : "**" + c.getSnippet().getDescription() + "**"), false);
+		            eb.addField("Country", (c.getSnippet().getCountry() == null ? "**Unknown**" : "**" + c.getSnippet().getCountry() + "**"), false);
 		                
 		            API.sendMessage(e.getChannel(), eb.build());
 		            
+		        }			
+		        
+		        else {
+		        	
+		        	API.sendMessage(e.getChannel(), ":no_entry: No results found.", false);		        	
+		        	
 		        }						
 			
 		}
