@@ -1,5 +1,4 @@
-[discord-invite]: https://discord.gg/cnAgKrv
-[ ![Discord](https://discordapp.com/api/guilds/539029656309989386/widget.png)_][discord-invite]
+[![](https://discordapp.com/api/guilds/539029656309989386/embed.png?style=banner1)](https://discord.gg/cnAgKrv)
 
 # Spidey
 
