@@ -21,6 +21,7 @@ import me.canelex.Spidey.commands.PollCommand;
 import me.canelex.Spidey.commands.RedditCommand;
 import me.canelex.Spidey.commands.SayCommand;
 import me.canelex.Spidey.commands.SearchCommand;
+import me.canelex.Spidey.commands.SlowmodeCommand;
 import me.canelex.Spidey.commands.SupportGuildsCommand;
 import me.canelex.Spidey.commands.UptimeCommand;
 import me.canelex.Spidey.commands.UrbanDictionaryCommand;
@@ -93,6 +94,7 @@ public class Core {
 		commands.put("ud", new UrbanDictionaryCommand());
 		commands.put("8ball", new EightBallCommand());
 		commands.put("gif", new GifCommand());
+		commands.put("slowmode", new SlowmodeCommand());		
 		
 	}
 	
