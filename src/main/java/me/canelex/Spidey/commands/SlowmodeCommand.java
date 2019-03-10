@@ -76,7 +76,7 @@ public class SlowmodeCommand implements Command {
 	@Override
 	public String help() {
 		
-		return "Sets a slowmode for channel. Example - `s!slowmode <seconds | off>";
+		return "Sets a slowmode for channel. Example - `s!slowmode <seconds | off>`";
 		
 	}
 
