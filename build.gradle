@@ -1,32 +1,24 @@
 plugins {
 
     id 'java'
+    id 'application'
+    id 'com.github.johnrengelman.shadow' version '5.0.0'    
     
 }
 
-task shadowJar(type: Jar) {
+application {
 
-	manifest {
-	
-        attributes 'Main-Class': 'me.canelex.Spidey.Core'
-        	
-    }
-    
-    baseName = project.name + '-withDependencies'
-    
-    from { 
-    
-        configurations.compile.collect { 
-        
-            it.isDirectory() ? it : zipTree(it) 
-            
-        } 
-        
-    }
-            
-    with jar
+    mainClassName = 'me.canelex.Spidey.Core'
+
+}
+
+jar {
+
+    baseName = project.name
     
 }
+
+shadowJar.classifier = 'withDependencies'
 
 repositories {
 
