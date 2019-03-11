@@ -5,12 +5,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import me.canelex.Spidey.Core;
-import me.canelex.Spidey.objects.command.Command;
+import me.canelex.Spidey.objects.command.ICommand;
 import me.canelex.Spidey.utils.API;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
-public class HelpCommand implements Command {
+public class HelpCommand implements ICommand {
 	
 	@Override
 	public boolean called(GuildMessageReceivedEvent e) {
@@ -28,9 +28,9 @@ public class HelpCommand implements Command {
 		
 		StringBuilder sb = new StringBuilder();		
 		
-		HashMap<String, Command> commands = new HashMap<String, Command>();
+		HashMap<String, ICommand> commands = new HashMap<String, ICommand>();
 		
-		for (Map.Entry<String, Command> entry : Core.commands.entrySet()) {
+		for (Map.Entry<String, ICommand> entry : Core.commands.entrySet()) {
 			
 			commands.put(entry.getKey(), entry.getValue());
 			

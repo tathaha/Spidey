@@ -17,12 +17,12 @@ import com.google.api.services.youtube.model.SearchListResponse;
 import com.mashape.unirest.http.Unirest;
 
 import me.canelex.Spidey.Secrets;
-import me.canelex.Spidey.objects.command.Command;
+import me.canelex.Spidey.objects.command.ICommand;
 import me.canelex.Spidey.utils.API;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
-public class YouTubeChannelCommand implements Command {
+public class YouTubeChannelCommand implements ICommand {
 	
 	Locale locale = new Locale("en", "EN");  
 	Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/London"));        	

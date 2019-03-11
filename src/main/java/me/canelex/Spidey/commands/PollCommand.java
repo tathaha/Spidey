@@ -3,16 +3,16 @@ package me.canelex.Spidey.commands;
 import java.awt.Color;
 
 import me.canelex.Spidey.MySQL;
-import me.canelex.Spidey.objects.command.Command;
+import me.canelex.Spidey.objects.command.ICommand;
 import me.canelex.Spidey.utils.API;
-import me.canelex.Spidey.utils.Emoji;
+import me.canelex.Spidey.utils.IEmoji;
 import me.canelex.Spidey.utils.PermissionError;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
-public class PollCommand implements Command {
+public class PollCommand implements ICommand {
 
 	@Override
 	public boolean called(GuildMessageReceivedEvent e) {
@@ -40,9 +40,9 @@ public class PollCommand implements Command {
     		API.deleteMessage(e.getMessage());
     		e.getChannel().sendMessage("Poll: **" + question + "**").queue(m -> {
     			
-    			m.addReaction(Emoji.like).queue();
-    			m.addReaction(Emoji.shrug).queue();
-    			m.addReaction(Emoji.dislike).queue();
+    			m.addReaction(IEmoji.like).queue();
+    			m.addReaction(IEmoji.shrug).queue();
+    			m.addReaction(IEmoji.dislike).queue();
         		EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
         		eb.setTitle("NEW POLL");
         		eb.setColor(Color.ORANGE);             		

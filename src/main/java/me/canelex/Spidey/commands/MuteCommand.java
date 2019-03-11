@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.StringUtils;
 
 import me.canelex.Spidey.MySQL;
-import me.canelex.Spidey.objects.command.Command;
+import me.canelex.Spidey.objects.command.ICommand;
 import me.canelex.Spidey.utils.API;
 import me.canelex.Spidey.utils.PermissionError;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -19,7 +19,7 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.managers.GuildController;
 
-public class MuteCommand implements Command {  	
+public class MuteCommand implements ICommand {  	
 	
 	@Override
 	public boolean called(GuildMessageReceivedEvent e) {

@@ -1,11 +1,11 @@
 package me.canelex.Spidey.commands;
 
 import me.canelex.Spidey.MySQL;
-import me.canelex.Spidey.objects.command.Command;
+import me.canelex.Spidey.objects.command.ICommand;
 import me.canelex.Spidey.utils.API;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
-public class LeaveCommand implements Command {
+public class LeaveCommand implements ICommand {
 
 	@Override
 	public boolean called(GuildMessageReceivedEvent e) {

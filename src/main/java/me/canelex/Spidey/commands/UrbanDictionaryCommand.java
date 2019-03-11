@@ -11,12 +11,12 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 
-import me.canelex.Spidey.objects.command.Command;
+import me.canelex.Spidey.objects.command.ICommand;
 import me.canelex.Spidey.utils.API;
-import me.canelex.Spidey.utils.Emoji;
+import me.canelex.Spidey.utils.IEmoji;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
-public class UrbanDictionaryCommand implements Command {
+public class UrbanDictionaryCommand implements ICommand {
 
 	@Override
 	public boolean called(GuildMessageReceivedEvent e) {
@@ -50,7 +50,7 @@ public class UrbanDictionaryCommand implements Command {
                             + "```\n"
                             + "**example**: \n"
                             + "%s" + "\n\n"
-                            + "_by %s (" + Emoji.like + "%s  " + Emoji.dislike + "%s)_"
+                            + "_by %s (" + IEmoji.like + "%s  " + IEmoji.dislike + "%s)_"
                     , item.getString("word"), item.getString("definition"), item.getString("example"),
                     item.getString("author"), item.getInt("thumbs_up"), item.getInt("thumbs_down"));
             

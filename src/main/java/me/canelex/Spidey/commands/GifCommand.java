@@ -4,11 +4,11 @@ import at.mukprojects.giphy4j.Giphy;
 import at.mukprojects.giphy4j.entity.search.SearchFeed;
 import at.mukprojects.giphy4j.exception.GiphyException;
 import me.canelex.Spidey.Secrets;
-import me.canelex.Spidey.objects.command.Command;
+import me.canelex.Spidey.objects.command.ICommand;
 import me.canelex.Spidey.utils.API;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
-public class GifCommand implements Command {
+public class GifCommand implements ICommand {
 
 	@Override
 	public boolean called(GuildMessageReceivedEvent e) {

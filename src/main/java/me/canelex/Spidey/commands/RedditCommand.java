@@ -1,7 +1,7 @@
 package me.canelex.Spidey.commands;
 
 import me.canelex.Spidey.Secrets;
-import me.canelex.Spidey.objects.command.Command;
+import me.canelex.Spidey.objects.command.ICommand;
 import me.canelex.Spidey.utils.API;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.OkHttpNetworkAdapter;
@@ -12,7 +12,7 @@ import net.dean.jraw.oauth.OAuthHelper;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
-public class RedditCommand implements Command {
+public class RedditCommand implements ICommand {
 
 	@Override
 	public boolean called(GuildMessageReceivedEvent e) {

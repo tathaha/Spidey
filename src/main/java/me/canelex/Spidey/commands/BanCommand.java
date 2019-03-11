@@ -1,12 +1,12 @@
 package me.canelex.Spidey.commands;
 
-import me.canelex.Spidey.objects.command.Command;
+import me.canelex.Spidey.objects.command.ICommand;
 import me.canelex.Spidey.utils.API;
 import me.canelex.Spidey.utils.PermissionError;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
-public class BanCommand implements Command {
+public class BanCommand implements ICommand {
 
 	@Override
 	public boolean called(GuildMessageReceivedEvent e) {

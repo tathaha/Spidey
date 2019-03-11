@@ -1,10 +1,10 @@
 package me.canelex.Spidey.commands;
 
-import me.canelex.Spidey.objects.command.Command;
+import me.canelex.Spidey.objects.command.ICommand;
 import me.canelex.Spidey.utils.API;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
-public class EightBallCommand implements Command {
+public class EightBallCommand implements ICommand {
 	
     private final String[] a = {
             "As I see it, yes",

@@ -4,14 +4,14 @@ import java.awt.Color;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import me.canelex.Spidey.objects.command.Command;
+import me.canelex.Spidey.objects.command.ICommand;
 import me.canelex.Spidey.utils.API;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
-public class MembercountCommand implements Command {
+public class MembercountCommand implements ICommand {
 
 	@Override
 	public boolean called(GuildMessageReceivedEvent e) {

@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import me.canelex.Spidey.objects.command.Command;
+import me.canelex.Spidey.objects.command.ICommand;
 import me.canelex.Spidey.utils.API;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
-public class JoindateCommand implements Command {
+public class JoindateCommand implements ICommand {
 	
 	Locale locale = new Locale("en", "EN");  
 	Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/London"));        	

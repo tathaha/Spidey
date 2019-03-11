@@ -2,7 +2,7 @@ package me.canelex.Spidey.commands;
 
 import java.awt.Color;
 
-import me.canelex.Spidey.objects.command.Command;
+import me.canelex.Spidey.objects.command.ICommand;
 import me.canelex.Spidey.utils.API;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
@@ -11,7 +11,7 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
-public class InfoCommand implements Command {
+public class InfoCommand implements ICommand {
 
 	@Override
 	public boolean called(GuildMessageReceivedEvent e) {

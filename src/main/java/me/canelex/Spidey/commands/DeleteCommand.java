@@ -4,14 +4,14 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import me.canelex.Spidey.objects.command.Command;
+import me.canelex.Spidey.objects.command.ICommand;
 import me.canelex.Spidey.utils.API;
 import me.canelex.Spidey.utils.PermissionError;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
-public class DeleteCommand implements Command {
+public class DeleteCommand implements ICommand {
 
 	@Override
 	public boolean called(GuildMessageReceivedEvent e) {

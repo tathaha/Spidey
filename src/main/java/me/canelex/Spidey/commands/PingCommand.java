@@ -3,11 +3,11 @@ package me.canelex.Spidey.commands;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 
-import me.canelex.Spidey.objects.command.Command;
+import me.canelex.Spidey.objects.command.ICommand;
 import me.canelex.Spidey.utils.API;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
-public class PingCommand implements Command {
+public class PingCommand implements ICommand {
 	
     ScriptEngineManager manager = new ScriptEngineManager();
     ScriptEngine engine = manager.getEngineByName("groovy"); 	

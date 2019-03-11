@@ -2,11 +2,11 @@ package me.canelex.Spidey.commands;
 
 import java.util.concurrent.TimeUnit;
 
-import me.canelex.Spidey.objects.command.Command;
+import me.canelex.Spidey.objects.command.ICommand;
 import me.canelex.Spidey.utils.API;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
-public class SlowmodeCommand implements Command {
+public class SlowmodeCommand implements ICommand {
 
 	@Override
 	public boolean called(GuildMessageReceivedEvent e) {

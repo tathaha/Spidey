@@ -2,7 +2,7 @@ package me.canelex.Spidey.objects.command;
 
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
-public interface Command {
+public interface ICommand {
 	
 	String help = "";
 	boolean called(GuildMessageReceivedEvent e);

@@ -4,13 +4,13 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
-import me.canelex.Spidey.objects.command.Command;
+import me.canelex.Spidey.objects.command.ICommand;
 import me.canelex.Spidey.objects.search.GoogleSearch;
 import me.canelex.Spidey.objects.search.SearchResult;
 import me.canelex.Spidey.utils.API;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
-public class SearchCommand implements Command {
+public class SearchCommand implements ICommand {
 
 	@Override
 	public boolean called(GuildMessageReceivedEvent e) {
