@@ -87,7 +87,17 @@ public class GuildCommand implements ICommand {
         	
         }
         
-        eb.addField(String.format((ec == 0) ? "Emotes (**0**)" : "Emotes (**%s** | **%s** animated)", ec, an), (st.length() == 0) ? "None" : st, false);            	
+        if (st.length() > 1024) {
+        	
+        	eb.addField(String.format((ec == 0) ? "Emotes (**0**)" : "Emotes (**%s** | **%s** animated)", ec, an), "Limit exceeded", false);
+        	
+        }
+        
+        else {
+        	
+        	eb.addField(String.format((ec == 0) ? "Emotes (**0**)" : "Emotes (**%s** | **%s** animated)", ec, an), (st.length() == 0) ? "None" : st, false);         	
+        	
+        }                         	
     	       	
 		API.sendMessage(e.getChannel(), eb.build());
 		
