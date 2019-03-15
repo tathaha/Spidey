@@ -6,6 +6,7 @@ import me.canelex.Spidey.commands.AvatarCommand;
 import me.canelex.Spidey.commands.BanCommand;
 import me.canelex.Spidey.commands.DeleteCommand;
 import me.canelex.Spidey.commands.EightBallCommand;
+import me.canelex.Spidey.commands.EvalCommand;
 import me.canelex.Spidey.commands.GifCommand;
 import me.canelex.Spidey.commands.GuildCommand;
 import me.canelex.Spidey.commands.HelpCommand;
@@ -28,8 +29,8 @@ import me.canelex.Spidey.commands.UrbanDictionaryCommand;
 import me.canelex.Spidey.commands.UserCommand;
 import me.canelex.Spidey.commands.WarnCommand;
 import me.canelex.Spidey.commands.YouTubeChannelCommand;
-import me.canelex.Spidey.objects.command.ICommand;
 import me.canelex.Spidey.objects.command.CommandParser;
+import me.canelex.Spidey.objects.command.ICommand;
 import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -94,7 +95,8 @@ public class Core {
 		commands.put("8ball", new EightBallCommand());
 		commands.put("gif", new GifCommand());
 		commands.put("slowmode", new SlowmodeCommand());
-		commands.put("roles", new RolesCommand());		
+		commands.put("roles", new RolesCommand());
+		commands.put("eval", new EvalCommand());
 		
 	}
 	
