@@ -28,7 +28,7 @@ public class RolesCommand implements ICommand {
 			EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
 			eb.setColor(Color.ORANGE);
 			
-	        List<Role> roles = e.getGuild().getRoles().stream().collect(Collectors.toCollection(ArrayList::new));
+	        List<Role> roles = e.getGuild().getRoleCache().stream().collect(Collectors.toCollection(ArrayList::new));
 	        roles.remove(e.getGuild().getPublicRole());			
 			
 	        String s = "";

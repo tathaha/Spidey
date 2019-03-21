@@ -49,7 +49,7 @@ public class GuildCommand implements ICommand {
     	eb.addField("Members", "" + e.getGuild().getMemberCache().size(), true);	    	
     	eb.addField("Verification Level", e.getGuild().getVerificationLevel().name(), true);
     	
-        List<Role> roles = e.getGuild().getRoles().stream().collect(Collectors.toCollection(ArrayList::new));
+        List<Role> roles = e.getGuild().getRoleCache().stream().collect(Collectors.toCollection(ArrayList::new));
         roles.remove(e.getGuild().getPublicRole());
         
     	eb.addField("Role count", "" + roles.size(), true);
