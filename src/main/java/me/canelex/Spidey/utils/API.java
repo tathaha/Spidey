@@ -7,7 +7,9 @@ import java.io.InputStream;
 import java.net.URL;
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.ClientType;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -186,6 +188,24 @@ public class API {
     public static void sendPrivateMessageFormat(final User u, final String message, final boolean isSpoiler, final Object... args) {
     	
     	sendPrivateMessage(u, String.format(message, args), false);
+    	
+    }    
+    
+    public static boolean isWeb(final Member member) {
+    	
+    	return member.getOnlineStatus(ClientType.WEB) != OnlineStatus.OFFLINE;
+    	
+    }    
+    
+    public static boolean isDesktop(final Member member) {
+    	
+    	return member.getOnlineStatus(ClientType.DESKTOP) != OnlineStatus.OFFLINE;
+    	
+    }        
+    
+    public static boolean isMobile(final Member member) {
+    	
+    	return member.getOnlineStatus(ClientType.MOBILE) != OnlineStatus.OFFLINE;
     	
     }    
 
