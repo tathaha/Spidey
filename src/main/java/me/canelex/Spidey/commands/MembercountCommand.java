@@ -14,26 +14,26 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 public class MembercountCommand implements ICommand {
 
 	@Override
-	public boolean called(GuildMessageReceivedEvent e) {
+	public final boolean called(final GuildMessageReceivedEvent e) {
 		
 		return true;
 		
 	}
 
 	@Override
-	public void action(GuildMessageReceivedEvent e) {
+	public final void action(final GuildMessageReceivedEvent e) {
 		
-    	List<Member> tonline = e.getGuild().getMemberCache().stream().filter(member -> member.getOnlineStatus() == OnlineStatus.ONLINE || member.getOnlineStatus() == OnlineStatus.IDLE || member.getOnlineStatus() == OnlineStatus.DO_NOT_DISTURB).collect(Collectors.toList());
-    	long bonline = tonline.stream().filter(m -> m.getUser().isBot()).count();        	
-    	long total = e.getGuild().getMemberCache().size();     	
-    	long online = tonline.size();
-    	long bots = e.getGuild().getMemberCache().stream().filter(member -> member.getUser().isBot()).count();
-    	long ponline = online - bonline;
-    	long monline = e.getGuild().getMemberCache().stream().filter(m -> API.isMobile(m)).count();
-    	long wonline = e.getGuild().getMemberCache().stream().filter(m -> API.isWeb(m)).count();
-    	long donline = e.getGuild().getMemberCache().stream().filter(m -> API.isDesktop(m)).count();    	
+		final List<Member> tonline = e.getGuild().getMemberCache().stream().filter(member -> member.getOnlineStatus() == OnlineStatus.ONLINE || member.getOnlineStatus() == OnlineStatus.IDLE || member.getOnlineStatus() == OnlineStatus.DO_NOT_DISTURB).collect(Collectors.toList());
+		final long bonline = tonline.stream().filter(m -> m.getUser().isBot()).count();        	
+		final long total = e.getGuild().getMemberCache().size();     	
+		final long online = tonline.size();
+		final long bots = e.getGuild().getMemberCache().stream().filter(member -> member.getUser().isBot()).count();
+		final long ponline = online - bonline;
+		final long monline = e.getGuild().getMemberCache().stream().filter(m -> API.isMobile(m)).count();
+		final long wonline = e.getGuild().getMemberCache().stream().filter(m -> API.isWeb(m)).count();
+		final long donline = e.getGuild().getMemberCache().stream().filter(m -> API.isDesktop(m)).count();    	
     	
-    	EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
+		final EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
     	eb.setTitle("MEMBERCOUNT");
     	eb.setColor(Color.WHITE);
     	eb.addField("Total", "**" + total + "**", true);        	
@@ -50,14 +50,14 @@ public class MembercountCommand implements ICommand {
 	}
 
 	@Override
-	public String help() {
+	public final String help() {
 		
 		return "Shows you membercount of your guild";
 		
 	}
 
 	@Override
-	public void executed(boolean success, GuildMessageReceivedEvent e) {
+	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {
 		
 		return;
 		

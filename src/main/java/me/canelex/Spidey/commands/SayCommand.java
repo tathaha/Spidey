@@ -10,14 +10,14 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 public class SayCommand implements ICommand {
 
 	@Override
-	public boolean called(GuildMessageReceivedEvent e) {
+	public final boolean called(final GuildMessageReceivedEvent e) {
 
 		return true;
 		
 	}
 
 	@Override
-	public void action(GuildMessageReceivedEvent e) {
+	public final void action(final GuildMessageReceivedEvent e) {
 		
 		final String neededPerm = "BAN_MEMBERS";
 		
@@ -40,7 +40,7 @@ public class SayCommand implements ICommand {
     		
     		else {
     			
-    			TextChannel ch = e.getMessage().getMentionedChannels().get(0);
+    			final TextChannel ch = e.getMessage().getMentionedChannels().get(0);
     			toSay = toSay.substring(0, toSay.lastIndexOf(" "));
     			API.sendMessage(ch, toSay, false);
     			
@@ -51,14 +51,14 @@ public class SayCommand implements ICommand {
 	}
 
 	@Override
-	public String help() {
+	public final String help() {
 
 		return "Spidey will say something for you (in specified channel)";
 		
 	}
 
 	@Override
-	public void executed(boolean success, GuildMessageReceivedEvent e) {
+	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {
 
 		return;
 		

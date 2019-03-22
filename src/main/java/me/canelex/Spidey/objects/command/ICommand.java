@@ -5,9 +5,9 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 public interface ICommand {
 	
 	String help = "";
-	boolean called(GuildMessageReceivedEvent e);
-	void action(GuildMessageReceivedEvent e);
+	boolean called(final GuildMessageReceivedEvent e);
+	void action(final GuildMessageReceivedEvent e);
 	String help();
-	void executed(boolean success, GuildMessageReceivedEvent e);	
+	void executed(final boolean success, final GuildMessageReceivedEvent e);	
 
 }

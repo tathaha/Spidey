@@ -37,8 +37,8 @@ public class Events extends ListenerAdapter {
 	@Override
 	public void onGuildMemberRoleRemove(GuildMemberRoleRemoveEvent e) {
 		
-		Guild guild = e.getGuild();
-		Role muted = guild.getRolesByName("Muted", false).get(0);
+		final Guild guild = e.getGuild();
+		final Role muted = guild.getRolesByName("Muted", false).get(0);
 		
 		if (e.getRoles().contains(muted)) {
 			
@@ -50,8 +50,8 @@ public class Events extends ListenerAdapter {
 			
 			else {
 				
-				TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));				
-				EmbedBuilder eb = new EmbedBuilder();
+				final TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));				
+				final EmbedBuilder eb = new EmbedBuilder();
 				eb.setTitle("UNMUTE");
 				eb.setColor(Color.GREEN);			
 		        eb.setThumbnail(e.getUser().getEffectiveAvatarUrl());						
@@ -67,8 +67,8 @@ public class Events extends ListenerAdapter {
 	@Override
     public void onGuildBan(GuildBanEvent e) {
 		
-		User user = e.getUser();
-		Guild guild = e.getGuild();
+		final User user = e.getUser();
+		final Guild guild = e.getGuild();
 		
 		if (guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong())) == null) {
 			
@@ -78,11 +78,11 @@ public class Events extends ListenerAdapter {
 		
 		else {
 			
-			TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));				
-	        Ban ban = guild.retrieveBan(user).complete();
-	        List<AuditLogEntry> auditbans = guild.retrieveAuditLogs().type(ActionType.BAN).complete();
-	        User banner = auditbans.get(0).getUser();
-	        EmbedBuilder eb = new EmbedBuilder();
+			final TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));				
+			final Ban ban = guild.retrieveBan(user).complete();
+			final List<AuditLogEntry> auditbans = guild.retrieveAuditLogs().type(ActionType.BAN).complete();
+			final User banner = auditbans.get(0).getUser();
+			final EmbedBuilder eb = new EmbedBuilder();
 	        eb.setTitle("NEW BAN");        
 	        eb.setThumbnail(user.getEffectiveAvatarUrl());                
 	        eb.setColor(Color.RED);
@@ -100,8 +100,8 @@ public class Events extends ListenerAdapter {
 	@Override
     public void onGuildUnban(GuildUnbanEvent e) {
 		
-		User user = e.getUser();
-		Guild guild = e.getGuild();		
+		final User user = e.getUser();
+		final Guild guild = e.getGuild();		
 		
 		if (guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong())) == null) {
 			
@@ -111,8 +111,8 @@ public class Events extends ListenerAdapter {
 		
 		else {
 			
-			TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));			
-	        EmbedBuilder eb = new EmbedBuilder();
+			final TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));			
+			final EmbedBuilder eb = new EmbedBuilder();
 	        eb.setTitle("UNBAN");
 	        eb.setColor(Color.GREEN);        
 	        eb.setThumbnail(user.getEffectiveAvatarUrl());                      
@@ -127,8 +127,8 @@ public class Events extends ListenerAdapter {
 	@Override
     public void onGuildMemberLeave(GuildMemberLeaveEvent e) {
 		
-		User user = e.getUser();
-		Guild guild = e.getGuild();	
+		final User user = e.getUser();
+		final Guild guild = e.getGuild();	
 		
 		if (guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong())) == null) {
 			
@@ -138,8 +138,8 @@ public class Events extends ListenerAdapter {
 		
 		else {
 			
-			TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));
-	        EmbedBuilder eb = new EmbedBuilder();
+			final TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));
+			final EmbedBuilder eb = new EmbedBuilder();
 	        eb.setTitle("USER HAS LEFT");        
 	        eb.setThumbnail(user.getEffectiveAvatarUrl());                
 	        eb.setColor(Color.RED);
@@ -154,8 +154,8 @@ public class Events extends ListenerAdapter {
 	@Override
     public void onGuildMemberJoin(GuildMemberJoinEvent e) {
 		
-		User user = e.getUser();
-		Guild guild = e.getGuild();		
+		final User user = e.getUser();
+		final Guild guild = e.getGuild();		
 		
 		if (guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong())) == null) {
 			
@@ -165,8 +165,8 @@ public class Events extends ListenerAdapter {
 		
 		else {
 			
-			TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));					
-	        EmbedBuilder eb = new EmbedBuilder();
+			final TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));					
+			final EmbedBuilder eb = new EmbedBuilder();
 	        eb.setTitle("USER HAS JOINED");        
 	        eb.setThumbnail(user.getEffectiveAvatarUrl());                     
 	        eb.setColor(Color.GREEN);

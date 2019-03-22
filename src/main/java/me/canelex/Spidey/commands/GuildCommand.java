@@ -18,22 +18,22 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 public class GuildCommand implements ICommand {
 	
-	Locale locale = new Locale("en", "EN");  
-	Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/London"));        	
-	SimpleDateFormat date = new SimpleDateFormat("EE, d.LLL Y", locale);      
-	SimpleDateFormat time = new SimpleDateFormat("HH:mm:ss", locale);  	
+	final Locale locale = new Locale("en", "EN");  
+	final Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/London"));        	
+	final SimpleDateFormat date = new SimpleDateFormat("EE, d.LLL Y", locale);      
+	final SimpleDateFormat time = new SimpleDateFormat("HH:mm:ss", locale);  	
 	
 	@Override
-	public boolean called(GuildMessageReceivedEvent e) {
+	public final boolean called(final GuildMessageReceivedEvent e) {
 
 		return true;
 		
 	}
 
 	@Override
-	public void action(GuildMessageReceivedEvent e) {
+	public final void action(final GuildMessageReceivedEvent e) {
 
-    	EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());         	
+		final EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());         	
     	eb.setColor(Color.ORANGE);
     	eb.setThumbnail(e.getGuild().getIconUrl());
     	
@@ -49,7 +49,7 @@ public class GuildCommand implements ICommand {
     	eb.addField("Members", "" + e.getGuild().getMemberCache().size(), true);	    	
     	eb.addField("Verification Level", e.getGuild().getVerificationLevel().name(), true);
     	
-        List<Role> roles = e.getGuild().getRoleCache().stream().collect(Collectors.toCollection(ArrayList::new));
+    	final List<Role> roles = e.getGuild().getRoleCache().stream().collect(Collectors.toCollection(ArrayList::new));
         roles.remove(e.getGuild().getPublicRole());
         
     	eb.addField("Role count", "" + roles.size(), true);
@@ -58,8 +58,8 @@ public class GuildCommand implements ICommand {
     	eb.addField("Region", e.getGuild().getRegionRaw(), true);    	    	
 		
     	cal.setTimeInMillis(e.getGuild().getTimeCreated().toInstant().toEpochMilli());
-		String creatdate = date.format(cal.getTime()).toString();   
-		String creattime = time.format(cal.getTime()).toString();   
+    	final String creatdate = date.format(cal.getTime()).toString();   
+    	final String creattime = time.format(cal.getTime()).toString();   
     	eb.addField("Creation", String.format( "%s | %s", creatdate, creattime), true);   
     	
         eb.addField("Custom invite URL", (!API.isPartnered(e.getGuild()) ? "Guild is not partnered" : "discord.gg/" + e.getGuild().retrieveVanityUrl().complete()), true);
@@ -67,9 +67,9 @@ public class GuildCommand implements ICommand {
         String st = "";
         
         int ec = 0;
-        long an = e.getGuild().getEmotes().stream().filter(em -> em.isAnimated()).count();
+        final long an = e.getGuild().getEmotes().stream().filter(em -> em.isAnimated()).count();
         
-        for (Emote emote : e.getGuild().getEmotes()) {
+        for (final Emote emote : e.getGuild().getEmotes()) {
         	
         	ec++;
         	
@@ -104,14 +104,14 @@ public class GuildCommand implements ICommand {
 	}
 
 	@Override
-	public String help() {
+	public final String help() {
 
 		return "Shows you info about this guild";
 		
 	}
 
 	@Override
-	public void executed(boolean success, GuildMessageReceivedEvent e) {
+	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {
 
 		return;
 		

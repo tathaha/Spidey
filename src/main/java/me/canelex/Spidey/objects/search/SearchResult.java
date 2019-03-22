@@ -12,9 +12,9 @@ public class SearchResult {
     private String content;
     private String url;
 
-    public static SearchResult fromGoogle(JSONObject googleResult) {
+    public static SearchResult fromGoogle(final JSONObject googleResult) {
     	
-        SearchResult result = new SearchResult();
+    	final SearchResult result = new SearchResult();
         result.title = cleanString(googleResult.getString("title"));
         result.content = cleanString(googleResult.getString("snippet"));
         
@@ -24,7 +24,7 @@ public class SearchResult {
             
         }
         
-        catch (UnsupportedEncodingException e) {
+        catch (final UnsupportedEncodingException e) {
         	
             e.printStackTrace();
             
@@ -34,25 +34,25 @@ public class SearchResult {
         
     }
 
-    public String getTitle() {
+    public final String getTitle() {
     	
         return title;
         
     }
 
-    public String getContent() {
+    public final String getContent() {
     	
         return content;
         
     }
 
-    public String getUrl() {
+    public final String getUrl() {
     	
         return url;
         
     }
 
-    public String getSuggestedReturn() {
+    public final String getSuggestedReturn() {
     	
     	if (url.startsWith("https://www.youtube.com/watch?")) {
     		
@@ -68,7 +68,7 @@ public class SearchResult {
         
     }
 
-	private static String cleanString(String uncleanString) {
+	private static final String cleanString(String uncleanString) {
 		
         return StringEscapeUtils.unescapeJava(
                 StringEscapeUtils.unescapeHtml4(

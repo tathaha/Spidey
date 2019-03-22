@@ -9,32 +9,32 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 public class PingCommand implements ICommand {
 	
-    ScriptEngineManager manager = new ScriptEngineManager();
-    ScriptEngine engine = manager.getEngineByName("groovy"); 	
+	final ScriptEngineManager manager = new ScriptEngineManager();
+	final ScriptEngine engine = manager.getEngineByName("groovy"); 	
 	
 	@Override
-	public boolean called(GuildMessageReceivedEvent e) {
+	public final boolean called(final GuildMessageReceivedEvent e) {
 
 		return true;
 		
 	}
 
 	@Override
-	public void action(GuildMessageReceivedEvent e) {
+	public final void action(final GuildMessageReceivedEvent e) {
 
 		API.sendMessage(e.getChannel(), "**Gateway**/**WebSocket**: **" + e.getJDA().getGatewayPing() + "**ms\n**REST**: **" + e.getJDA().getRestPing().complete() + "**ms", false);
 		
 	}
 
 	@Override
-	public String help() {
+	public final String help() {
 
 		return "Shows you ping info";
 		
 	}
 
 	@Override
-	public void executed(boolean success, GuildMessageReceivedEvent e) {
+	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {
 
 		return;
 		

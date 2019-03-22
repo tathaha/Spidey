@@ -8,14 +8,14 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 public class LeaveCommand implements ICommand {
 
 	@Override
-	public boolean called(GuildMessageReceivedEvent e) {
+	public final boolean called(final GuildMessageReceivedEvent e) {
 
 		return true;
 		
 	}
 
 	@Override
-	public void action(GuildMessageReceivedEvent e) {
+	public final void action(final GuildMessageReceivedEvent e) {
 
 		if (e.getMember() != e.getGuild().getOwner()) {
 			
@@ -35,14 +35,14 @@ public class LeaveCommand implements ICommand {
 	}
 
 	@Override
-	public String help() {
+	public final String help() {
 
 		return "Spidey will leave your server";
 		
 	}
 
 	@Override
-	public void executed(boolean success, GuildMessageReceivedEvent e) {
+	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {
 		
 		return;
 		

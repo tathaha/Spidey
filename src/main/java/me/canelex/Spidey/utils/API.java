@@ -20,14 +20,14 @@ import net.dv8tion.jda.api.entities.User;
 
 public class API {
 	
-	public static void addRole(final Member m, final Role r) {
+	public static final void addRole(final Member m, final Role r) {
 		
 		Guild g = r.getGuild();
 		g.getController().addSingleRoleToMember(m, r).queue();
 		
 	}	
 	
-	public static void removeRole(final Member m, final Role r) {
+	public static final void removeRole(final Member m, final Role r) {
 		
 		Guild g = r.getGuild();
 		g.getController().removeSingleRoleFromMember(m, r).queue();
@@ -35,13 +35,13 @@ public class API {
 	}		
 	
 	
-	public static boolean hasPerm(final Member toCheck, final Permission perm) {
+	public static final boolean hasPerm(final Member toCheck, final Permission perm) {
 		
 		return toCheck.hasPermission(perm);
 		
 	}
 	
-	public static void sendMessage(final TextChannel ch, final String toSend, final boolean isSpoiler) {
+	public static final void sendMessage(final TextChannel ch, final String toSend, final boolean isSpoiler) {
 		
 		if (isSpoiler) {
 			
@@ -57,23 +57,23 @@ public class API {
 		
 	}
 
-	public static void sendMessage(final TextChannel ch, final MessageEmbed embed) {
+	public static final void sendMessage(final TextChannel ch, final MessageEmbed embed) {
 		
 		ch.sendMessage(embed).queue();		
 		
 	}	
 	
-	public static void sendFile(final TextChannel ch, final File file) {
+	public static final void sendFile(final TextChannel ch, final File file) {
 		
 		ch.sendFile(file).queue();
 		
 	}		
 	
-	public static void sendImage(final TextChannel ch, final String link, final boolean isSpoiler) {
+	public static final void sendImage(final TextChannel ch, final String link, final boolean isSpoiler) {
 		
 		try {
 			
-			InputStream in = new BufferedInputStream(new URL(link).openStream());	
+			final InputStream in = new BufferedInputStream(new URL(link).openStream());	
 			
 			if (isSpoiler) {
 				
@@ -99,7 +99,7 @@ public class API {
 		
 	}	
 
-	public static void sendPrivateMessage(final User user, final String toSend, final boolean isSpoiler) {
+	public static final void sendPrivateMessage(final User user, final String toSend, final boolean isSpoiler) {
 
 		user.openPrivateChannel().queue(channel -> {
 			
@@ -119,91 +119,91 @@ public class API {
 		
 	}
 	
-	public static void sendPrivateMessage(final User user, final MessageEmbed embed) {
+	public static final void sendPrivateMessage(final User user, final MessageEmbed embed) {
 
 		user.openPrivateChannel().queue(channel -> channel.sendMessage(embed).queue());		
 		
 	}	
 	
-	public static boolean hasRole(final Member member, final Role r) {
+	public static final boolean hasRole(final Member member, final Role r) {
 		
 		return member.getRoles().contains(r);
 		
 	}
 	
-	public static Member getMember(final Guild g, final User u) {
+	public static final Member getMember(final Guild g, final User u) {
 		
 		return g.getMember(u);
 		
 	}
 	
-	public static User getUser(final Member m) { 
+	public static final User getUser(final Member m) { 
 		
 		return m.getUser();
 		
 	}
 	
-	public static Role getRoleById(final Guild g, final long id) {
+	public static final Role getRoleById(final Guild g, final long id) {
 		
 		return g.getRoleById(id);
 		
 	}		
 	
-	public static void deleteMessage(final Message msg) {
+	public static final void deleteMessage(final Message msg) {
 		
 		msg.delete().queue();
 		
 	}
 	
-	public static boolean isPartnered(final Guild g) {
+	public static final boolean isPartnered(final Guild g) {
 		
 		return g.getFeatures().contains("VIP_REGIONS"); 	
 		
 	}
 	
-    public static String replaceLast(final String text, final String regex, final String replacement) {
+    public static final String replaceLast(final String text, final String regex, final String replacement) {
     	
         return text.replaceFirst("(?s)(.*)" + regex, "$1" + replacement);
         
     }  	
     
-    public static EmbedBuilder createEmbedBuilder(final User u) { //by maasterkoo
+    public static final EmbedBuilder createEmbedBuilder(final User u) { //by maasterkoo
     	
         return new EmbedBuilder().setFooter("Command executed by " + u.getAsTag(), u.getEffectiveAvatarUrl());
         
     } 
     
-    public static String getInviteUrl(final long guildId) {
+    public static final String getInviteUrl(final long guildId) {
     	
     	return String.format("https://discordapp.com/oauth2/authorize?client_id=468523263853592576&guild_id=%s&scope=bot&permissions=268446900", guildId);
     	
     }
     
-    public static void sendMessageFormat(final TextChannel ch, final String message, final boolean isSpoiler, final Object... args) {
+    public static final void sendMessageFormat(final TextChannel ch, final String message, final boolean isSpoiler, final Object... args) {
     	
     	sendMessage(ch, String.format(message, args), false);
     	
     }
     
-    public static void sendPrivateMessageFormat(final User u, final String message, final boolean isSpoiler, final Object... args) {
+    public static final void sendPrivateMessageFormat(final User u, final String message, final boolean isSpoiler, final Object... args) {
     	
     	sendPrivateMessage(u, String.format(message, args), false);
     	
     }    
     
-    public static boolean isWeb(final Member member) {
+    public static final boolean isWeb(final Member member) {
     	
     	return member.getOnlineStatus(ClientType.WEB) != OnlineStatus.OFFLINE;
     	
     }    
     
-    public static boolean isDesktop(final Member member) {
+    public static final boolean isDesktop(final Member member) {
     	
     	return member.getOnlineStatus(ClientType.DESKTOP) != OnlineStatus.OFFLINE;
     	
     }        
     
-    public static boolean isMobile(final Member member) {
+    public static final boolean isMobile(final Member member) {
     	
     	return member.getOnlineStatus(ClientType.MOBILE) != OnlineStatus.OFFLINE;
     	

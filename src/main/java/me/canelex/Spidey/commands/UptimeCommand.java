@@ -9,14 +9,14 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 public class UptimeCommand implements ICommand {
 
 	@Override
-	public boolean called(GuildMessageReceivedEvent e) {
+	public final boolean called(final GuildMessageReceivedEvent e) {
 		
 		return true;
 		
 	}
 
 	@Override
-	public void action(GuildMessageReceivedEvent e) {
+	public final void action(final GuildMessageReceivedEvent e) {
 		
 		final long duration = ManagementFactory.getRuntimeMXBean().getUptime();
 
@@ -37,14 +37,14 @@ public class UptimeCommand implements ICommand {
 	}
 
 	@Override
-	public String help() {
+	public final String help() {
 		
 		return "Shows the uptime of the bot";
 		
 	}
 
 	@Override
-	public void executed(boolean success, GuildMessageReceivedEvent e) {
+	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {
 		
 		return;
 		

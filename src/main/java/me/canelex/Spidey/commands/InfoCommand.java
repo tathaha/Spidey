@@ -14,21 +14,21 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 public class InfoCommand implements ICommand {
 
 	@Override
-	public boolean called(GuildMessageReceivedEvent e) {
+	public final boolean called(final GuildMessageReceivedEvent e) {
 		
 		return true;
 		
 	}
 
 	@Override
-	public void action(GuildMessageReceivedEvent e) {
+	public final void action(final GuildMessageReceivedEvent e) {
 		
-		JDA jda = e.getJDA();
-		User author = e.getAuthor();
-		TextChannel msgCh = e.getChannel();
+		final JDA jda = e.getJDA();
+		final User author = e.getAuthor();
+		final TextChannel msgCh = e.getChannel();
 
-    	User dev = jda.retrieveApplicationInfo().complete().getOwner();
-		EmbedBuilder eb = API.createEmbedBuilder(author);
+		final User dev = jda.retrieveApplicationInfo().complete().getOwner();
+		final EmbedBuilder eb = API.createEmbedBuilder(author);
 		eb.setAuthor("About me", "https://canelex.ymastersk.net", jda.getSelfUser().getEffectiveAvatarUrl());
 		eb.setColor(Color.WHITE);
 		eb.addField("Developer", dev.getAsMention(), true);
@@ -39,13 +39,13 @@ public class InfoCommand implements ICommand {
 	}
 
 	@Override
-	public String help() {
+	public final String help() {
 
 		return "Shows you info about me";
 	}
 
 	@Override
-	public void executed(boolean success, GuildMessageReceivedEvent e) {
+	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {
 		
 		return;
 		

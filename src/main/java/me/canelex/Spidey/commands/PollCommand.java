@@ -15,18 +15,18 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 public class PollCommand implements ICommand {
 
 	@Override
-	public boolean called(GuildMessageReceivedEvent e) {
+	public final boolean called(final GuildMessageReceivedEvent e) {
 
 		return true;
 		
 	}
 
 	@Override
-	public void action(GuildMessageReceivedEvent e) {
+	public final void action(final GuildMessageReceivedEvent e) {
 
 		final String neededPerm = "BAN_MEMBERS";    		
 		
-		TextChannel log = e.getGuild().getTextChannelById(MySQL.getChannelId(e.getGuild().getIdLong()));	   		
+		final TextChannel log = e.getGuild().getTextChannelById(MySQL.getChannelId(e.getGuild().getIdLong()));	   		
 		
 		if (!API.hasPerm(e.getMember(), Permission.valueOf(neededPerm))) {
 			
@@ -36,14 +36,14 @@ public class PollCommand implements ICommand {
 		
 		else {
 			
-    		String question = e.getMessage().getContentRaw().substring(7);
+			final String question = e.getMessage().getContentRaw().substring(7);
     		API.deleteMessage(e.getMessage());
     		e.getChannel().sendMessage("Poll: **" + question + "**").queue(m -> {
     			
     			m.addReaction(IEmoji.like).queue();
     			m.addReaction(IEmoji.shrug).queue();
     			m.addReaction(IEmoji.dislike).queue();
-        		EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
+    			final EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
         		eb.setTitle("NEW POLL");
         		eb.setColor(Color.ORANGE);             		
         		eb.addField("Question", "**" + question + "**", false);
@@ -57,14 +57,14 @@ public class PollCommand implements ICommand {
 	}
 
 	@Override
-	public String help() {
+	public final String help() {
 
 		return "Creates a new poll";
 		
 	}
 
 	@Override
-	public void executed(boolean success, GuildMessageReceivedEvent e) {
+	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {
 
 		return;
 		

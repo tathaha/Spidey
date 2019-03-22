@@ -11,27 +11,27 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 public class GifCommand implements ICommand {
 
 	@Override
-	public boolean called(GuildMessageReceivedEvent e) {
+	public final boolean called(final GuildMessageReceivedEvent e) {
 
 		return true;
 		
 	}
 
 	@Override
-	public void action(GuildMessageReceivedEvent e) {
+	public final void action(final GuildMessageReceivedEvent e) {
 		
 		final String query = e.getMessage().getContentRaw().substring(6);
 				
 		try {
 			
-			Giphy giphy = new Giphy(Secrets.giphykey);
-			SearchFeed feed = giphy.search(query, 1, 0);		
+			final Giphy giphy = new Giphy(Secrets.giphykey);
+			final SearchFeed feed = giphy.search(query, 1, 0);		
 			
 		    API.sendMessage(e.getChannel(), "Gif matching **" + query + "**: " + feed.getDataList().get(0).getImages().getOriginal().getUrl(), false);				
 			
 		}		
 		
-		catch (GiphyException ex) {
+		catch (final GiphyException ex) {
 			
 			ex.printStackTrace();
 			
@@ -40,14 +40,14 @@ public class GifCommand implements ICommand {
 	}
 
 	@Override
-	public String help() {
+	public final String help() {
 		
 		return "Sends a gif matching your query";
 		
 	}
 
 	@Override
-	public void executed(boolean success, GuildMessageReceivedEvent e) {
+	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {
 		
 		return;
 		

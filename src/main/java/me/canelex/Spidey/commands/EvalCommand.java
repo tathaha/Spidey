@@ -12,17 +12,17 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 public class EvalCommand implements ICommand {
 	
-	ScriptEngine engine = new ScriptEngineManager().getEngineByName("groovy");
+	final ScriptEngine engine = new ScriptEngineManager().getEngineByName("groovy");
 
 	@Override
-	public boolean called(GuildMessageReceivedEvent e) {
+	public final boolean called(final GuildMessageReceivedEvent e) {
 
 		return true;
 		
 	}
 
 	@Override
-	public void action(GuildMessageReceivedEvent e) {
+	public final void action(final GuildMessageReceivedEvent e) {
 
 		final String toEval = e.getMessage().getContentRaw().substring(7);
 		final String neededPerm = "ADMINISTRATOR";
@@ -53,7 +53,7 @@ public class EvalCommand implements ICommand {
 				
 			}
 			
-			catch (ScriptException ex) {
+			catch (final ScriptException ex) {
 				
 				ex.printStackTrace();
 				
@@ -64,14 +64,14 @@ public class EvalCommand implements ICommand {
 	}
 
 	@Override
-	public String help() {
+	public final String help() {
 
 		return "Executes entered (java) code (importing needed)";
 		
 	}
 
 	@Override
-	public void executed(boolean success, GuildMessageReceivedEvent e) {
+	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {
 		
 		return;
 		

@@ -15,14 +15,14 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 public class WarnCommand implements ICommand {
 
 	@Override
-	public boolean called(GuildMessageReceivedEvent e) {
+	public final boolean called(final GuildMessageReceivedEvent e) {
 		
 		return true;
 		
 	}
 
 	@Override
-	public void action(GuildMessageReceivedEvent e) {
+	public final void action(final GuildMessageReceivedEvent e) {
 		
 		final String neededPerm = "BAN_MEMBERS";    		
 		
@@ -39,15 +39,14 @@ public class WarnCommand implements ICommand {
 				else {
 					
 					  TextChannel log = e.getGuild().getTextChannelById(MySQL.getChannelId(e.getGuild().getIdLong()));
-					  final String reason;
-				      reason = e.getMessage().getContentRaw().substring(7, e.getMessage().getContentRaw().lastIndexOf(" "));
+					  final String reason = e.getMessage().getContentRaw().substring(7, e.getMessage().getContentRaw().lastIndexOf(" "));
 				
-				      for (User u : e.getMessage().getMentionedUsers()) {
+				      for (final User u : e.getMessage().getMentionedUsers()) {
 				
 				        API.sendPrivateMessageFormat(u, ":exclamation: You have been warned on guild **%s** from **%s** for **%s**.", false, e.getGuild().getName(), e.getAuthor().getName(), e.getAuthor().getName());
 				
 				        API.deleteMessage(e.getMessage());
-				        EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
+				        final EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
 				        eb.setTitle("NEW WARN");
 				        eb.setColor(Color.ORANGE);
 				        eb.addField("User", u.getAsMention(), true);
@@ -72,14 +71,14 @@ public class WarnCommand implements ICommand {
 	}
 
 	@Override
-	public String help() {
+	public final String help() {
 
 		return "Warns user";
 		
 	}
 
 	@Override
-	public void executed(boolean success, GuildMessageReceivedEvent e) {
+	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {
 		
 		return;
 		

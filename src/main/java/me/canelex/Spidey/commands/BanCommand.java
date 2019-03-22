@@ -9,25 +9,25 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 public class BanCommand implements ICommand {
 
 	@Override
-	public boolean called(GuildMessageReceivedEvent e) {
+	public final boolean called(final GuildMessageReceivedEvent e) {
 		
 		return true;
 		
 	}
 
 	@Override
-	public void action(GuildMessageReceivedEvent e) {
+	public final void action(final GuildMessageReceivedEvent e) {
 		
 		final String neededPerm = "BAN_MEMBERS";    		
 		
-		if (!e.getMessage().getContentRaw().equals("s!ban")) {
+		if (!e.getMessage().getContentRaw().equals("s!ban")) { //TODO rewrite
 			
 			if (e.getMember().hasPermission(Permission.valueOf(neededPerm))) {
 				
         		String id = e.getMessage().getContentRaw().substring(6);
         		id = id.substring(0, id.indexOf(" "));
         		
-        		String reason = e.getMessage().getContentRaw().substring((7 + id.length()));
+        		final String reason = e.getMessage().getContentRaw().substring((7 + id.length()));
         		
 				e.getGuild().getController().ban(id, 0, reason).queue();   				    				
 				
@@ -44,14 +44,14 @@ public class BanCommand implements ICommand {
 	}
 
 	@Override
-	public String help() {
+	public final String help() {
 		
 		return "Bans user";
 		
 	}
 
 	@Override
-	public void executed(boolean success, GuildMessageReceivedEvent e) {
+	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {
 		
 		return;
 		

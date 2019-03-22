@@ -11,18 +11,18 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 public class AvatarCommand implements ICommand {
 
 	@Override
-	public boolean called(GuildMessageReceivedEvent e) {
+	public final boolean called(final GuildMessageReceivedEvent e) {
 		
 		return true;
 		
 	}
 
 	@Override
-	public void action(GuildMessageReceivedEvent e) {
+	public final void action(final GuildMessageReceivedEvent e) {
 
 		if (e.getMessage().getMentionedUsers().isEmpty()) {
 			
-			EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
+			final EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
 			eb.setAuthor("Avatar of user " + e.getAuthor().getAsTag());
 			eb.setImage(e.getAuthor().getEffectiveAvatarUrl());
 			eb.setColor(Color.WHITE);
@@ -32,8 +32,8 @@ public class AvatarCommand implements ICommand {
 		
 		else {
 			
-			User u = e.getMessage().getMentionedUsers().get(0);
-			EmbedBuilder eb = API.createEmbedBuilder(u);
+			final User u = e.getMessage().getMentionedUsers().get(0);
+			final EmbedBuilder eb = API.createEmbedBuilder(u);
 			eb.setAuthor("Avatar of user " + u.getAsTag()); 
 			eb.setImage(u.getEffectiveAvatarUrl());
 			eb.setColor(Color.WHITE);
@@ -44,14 +44,14 @@ public class AvatarCommand implements ICommand {
 	}
 
 	@Override
-	public String help() {
+	public final String help() {
 		
 		return "Shows avatar of you or mentioned user";
 		
 	}
 
 	@Override
-	public void executed(boolean success, GuildMessageReceivedEvent e) {
+	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {
 		
 		return;
 		

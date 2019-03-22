@@ -19,22 +19,22 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 public class UrbanDictionaryCommand implements ICommand {
 
 	@Override
-	public boolean called(GuildMessageReceivedEvent e) {
+	public final boolean called(final GuildMessageReceivedEvent e) {
 
 		return true;
 		
 	}
 
 	@Override
-	public void action(GuildMessageReceivedEvent e) {	
+	public final void action(final GuildMessageReceivedEvent e) {	
 		
 		final String query = e.getMessage().getContentRaw().substring(5);
 		
 	    try {
 	    	
-            Future<HttpResponse<JsonNode>> future = Unirest.get("http://api.urbandictionary.com/v0/define?term=" + URLEncoder.encode(query, "UTF-8")).asJsonAsync();
-            HttpResponse<JsonNode> json = future.get(30, TimeUnit.SECONDS);
-            JSONArray list = json.getBody().getObject().getJSONArray("list");
+	    	final Future<HttpResponse<JsonNode>> future = Unirest.get("http://api.urbandictionary.com/v0/define?term=" + URLEncoder.encode(query, "UTF-8")).asJsonAsync();
+	    	final HttpResponse<JsonNode> json = future.get(30, TimeUnit.SECONDS);
+	    	final JSONArray list = json.getBody().getObject().getJSONArray("list");
             
             if (list.length() == 0) {
             	
@@ -42,7 +42,7 @@ public class UrbanDictionaryCommand implements ICommand {
             	
             }
             
-            JSONObject item = list.getJSONObject(0);
+            final JSONObject item = list.getJSONObject(0);
             final String result = String.format("Urban Dictionary \n\n"
                             + "Definition for **%s**: \n"
                             + "```\n"
@@ -58,7 +58,7 @@ public class UrbanDictionaryCommand implements ICommand {
 	    	
 	    }		
 	    
-	    catch (Exception ex) {
+	    catch (final Exception ex) {
 	    	
 	    	ex.printStackTrace();
 	    	API.sendMessage(e.getChannel(), ":no_entry: A problem has occured: **" + ex.getMessage() + "**", false);
@@ -68,14 +68,14 @@ public class UrbanDictionaryCommand implements ICommand {
 	}
 
 	@Override
-	public String help() {
+	public final String help() {
 
 		return "Returns a definition of your query from Urban Dictionary";
 		
 	}
 
 	@Override
-	public void executed(boolean success, GuildMessageReceivedEvent e) {
+	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {
 		
 		return;
 		

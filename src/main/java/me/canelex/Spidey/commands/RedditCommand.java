@@ -15,31 +15,31 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 public class RedditCommand implements ICommand {
 
 	@Override
-	public boolean called(GuildMessageReceivedEvent e) {
+	public final boolean called(final GuildMessageReceivedEvent e) {
 
 		return true;
 		
 	}
 
 	@Override
-	public void action(GuildMessageReceivedEvent e) {
+	public final void action(final GuildMessageReceivedEvent e) {
 		
 		final String subreddit = e.getMessage().getContentRaw().substring(9);
 		
-		Credentials credentials = Credentials.script("canelex_", Secrets.redditPass, Secrets.redditClientId, Secrets.redditSecret);
-		UserAgent ua = new UserAgent("bot", "me.canelex.Spidey", "STABLE", "canelex_");
-		OkHttpNetworkAdapter adapter = new OkHttpNetworkAdapter(ua);
-		RedditClient reddit = OAuthHelper.automatic(adapter, credentials);
+		final Credentials credentials = Credentials.script("canelex_", Secrets.redditPass, Secrets.redditClientId, Secrets.redditSecret);
+		final UserAgent ua = new UserAgent("bot", "me.canelex.Spidey", "STABLE", "canelex_");
+		final OkHttpNetworkAdapter adapter = new OkHttpNetworkAdapter(ua);
+		final RedditClient reddit = OAuthHelper.automatic(adapter, credentials);
 		
 	    try {
 	    	
-			Subreddit sr = reddit.subreddit(subreddit).about();			
+	    	final Subreddit sr = reddit.subreddit(subreddit).about();			
 			
-			int subs = sr.getSubscribers();
-			int active = sr.getAccountsActive();
-			String desc = sr.getPublicDescription();
+	    	final int subs = sr.getSubscribers();
+	    	final int active = sr.getAccountsActive();
+	    	final String desc = sr.getPublicDescription();
 				
-			EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
+	    	final EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
 			eb.setAuthor(sr.getTitle(), "https://reddit.com/r/" + subreddit, "https://i.ymastersk.net/LRjhvy");
 			eb.setColor(16727832);				
 			eb.addField("Subscribers", "**" + subs + "**", false);
@@ -51,7 +51,7 @@ public class RedditCommand implements ICommand {
 	    	
 	    }		
 	    
-	    catch (NullPointerException ex) {
+	    catch (final NullPointerException ex) {
 	    	
 	    	API.sendMessage(e.getChannel(), ":no_entry: Subreddit not found.", false);
 	    	
@@ -60,14 +60,14 @@ public class RedditCommand implements ICommand {
 	}
 
 	@Override
-	public String help() {
+	public final String help() {
 		
 		return "Shows you info about entered subreddit. For example `s!reddit PewdiepieSubmissions`.";
 		
 	}
 
 	@Override
-	public void executed(boolean success, GuildMessageReceivedEvent e) {
+	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {
 		
 		return;
 		

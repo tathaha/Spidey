@@ -16,24 +16,24 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 public class UserCommand implements ICommand {
 	
-	Locale locale = new Locale("en", "EN");  
-	Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/London"));        	
-	SimpleDateFormat date = new SimpleDateFormat("EEEE, d.LLLL Y", locale);      
-	SimpleDateFormat time = new SimpleDateFormat("HH:mm:ss", locale);	
+	final Locale locale = new Locale("en", "EN");  
+	final Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/London"));        	
+	final SimpleDateFormat date = new SimpleDateFormat("EEEE, d.LLLL Y", locale);      
+	final SimpleDateFormat time = new SimpleDateFormat("HH:mm:ss", locale);	
 
 	@Override
-	public boolean called(GuildMessageReceivedEvent e) {
+	public final boolean called(final GuildMessageReceivedEvent e) {
 
 		return true;
 		
 	}
 
 	@Override
-	public void action(GuildMessageReceivedEvent e) {
+	public final void action(final GuildMessageReceivedEvent e) {
 		
 		if (e.getMessage().getMentionedUsers().isEmpty()) {
 			
-			EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
+			final EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
 			
 			eb.setAuthor("USER INFO - " + e.getAuthor().getAsTag());
 			eb.setColor(Color.WHITE);
@@ -43,14 +43,14 @@ public class UserCommand implements ICommand {
 			eb.addField("Nickname for this guild", "**" + (e.getMember().getNickname() == null ? "None" : e.getMember().getNickname()) + "**", false);
 			
         	cal.setTimeInMillis(e.getAuthor().getTimeCreated().toInstant().toEpochMilli());
-    		String creatdate = date.format(cal.getTime()).toString();   
-    		String creattime = time.format(cal.getTime()).toString(); 
+        	final String creatdate = date.format(cal.getTime()).toString();   
+        	final String creattime = time.format(cal.getTime()).toString(); 
     		
     		eb.addField("Account created", String.format( "**%s** | **%s** UTC", creatdate, creattime), false);
     		
         	cal.setTimeInMillis(e.getMember().getTimeJoined().toInstant().toEpochMilli());
-    		String joindate = date.format(cal.getTime()).toString();   
-    		String jointime = time.format(cal.getTime()).toString(); 
+        	final String joindate = date.format(cal.getTime()).toString();   
+        	final String jointime = time.format(cal.getTime()).toString(); 
     		
     		eb.addField("User joined", String.format( "**%s** | **%s** UTC", joindate, jointime), false);
     		
@@ -65,7 +65,7 @@ public class UserCommand implements ICommand {
                 int i = 0;
             	String s = "";
             		
-                for (Role role : e.getMember().getRoles()) {
+                for (final Role role : e.getMember().getRoles()) {
                     	
                      i++;
                         
@@ -93,10 +93,10 @@ public class UserCommand implements ICommand {
 		
 		else {
 			
-			User user = e.getMessage().getMentionedUsers().get(0);
-			Member member = API.getMember(e.getGuild(), user);
+			final User user = e.getMessage().getMentionedUsers().get(0);
+			final Member member = API.getMember(e.getGuild(), user);
 			
-			EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
+			final EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
 			
 			eb.setAuthor("USER INFO - " + user.getAsTag());
 			eb.setColor(Color.WHITE);    			
@@ -106,14 +106,14 @@ public class UserCommand implements ICommand {
 			eb.addField("Nickname for this guild", "**" + (member.getNickname() == null ? "None" : member.getNickname()) + "**", false);
 			
         	cal.setTimeInMillis(user.getTimeCreated().toInstant().toEpochMilli());
-    		String creatdate = date.format(cal.getTime()).toString();   
-    		String creattime = time.format(cal.getTime()).toString(); 
+        	final String creatdate = date.format(cal.getTime()).toString();   
+        	final String creattime = time.format(cal.getTime()).toString(); 
     		
     		eb.addField("Account created", String.format( "**%s** | **%s** UTC", creatdate, creattime), false);
     		
         	cal.setTimeInMillis(member.getTimeJoined().toInstant().toEpochMilli());
-    		String joindate = date.format(cal.getTime()).toString();   
-    		String jointime = time.format(cal.getTime()).toString(); 
+        	final String joindate = date.format(cal.getTime()).toString();   
+        	final String jointime = time.format(cal.getTime()).toString(); 
     		
     		eb.addField("User joined", String.format( "**%s** | **%s** UTC", joindate, jointime), false);       		
     			
@@ -128,7 +128,7 @@ public class UserCommand implements ICommand {
                 int i = 0;
             	String s = "";
             		
-                for (Role role : member.getRoles()) {
+                for (final Role role : member.getRoles()) {
                     	
                      i++;
                         
@@ -157,14 +157,14 @@ public class UserCommand implements ICommand {
 	}
 
 	@Override
-	public String help() {
+	public final String help() {
 		
 		return "Shows info about you or mentioned user";
 		
 	}
 
 	@Override
-	public void executed(boolean success, GuildMessageReceivedEvent e) {
+	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {
 
 		return;
 		

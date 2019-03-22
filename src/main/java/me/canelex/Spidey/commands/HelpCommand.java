@@ -13,24 +13,24 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 public class HelpCommand implements ICommand {
 	
 	@Override
-	public boolean called(GuildMessageReceivedEvent e) {
+	public final boolean called(final GuildMessageReceivedEvent e) {
 
 		return true;
 		
 	}
 
 	@Override
-	public void action(GuildMessageReceivedEvent e) {
+	public final void action(final GuildMessageReceivedEvent e) {
 
-		EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor())
+		final EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor())
 				.setColor(Color.WHITE)
 				.setAuthor("Spidey's Commands", "https://github.com/caneleex/Spidey", e.getJDA().getSelfUser().getEffectiveAvatarUrl());
 		
-		StringBuilder sb = new StringBuilder();		
+		final StringBuilder sb = new StringBuilder();		
 		
-		HashMap<String, ICommand> commands = new HashMap<String, ICommand>();
+		final HashMap<String, ICommand> commands = new HashMap<String, ICommand>();
 		
-		for (Map.Entry<String, ICommand> entry : Core.commands.entrySet()) {
+		for (final Map.Entry<String, ICommand> entry : Core.commands.entrySet()) {
 			
 			commands.put(entry.getKey(), entry.getValue());
 			
@@ -38,7 +38,7 @@ public class HelpCommand implements ICommand {
 		
 		commands.remove("yt");
 				
-		for (String cmd : commands.keySet()) {
+		for (final String cmd : commands.keySet()) {
 			
 			if (!Core.commands.get(cmd).help().equals(null)) {
 				
@@ -66,14 +66,14 @@ public class HelpCommand implements ICommand {
 	}
 
 	@Override
-	public String help() {
+	public final String help() {
 
 		return "Shows you this message";
 		
 	}
 
 	@Override
-	public void executed(boolean success, GuildMessageReceivedEvent e) {
+	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {
 
 		return;
 		

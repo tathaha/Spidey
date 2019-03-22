@@ -14,28 +14,28 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 public class RolesCommand implements ICommand {
 
 	@Override
-	public boolean called(GuildMessageReceivedEvent e) {
+	public final boolean called(final GuildMessageReceivedEvent e) {
 
 		return true;
 		
 	}
 
 	@Override
-	public void action(GuildMessageReceivedEvent e) {
+	public final void action(final GuildMessageReceivedEvent e) {
 				
 		if (e.getMessage().getMentionedMembers().isEmpty()) {
 			
-			EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
+			final EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
 			eb.setColor(Color.ORANGE);
 			
-	        List<Role> roles = e.getGuild().getRoleCache().stream().collect(Collectors.toCollection(ArrayList::new));
+			final List<Role> roles = e.getGuild().getRoleCache().stream().collect(Collectors.toCollection(ArrayList::new));
 	        roles.remove(e.getGuild().getPublicRole());			
 			
 	        String s = "";
 	        
 	        int i = 0;
 	        
-	        for (Role role : roles) {
+	        for (final Role role : roles) {
 	        	
 	        	i++;
 	        	
@@ -61,14 +61,14 @@ public class RolesCommand implements ICommand {
 		
 		else {
 			
-			EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
+			final EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
 			eb.setColor(Color.ORANGE);
 			
 	        String s = "";
 	        
 	        int i = 0;
 	        
-	        for (Role role : e.getMessage().getMentionedMembers().get(0).getRoles()) {
+	        for (final Role role : e.getMessage().getMentionedMembers().get(0).getRoles()) {
 	        	
 	        	i++;
 	        	
@@ -95,14 +95,14 @@ public class RolesCommand implements ICommand {
 	}
 
 	@Override
-	public String help() {
+	public final String help() {
 
 		return "Returns roles of guild if nobody is mentioned";
 		
 	}		
 
 	@Override
-	public void executed(boolean success, GuildMessageReceivedEvent e) {
+	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {
 		
 		return;
 		

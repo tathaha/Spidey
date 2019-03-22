@@ -22,16 +22,16 @@ import net.dv8tion.jda.api.managers.GuildController;
 public class MuteCommand implements ICommand {  	
 	
 	@Override
-	public boolean called(GuildMessageReceivedEvent e) {
+	public final boolean called(final GuildMessageReceivedEvent e) {
 
 		return true;
 		
 	}
 
 	@Override
-	public void action(GuildMessageReceivedEvent e) {
+	public final void action(final GuildMessageReceivedEvent e) {
 
-		GuildController controller = e.getGuild().getController();			
+		final GuildController controller = e.getGuild().getController(); //TODO rewrite
 		
 		if (e.getGuild().getTextChannelById(MySQL.getChannelId(e.getGuild().getIdLong())) == null) {
 			
@@ -41,10 +41,10 @@ public class MuteCommand implements ICommand {
 		
 		else {
 			
-			TextChannel c = e.getGuild().getTextChannelById(MySQL.getChannelId(e.getGuild().getIdLong()));
+			final TextChannel c = e.getGuild().getTextChannelById(MySQL.getChannelId(e.getGuild().getIdLong()));
     		final String neededPerm = "BAN_MEMBERS";			
     		
-    		List<User> men = e.getMessage().getMentionedUsers();
+    		final List<User> men = e.getMessage().getMentionedUsers();
     		
     		if (!e.getMessage().getContentRaw().equals("s!mute")) {
     			
@@ -65,14 +65,14 @@ public class MuteCommand implements ICommand {
             		String reason = e.getMessage().getContentRaw().substring((7 + 2 + length.length() + time.length()));
             		reason = reason.substring(0, reason.lastIndexOf(" "));
             		
-            		int lengthV = Integer.valueOf(length);
+            		final int lengthV = Integer.valueOf(length);
             		
             		if (!men.isEmpty()) {
             			
-            			for (User user : men) {
+            			for (final User user : men) {
             				
-            				Role muted = e.getGuild().getRolesByName("Muted", false).get(0);
-            				Member member = e.getGuild().getMember(user);
+            				final Role muted = e.getGuild().getRolesByName("Muted", false).get(0);
+            				final Member member = e.getGuild().getMember(user);
             				
             	    		API.deleteMessage(e.getMessage());        				
             				controller.addSingleRoleToMember(member, muted).queue();
@@ -81,7 +81,7 @@ public class MuteCommand implements ICommand {
             					
                 				if (time.equalsIgnoreCase("d")) {
                 					
-                    				EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
+                					final EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
                     				eb.setTitle("NEW MUTE");                    				
                     		        eb.setThumbnail(user.getEffectiveAvatarUrl());                    				                    				
                     				eb.setColor(Color.RED);
@@ -111,7 +111,7 @@ public class MuteCommand implements ICommand {
                 					
                     				if (time.equalsIgnoreCase("w")) {
                     					
-                        				EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
+                    					final EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
                         				eb.setTitle("NEW MUTE");                        				
                         		        eb.setThumbnail(user.getEffectiveAvatarUrl());                        		        
                         				eb.setColor(Color.RED);
@@ -141,7 +141,7 @@ public class MuteCommand implements ICommand {
                     					
                         				if (time.equalsIgnoreCase("m")) {
                         					
-                            				EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
+                        					final EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
                             				eb.setTitle("NEW MUTE");                            				
                             		        eb.setThumbnail(user.getEffectiveAvatarUrl());                            		        
                             				eb.setColor(Color.RED);
@@ -217,14 +217,14 @@ public class MuteCommand implements ICommand {
 	}
 
 	@Override
-	public String help() {
+	public final String help() {
 
 		return "Mutes user";
 		
 	}
 
 	@Override
-	public void executed(boolean success, GuildMessageReceivedEvent e) {
+	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {
 
 		return;
 		

@@ -14,18 +14,18 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 public class DeleteCommand implements ICommand {
 
 	@Override
-	public boolean called(GuildMessageReceivedEvent e) {
+	public final boolean called(final GuildMessageReceivedEvent e) {
 		
 		return true;
 		
 	}
 
 	@Override
-	public void action(GuildMessageReceivedEvent e) {
+	public final void action(final GuildMessageReceivedEvent e) {
 		
 		final String neededPerm = "BAN_MEMBERS";	    		
 		
-		String[] args = e.getMessage().getContentRaw().split("\\s+");
+		final String[] args = e.getMessage().getContentRaw().split("\\s+");
 		int amount = Integer.parseInt(args[1]);  
 		int count;
 		API.deleteMessage(e.getMessage());
@@ -41,7 +41,7 @@ public class DeleteCommand implements ICommand {
     		if (e.getMessage().getMentionedUsers().isEmpty()) {
     			
     			amount++;
-        		List<Message> messages = e.getChannel().getIterableHistory().cache(false).stream().limit(amount).collect(Collectors.toList());        			
+    			final List<Message> messages = e.getChannel().getIterableHistory().cache(false).stream().limit(amount).collect(Collectors.toList());        			
     			count = messages.size() - 1;        			
     			
     			if (messages.size() == 1) {
@@ -88,9 +88,9 @@ public class DeleteCommand implements ICommand {
     		
     		else {        			
     			      			
-        		List<Message> messagesByUser = e.getChannel().getIterableHistory().cache(false).stream().filter(m -> m.getAuthor().equals(e.getMessage().getMentionedUsers().get(0))).limit(amount).collect(Collectors.toList());    
+    			final List<Message> messagesByUser = e.getChannel().getIterableHistory().cache(false).stream().filter(m -> m.getAuthor().equals(e.getMessage().getMentionedUsers().get(0))).limit(amount).collect(Collectors.toList());    
         				
-            	int uCount = messagesByUser.size();     
+    			final int uCount = messagesByUser.size();     
             	
     			if (messagesByUser.size() == 1) {
     				
@@ -139,14 +139,14 @@ public class DeleteCommand implements ICommand {
 	}
 
 	@Override
-	public String help() {
+	public final String help() {
 		
 		return "Deletes messages (by mentioned user)";
 		
 	}
 
 	@Override
-	public void executed(boolean success, GuildMessageReceivedEvent e) {
+	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {
 		
 		return;
 		

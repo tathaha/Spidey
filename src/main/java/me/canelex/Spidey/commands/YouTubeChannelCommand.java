@@ -30,20 +30,20 @@ public class YouTubeChannelCommand implements ICommand {
 	SimpleDateFormat time = new SimpleDateFormat("HH:mm:ss", locale);  	
 
 	@Override
-	public boolean called(GuildMessageReceivedEvent e) {
+	public final boolean called(final GuildMessageReceivedEvent e) {
 
 		return true;
 		
 	}
 
 	@Override
-	public void action(GuildMessageReceivedEvent e) {
+	public final void action(final GuildMessageReceivedEvent e) {
 		
 		final String channel = e.getMessage().getContentRaw().substring(12);
 		
 		try {
 			
-		    YouTube youtube = new YouTube.Builder(
+			final YouTube youtube = new YouTube.Builder(
 		                new NetHttpTransport(),
 		                new JacksonFactory(),
 		                new HttpRequestInitializer() {
@@ -55,27 +55,27 @@ public class YouTubeChannelCommand implements ICommand {
 		        .setYouTubeRequestInitializer(new YouTubeRequestInitializer(Secrets.youtubeapikey))
 		        .build();
 
-		        YouTube.Search.List search = youtube.search().list("snippet");
+		        final YouTube.Search.List search = youtube.search().list("snippet");
 		        search.setQ(channel);
 		        search.setType("channel");
 
-		        SearchListResponse searchResponse = search.execute();
+		        final SearchListResponse searchResponse = search.execute();
 		        
 		        if (!searchResponse.getItems().isEmpty()) {        	
 		            	
-		            String channelId = searchResponse.getItems().get(0).getSnippet().getChannelId();
+		        	final String channelId = searchResponse.getItems().get(0).getSnippet().getChannelId();
 
-		            YouTube.Channels.List channels = youtube.channels().list("snippet, statistics");
+		        	final YouTube.Channels.List channels = youtube.channels().list("snippet, statistics");
 		            channels.setId(channelId);
 
-		            Channel c = channels.execute().getItems().get(0);
+		            final Channel c = channels.execute().getItems().get(0);
 		            
 		            cal.setTimeInMillis(c.getSnippet().getPublishedAt().getValue());
 		            
-		    		String creatdate = date.format(cal.getTime()).toString();   
-		    		String creattime = time.format(cal.getTime()).toString();   		            
+		            final String creatdate = date.format(cal.getTime()).toString();   
+		            final String creattime = time.format(cal.getTime()).toString();   		            
 
-		            EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
+		            final EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
 		            eb.setAuthor(c.getSnippet().getTitle(), "https://youtube.com/channel/" + channelId, "https://i.ymastersk.net/vo96zG");
 		            eb.setColor(14765121);
 		            eb.setThumbnail(c.getSnippet().getThumbnails().getHigh().getUrl());
@@ -99,7 +99,7 @@ public class YouTubeChannelCommand implements ICommand {
 			
 		}
 		
-		catch (Exception ex) {
+		catch (final Exception ex) {
 			
 			ex.printStackTrace();
 			
@@ -108,14 +108,14 @@ public class YouTubeChannelCommand implements ICommand {
 	}
 
 	@Override
-	public String help() {
+	public final String help() {
 
 		return "Shows info about entered YouTube channel";
 		
 	}
 
 	@Override
-	public void executed(boolean success, GuildMessageReceivedEvent e) {
+	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {
 		
 		return;
 		

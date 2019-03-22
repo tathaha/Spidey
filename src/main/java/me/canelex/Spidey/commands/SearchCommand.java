@@ -13,17 +13,17 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 public class SearchCommand implements ICommand {
 
 	@Override
-	public boolean called(GuildMessageReceivedEvent e) {
+	public final boolean called(final GuildMessageReceivedEvent e) {
 
 		return true;
 		
 	}
 
 	@Override
-	public void action(GuildMessageReceivedEvent e) {
+	public final void action(final GuildMessageReceivedEvent e) {
 		
 		String filter = null;
-		String[] args = e.getMessage().getContentRaw().split("\\s+");
+		final String[] args = e.getMessage().getContentRaw().split("\\s+");
 		
 		switch (args[0]) {
 				
@@ -42,7 +42,7 @@ public class SearchCommand implements ICommand {
 				
 		}
 
-		List<SearchResult> results = GoogleSearch.performSearch(
+		final List<SearchResult> results = GoogleSearch.performSearch(
 				"015021391643023377625:kq7ex3xgvoq",
 				StringUtils.join(args, "+", 1, args.length)
 						+ ((filter != null) ? ("+" + filter) : ""));
@@ -52,14 +52,14 @@ public class SearchCommand implements ICommand {
 	}
 
 	@Override
-	public String help() {
+	public final String help() {
 
 		return "Allows you to search Google or YouTube";
 		
 	}
 
 	@Override
-	public void executed(boolean success, GuildMessageReceivedEvent e) {
+	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {
 		
 		return;
 		

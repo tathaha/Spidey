@@ -19,18 +19,18 @@ public class GoogleSearch {
     private static final String GOOGLE_URL = "https://www.googleapis.com/customsearch/v1/?cx=%s&key=%s&num=1&q=%s";
     private static final String GOOGLE_API_KEY = Secrets.googleapikey;
 
-    public static List<SearchResult> performSearch(String engineId, String terms) {
+    public final static List<SearchResult> performSearch(final String engineId, String terms) {
     	
         try {
 
-            terms = terms.replace(" ", "%20");
-            String searchUrl = String.format(GOOGLE_URL, engineId, GOOGLE_API_KEY, terms);
+        	terms = terms.replace(" ", "%20");
+        	final String searchUrl = String.format(GOOGLE_URL, engineId, GOOGLE_API_KEY, terms);
 
-            URL searchURL = new URL(searchUrl);
-            URLConnection conn = searchURL.openConnection();
+        	final URL searchURL = new URL(searchUrl);
+        	final URLConnection conn = searchURL.openConnection();
             conn.setRequestProperty("User-Agent", "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:39.0) Gecko/20100101 " + randomName(10));
-            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            StringBuilder json = new StringBuilder();
+            final BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            final StringBuilder json = new StringBuilder();
             String line;
             
             while ((line = in.readLine()) != null) {
@@ -41,8 +41,8 @@ public class GoogleSearch {
             
             in.close();
 
-            JSONArray jsonResults = new JSONObject(json.toString()).getJSONArray("items");
-            List<SearchResult> results = new LinkedList<>();
+            final JSONArray jsonResults = new JSONObject(json.toString()).getJSONArray("items");
+            final List<SearchResult> results = new LinkedList<>();
             
             for (int i = 0; i < jsonResults.length(); i++) {
             	            	
@@ -54,7 +54,7 @@ public class GoogleSearch {
             
         }
         
-        catch (IOException e) {
+        catch (final IOException e) {
         	
             e.printStackTrace();
             return null;
@@ -63,15 +63,15 @@ public class GoogleSearch {
         
     }	
     
-    private static String randomName(int randomLength) {
+    private final static String randomName(final int randomLength) {
     	
-        char[] characters = new char[]
+    	final char[] characters = new char[]
                 {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
                 'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
                 '1','2','3','4','5','6','7','8','9','0'};
 
-        Random rand = new Random();
-        StringBuilder builder = new StringBuilder();
+    	final Random rand = new Random();
+    	final StringBuilder builder = new StringBuilder();
         builder.append("Spidey/");
         
         for (int i = 0; i < randomLength; i++) {

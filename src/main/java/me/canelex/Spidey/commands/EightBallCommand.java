@@ -30,28 +30,28 @@ public class EightBallCommand implements ICommand {
             "You can't handle the truth"};	
 	
 	@Override
-	public boolean called(GuildMessageReceivedEvent e) {
+	public final boolean called(final GuildMessageReceivedEvent e) {
 
 		return true;
 		
 	}
 
 	@Override
-	public void action(GuildMessageReceivedEvent e) {
+	public final void action(final GuildMessageReceivedEvent e) {
 		
 		API.sendMessage(e.getChannel(), ":crystal_ball: " + a[(int) (Math.random() * a.length)], false);
 		
 	}
 
 	@Override
-	public String help() {
+	public final String help() {
 
 		return "Returns a random answer to your question";
 		
 	}
 
 	@Override
-	public void executed(boolean success, GuildMessageReceivedEvent e) {
+	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {
 		
 		return;
 		
