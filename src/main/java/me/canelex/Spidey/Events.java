@@ -25,12 +25,6 @@ public class Events extends ListenerAdapter {
 	@Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent e) {
 		
-		if (e.getAuthor().isBot()) {
-			
-			return;
-			
-		}
-		
 		if (e.getMessage().getContentRaw().startsWith("s!") && !e.getAuthor().isBot()){
 			
 			Core.handleCommand(Core.parser.parse(e.getMessage().getContentRaw(), e));
