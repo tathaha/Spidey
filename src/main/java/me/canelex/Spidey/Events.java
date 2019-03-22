@@ -31,7 +31,7 @@ public class Events extends ListenerAdapter {
 			
 		}
 		
-		if (e.getMessage().getContentRaw().startsWith("s!") && e.getMessage().getAuthor().getId() != e.getJDA().getSelfUser().getId()){
+		if (e.getMessage().getContentRaw().startsWith("s!") && !e.getAuthor().isBot()){
 			
 			Core.handleCommand(Core.parser.parse(e.getMessage().getContentRaw(), e));
 			return;
