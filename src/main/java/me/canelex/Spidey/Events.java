@@ -30,13 +30,6 @@ public class Events extends ListenerAdapter {
 			return;
 			
 		}
-    	
-		if (e.getMessage().getContentRaw().equals("s!reload") && e.getAuthor().getId().equals("394607709741252621")) {
-			
-			Core.setupCommands();
-			API.sendMessage(e.getChannel(), ":white_check_mark: Successfully reloaded commands.", false);
-			
-		}
 		
 		if (e.getMessage().getContentRaw().startsWith("s!") && e.getMessage().getAuthor().getId() != e.getJDA().getSelfUser().getId()){
 			
