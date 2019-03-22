@@ -23,12 +23,15 @@ public class MembercountCommand implements ICommand {
 	@Override
 	public void action(GuildMessageReceivedEvent e) {
 		
-    	List<Member> tonline = e.getGuild().getMembers().stream().filter(member -> member.getOnlineStatus() == OnlineStatus.ONLINE || member.getOnlineStatus() == OnlineStatus.IDLE || member.getOnlineStatus() == OnlineStatus.DO_NOT_DISTURB).collect(Collectors.toList());
+    	List<Member> tonline = e.getGuild().getMemberCache().stream().filter(member -> member.getOnlineStatus() == OnlineStatus.ONLINE || member.getOnlineStatus() == OnlineStatus.IDLE || member.getOnlineStatus() == OnlineStatus.DO_NOT_DISTURB).collect(Collectors.toList());
     	long bonline = tonline.stream().filter(m -> m.getUser().isBot()).count();        	
     	long total = e.getGuild().getMemberCache().size();     	
     	long online = tonline.size();
-    	long bots = e.getGuild().getMembers().stream().filter(member -> member.getUser().isBot()).count();
+    	long bots = e.getGuild().getMemberCache().stream().filter(member -> member.getUser().isBot()).count();
     	long ponline = online - bonline;
+    	long monline = e.getGuild().getMemberCache().stream().filter(m -> API.isMobile(m)).count();
+    	long wonline = e.getGuild().getMemberCache().stream().filter(m -> API.isWeb(m)).count();
+    	long donline = e.getGuild().getMemberCache().stream().filter(m -> API.isDesktop(m)).count();    	
     	
     	EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
     	eb.setTitle("MEMBERCOUNT");
@@ -38,7 +41,10 @@ public class MembercountCommand implements ICommand {
     	eb.addField("Bots", "**" + bots + "**", true);
     	eb.addField("Total online", "**" + online + "**", true);
     	eb.addField("People online", "**" + ponline + "**", true);
-    	eb.addField("Bots online", "**" + bonline + "**", true);        	
+    	eb.addField("Bots online", "**" + bonline + "**", true);  
+    	eb.addField("Desktop users online", "**" + donline + "**", true);
+    	eb.addField("Mobile users online", "**" + monline + "**", true);    	
+    	eb.addField("Web users online", "**" + wonline + "** (includes bots)", true);
        	API.sendMessage(e.getChannel(), eb.build());		
 		
 	}
