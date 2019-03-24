@@ -5,7 +5,7 @@ import java.awt.Color;
 import me.canelex.Spidey.MySQL;
 import me.canelex.Spidey.objects.command.ICommand;
 import me.canelex.Spidey.utils.API;
-import me.canelex.Spidey.utils.IEmoji;
+import me.canelex.Spidey.utils.Emojis;
 import me.canelex.Spidey.utils.PermissionError;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
@@ -40,9 +40,9 @@ public class PollCommand implements ICommand {
     		API.deleteMessage(e.getMessage());
     		e.getChannel().sendMessage("Poll: **" + question + "**").queue(m -> {
     			
-    			m.addReaction(IEmoji.like).queue();
-    			m.addReaction(IEmoji.shrug).queue();
-    			m.addReaction(IEmoji.dislike).queue();
+    			m.addReaction(Emojis.like).queue();
+    			m.addReaction(Emojis.shrug).queue();
+    			m.addReaction(Emojis.dislike).queue();
     			final EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
         		eb.setTitle("NEW POLL");
         		eb.setColor(Color.ORANGE);             		

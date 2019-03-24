@@ -13,7 +13,7 @@ import com.mashape.unirest.http.Unirest;
 
 import me.canelex.Spidey.objects.command.ICommand;
 import me.canelex.Spidey.utils.API;
-import me.canelex.Spidey.utils.IEmoji;
+import me.canelex.Spidey.utils.Emojis;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 public class UrbanDictionaryCommand implements ICommand {
@@ -50,7 +50,7 @@ public class UrbanDictionaryCommand implements ICommand {
                             + "```\n"
                             + "**example**: \n"
                             + "%s" + "\n\n"
-                            + "_by %s (" + IEmoji.like + "%s  " + IEmoji.dislike + "%s)_"
+                            + "_by %s (" + Emojis.like + "%s  " + Emojis.dislike + "%s)_"
                     , item.getString("word"), item.getString("definition"), item.getString("example"),
                     item.getString("author"), item.getInt("thumbs_up"), item.getInt("thumbs_down"));
             
