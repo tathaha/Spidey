@@ -39,12 +39,12 @@ import net.dv8tion.jda.api.entities.Activity;
 public class Core {	
 	
 	public static final CommandParser parser = new CommandParser();
-	public static HashMap<String, ICommand> commands = new HashMap<String, ICommand>();	
+	public static final HashMap<String, ICommand> commands = new HashMap<String, ICommand>();	
 	
-	public Core() throws Exception {
+	public static final void main(final String[] args) throws Exception {
     	
 		@SuppressWarnings("unused")
-		JDA jda = new JDABuilder(AccountType.BOT)
+		final JDA jda = new JDABuilder(AccountType.BOT)
     			.setToken(Secrets.token)
     			.addEventListeners(new Events())
     			.setActivity(Activity.streaming("discord.gg/cnAgKrv", "https://twitch.tv/canelex_"))    
@@ -54,13 +54,7 @@ public class Core {
         
     } 	
 	
-	public static void main(String[] args) throws Exception {
-		
-		new Core();
-		
-	}
-	
-	public static void setupCommands() {
+	public static final void setupCommands() {
 		
 		commands.clear();
 		commands.put("guild", new GuildCommand());
@@ -94,11 +88,11 @@ public class Core {
 		
 	}
 	
-	public static void handleCommand(CommandParser.CommandContainer cmd) {
+	public static final void handleCommand(final CommandParser.CommandContainer cmd) {
 		
 		if (commands.containsKey(cmd.invoke)) {
 			
-			boolean safe = commands.get(cmd.invoke).called(cmd.event);
+			final boolean safe = commands.get(cmd.invoke).called(cmd.event);
 			
 			if (!safe) {
 				

@@ -23,7 +23,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 public class Events extends ListenerAdapter {		 
 	
 	@Override
-    public void onGuildMessageReceived(GuildMessageReceivedEvent e) {
+    public final void onGuildMessageReceived(final GuildMessageReceivedEvent e) {
 		
 		if (e.getMessage().getContentRaw().startsWith("s!") && !e.getAuthor().isBot()){
 			
@@ -35,7 +35,7 @@ public class Events extends ListenerAdapter {
 	}
 	
 	@Override
-	public void onGuildMemberRoleRemove(GuildMemberRoleRemoveEvent e) {
+	public final void onGuildMemberRoleRemove(final GuildMemberRoleRemoveEvent e) {
 		
 		final Guild guild = e.getGuild();
 		final Role muted = guild.getRolesByName("Muted", false).get(0);
@@ -65,7 +65,7 @@ public class Events extends ListenerAdapter {
 	}
 	
 	@Override
-    public void onGuildBan(GuildBanEvent e) {
+    public final void onGuildBan(final GuildBanEvent e) {
 		
 		final User user = e.getUser();
 		final Guild guild = e.getGuild();
@@ -98,7 +98,7 @@ public class Events extends ListenerAdapter {
 	}	
 	
 	@Override
-    public void onGuildUnban(GuildUnbanEvent e) {
+    public final void onGuildUnban(final GuildUnbanEvent e) {
 		
 		final User user = e.getUser();
 		final Guild guild = e.getGuild();		
@@ -125,7 +125,7 @@ public class Events extends ListenerAdapter {
 	}	
 	
 	@Override
-    public void onGuildMemberLeave(GuildMemberLeaveEvent e) {
+    public final void onGuildMemberLeave(final GuildMemberLeaveEvent e) {
 		
 		final User user = e.getUser();
 		final Guild guild = e.getGuild();	
@@ -152,7 +152,7 @@ public class Events extends ListenerAdapter {
 	}	
 	
 	@Override
-    public void onGuildMemberJoin(GuildMemberJoinEvent e) {
+    public final void onGuildMemberJoin(final GuildMemberJoinEvent e) {
 		
 		final User user = e.getUser();
 		final Guild guild = e.getGuild();		
@@ -179,7 +179,7 @@ public class Events extends ListenerAdapter {
 	}	
 	
 	@Override
-	public void onGuildLeave(GuildLeaveEvent e) {
+	public final void onGuildLeave(final GuildLeaveEvent e) {
 		
 		if (MySQL.isInDatabase(e.getGuild().getIdLong())) {
 			
