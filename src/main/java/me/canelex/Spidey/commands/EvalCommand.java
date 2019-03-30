@@ -44,9 +44,10 @@ public class EvalCommand implements ICommand {
 				engine.put("jda", e.getJDA());
 				engine.put("guild", e.getGuild());
 				
-				e.getChannel().sendMessage("```java\n" + engine.eval(toEval) + "```").submit().thenRun(() -> e.getMessage().addReaction("✅").queue()).exceptionally(ex -> {
+				e.getChannel().sendMessage("```" + engine.eval(toEval) + "```").submit().thenRun(() -> e.getMessage().addReaction("✅").queue()).exceptionally(ex -> {
 					
 					e.getMessage().addReaction("❌").queue();
+					API.sendMessage(e.getChannel(), "```" + ex.getMessage() + "```", false); 
 					return null;
 					
 				});
