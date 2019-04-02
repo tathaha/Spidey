@@ -6,7 +6,6 @@ import me.canelex.Spidey.commands.AvatarCommand;
 import me.canelex.Spidey.commands.BanCommand;
 import me.canelex.Spidey.commands.DeleteCommand;
 import me.canelex.Spidey.commands.EightBallCommand;
-import me.canelex.Spidey.commands.EvalCommand;
 import me.canelex.Spidey.commands.GifCommand;
 import me.canelex.Spidey.commands.GuildCommand;
 import me.canelex.Spidey.commands.HelpCommand;
@@ -84,7 +83,6 @@ public class Core {
 		commands.put("gif", new GifCommand());
 		commands.put("slowmode", new SlowmodeCommand());
 		commands.put("roles", new RolesCommand());
-		commands.put("eval", new EvalCommand());
 		
 	}
 	
