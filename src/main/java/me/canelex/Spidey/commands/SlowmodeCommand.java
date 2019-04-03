@@ -4,6 +4,7 @@ import java.util.concurrent.TimeUnit;
 
 import me.canelex.Spidey.objects.command.ICommand;
 import me.canelex.Spidey.utils.API;
+import me.canelex.Spidey.utils.Emojis;
 import me.canelex.Spidey.utils.PermissionError;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -57,7 +58,7 @@ public class SlowmodeCommand implements ICommand {
 	            
 	        }		
 	        
-	        e.getChannel().getManager().setSlowmode(seconds).submit().thenRun(() -> e.getMessage().addReaction("✅").submit().thenRun(() -> {
+	        e.getChannel().getManager().setSlowmode(seconds).submit().thenRun(() -> e.getMessage().addReaction(Emojis.check).submit().thenRun(() -> {
 	        	
 	        	if (e.getMessage() != null) {
 	        		
@@ -77,7 +78,7 @@ public class SlowmodeCommand implements ICommand {
 	        		
 	        	});
 	        	
-	        	e.getMessage().addReaction("❌").queue();  
+	        	e.getMessage().addReaction(Emojis.cross).queue();  
 	        	e.getMessage().delete().queueAfter(5, TimeUnit.SECONDS);
 	        	return null;
 	        	
