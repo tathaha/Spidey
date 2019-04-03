@@ -47,7 +47,7 @@ public class WarnCommand implements ICommand {
 				
 				        API.deleteMessage(e.getMessage());
 				        final EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
-				        eb.setTitle("NEW WARN");
+				        eb.setAuthor("NEW WARN");
 				        eb.setColor(Color.ORANGE);
 				        eb.addField("User", u.getAsMention(), true);
 				        eb.addField("Moderator", e.getAuthor().getAsMention(), true);

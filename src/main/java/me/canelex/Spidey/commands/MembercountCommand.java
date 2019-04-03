@@ -34,7 +34,7 @@ public class MembercountCommand implements ICommand {
 		final long donline = e.getGuild().getMemberCache().stream().filter(m -> API.isDesktop(m)).count();    	
     	
 		final EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
-    	eb.setTitle("MEMBERCOUNT");
+    	eb.setAuthor("MEMBERCOUNT");
     	eb.setColor(Color.WHITE);
     	eb.addField("Total", "**" + total + "**", true);        	
     	eb.addField("People", "**" + (total - bots) + "**", true);

@@ -82,7 +82,7 @@ public class MuteCommand implements ICommand {
                 				if (time.equalsIgnoreCase("d")) {
                 					
                 					final EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
-                    				eb.setTitle("NEW MUTE");                    				
+                    				eb.setAuthor("NEW MUTE");                    				
                     		        eb.setThumbnail(user.getEffectiveAvatarUrl());                    				                    				
                     				eb.setColor(Color.RED);
                     				eb.addField("User", user.getAsMention(), true);
@@ -112,7 +112,7 @@ public class MuteCommand implements ICommand {
                     				if (time.equalsIgnoreCase("w")) {
                     					
                     					final EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
-                        				eb.setTitle("NEW MUTE");                        				
+                        				eb.setAuthor("NEW MUTE");                        				
                         		        eb.setThumbnail(user.getEffectiveAvatarUrl());                        		        
                         				eb.setColor(Color.RED);
                         				eb.addField("User", user.getAsMention(), true);
@@ -142,7 +142,7 @@ public class MuteCommand implements ICommand {
                         				if (time.equalsIgnoreCase("m")) {
                         					
                         					final EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
-                            				eb.setTitle("NEW MUTE");                            				
+                            				eb.setAuthor("NEW MUTE");                            				
                             		        eb.setThumbnail(user.getEffectiveAvatarUrl());                            		        
                             				eb.setColor(Color.RED);
                             				eb.addField("User", user.getAsMention(), true);

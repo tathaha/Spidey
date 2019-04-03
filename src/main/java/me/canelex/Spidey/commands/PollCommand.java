@@ -44,7 +44,7 @@ public class PollCommand implements ICommand {
     			m.addReaction(Emojis.shrug).queue();
     			m.addReaction(Emojis.dislike).queue();
     			final EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
-        		eb.setTitle("NEW POLL");
+        		eb.setAuthor("NEW POLL");
         		eb.setColor(Color.ORANGE);             		
         		eb.addField("Question", "**" + question + "**", false);
         		eb.setFooter("Poll created by " + e.getAuthor().getAsTag(), e.getAuthor().getEffectiveAvatarUrl());             		

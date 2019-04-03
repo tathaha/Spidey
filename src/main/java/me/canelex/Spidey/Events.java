@@ -52,7 +52,7 @@ public class Events extends ListenerAdapter {
 				
 				final TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));				
 				final EmbedBuilder eb = new EmbedBuilder();
-				eb.setTitle("UNMUTE");
+				eb.setAuthor("UNMUTE");
 				eb.setColor(Color.GREEN);			
 		        eb.setThumbnail(e.getUser().getEffectiveAvatarUrl());						
 				eb.addField("User", "**" + e.getUser().getAsTag() + "**", false);
@@ -83,7 +83,7 @@ public class Events extends ListenerAdapter {
 			final List<AuditLogEntry> auditbans = guild.retrieveAuditLogs().type(ActionType.BAN).complete();
 			final User banner = auditbans.get(0).getUser();
 			final EmbedBuilder eb = new EmbedBuilder();
-	        eb.setTitle("NEW BAN");        
+	        eb.setAuthor("NEW BAN");        
 	        eb.setThumbnail(user.getEffectiveAvatarUrl());                
 	        eb.setColor(Color.RED);
 	        eb.addField("User", "**" + user.getAsTag() + "**", true);
@@ -113,7 +113,7 @@ public class Events extends ListenerAdapter {
 			
 			final TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));			
 			final EmbedBuilder eb = new EmbedBuilder();
-	        eb.setTitle("UNBAN");
+	        eb.setAuthor("UNBAN");
 	        eb.setColor(Color.GREEN);        
 	        eb.setThumbnail(user.getEffectiveAvatarUrl());                      
 	        eb.addField("User", "**" + user.getAsTag() + "**", true);
@@ -140,7 +140,7 @@ public class Events extends ListenerAdapter {
 			
 			final TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));
 			final EmbedBuilder eb = new EmbedBuilder();
-	        eb.setTitle("USER HAS LEFT");        
+	        eb.setAuthor("USER HAS LEFT");        
 	        eb.setThumbnail(user.getEffectiveAvatarUrl());                
 	        eb.setColor(Color.RED);
 	        eb.addField("User", "**" + user.getAsTag() + "**", true);
@@ -167,7 +167,7 @@ public class Events extends ListenerAdapter {
 			
 			final TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));					
 			final EmbedBuilder eb = new EmbedBuilder();
-	        eb.setTitle("USER HAS JOINED");        
+	        eb.setAuthor("USER HAS JOINED");        
 	        eb.setThumbnail(user.getEffectiveAvatarUrl());                     
 	        eb.setColor(Color.GREEN);
 	        eb.addField("User", "**" + user.getAsTag() + "**", true);
