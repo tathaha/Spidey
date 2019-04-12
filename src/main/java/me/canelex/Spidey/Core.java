@@ -2,6 +2,8 @@ package me.canelex.Spidey;
 
 import java.util.HashMap;
 
+import javax.security.auth.login.LoginException;
+
 import me.canelex.Spidey.commands.AvatarCommand;
 import me.canelex.Spidey.commands.BanCommand;
 import me.canelex.Spidey.commands.DeleteCommand;
@@ -40,14 +42,24 @@ public class Core {
 	public static final CommandParser parser = new CommandParser();
 	public static final HashMap<String, ICommand> commands = new HashMap<String, ICommand>();	
 	
-	public static final void main(final String[] args) throws Exception {
-    	
-		@SuppressWarnings("unused")
-		final JDA jda = new JDABuilder(AccountType.BOT)
-    			.setToken(Secrets.token)
-    			.addEventListeners(new Events())
-    			.setActivity(Activity.streaming("discord.gg/cnAgKrv", "https://twitch.tv/canelex_"))    
-    			.build().awaitReady();      
+	public static final void main(final String[] args) {
+		
+		try {
+				
+			@SuppressWarnings("unused")
+			final JDA jda = new JDABuilder(AccountType.BOT)
+					.setToken(Secrets.token)
+					.addEventListeners(new Events())
+					.setActivity(Activity.streaming("discord.gg/cnAgKrv", "https://twitch.tv/canelex_"))    
+					.build().awaitReady();
+				
+		} 
+			
+		catch (LoginException | InterruptedException e) {
+
+			e.printStackTrace();
+				
+		}
 		
 		setupCommands();
         
