@@ -30,7 +30,7 @@ dependencies {
 
     implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.15'
     
-    implementation (group: 'net.dv8tion', name: 'JDA', version: '4.ALPHA.0_67') {
+    implementation (group: 'net.dv8tion', name: 'JDA', version: '4.ALPHA.0_74') {
     
        exclude group: 'club.minnced', module: 'opus-java'
        
