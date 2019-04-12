@@ -94,7 +94,7 @@ public class UserCommand implements ICommand {
 		else {
 			
 			final User user = e.getMessage().getMentionedUsers().get(0);
-			final Member member = API.getMember(e.getGuild(), user);
+			final Member member = e.getGuild().getMember(user);
 			
 			final EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
 			

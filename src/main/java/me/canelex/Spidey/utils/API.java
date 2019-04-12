@@ -1,11 +1,5 @@
 package me.canelex.Spidey.utils;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.Permission;
@@ -18,22 +12,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
 
-public class API {
-	
-	public static final void addRole(final Member m, final Role r) {
-		
-		Guild g = r.getGuild();
-		g.getController().addSingleRoleToMember(m, r).queue();
-		
-	}	
-	
-	public static final void removeRole(final Member m, final Role r) {
-		
-		Guild g = r.getGuild();
-		g.getController().removeSingleRoleFromMember(m, r).queue();
-		
-	}		
-	
+public class API {		
 	
 	public static final boolean hasPerm(final Member toCheck, final Permission perm) {
 		
@@ -61,43 +40,7 @@ public class API {
 		
 		ch.sendMessage(embed).queue();		
 		
-	}	
-	
-	public static final void sendFile(final TextChannel ch, final File file) {
-		
-		ch.sendFile(file).queue();
-		
 	}		
-	
-	public static final void sendImage(final TextChannel ch, final String link, final boolean isSpoiler) {
-		
-		try {
-			
-			final InputStream in = new BufferedInputStream(new URL(link).openStream());	
-			
-			if (isSpoiler) {
-				
-				ch.sendFile(in, "SPOILER_" + link.substring(link.lastIndexOf("/") + 1)).queue();					
-				
-			}
-			
-			else {
-				
-				ch.sendFile(in, link.substring(link.lastIndexOf("/") + 1)).queue();					
-				
-			}
-								
-			in.close();
-			
-		}		
-		
-		catch (IOException ex) {
-			
-			ex.printStackTrace();
-			
-		}
-		
-	}	
 
 	public static final void sendPrivateMessage(final User user, final String toSend, final boolean isSpoiler) {
 
@@ -117,29 +60,11 @@ public class API {
 			
 		});		
 		
-	}
-	
-	public static final void sendPrivateMessage(final User user, final MessageEmbed embed) {
-
-		user.openPrivateChannel().queue(channel -> channel.sendMessage(embed).queue());		
-		
 	}	
 	
 	public static final boolean hasRole(final Member member, final Role r) {
 		
 		return member.getRoles().contains(r);
-		
-	}
-	
-	public static final Member getMember(final Guild g, final User u) {
-		
-		return g.getMember(u);
-		
-	}
-	
-	public static final User getUser(final Member m) { 
-		
-		return m.getUser();
 		
 	}
 	
@@ -176,12 +101,6 @@ public class API {
     public static final String getInviteUrl(final long guildId) {
     	
     	return String.format("https://discordapp.com/oauth2/authorize?client_id=468523263853592576&guild_id=%s&scope=bot&permissions=268446900", guildId);
-    	
-    }
-    
-    public static final void sendMessageFormat(final TextChannel ch, final String message, final boolean isSpoiler, final Object... args) {
-    	
-    	sendMessage(ch, String.format(message, args), false);
     	
     }
     

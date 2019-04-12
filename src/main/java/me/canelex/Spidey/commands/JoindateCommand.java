@@ -46,7 +46,7 @@ public class JoindateCommand implements ICommand {
     		
     		for (final User user : mentioned) {
     			
-    			final Member member = API.getMember(e.getGuild(), user);
+    			final Member member = e.getGuild().getMember(user);
         		cal.setTimeInMillis(member.getTimeJoined().toInstant().toEpochMilli());
         		final String joindate = date.format(cal.getTime()).toString();
         		final String jointime = time.format(cal.getTime()).toString();            		
