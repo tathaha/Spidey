@@ -33,7 +33,7 @@ public class LogCommand implements ICommand {
 				
 			}
 			
-			if (!MySQL.isInDatabase(e.getGuild().getIdLong())) {    			
+			if (MySQL.getChannelId(e.getGuild().getIdLong()) != null) {
     				    				
             	MySQL.insertData(e.getGuild().getIdLong(), e.getChannel().getIdLong());
             	e.getChannel().sendMessage(":white_check_mark: Log channel set to " + e.getChannel().getAsMention() + ". Type this command again to set log channel to default guild channel.").queue(m -> m.delete().queueAfter(5,  TimeUnit.SECONDS));
@@ -42,7 +42,7 @@ public class LogCommand implements ICommand {
 			
 			else {
 				
-    			if (MySQL.getChannelId(e.getGuild().getIdLong()).equals(e.getChannel().getIdLong())) {
+    			if (MySQL.getChannelId(e.getGuild().getIdLong()) == e.getChannel().getIdLong()) {
     				
     				MySQL.removeData(e.getGuild().getIdLong());
     				MySQL.insertData(e.getGuild().getIdLong(), e.getGuild().getDefaultChannel().getIdLong());
@@ -78,10 +78,6 @@ public class LogCommand implements ICommand {
 	}
 
 	@Override
-	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {
-
-		return;
-		
-	}	
+	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {}
 
 }

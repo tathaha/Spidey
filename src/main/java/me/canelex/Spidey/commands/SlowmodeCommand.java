@@ -58,15 +58,7 @@ public class SlowmodeCommand implements ICommand {
 	            
 	        }		
 	        
-	        e.getChannel().getManager().setSlowmode(seconds).submit().thenRun(() -> e.getMessage().addReaction(Emojis.check).submit().thenRun(() -> {
-	        	
-	        	if (e.getMessage() != null) {
-	        		
-	        		e.getMessage().delete().queueAfter(5, TimeUnit.SECONDS);
-	        		
-	        	}
-	        	
-	        })).exceptionally(ex -> { 
+	        e.getChannel().getManager().setSlowmode(seconds).submit().thenRun(() -> e.getMessage().addReaction(Emojis.check).submit().thenRun(() -> e.getMessage().delete().queueAfter(5, TimeUnit.SECONDS))).exceptionally(ex -> {
 	        	
 	        	e.getChannel().sendMessage(":no_entry: An error has occured: " + ex.getMessage()).queue(m -> {
 	        		
@@ -96,10 +88,6 @@ public class SlowmodeCommand implements ICommand {
 	}
 
 	@Override
-	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {
-		
-		return;
-		
-	}
+	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {}
 	
 }

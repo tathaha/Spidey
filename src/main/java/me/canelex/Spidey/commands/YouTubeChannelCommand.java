@@ -1,11 +1,5 @@
 package me.canelex.Spidey.commands;
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
-import java.util.TimeZone;
-
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.javanet.NetHttpTransport;
@@ -15,19 +9,23 @@ import com.google.api.services.youtube.YouTubeRequestInitializer;
 import com.google.api.services.youtube.model.Channel;
 import com.google.api.services.youtube.model.SearchListResponse;
 import com.mashape.unirest.http.Unirest;
-
 import me.canelex.Spidey.Secrets;
 import me.canelex.Spidey.objects.command.ICommand;
 import me.canelex.Spidey.utils.API;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.TimeZone;
+
 public class YouTubeChannelCommand implements ICommand {
 	
-	Locale locale = new Locale("en", "EN");  
-	Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/London"));        	
-	SimpleDateFormat date = new SimpleDateFormat("EEEE, d.LLLL Y", locale);      
-	SimpleDateFormat time = new SimpleDateFormat("HH:mm:ss", locale);  	
+	private Locale locale = new Locale("en", "EN");
+	private Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/London"));
+	private SimpleDateFormat date = new SimpleDateFormat("EEEE, d.LLLL Y", locale);
+	private SimpleDateFormat time = new SimpleDateFormat("HH:mm:ss", locale);
 
 	@Override
 	public final boolean called(final GuildMessageReceivedEvent e) {
@@ -47,7 +45,7 @@ public class YouTubeChannelCommand implements ICommand {
 		                new NetHttpTransport(),
 		                new JacksonFactory(),
 		                new HttpRequestInitializer() {
-		                        public void initialize(HttpRequest request) throws IOException {
+		                        public void initialize(HttpRequest request) {
 		                }
 		        })
 		    		
@@ -72,8 +70,8 @@ public class YouTubeChannelCommand implements ICommand {
 		            
 		            cal.setTimeInMillis(c.getSnippet().getPublishedAt().getValue());
 		            
-		            final String creatdate = date.format(cal.getTime()).toString();   
-		            final String creattime = time.format(cal.getTime()).toString();   		            
+		            final String creatdate = date.format(cal.getTime());
+		            final String creattime = time.format(cal.getTime());
 
 		            final EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
 		            eb.setAuthor(c.getSnippet().getTitle(), "https://youtube.com/channel/" + channelId, "https://i.ymastersk.net/vo96zG");
@@ -116,10 +114,6 @@ public class YouTubeChannelCommand implements ICommand {
 	}
 
 	@Override
-	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {
-		
-		return;
-		
-	}
+	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {}
 
 }

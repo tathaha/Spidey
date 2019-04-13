@@ -19,7 +19,7 @@ public class GoogleSearch {
     private static final String GOOGLE_URL = "https://www.googleapis.com/customsearch/v1/?cx=%s&key=%s&num=1&q=%s";
     private static final String GOOGLE_API_KEY = Secrets.googleapikey;
 
-    public final static List<SearchResult> performSearch(final String engineId, String terms) {
+    public static List<SearchResult> performSearch(final String engineId, String terms) {
     	
         try {
 
@@ -28,7 +28,7 @@ public class GoogleSearch {
 
         	final URL searchURL = new URL(searchUrl);
         	final URLConnection conn = searchURL.openConnection();
-            conn.setRequestProperty("User-Agent", "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:39.0) Gecko/20100101 " + randomName(10));
+            conn.setRequestProperty("User-Agent", "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:39.0) Gecko/20100101 " + randomName());
             final BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             final StringBuilder json = new StringBuilder();
             String line;
@@ -63,7 +63,7 @@ public class GoogleSearch {
         
     }	
     
-    private final static String randomName(final int randomLength) {
+    private static String randomName() {
     	
     	final char[] characters = new char[]
                 {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
@@ -74,7 +74,7 @@ public class GoogleSearch {
     	final StringBuilder builder = new StringBuilder();
         builder.append("Spidey/");
         
-        for (int i = 0; i < randomLength; i++) {
+        for (int i = 0; i < 10; i++) {
         	
             builder.append(characters[rand.nextInt(characters.length)]);
             

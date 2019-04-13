@@ -39,10 +39,10 @@ import net.dv8tion.jda.api.entities.Activity;
 
 public class Core {	
 	
-	public static final CommandParser parser = new CommandParser();
-	public static final HashMap<String, ICommand> commands = new HashMap<String, ICommand>();	
+	static final CommandParser parser = new CommandParser();
+	public static final HashMap<String, ICommand> commands = new HashMap<>();
 	
-	public static final void main(final String[] args) {
+	public static void main(final String[] args) {
 		
 		try {
 				
@@ -65,7 +65,7 @@ public class Core {
         
     } 	
 	
-	public static final void setupCommands() {
+	private static void setupCommands() {
 		
 		commands.clear();
 		commands.put("guild", new GuildCommand());
@@ -98,18 +98,11 @@ public class Core {
 		
 	}
 	
-	public static final void handleCommand(final CommandParser.CommandContainer cmd) {
+	static void handleCommand(final CommandParser.CommandContainer cmd) {
 		
 		if (commands.containsKey(cmd.invoke)) {
 			
 			final boolean safe = commands.get(cmd.invoke).called(cmd.event);
-			
-			if (!safe) {
-				
-				commands.get(cmd.invoke).executed(safe, cmd.event);
-				return;
-				
-			}
 			
 			commands.get(cmd.invoke).action(cmd.event);
 			commands.get(cmd.invoke).executed(safe, cmd.event);

@@ -12,26 +12,26 @@ public class SearchResult {
     private String content;
     private String url;
 
-    public static SearchResult fromGoogle(final JSONObject googleResult) {
-    	
+    static SearchResult fromGoogle(final JSONObject googleResult) {
+
     	final SearchResult result = new SearchResult();
         result.title = cleanString(googleResult.getString("title"));
         result.content = cleanString(googleResult.getString("snippet"));
-        
+
         try {
-        	
+
             result.url = URLDecoder.decode(cleanString(googleResult.getString("link")), "UTF-8");
-            
+
         }
-        
+
         catch (final UnsupportedEncodingException e) {
-        	
+
             e.printStackTrace();
-            
+
         }
-        
+
         return result;
-        
+
     }
 
     public final String getTitle() {
@@ -68,7 +68,7 @@ public class SearchResult {
         
     }
 
-	private static final String cleanString(String uncleanString) {
+	private static String cleanString(String uncleanString) {
 		
         return StringEscapeUtils.unescapeJava(
                 StringEscapeUtils.unescapeHtml4(

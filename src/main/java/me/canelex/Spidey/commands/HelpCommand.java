@@ -28,7 +28,7 @@ public class HelpCommand implements ICommand {
 		
 		final StringBuilder sb = new StringBuilder();		
 		
-		final HashMap<String, ICommand> commands = new HashMap<String, ICommand>();
+		final HashMap<String, ICommand> commands = new HashMap<>();
 		
 		for (final Map.Entry<String, ICommand> entry : Core.commands.entrySet()) {
 			
@@ -39,25 +39,21 @@ public class HelpCommand implements ICommand {
 		commands.remove("yt");
 				
 		for (final String cmd : commands.keySet()) {
-			
-			if (!Core.commands.get(cmd).help().equals(null)) {
 				
-				if (cmd.equals("g")) {
+			if (cmd.equals("g")) {
 					
-					sb.append("`s!" + cmd + "` | `s!yt` - " + Core.commands.get(cmd).help() + "\n");					
+				sb.append("`s!" + cmd + "` | `s!yt` - " + Core.commands.get(cmd).help() + "\n");
 					
-				}
-				
-				else {
-					
-					sb.append("`s!" + cmd + "` - " + Core.commands.get(cmd).help() + "\n");					
-					
-				}
-				
-				final String help = sb.toString();
-				eb.setDescription(help);
-				
 			}
+				
+			else {
+					
+				sb.append("`s!" + cmd + "` - " + Core.commands.get(cmd).help() + "\n");
+					
+			}
+				
+			final String help = sb.toString();
+			eb.setDescription(help);
 			
 		}
 		
@@ -73,10 +69,6 @@ public class HelpCommand implements ICommand {
 	}
 
 	@Override
-	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {
-
-		return;
-		
-	}	
+	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {}
 
 }

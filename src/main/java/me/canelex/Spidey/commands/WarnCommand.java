@@ -24,39 +24,34 @@ public class WarnCommand implements ICommand {
 	@Override
 	public final void action(final GuildMessageReceivedEvent e) {
 		
-		final String neededPerm = "BAN_MEMBERS";    		
+		final String neededPerm = "BAN_MEMBERS";
+		final long l = MySQL.getChannelId(e.getGuild().getIdLong());
 		
 		if (!e.getMessage().getContentRaw().equals("s!warn")) {
 			
 			if (API.hasPerm(e.getMember(), Permission.valueOf(neededPerm))) {
 				
-				if (e.getGuild().getTextChannelById(MySQL.getChannelId(e.getGuild().getIdLong())) == null) {
-					
-					return;
-					
+				if (e.getGuild().getTextChannelById(l) != null) {
+
+					TextChannel log = e.getGuild().getTextChannelById(l);
+					final String reason = e.getMessage().getContentRaw().substring(7, e.getMessage().getContentRaw().lastIndexOf(" "));
+
+					for (final User u : e.getMessage().getMentionedUsers()) {
+
+						API.sendPrivateMessageFormat(u, ":exclamation: You have been warned on guild **%s** from **%s** for **%s**.", false, e.getGuild().getName(), e.getAuthor().getName(), e.getAuthor().getName());
+
+						API.deleteMessage(e.getMessage());
+						final EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
+						eb.setAuthor("NEW WARN");
+						eb.setColor(Color.ORANGE);
+						eb.addField("User", u.getAsMention(), true);
+						eb.addField("Moderator", e.getAuthor().getAsMention(), true);
+						eb.addField("Reason", "**" + reason + "**", true);
+						API.sendMessage(log, eb.build());
+
+					}
+
 				}
-				
-				else {
-					
-					  TextChannel log = e.getGuild().getTextChannelById(MySQL.getChannelId(e.getGuild().getIdLong()));
-					  final String reason = e.getMessage().getContentRaw().substring(7, e.getMessage().getContentRaw().lastIndexOf(" "));
-				
-				      for (final User u : e.getMessage().getMentionedUsers()) {
-				
-				        API.sendPrivateMessageFormat(u, ":exclamation: You have been warned on guild **%s** from **%s** for **%s**.", false, e.getGuild().getName(), e.getAuthor().getName(), e.getAuthor().getName());
-				
-				        API.deleteMessage(e.getMessage());
-				        final EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
-				        eb.setAuthor("NEW WARN");
-				        eb.setColor(Color.ORANGE);
-				        eb.addField("User", u.getAsMention(), true);
-				        eb.addField("Moderator", e.getAuthor().getAsMention(), true);
-				        eb.addField("Reason", "**" + reason + "**", true);
-				        API.sendMessage(log, eb.build());     					  
-					      					
-	                    }    				    			 			
-				
-			    }
 				
 			}
 			
@@ -78,10 +73,6 @@ public class WarnCommand implements ICommand {
 	}
 
 	@Override
-	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {
-		
-		return;
-		
-	}
+	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {}
 
 }

@@ -31,7 +31,7 @@ public class RolesCommand implements ICommand {
 			final List<Role> roles = e.getGuild().getRoleCache().stream().collect(Collectors.toCollection(ArrayList::new));
 	        roles.remove(e.getGuild().getPublicRole());			
 			
-	        String s = "";
+	        StringBuilder s = new StringBuilder();
 	        
 	        int i = 0;
 	        
@@ -41,13 +41,13 @@ public class RolesCommand implements ICommand {
 	        	
 	        	if (i == roles.size()) {
 	        		
-	        		s += role.getName();
+	        		s.append(role.getName());
 	        		
 	        	}
 	        	
 	        	else {
 	        		
-	        		s += role.getName() + ", ";
+	        		s.append(role.getName() + ", ");
 	        		
 	        	}
 	        	
@@ -64,7 +64,7 @@ public class RolesCommand implements ICommand {
 			final EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
 			eb.setColor(Color.ORANGE);
 			
-	        String s = "";
+	        StringBuilder s = new StringBuilder();
 	        
 	        int i = 0;
 	        
@@ -74,19 +74,19 @@ public class RolesCommand implements ICommand {
 	        	
 	        	if (i == e.getMessage().getMentionedMembers().get(0).getRoles().size()) {
 	        		
-	        		s += role.getName();
+	        		s.append(role.getName());
 	        		
 	        	}
 	        	
 	        	else {
 	        		
-	        		s += role.getName() + ", ";
+	        		s.append(role.getName() + ", ");
 	        		
 	        	}
 	        	
 	        }
 	        
-	        eb.setDescription("Roles of **" + e.getMessage().getMentionedMembers().get(0).getUser().getAsTag() + "**\n\n" + ((i == 0) ? "None" : s + " (**" + i + "**)"));
+	        eb.setDescription("Roles of **" + e.getMessage().getMentionedMembers().get(0).getUser().getAsTag() + "**\n\n" + ((i == 0) ? "None" : s.toString() + " (**" + i + "**)"));
 	        
 	        API.sendMessage(e.getChannel(), eb.build());			
 			
@@ -102,10 +102,6 @@ public class RolesCommand implements ICommand {
 	}		
 
 	@Override
-	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {
-		
-		return;
-		
-	}
+	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {}
 
 }

@@ -18,10 +18,10 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 public class GuildCommand implements ICommand {
 	
-	final Locale locale = new Locale("en", "EN");  
-	final Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/London"));        	
-	final SimpleDateFormat date = new SimpleDateFormat("EE, d.LLL Y", locale);      
-	final SimpleDateFormat time = new SimpleDateFormat("HH:mm:ss", locale);  	
+	private final Locale locale = new Locale("en", "EN");
+	private final Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/London"));
+	private final SimpleDateFormat date = new SimpleDateFormat("EE, d.LLL Y", locale);
+	private final SimpleDateFormat time = new SimpleDateFormat("HH:mm:ss", locale);
 	
 	@Override
 	public final boolean called(final GuildMessageReceivedEvent e) {
@@ -58,13 +58,13 @@ public class GuildCommand implements ICommand {
     	eb.addField("Region", e.getGuild().getRegionRaw(), true);    	    	
 		
     	cal.setTimeInMillis(e.getGuild().getTimeCreated().toInstant().toEpochMilli());
-    	final String creatdate = date.format(cal.getTime()).toString();   
-    	final String creattime = time.format(cal.getTime()).toString();   
+    	final String creatdate = date.format(cal.getTime());
+    	final String creattime = time.format(cal.getTime());
     	eb.addField("Creation", String.format( "%s | %s", creatdate, creattime), true);   
     	
         eb.addField("Custom invite URL", (!API.isPartnered(e.getGuild()) ? "Guild is not partnered" : "discord.gg/" + e.getGuild().retrieveVanityUrl().complete()), true);
         
-        String st = "";
+        StringBuilder st = new StringBuilder();
         
         int ec = 0;
         final long an = e.getGuild().getEmotes().stream().filter(em -> em.isAnimated()).count();
@@ -75,13 +75,13 @@ public class GuildCommand implements ICommand {
         	
         	if (ec == e.getGuild().getEmotes().size()) {
         		
-        		st += emote.getAsMention();
+        		st.append(emote.getAsMention());
         		
         	}
         	
         	else {
         		
-        		st += emote.getAsMention() + " ";
+        		st.append(emote.getAsMention() + " ");
         		
         	}
         	
@@ -95,7 +95,7 @@ public class GuildCommand implements ICommand {
         
         else {
         	
-        	eb.addField(String.format((ec == 0) ? "Emotes (**0**)" : "Emotes (**%s** | **%s** animated)", ec, an), (st.length() == 0) ? "None" : st, false);         	
+        	eb.addField(String.format((ec == 0) ? "Emotes (**0**)" : "Emotes (**%s** | **%s** animated)", ec, an), (st.toString().length() == 0) ? "None" : st.toString(), false);
         	
         }                         	
     	       	
@@ -111,10 +111,6 @@ public class GuildCommand implements ICommand {
 	}
 
 	@Override
-	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {
-
-		return;
-		
-	}	
+	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {}
 
 }

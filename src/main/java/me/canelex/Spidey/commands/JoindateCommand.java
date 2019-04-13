@@ -14,10 +14,10 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 public class JoindateCommand implements ICommand {
 	
-	final Locale locale = new Locale("en", "EN");  
-	final Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/London"));        	
-	final SimpleDateFormat date = new SimpleDateFormat("EEEE, d.LLLL Y", locale);      
-	final SimpleDateFormat time = new SimpleDateFormat("HH:mm:ss", locale); 	
+	private final Locale locale = new Locale("en", "EN");
+	private final Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/London"));
+	private final SimpleDateFormat date = new SimpleDateFormat("EEEE, d.LLLL Y", locale);
+	private final SimpleDateFormat time = new SimpleDateFormat("HH:mm:ss", locale);
 
 	@Override
 	public final boolean called(final GuildMessageReceivedEvent e) {
@@ -34,8 +34,8 @@ public class JoindateCommand implements ICommand {
     	if (e.getMessage().getMentionedUsers().isEmpty()) {
     		
     		cal.setTimeInMillis(e.getMember().getTimeJoined().toInstant().toEpochMilli()); 
-    		final String joindate = date.format(cal.getTime()).toString();
-    		final String jointime = time.format(cal.getTime()).toString();        		
+    		final String joindate = date.format(cal.getTime());
+    		final String jointime = time.format(cal.getTime());
     		API.sendPrivateMessageFormat(e.getAuthor(), "Date and time of joining to guild **%s**: **%s** | **%s** UTC", false, e.getGuild().getName(), joindate, jointime);
     		
     	}
@@ -48,8 +48,8 @@ public class JoindateCommand implements ICommand {
     			
     			final Member member = e.getGuild().getMember(user);
         		cal.setTimeInMillis(member.getTimeJoined().toInstant().toEpochMilli());
-        		final String joindate = date.format(cal.getTime()).toString();
-        		final String jointime = time.format(cal.getTime()).toString();            		
+        		final String joindate = date.format(cal.getTime());
+        		final String jointime = time.format(cal.getTime());
         		API.sendPrivateMessageFormat(e.getAuthor(), "(**" + member.getEffectiveName() + "**) " + "Date and time of joining to guild **%s**: **%s** | **%s** UTC", false,  e.getGuild().getName(), joindate, jointime);          		
     		
     		}
@@ -66,10 +66,6 @@ public class JoindateCommand implements ICommand {
 	}
 
 	@Override
-	public void executed(final boolean success, final GuildMessageReceivedEvent e) {
-		
-		return;
-		
-	}
+	public void executed(final boolean success, final GuildMessageReceivedEvent e) {}
 
 }
