@@ -45,7 +45,7 @@ public class SlowmodeCommand implements ICommand {
 	        	
 	            try {
 	            	
-	                seconds = Math.max(0, Math.min(Integer.parseInt(par), 120));
+	                seconds = Math.max(0, Math.min(Integer.parseInt(par), 21600));
 	                
 	            }
 	            
@@ -83,7 +83,7 @@ public class SlowmodeCommand implements ICommand {
 	@Override
 	public final String help() {
 		
-		return "Sets a slowmode for channel. Example - `s!slowmode <seconds | off>`";
+		return "Sets a slowmode for channel. Limit: `21600s` - `6h`. Example - `s!slowmode <seconds | off>`";
 		
 	}
 
