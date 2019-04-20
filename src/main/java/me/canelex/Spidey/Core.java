@@ -4,32 +4,7 @@ import java.util.HashMap;
 
 import javax.security.auth.login.LoginException;
 
-import me.canelex.Spidey.commands.AvatarCommand;
-import me.canelex.Spidey.commands.BanCommand;
-import me.canelex.Spidey.commands.DeleteCommand;
-import me.canelex.Spidey.commands.EightBallCommand;
-import me.canelex.Spidey.commands.GifCommand;
-import me.canelex.Spidey.commands.GuildCommand;
-import me.canelex.Spidey.commands.HelpCommand;
-import me.canelex.Spidey.commands.InfoCommand;
-import me.canelex.Spidey.commands.JoindateCommand;
-import me.canelex.Spidey.commands.LeaveCommand;
-import me.canelex.Spidey.commands.LogCommand;
-import me.canelex.Spidey.commands.MembercountCommand;
-import me.canelex.Spidey.commands.MuteCommand;
-import me.canelex.Spidey.commands.PingCommand;
-import me.canelex.Spidey.commands.PollCommand;
-import me.canelex.Spidey.commands.RedditCommand;
-import me.canelex.Spidey.commands.RolesCommand;
-import me.canelex.Spidey.commands.SayCommand;
-import me.canelex.Spidey.commands.SearchCommand;
-import me.canelex.Spidey.commands.SlowmodeCommand;
-import me.canelex.Spidey.commands.SupportGuildsCommand;
-import me.canelex.Spidey.commands.UptimeCommand;
-import me.canelex.Spidey.commands.UrbanDictionaryCommand;
-import me.canelex.Spidey.commands.UserCommand;
-import me.canelex.Spidey.commands.WarnCommand;
-import me.canelex.Spidey.commands.YouTubeChannelCommand;
+import me.canelex.Spidey.commands.*;
 import me.canelex.Spidey.objects.command.CommandParser;
 import me.canelex.Spidey.objects.command.ICommand;
 import net.dv8tion.jda.api.AccountType;
@@ -95,6 +70,7 @@ public class Core {
 		commands.put("gif", new GifCommand());
 		commands.put("slowmode", new SlowmodeCommand());
 		commands.put("roles", new RolesCommand());
+		commands.put("invite", new InviteCommand());
 		
 	}
 	
