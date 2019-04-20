@@ -70,6 +70,12 @@ public class API {
     	return String.format("https://discordapp.com/oauth2/authorize?client_id=468523263853592576&guild_id=%s&scope=bot&permissions=268446900", guildId);
     	
     }
+
+	public static String getInviteUrl() {
+
+		return "https://discordapp.com/oauth2/authorize?client_id=468523263853592576&scope=bot&permissions=268446900";
+
+	}
     
     public static void sendPrivateMessageFormat(final User u, final String message, final Object... args) {
     	
