@@ -1,15 +1,16 @@
 package me.canelex.Spidey.commands;
 
-import java.awt.Color;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import me.canelex.Spidey.objects.command.ICommand;
 import me.canelex.Spidey.utils.API;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.utils.cache.MemberCacheView;
+
+import java.awt.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class MembercountCommand implements ICommand {
 
@@ -22,16 +23,17 @@ public class MembercountCommand implements ICommand {
 
 	@Override
 	public final void action(final GuildMessageReceivedEvent e) {
-		
-		final List<Member> tonline = e.getGuild().getMemberCache().stream().filter(member -> member.getOnlineStatus() == OnlineStatus.ONLINE || member.getOnlineStatus() == OnlineStatus.IDLE || member.getOnlineStatus() == OnlineStatus.DO_NOT_DISTURB).collect(Collectors.toList());
+
+		final MemberCacheView mcv = e.getGuild().getMemberCache();
+		final List<Member> tonline = mcv.stream().filter(member -> member.getOnlineStatus() == OnlineStatus.ONLINE || member.getOnlineStatus() == OnlineStatus.IDLE || member.getOnlineStatus() == OnlineStatus.DO_NOT_DISTURB).collect(Collectors.toList());
 		final long bonline = tonline.stream().filter(m -> m.getUser().isBot()).count();        	
-		final long total = e.getGuild().getMemberCache().size();     	
+		final long total = mcv.size();
 		final long online = tonline.size();
-		final long bots = e.getGuild().getMemberCache().stream().filter(member -> member.getUser().isBot()).count();
+		final long bots = mcv.stream().filter(member -> member.getUser().isBot()).count();
 		final long ponline = online - bonline;
-		final long monline = e.getGuild().getMemberCache().stream().filter(m -> API.isMobile(m)).count();
-		final long wonline = e.getGuild().getMemberCache().stream().filter(m -> API.isWeb(m)).count();
-		final long donline = e.getGuild().getMemberCache().stream().filter(m -> API.isDesktop(m)).count();    	
+		final long monline = mcv.stream().filter(m -> API.isMobile(m)).count();
+		final long wonline = (mcv.stream().filter(m -> API.isWeb(m)).count() - bonline);
+		final long donline = mcv.stream().filter(m -> API.isDesktop(m)).count();
     	
 		final EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
     	eb.setAuthor("MEMBERCOUNT");
@@ -44,7 +46,7 @@ public class MembercountCommand implements ICommand {
     	eb.addField("Bots online", "**" + bonline + "**", true);  
     	eb.addField("Desktop users online", "**" + donline + "**", true);
     	eb.addField("Mobile users online", "**" + monline + "**", true);    	
-    	eb.addField("Web users online", "**" + wonline + "** (includes bots)", true);
+    	eb.addField("Web users online", "**" + wonline + "**", true);
        	API.sendMessage(e.getChannel(), eb.build());		
 		
 	}
@@ -52,7 +54,7 @@ public class MembercountCommand implements ICommand {
 	@Override
 	public final String help() {
 		
-		return "Shows you membercount of your guild";
+		return "Shows you membercount of guild";
 		
 	}
 
