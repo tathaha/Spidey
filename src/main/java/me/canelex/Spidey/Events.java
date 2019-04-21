@@ -38,13 +38,12 @@ public class Events extends ListenerAdapter {
 		
 		final Guild guild = e.getGuild();
 		final Role muted = guild.getRolesByName("Muted", false).get(0);
-		final long l = MySQL.getChannelId(guild.getIdLong());
 		
 		if (e.getRoles().contains(muted)) {
 			
-			if (guild.getTextChannelById(l) != null) {
+			if (guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong())) != null) {
 
-				final TextChannel log = guild.getTextChannelById(l);
+				final TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));
 				final EmbedBuilder eb = new EmbedBuilder();
 				eb.setAuthor("UNMUTE");
 				eb.setColor(Color.GREEN);
@@ -63,11 +62,10 @@ public class Events extends ListenerAdapter {
 		
 		final User user = e.getUser();
 		final Guild guild = e.getGuild();
-		final long l = MySQL.getChannelId(guild.getIdLong());
 		
-		if (guild.getTextChannelById(l) != null) {
+		if (guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong())) != null) {
 
-			final TextChannel log = guild.getTextChannelById(l);
+			final TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));
 			final Ban ban = guild.retrieveBan(user).complete();
 			final List<AuditLogEntry> auditbans = guild.retrieveAuditLogs().type(ActionType.BAN).complete();
 			final User banner = auditbans.get(0).getUser();
@@ -91,11 +89,10 @@ public class Events extends ListenerAdapter {
 		
 		final User user = e.getUser();
 		final Guild guild = e.getGuild();
-		final long l = MySQL.getChannelId(guild.getIdLong());
 		
-		if (guild.getTextChannelById(l) != null) {
+		if (guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong())) != null) {
 
-			final TextChannel log = guild.getTextChannelById(l);
+			final TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));
 			final EmbedBuilder eb = new EmbedBuilder();
 			eb.setAuthor("UNBAN");
 			eb.setColor(Color.GREEN);
@@ -113,11 +110,10 @@ public class Events extends ListenerAdapter {
 		
 		final User user = e.getUser();
 		final Guild guild = e.getGuild();
-		final long l = MySQL.getChannelId(guild.getIdLong());
 		
-		if (guild.getTextChannelById(l) != null) {
+		if (guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong())) != null) {
 
-			final TextChannel log = guild.getTextChannelById(l);
+			final TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));
 			final EmbedBuilder eb = new EmbedBuilder();
 			eb.setAuthor("USER HAS LEFT");
 			eb.setThumbnail(user.getEffectiveAvatarUrl());
@@ -135,11 +131,10 @@ public class Events extends ListenerAdapter {
 		
 		final User user = e.getUser();
 		final Guild guild = e.getGuild();
-		final long l = MySQL.getChannelId(guild.getIdLong());
 		
-		if (guild.getTextChannelById(l) != null) {
+		if (guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong())) != null) {
 
-			final TextChannel log = guild.getTextChannelById(l);
+			final TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));
 			final EmbedBuilder eb = new EmbedBuilder();
 			eb.setAuthor("USER HAS JOINED");
 			eb.setThumbnail(user.getEffectiveAvatarUrl());
