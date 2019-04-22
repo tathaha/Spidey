@@ -14,39 +14,35 @@ public class GifCommand implements ICommand {
 	public final boolean called(final GuildMessageReceivedEvent e) {
 
 		return true;
-		
+
 	}
 
 	@Override
 	public final void action(final GuildMessageReceivedEvent e) {
-		
+
 		final String query = e.getMessage().getContentRaw().substring(6);
-				
+
 		try {
-			
+
 			final Giphy giphy = new Giphy(Secrets.giphykey);
-			final SearchFeed feed = giphy.search(query, 1, 0);		
-			
-		    API.sendMessage(e.getChannel(), "Gif matching **" + query + "**: " + feed.getDataList().get(0).getImages().getOriginal().getUrl(), false);				
-			
-		}		
-		
-		catch (final GiphyException ex) {
-			
-			ex.printStackTrace();
-			
-		}			 	
-	      		
+			final SearchFeed feed = giphy.search(query, 1, 0);
+
+			API.sendMessage(e.getChannel(), "Gif matching **" + query + "**: " + feed.getDataList().get(0).getImages().getOriginal().getUrl(), false);
+
+		}
+
+		catch (final GiphyException ex) {}
+
 	}
 
 	@Override
 	public final String help() {
-		
+
 		return "Sends a gif matching your query";
-		
+
 	}
 
 	@Override
 	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {}
-	
+
 }
