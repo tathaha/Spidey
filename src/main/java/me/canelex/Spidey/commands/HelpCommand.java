@@ -51,9 +51,8 @@ public class HelpCommand implements ICommand {
 				sb.append("`s!" + cmd + "` - " + Core.commands.get(cmd).help() + "\n");
 					
 			}
-				
-			final String help = sb.toString();
-			eb.setDescription(help);
+
+			eb.setDescription(sb.toString());
 			
 		}
 		
