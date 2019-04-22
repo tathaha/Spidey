@@ -55,7 +55,7 @@ public class Core {
 		commands.put("ban", new BanCommand());
 		commands.put("poll", new PollCommand());
 		commands.put("uptime", new UptimeCommand());
-		commands.put("delete", new DeleteCommand());
+		commands.put("d", new DeleteCommand());
 		commands.put("user", new UserCommand());
 		commands.put("avatar", new AvatarCommand());
 		commands.put("leave", new LeaveCommand());
