@@ -20,27 +20,27 @@ import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleRemoveEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
-public class Events extends ListenerAdapter {		 
-	
+public class Events extends ListenerAdapter {
+
 	@Override
-    public final void onGuildMessageReceived(final GuildMessageReceivedEvent e) {
-		
+	public final void onGuildMessageReceived(final GuildMessageReceivedEvent e) {
+
 		if (e.getMessage().getContentRaw().startsWith("s!") && !e.getAuthor().isBot()){
-			
+
 			Core.handleCommand(Core.parser.parse(e.getMessage().getContentRaw(), e));
-			
-		}       	
-        
+
+		}
+
 	}
-	
+
 	@Override
 	public final void onGuildMemberRoleRemove(final GuildMemberRoleRemoveEvent e) {
-		
+
 		final Guild guild = e.getGuild();
 		final Role muted = guild.getRolesByName("Muted", false).get(0);
-		
+
 		if (e.getRoles().contains(muted)) {
-			
+
 			if (guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong())) != null) {
 
 				final TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));
@@ -50,19 +50,19 @@ public class Events extends ListenerAdapter {
 				eb.setThumbnail(e.getUser().getEffectiveAvatarUrl());
 				eb.addField("User", "**" + e.getUser().getAsTag() + "**", false);
 				API.sendMessage(log, eb.build());
-				
+
 			}
-			
+
 		}
-		
+
 	}
-	
+
 	@Override
-    public final void onGuildBan(final GuildBanEvent e) {
-		
+	public final void onGuildBan(final GuildBanEvent e) {
+
 		final User user = e.getUser();
 		final Guild guild = e.getGuild();
-		
+
 		if (guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong())) != null) {
 
 			final TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));
@@ -70,26 +70,44 @@ public class Events extends ListenerAdapter {
 			final List<AuditLogEntry> auditbans = guild.retrieveAuditLogs().type(ActionType.BAN).complete();
 			final User banner = auditbans.get(0).getUser();
 			final EmbedBuilder eb = new EmbedBuilder();
+			String reason = null;
+
+			if (banner.equals(e.getJDA().getSelfUser())) {
+
+				if (ban.getReason().equals("[Banned by Spidey#2370]")) {
+
+					reason = "Unknown";
+
+				}
+
+				else {
+
+					reason = ban.getReason().substring(24);
+
+				}
+
+			}
+
 			eb.setAuthor("NEW BAN");
 			eb.setThumbnail(user.getEffectiveAvatarUrl());
 			eb.setColor(Color.RED);
 			eb.addField("User", "**" + user.getAsTag() + "**", true);
 			eb.addField("ID", "**" + user.getId() + "**", true);
 			eb.addField("Moderator", banner.getAsMention(), true);
-			eb.addField("Reason", "**" + (ban.getReason() == null ? "Unknown" : ban.getReason()) + "**", true);
+			eb.addField("Reason", "**" + reason + "**", true);
 
 			API.sendMessage(log, eb.build());
-			
+
 		}
-		
-	}	
-	
+
+	}
+
 	@Override
-    public final void onGuildUnban(final GuildUnbanEvent e) {
-		
+	public final void onGuildUnban(final GuildUnbanEvent e) {
+
 		final User user = e.getUser();
 		final Guild guild = e.getGuild();
-		
+
 		if (guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong())) != null) {
 
 			final TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));
@@ -100,17 +118,17 @@ public class Events extends ListenerAdapter {
 			eb.addField("User", "**" + user.getAsTag() + "**", true);
 			eb.addField("ID", "**" + user.getId() + "**", true);
 			API.sendMessage(log, eb.build());
-			
+
 		}
-		
-	}	
-	
+
+	}
+
 	@Override
-    public final void onGuildMemberLeave(final GuildMemberLeaveEvent e) {
-		
+	public final void onGuildMemberLeave(final GuildMemberLeaveEvent e) {
+
 		final User user = e.getUser();
 		final Guild guild = e.getGuild();
-		
+
 		if (guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong())) != null) {
 
 			final TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));
@@ -121,17 +139,17 @@ public class Events extends ListenerAdapter {
 			eb.addField("User", "**" + user.getAsTag() + "**", true);
 			eb.addField("ID", "**" + user.getId() + "**", true);
 			API.sendMessage(log, eb.build());
-			
+
 		}
-		
-	}	
-	
+
+	}
+
 	@Override
-    public final void onGuildMemberJoin(final GuildMemberJoinEvent e) {
-		
+	public final void onGuildMemberJoin(final GuildMemberJoinEvent e) {
+
 		final User user = e.getUser();
 		final Guild guild = e.getGuild();
-		
+
 		if (guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong())) != null) {
 
 			final TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));
@@ -142,20 +160,20 @@ public class Events extends ListenerAdapter {
 			eb.addField("User", "**" + user.getAsTag() + "**", true);
 			eb.addField("ID", "**" + user.getId() + "**", true);
 			API.sendMessage(log, eb.build());
-			
+
 		}
-		
-	}	
-	
+
+	}
+
 	@Override
 	public final void onGuildLeave(final GuildLeaveEvent e) {
-		
+
 		if (MySQL.getChannelId(e.getGuild().getIdLong()) != null) {
-			
+
 			MySQL.removeData(e.getGuild().getIdLong());
-			
+
 		}
-		
+
 	}
-		
+
 }
