@@ -70,9 +70,9 @@ public class Events extends ListenerAdapter {
 			final List<AuditLogEntry> auditbans = guild.retrieveAuditLogs().type(ActionType.BAN).complete();
 			final User banner = auditbans.get(0).getUser();
 			final EmbedBuilder eb = new EmbedBuilder();
-			String reason = null;
+			String reason;
 
-			if (banner.equals(e.getJDA().getSelfUser())) {
+			if (banner != null && banner.equals(e.getJDA().getSelfUser())) {
 
 				if (ban.getReason().equals("[Banned by Spidey#2370]")) {
 
@@ -83,6 +83,22 @@ public class Events extends ListenerAdapter {
 				else {
 
 					reason = ban.getReason().substring(24);
+
+				}
+
+			}
+
+			else {
+
+				if (ban.getReason() == null) {
+
+					reason = "Unknown";
+
+				}
+
+				else {
+
+					reason = ban.getReason();
 
 				}
 
