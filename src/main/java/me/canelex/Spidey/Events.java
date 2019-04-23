@@ -74,33 +74,13 @@ public class Events extends ListenerAdapter {
 
 			if (banner != null && banner.equals(e.getJDA().getSelfUser())) {
 
-				if (ban.getReason().equals("[Banned by Spidey#2370]")) {
-
-					reason = "Unknown";
-
-				}
-
-				else {
-
-					reason = ban.getReason().substring(24);
-
-				}
+				reason = (ban.getReason().equals("[Banned by Spidey#2370]") ?  "Unknown" : ban.getReason().substring(24));
 
 			}
 
 			else {
 
-				if (ban.getReason() == null) {
-
-					reason = "Unknown";
-
-				}
-
-				else {
-
-					reason = ban.getReason();
-
-				}
+				reason = (ban.getReason() == null ? "Unknown" : ban.getReason());
 
 			}
 
