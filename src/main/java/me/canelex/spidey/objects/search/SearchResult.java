@@ -2,19 +2,20 @@ package me.canelex.spidey.objects.search;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.json.JSONObject;
+import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
 public class SearchResult {
-	
+
     private String title;
     private String content;
     private String url;
 
     static SearchResult fromGoogle(final JSONObject googleResult) {
 
-    	final SearchResult result = new SearchResult();
+        final SearchResult result = new SearchResult();
         result.title = cleanString(googleResult.getString("title"));
         result.content = cleanString(googleResult.getString("snippet"));
 
@@ -26,7 +27,7 @@ public class SearchResult {
 
         catch (final UnsupportedEncodingException e) {
 
-            e.printStackTrace();
+            LoggerFactory.getLogger(SearchResult.class).error("Exception!", e);
 
         }
 
@@ -34,49 +35,31 @@ public class SearchResult {
 
     }
 
-    public final String getTitle() {
-    	
-        return title;
-        
-    }
-
-    public final String getContent() {
-    	
-        return content;
-        
-    }
-
-    public final String getUrl() {
-    	
-        return url;
-        
-    }
-
     public final String getSuggestedReturn() {
-    	
-    	if (url.startsWith("https://www.youtube.com/watch?")) {
-    		
-            return url.replace("https://www.youtube.com/watch?v=", "https://youtu.be/") + " - *" + title + "*: \"" + content + "\"";    		
-    		
-    	}
-    	
-    	else {
-    		
-            return url.replace("www.", "") + " - *" + title + "*: \"" + content + "\"";    		
-    		
-    	}    	
-        
+
+        if (url.startsWith("https://www.youtube.com/watch?")) {
+
+            return url.replace("https://www.youtube.com/watch?v=", "https://youtu.be/") + " - *" + title + "*: \"" + content + "\"";
+
+        }
+
+        else {
+
+            return url.replace("www.", "") + " - *" + title + "*: \"" + content + "\"";
+
+        }
+
     }
 
-	private static String cleanString(String uncleanString) {
-		
+    private static String cleanString(String uncleanString) {
+
         return StringEscapeUtils.unescapeJava(
                 StringEscapeUtils.unescapeHtml4(
                         uncleanString
                                 .replaceAll("\\s+", " ")
-                                .replaceAll("\\<.*?>", "")
+                                .replaceAll("<.*?>", "")
                                 .replaceAll("\"", "")));
-        
-    }	
+
+    }
 
 }

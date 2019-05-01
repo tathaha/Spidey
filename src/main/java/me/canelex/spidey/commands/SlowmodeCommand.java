@@ -9,18 +9,11 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 public class SlowmodeCommand implements ICommand {
 
 	@Override
-	public final boolean called(final GuildMessageReceivedEvent e) {
-
-		return true;
-
-	}
-
-	@Override
 	public final void action(final GuildMessageReceivedEvent e) {
 
 		final String neededPerm = "ADMINISTRATOR";
 
-		if (!API.hasPerm(e.getMember(), Permission.valueOf(neededPerm))) {
+		if (e.getMember() != null && !API.hasPerm(e.getMember(), Permission.valueOf(neededPerm))) {
 
 			API.sendMessage(e.getChannel(), PermissionError.getErrorMessage(neededPerm), false);
 
@@ -67,8 +60,5 @@ public class SlowmodeCommand implements ICommand {
 		return "Sets a slowmode for channel. Limit: `21600s` - `6h`. Example - `s!slowmode <seconds | off>`";
 
 	}
-
-	@Override
-	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {}
 
 }

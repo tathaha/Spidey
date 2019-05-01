@@ -21,6 +21,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import java.awt.*;
 import java.util.List;
 
+@SuppressWarnings("ConstantConditions")
 public class Events extends ListenerAdapter {
 
 	@Override
@@ -40,19 +41,15 @@ public class Events extends ListenerAdapter {
 		final Guild guild = e.getGuild();
 		final Role muted = guild.getRolesByName("Muted", false).get(0);
 
-		if (e.getRoles().contains(muted)) {
+		if (e.getRoles().contains(muted) && guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong())) != null) {
 
-			if (guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong())) != null) {
-
-				final TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));
-				final EmbedBuilder eb = new EmbedBuilder();
-				eb.setAuthor("UNMUTE");
-				eb.setColor(Color.GREEN);
-				eb.setThumbnail(e.getUser().getEffectiveAvatarUrl());
-				eb.addField("User", "**" + e.getUser().getAsTag() + "**", false);
-				API.sendMessage(log, eb.build());
-
-			}
+			final TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));
+			final EmbedBuilder eb = new EmbedBuilder();
+			eb.setAuthor("UNMUTE");
+			eb.setColor(Color.GREEN);
+			eb.setThumbnail(e.getUser().getEffectiveAvatarUrl());
+			eb.addField("User", "**" + e.getUser().getAsTag() + "**", false);
+			API.sendMessage(log, eb.build());
 
 		}
 
@@ -75,7 +72,7 @@ public class Events extends ListenerAdapter {
 
 			if (banner != null && banner.equals(e.getJDA().getSelfUser())) {
 
-				reason = (ban.getReason().equals("[Banned by Spidey#2370]") ?  "Unknown" : ban.getReason().substring(24));
+				reason = (ban.getReason().equals("[Banned by spidey#2370]") ?  "Unknown" : ban.getReason().substring(24));
 
 			}
 
@@ -90,7 +87,7 @@ public class Events extends ListenerAdapter {
 			eb.setColor(Color.RED);
 			eb.addField("User", "**" + user.getAsTag() + "**", true);
 			eb.addField("ID", "**" + user.getId() + "**", true);
-			eb.addField("Moderator", banner.getAsMention(), true);
+			eb.addField("Moderator", banner == null ? "Unknown" : banner.getAsMention(), true);
 			eb.addField("Reason", "**" + reason + "**", true);
 
 			API.sendMessage(log, eb.build());

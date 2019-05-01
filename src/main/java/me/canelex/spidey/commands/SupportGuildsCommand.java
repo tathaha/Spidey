@@ -10,13 +10,6 @@ import java.awt.*;
 public class SupportGuildsCommand implements ICommand {
 
 	@Override
-	public final boolean called(final GuildMessageReceivedEvent e) {
-
-		return true;
-
-	}
-
-	@Override
 	public final void action(final GuildMessageReceivedEvent e) {
 
 		final EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
@@ -34,8 +27,5 @@ public class SupportGuildsCommand implements ICommand {
 		return "Shows you (support) guilds of Spidey";
 
 	}
-
-	@Override
-	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {}
 
 }

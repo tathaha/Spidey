@@ -14,15 +14,8 @@ import java.awt.*;
 public class InfoCommand implements ICommand {
 
 	@Override
-	public final boolean called(final GuildMessageReceivedEvent e) {
-		
-		return true;
-		
-	}
-
-	@Override
 	public final void action(final GuildMessageReceivedEvent e) {
-		
+
 		final JDA jda = e.getJDA();
 		final User author = e.getAuthor();
 		final TextChannel msgCh = e.getChannel();
@@ -33,9 +26,9 @@ public class InfoCommand implements ICommand {
 		eb.setColor(Color.WHITE);
 		eb.addField("Developer", dev.getAsMention(), true);
 		eb.addField("Release channel", "**STABLE**", true);
-		eb.addField("I'm running on JDA version", "**" + JDAInfo.VERSION + "**", true);		
-		API.sendMessage(msgCh, eb.build());		
-		
+		eb.addField("I'm running on JDA version", "**" + JDAInfo.VERSION + "**", true);
+		API.sendMessage(msgCh, eb.build());
+
 	}
 
 	@Override
@@ -44,7 +37,4 @@ public class InfoCommand implements ICommand {
 		return "Shows you info about me";
 	}
 
-	@Override
-	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {}
-	
 }

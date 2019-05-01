@@ -17,14 +17,6 @@ import java.util.stream.Collectors;
 public class DeleteCommand implements ICommand {
 
 	private int count;
-	private int amount;
-
-	@Override
-	public final boolean called(final GuildMessageReceivedEvent e) {
-
-		return true;
-
-	}
 
 	@Override
 	public final void action(final GuildMessageReceivedEvent e) {
@@ -34,13 +26,12 @@ public class DeleteCommand implements ICommand {
 		final TextChannel ch = e.getChannel();
 
 		msg.delete().complete();
-		if (!API.hasPerm(e.getMember(), Permission.BAN_MEMBERS))  {
+		if (e.getMember() != null && !API.hasPerm(e.getMember(), Permission.BAN_MEMBERS))  {
 
 			API.sendMessage(ch, PermissionError.getErrorMessage("BAN_MEMBERS"), false);
 			return;
 
 		}
-
 		final String[] args = msg.getContentRaw().trim().split("\\s+", maxArgs);
 
 		if (args.length < 2) {
@@ -49,9 +40,9 @@ public class DeleteCommand implements ICommand {
 			return;
 
 		}
-
 		if (msg.getMentionedUsers().isEmpty()) {
 
+			int amount;
 			try {
 				amount = Integer.parseUnsignedInt(args[1]);
 			} catch (final NumberFormatException ignored) {
@@ -82,6 +73,7 @@ public class DeleteCommand implements ICommand {
 
 		else {
 
+			int amount;
 			final User user = msg.getMentionedUsers().get(0);
 			try {
 				amount = Integer.parseUnsignedInt(args[2]);
@@ -97,9 +89,9 @@ public class DeleteCommand implements ICommand {
 			if (amount == 100) {
 				amount = 99;
 			}
-
+			int a = amount;
 			ch.getIterableHistory().cache(false).takeAsync(100).thenAccept(msgs -> {
-				final List<Message> newList = msgs.stream().filter(m -> m.getAuthor().equals(user)).limit(amount).collect(Collectors.toList());
+				final List<Message> newList = msgs.stream().filter(m -> m.getAuthor().equals(user)).limit(a).collect(Collectors.toList());
 				CompletableFuture future;
 				if (newList.size() == 1) {
 					future = newList.get(0).delete().submit();
@@ -118,8 +110,5 @@ public class DeleteCommand implements ICommand {
 		return "Deletes messages (by mentioned user)";
 
 	}
-
-	@Override
-	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {}
 
 }

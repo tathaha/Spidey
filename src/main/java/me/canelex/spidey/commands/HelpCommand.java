@@ -12,62 +12,52 @@ import java.util.Map;
 
 public class HelpCommand extends Core implements ICommand {
 
-	@Override
-	public final boolean called(final GuildMessageReceivedEvent e) {
+    @Override
+    public final void action(final GuildMessageReceivedEvent e) {
 
-		return true;
+        final EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor())
+                .setColor(Color.WHITE)
+                .setAuthor("Spidey's Commands", "https://github.com/caneleex/Spidey", e.getJDA().getSelfUser().getEffectiveAvatarUrl());
 
-	}
+        final StringBuilder sb = new StringBuilder();
 
-	@Override
-	public final void action(final GuildMessageReceivedEvent e) {
+        final HashMap<String, ICommand> commands = new HashMap<>();
 
-		final EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor())
-				.setColor(Color.WHITE)
-				.setAuthor("Spidey's Commands", "https://github.com/caneleex/Spidey", e.getJDA().getSelfUser().getEffectiveAvatarUrl());
+        for (final Map.Entry<String, ICommand> entry : Core.commands.entrySet()) {
 
-		final StringBuilder sb = new StringBuilder();
+            commands.put(entry.getKey(), entry.getValue());
 
-		final HashMap<String, ICommand> commands = new HashMap<>();
+        }
 
-		for (final Map.Entry<String, ICommand> entry : Core.commands.entrySet()) {
+        commands.remove("yt");
 
-			commands.put(entry.getKey(), entry.getValue());
+        for (final String cmd : commands.keySet()) {
 
-		}
+            if (cmd.equals("g")) {
 
-		commands.remove("yt");
+                sb.append("`s!").append(cmd).append("` | `s!yt` - ").append(Core.commands.get(cmd).help()).append("\n");
 
-		for (final String cmd : commands.keySet()) {
+            }
 
-			if (cmd.equals("g")) {
+            else {
 
-				sb.append("`s!" + cmd + "` | `s!yt` - " + Core.commands.get(cmd).help() + "\n");
+                sb.append("`s!").append(cmd).append("` - ").append(Core.commands.get(cmd).help()).append("\n");
 
-			}
+            }
 
-			else {
+            eb.setDescription(sb.toString());
 
-				sb.append("`s!" + cmd + "` - " + Core.commands.get(cmd).help() + "\n");
+        }
 
-			}
+        API.sendMessage(e.getChannel(), eb.build());
 
-			eb.setDescription(sb.toString());
+    }
 
-		}
+    @Override
+    public final String help() {
 
-		API.sendMessage(e.getChannel(), eb.build());
+        return "Shows you this message";
 
-	}
-
-	@Override
-	public final String help() {
-
-		return "Shows you this message";
-
-	}
-
-	@Override
-	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {}
+    }
 
 }

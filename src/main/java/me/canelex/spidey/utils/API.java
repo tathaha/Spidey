@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 public class API {
 
-	private static final String INVITE_LINK = "https://discordapp.com/oauth2/authorize?client_id=468523263853592576&scope=bot&permissions=268446900";
+	private static final String INVITE_LINK = "https://discordapp.com/oauth2/authorize?client_id=545938274368356352&scope=bot&permissions=268446900";
 
 	private API(){
 		super();
@@ -75,7 +75,7 @@ public class API {
 
 	public static String getInviteUrl(final long guildId) {
 
-		return String.format("https://discordapp.com/oauth2/authorize?client_id=468523263853592576&guild_id=%s&scope=bot&permissions=268446900", guildId);
+		return String.format("https://discordapp.com/oauth2/authorize?client_id=545938274368356352&guild_id=%s&scope=bot&permissions=268446900", guildId);
 
 	}
 
@@ -111,7 +111,7 @@ public class API {
 
 	public static void returnError(String errMsg, Message origin) {
 
-		origin.addReaction(Emojis.cross).queue();
+		origin.addReaction(Emojis.CROSS).queue();
 		origin.getTextChannel().sendMessage(String.format(":no_entry: %s.", errMsg)).queue(m -> {
 
 			origin.delete().queueAfter(5, TimeUnit.SECONDS, null, userGone -> {

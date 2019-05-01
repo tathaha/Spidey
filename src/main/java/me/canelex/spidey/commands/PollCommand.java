@@ -15,55 +15,46 @@ import java.awt.*;
 public class PollCommand implements ICommand {
 
 	@Override
-	public final boolean called(final GuildMessageReceivedEvent e) {
-
-		return true;
-		
-	}
-
-	@Override
 	public final void action(final GuildMessageReceivedEvent e) {
 
-		final String neededPerm = "BAN_MEMBERS";    		
-		
-		final TextChannel log = e.getGuild().getTextChannelById(MySQL.getChannelId(e.getGuild().getIdLong()));	   		
-		
-		if (!API.hasPerm(e.getMember(), Permission.valueOf(neededPerm))) {
-			
-			API.sendMessage(e.getChannel(), PermissionError.getErrorMessage(neededPerm), false);      			
-			
+		final String neededPerm = "BAN_MEMBERS";
+
+		@SuppressWarnings("ConstantConditions") final TextChannel log = e.getGuild().getTextChannelById(MySQL.getChannelId(e.getGuild().getIdLong()));
+
+		if (e.getMember() != null && !API.hasPerm(e.getMember(), Permission.valueOf(neededPerm))) {
+
+			API.sendMessage(e.getChannel(), PermissionError.getErrorMessage(neededPerm), false);
+
 		}
-		
+
 		else {
-			
+
 			final String question = e.getMessage().getContentRaw().substring(7);
-    		API.deleteMessage(e.getMessage());
-    		e.getChannel().sendMessage("Poll: **" + question + "**").queue(m -> {
-    			
-    			m.addReaction(Emojis.like).queue();
-    			m.addReaction(Emojis.shrug).queue();
-    			m.addReaction(Emojis.dislike).queue();
-    			final EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
-        		eb.setAuthor("NEW POLL");
-        		eb.setColor(Color.ORANGE);             		
-        		eb.addField("Question", "**" + question + "**", false);
-        		eb.setFooter("Poll created by " + e.getAuthor().getAsTag(), e.getAuthor().getEffectiveAvatarUrl());             		
-        		API.sendMessage(log, eb.build());
-    			        			
-    		});    			
-    		   			
-		}		
-		
+			API.deleteMessage(e.getMessage());
+			e.getChannel().sendMessage("Poll: **" + question + "**").queue(m -> {
+
+				m.addReaction(Emojis.LIKE).queue();
+				m.addReaction(Emojis.SHRUG).queue();
+				m.addReaction(Emojis.DISLIKE).queue();
+				final EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
+				eb.setAuthor("NEW POLL");
+				eb.setColor(Color.ORANGE);
+				eb.addField("Question", "**" + question + "**", false);
+				eb.setFooter("Poll created by " + e.getAuthor().getAsTag(), e.getAuthor().getEffectiveAvatarUrl());
+				assert log != null;
+				API.sendMessage(log, eb.build());
+
+			});
+
+		}
+
 	}
 
 	@Override
 	public final String help() {
 
 		return "Creates a new poll";
-		
-	}
 
-	@Override
-	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {}
+	}
 
 }

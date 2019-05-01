@@ -51,7 +51,6 @@ public class Core {
 		commands.put("joindate", new JoindateCommand());
 		commands.put("log", new LogCommand());
 		commands.put("membercount", new MembercountCommand());
-		commands.put("mute", new MuteCommand());
 		commands.put("ping", new PingCommand());
 		commands.put("warn", new WarnCommand());
 		commands.put("ban", new BanCommand());
@@ -82,14 +81,7 @@ public class Core {
 	static void handleCommand(final CommandParser.CommandContainer cmd) {
 
 		if (commands.containsKey(cmd.invoke)) {
-
-			EXECUTOR.submit(() -> {
-				final boolean safe = commands.get(cmd.invoke).called(cmd.event);
-
-				commands.get(cmd.invoke).action(cmd.event);
-				commands.get(cmd.invoke).executed(safe, cmd.event);
-			});
-
+			EXECUTOR.submit(() -> commands.get(cmd.invoke).action(cmd.event));
 		}
 
 	}

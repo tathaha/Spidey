@@ -17,13 +17,6 @@ import java.util.concurrent.TimeUnit;
 public class UrbanDictionaryCommand implements ICommand {
 
 	@Override
-	public final boolean called(final GuildMessageReceivedEvent e) {
-
-		return true;
-
-	}
-
-	@Override
 	public final void action(final GuildMessageReceivedEvent e) {
 
 		final String query = e.getMessage().getContentRaw().substring(5);
@@ -42,7 +35,7 @@ public class UrbanDictionaryCommand implements ICommand {
 							+ "```\n"
 							+ "**example**: \n"
 							+ "%s" + "\n\n"
-							+ "_by %s (" + Emojis.like + "%s  " + Emojis.dislike + "%s)_"
+							+ "_by %s (" + Emojis.LIKE + "%s  " + Emojis.DISLIKE + "%s)_"
 					, item.getString("word"), item.getString("definition"), item.getString("example"),
 					item.getString("author"), item.getInt("thumbs_up"), item.getInt("thumbs_down"));
 
@@ -64,8 +57,5 @@ public class UrbanDictionaryCommand implements ICommand {
 		return "Returns a definition of your query from Urban Dictionary";
 
 	}
-
-	@Override
-	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {}
 
 }

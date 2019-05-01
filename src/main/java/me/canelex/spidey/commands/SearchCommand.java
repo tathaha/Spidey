@@ -12,33 +12,26 @@ import java.util.List;
 public class SearchCommand implements ICommand {
 
 	@Override
-	public final boolean called(final GuildMessageReceivedEvent e) {
-
-		return true;
-		
-	}
-
-	@Override
 	public final void action(final GuildMessageReceivedEvent e) {
-		
+
 		String filter = null;
 		final String[] args = e.getMessage().getContentRaw().split("\\s+");
-		
+
 		switch (args[0]) {
-				
+
 			case "s!g":
-				
-				break;				
-				
+
+				break;
+
 			case "s!yt":
-				
+
 				filter = "site:youtube.com";
-				break;			
-				
+				break;
+
 			default:
-				
+
 				return;
-				
+
 		}
 
 		final List<SearchResult> results = GoogleSearch.performSearch(
@@ -46,18 +39,15 @@ public class SearchCommand implements ICommand {
 				StringUtils.join(args, "+", 1, args.length)
 						+ ((filter != null) ? ("+" + filter) : ""));
 
-		API.sendMessage(e.getChannel(), results.get(0).getSuggestedReturn(), false);		
-		
+		API.sendMessage(e.getChannel(), results.get(0).getSuggestedReturn(), false);
+
 	}
 
 	@Override
 	public final String help() {
 
 		return "Allows you to search Google or YouTube";
-		
-	}
 
-	@Override
-	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {}
+	}
 
 }

@@ -15,36 +15,16 @@ import java.util.concurrent.TimeUnit;
 public class BanCommand implements ICommand {
 
 	@Override
-	public final boolean called(final GuildMessageReceivedEvent e) {
-
-		return true;
-
-	}
-
-	private void returnError(String errMsg, Message origin)  {
-
-		origin.addReaction(Emojis.cross).queue();
-		origin.getTextChannel().sendMessage(String.format(":no_entry: %s.", errMsg)).queue(m -> {
-
-			origin.delete().queueAfter(5, TimeUnit.SECONDS, null, userGone -> {});
-			m.delete().queueAfter(5, TimeUnit.SECONDS, null, botGone -> {});
-
-		});
-
-	}
-
-	@Override
 	public final void action(final GuildMessageReceivedEvent e) {
 
 		final int maxArgs = 4;
 		final Message msg = e.getMessage();
-		final Permission perm = Permission.BAN_MEMBERS;
 
 		e.getMessage().delete().queueAfter(5, TimeUnit.SECONDS);
 
-		if (!API.hasPerm(e.getMember(), perm))  {
+		if (e.getMember() != null && !API.hasPerm(e.getMember(), Permission.BAN_MEMBERS))  {
 
-			API.sendMessage(e.getChannel(), PermissionError.getErrorMessage(perm.getName()), false);
+			API.sendMessage(e.getChannel(), PermissionError.getErrorMessage("BAN_MEMBERS"), false);
 			return;
 
 		}
@@ -53,14 +33,14 @@ public class BanCommand implements ICommand {
 
 		if (args.length < 3) {
 
-			returnError("Wrong syntax", msg);
+			API.returnError("Wrong syntax", msg);
 			return;
 
 		}
 
 		if (!args[1].matches(Message.MentionType.USER.getPattern().pattern())) {
 
-			returnError("Wrong syntax (no mention)", msg);
+			API.returnError("Wrong syntax (no mention)", msg);
 			return;
 
 		}
@@ -69,7 +49,7 @@ public class BanCommand implements ICommand {
 
 		if (members.isEmpty()) {
 
-			returnError("User wasn't found", msg);
+			API.returnError("User wasn't found", msg);
 			return;
 
 		}
@@ -78,7 +58,7 @@ public class BanCommand implements ICommand {
 
 		if (!e.getGuild().getSelfMember().canInteract(mb)) {
 
-			returnError("Can't ban the user due to permission hierarchy position", msg);
+			API.returnError("Can't ban the user due to permission hierarchy position", msg);
 			return;
 
 		}
@@ -91,12 +71,12 @@ public class BanCommand implements ICommand {
 
 		} catch (final NumberFormatException ex) {
 
-			returnError("Please enter a valid number", msg);
+			API.returnError("Please enter a valid number", msg);
 			return;
 
 		}
 
-		final StringBuilder reasonBuilder = new StringBuilder("[Banned by Spidey#2370]");
+		final StringBuilder reasonBuilder = new StringBuilder("[Banned by spidey#2370]");
 		final StringBuilder banMsgBuilder = new StringBuilder(":white_check_mark: Successfully banned user **"
 				+ mb.getUser().getAsTag() + "**.");
 
@@ -111,7 +91,7 @@ public class BanCommand implements ICommand {
 		final String reasonMsg = reasonBuilder.toString();
 		final String banMsg = banMsgBuilder.toString();
 
-		msg.addReaction(Emojis.check).queue();
+		msg.addReaction(Emojis.CHECK).queue();
 		e.getGuild().getController().ban(mb, delDays, reasonMsg).queue();
 
 		e.getChannel().sendMessage(banMsg).queue(m -> {
@@ -129,8 +109,5 @@ public class BanCommand implements ICommand {
 		return "Bans user";
 
 	}
-
-	@Override
-	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {}
 
 }

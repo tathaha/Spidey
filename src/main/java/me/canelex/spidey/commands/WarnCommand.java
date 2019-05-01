@@ -15,26 +15,19 @@ import java.awt.*;
 public class WarnCommand implements ICommand {
 
 	@Override
-	public final boolean called(final GuildMessageReceivedEvent e) {
-		
-		return true;
-		
-	}
-
-	@Override
 	public final void action(final GuildMessageReceivedEvent e) {
-		
+
 		final String neededPerm = "BAN_MEMBERS";
-		final long l = MySQL.getChannelId(e.getGuild().getIdLong());
-		
+		@SuppressWarnings("ConstantConditions") final long l = MySQL.getChannelId(e.getGuild().getIdLong());
+
 		if (!e.getMessage().getContentRaw().equals("s!warn")) {
-			
-			if (API.hasPerm(e.getMember(), Permission.valueOf(neededPerm))) {
-				
+
+			if (e.getMember() != null && API.hasPerm(e.getMember(), Permission.valueOf(neededPerm))) {
+
 				if (e.getGuild().getTextChannelById(l) != null) {
 
 					TextChannel log = e.getGuild().getTextChannelById(l);
-					final String reason = e.getMessage().getContentRaw().substring(7, e.getMessage().getContentRaw().lastIndexOf(" "));
+					final String reason = e.getMessage().getContentRaw().substring(7, e.getMessage().getContentRaw().lastIndexOf(' '));
 
 					for (final User u : e.getMessage().getMentionedUsers()) {
 
@@ -47,32 +40,30 @@ public class WarnCommand implements ICommand {
 						eb.addField("User", u.getAsMention(), true);
 						eb.addField("Moderator", e.getAuthor().getAsMention(), true);
 						eb.addField("Reason", "**" + reason + "**", true);
+						assert log != null;
 						API.sendMessage(log, eb.build());
 
 					}
 
 				}
-				
+
 			}
-			
+
 			else {
-				
-				API.sendMessage(e.getChannel(), PermissionError.getErrorMessage(neededPerm), false);    				
-				
+
+				API.sendMessage(e.getChannel(), PermissionError.getErrorMessage(neededPerm), false);
+
 			}
-			
-		}		
-		
+
+		}
+
 	}
 
 	@Override
 	public final String help() {
 
 		return "Warns user";
-		
-	}
 
-	@Override
-	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {}
+	}
 
 }

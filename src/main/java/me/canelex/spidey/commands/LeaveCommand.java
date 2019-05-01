@@ -5,16 +5,10 @@ import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.utils.API;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class LeaveCommand implements ICommand {
-
-	@Override
-	public final boolean called(final GuildMessageReceivedEvent e) {
-
-		return true;
-
-	}
 
 	@Override
 	public final void action(final GuildMessageReceivedEvent e) {
@@ -29,7 +23,7 @@ public class LeaveCommand implements ICommand {
 
 			e.getChannel().sendMessage("Bye.").queue(m -> m.delete().queueAfter(5, TimeUnit.SECONDS));
 			API.deleteMessage(e.getMessage());
-			API.sendPrivateMessageFormat(e.getGuild().getOwner().getUser(), "I've left your server **%s**. If you'd want to invite me back, please use this URL: ||%s||. Thanks for using **Spidey**!", false, e.getGuild().getName(), API.getInviteUrl(e.getGuild().getIdLong()));
+			API.sendPrivateMessageFormat(Objects.requireNonNull(e.getGuild().getOwner()).getUser(), "I've left your server **%s**. If you'd want to invite me back, please use this URL: ||%s||. Thanks for using **spidey**!", false, e.getGuild().getName(), API.getInviteUrl(e.getGuild().getIdLong()));
 			MySQL.removeData(e.getGuild().getIdLong());
 			e.getGuild().leave().queue();
 
@@ -43,8 +37,5 @@ public class LeaveCommand implements ICommand {
 		return "Spidey will leave your server";
 
 	}
-
-	@Override
-	public final void executed(final boolean success, final GuildMessageReceivedEvent e) {}
 
 }

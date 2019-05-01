@@ -9,13 +9,6 @@ import java.util.concurrent.TimeUnit;
 public class InviteCommand implements ICommand {
 
     @Override
-    public final boolean called(final GuildMessageReceivedEvent e) {
-
-        return true;
-
-    }
-
-    @Override
     public final void action(final GuildMessageReceivedEvent e) {
 
         e.getMessage().delete().queueAfter(5, TimeUnit.SECONDS);
@@ -30,8 +23,5 @@ public class InviteCommand implements ICommand {
         return "Sends you Spidey's invite link to PM";
 
     }
-
-    @Override
-    public final void executed(final boolean success, final GuildMessageReceivedEvent e) {}
 
 }
