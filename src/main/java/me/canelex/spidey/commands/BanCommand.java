@@ -76,7 +76,7 @@ public class BanCommand implements ICommand {
 
 		}
 
-		final StringBuilder reasonBuilder = new StringBuilder("[Banned by spidey#2370]");
+		final StringBuilder reasonBuilder = new StringBuilder("[Banned by Spidey#2370]");
 		final StringBuilder banMsgBuilder = new StringBuilder(":white_check_mark: Successfully banned user **"
 				+ mb.getUser().getAsTag() + "**.");
 
