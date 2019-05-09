@@ -9,8 +9,10 @@ import com.google.api.services.youtube.model.SearchListResponse;
 import com.mashape.unirest.http.Unirest;
 import me.canelex.spidey.Secrets;
 import me.canelex.spidey.objects.command.ICommand;
+import me.canelex.spidey.objects.json.SocialBlade;
 import me.canelex.spidey.utils.API;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.slf4j.LoggerFactory;
 
@@ -30,15 +32,14 @@ public class YouTubeChannelCommand implements ICommand {
 	public final void action(final GuildMessageReceivedEvent e) {
 
 		final String channel = e.getMessage().getContentRaw().substring(12);
+		Message msg = e.getChannel().sendMessage("Fetching data..").complete(); //TODO temporary solution
 
 		try {
 
 			final YouTube youtube = new YouTube.Builder(
 					new NetHttpTransport(),
 					new JacksonFactory(),
-					request -> {
-					})
-
+					request -> {})
 					.setApplicationName("youtube-cmdline-search-sample")
 					.setYouTubeRequestInitializer(new YouTubeRequestInitializer(Secrets.YOUTUBEAPIKEY))
 					.build();
@@ -52,10 +53,8 @@ public class YouTubeChannelCommand implements ICommand {
 			if (!searchResponse.getItems().isEmpty()) {
 
 				final String channelId = searchResponse.getItems().get(0).getSnippet().getChannelId();
-
 				final YouTube.Channels.List channels = youtube.channels().list("snippet, statistics");
 				channels.setId(channelId);
-
 				final Channel c = channels.execute().getItems().get(0);
 
 				cal.setTimeInMillis(c.getSnippet().getPublishedAt().getValue());
@@ -64,19 +63,19 @@ public class YouTubeChannelCommand implements ICommand {
 				final String creattime = time.format(cal.getTime());
 
 				final EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
+				final SocialBlade sb = new SocialBlade().getYouTube(channelId);
 				eb.setAuthor(c.getSnippet().getTitle(), "https://youtube.com/channel/" + channelId, "https://i.ymastersk.net/vo96zG");
 				eb.setColor(14765121);
-				eb.setThumbnail(c.getSnippet().getThumbnails().getHigh().getUrl());
-				eb.addField("Subscribers", "**" + c.getStatistics().getSubscriberCount() + "**", false);
-				eb.addField("Views", "**" + c.getStatistics().getViewCount() + "**", false);
-				eb.addField("Videos", "**" + c.getStatistics().getVideoCount() + "**", false);
+				eb.setThumbnail(sb.getAvatar());
+				eb.addField("Subscribers", "**" + sb.getSubs() + "**", false);
+				eb.addField("Views", "**" + sb.getViews() + "**", false);
+				eb.addField("Videos", "**" + sb.getVideos() + "**", false);
 				eb.addField("Created", String.format( "**%s** | **%s** UTC", creatdate, creattime), false);
-				eb.addField("Description", (c.getSnippet().getDescription().length() == 0 ? "**None**" : "**" + c.getSnippet().getDescription() + "**"), false);
-				eb.addField("Country", (c.getSnippet().getCountry() == null ? "**Unknown**" : "**" + c.getSnippet().getCountry() + "**"), false);
-				String latestVideo = Unirest.get("https://beta.decapi.me/youtube/latest_video/?id=" + channelId).asStringAsync().get().getBody();
+				eb.addField("Verified", (sb.isVerified() ? "**No**" : "**Yes**"), false);
+				eb.addField("Country", (sb.getCountry() == null ? "**Unknown**" : "**" + sb.getCountry() + "**"), false);
+				String latestVideo = Unirest.get("https://beta.decapi.me/youtube/latest_video/?id=" + channelId).asString().getBody();
 				eb.addField("Latest video", (latestVideo.equals("An error occurred retrieving videos for channel: " + channelId) ? "**This channel has no videos**" : latestVideo), false);
-
-				API.sendMessage(e.getChannel(), eb.build());
+				msg.editMessage(eb.build()).queue();
 
 			}
 
