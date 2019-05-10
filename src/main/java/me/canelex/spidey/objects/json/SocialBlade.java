@@ -18,9 +18,11 @@ public class SocialBlade {
     private int subs;
     private long views;
     private int videos;
+    private boolean partner;
     private boolean verified;
     private String avatar;
     private String country;
+    private String banner;
     private static final Logger logger = LoggerFactory.getLogger(SocialBlade.class);
 
     public final SocialBlade getYouTube(final String id) throws IOException {
@@ -40,9 +42,11 @@ public class SocialBlade {
         this.videos = data.getInt("uploads");
         this.subs = data.getInt("subs");
         this.views = data.getLong("views");
+        this.partner = 1 == data.getInt("partner");
         this.verified = 1 == data.getInt("isVerified");
         this.avatar = data.getString("avatar").replace("//a//", "/a/").replace("s88", "s300");
         this.country = data.getString("country");
+        this.banner = data.getString("banner");
 
         return this;
 
@@ -94,8 +98,10 @@ public class SocialBlade {
     public final int getSubs(){ return subs; }
     public final long getViews() { return views; }
     public final int getVideos() { return videos; }
-    public final boolean isVerified(){ return verified; }
+    public final boolean isPartner(){ return partner; }
+    public final boolean isVerified() { return verified; }
     public final String getAvatar() { return avatar; }
     public final String getCountry(){ return country; }
+    public final String getBanner() { return banner; }
 
 }

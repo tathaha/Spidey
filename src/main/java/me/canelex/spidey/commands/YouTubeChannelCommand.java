@@ -71,10 +71,17 @@ public class YouTubeChannelCommand implements ICommand {
 				eb.addField("Views", "**" + sb.getViews() + "**", false);
 				eb.addField("Videos", "**" + sb.getVideos() + "**", false);
 				eb.addField("Created", String.format( "**%s** | **%s** UTC", creatdate, creattime), false);
-				eb.addField("Verified", (sb.isVerified() ? "**No**" : "**Yes**"), false);
-				eb.addField("Country", (sb.getCountry().length() == 0 ? "**Unknown**" : "**" + sb.getCountry() + "**"), false);
+				eb.addField("Partner", (sb.isPartner() ? "**Yes**" : "**No**"), false);
+				eb.addField("Verified", (sb.isVerified() ? "**Yes**" : "**No**"), false);
+				eb.addField("Country", "**" + sb.getCountry() + "**", false);
 				final String latestVideo = Unirest.get("https://beta.decapi.me/youtube/latest_video/?id=" + channelId).asString().getBody();
 				eb.addField("Latest video", (latestVideo.equals("An error occurred retrieving videos for channel: " + channelId) ? "**This channel has no videos**" : latestVideo), false);
+
+				if (!sb.getBanner().equals("http://s.ytimg.com/yts/img/channels/c4/default_banner-vfl7DRgTn.png")) {
+					eb.addBlankField(false);
+					eb.setImage(sb.getBanner());
+				}
+
 				msg.editMessage(eb.build()).queue();
 
 			}

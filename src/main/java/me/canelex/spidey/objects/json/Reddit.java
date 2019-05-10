@@ -31,7 +31,7 @@ public class Reddit {
         return i == 0;
     }
 
-    private  Reddit fromJson(final JSONObject o) {
+    private Reddit fromJson(final JSONObject o) {
 
         final JSONObject data = o.getJSONObject("data");
         this.subs = data.getInt("subscribers");
