@@ -23,16 +23,16 @@ import java.util.TimeZone;
 
 public class YouTubeChannelCommand implements ICommand {
 
-	private Locale locale = new Locale("en", "EN");
-	private Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/London"));
-	private SimpleDateFormat date = new SimpleDateFormat("EEEE, d.LLLL Y", locale);
-	private SimpleDateFormat time = new SimpleDateFormat("HH:mm:ss", locale);
+	private final Locale locale = new Locale("en", "EN");
+	private final Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/London"));
+	private final SimpleDateFormat date = new SimpleDateFormat("EEEE, d.LLLL Y", locale);
+	private final SimpleDateFormat time = new SimpleDateFormat("HH:mm:ss", locale);
 
 	@Override
 	public final void action(final GuildMessageReceivedEvent e) {
 
 		final String channel = e.getMessage().getContentRaw().substring(12);
-		Message msg = e.getChannel().sendMessage("Fetching data..").complete(); //TODO temporary solution
+		final Message msg = e.getChannel().sendMessage("Fetching data..").complete(); //TODO temporary solution
 
 		try {
 
@@ -72,8 +72,8 @@ public class YouTubeChannelCommand implements ICommand {
 				eb.addField("Videos", "**" + sb.getVideos() + "**", false);
 				eb.addField("Created", String.format( "**%s** | **%s** UTC", creatdate, creattime), false);
 				eb.addField("Verified", (sb.isVerified() ? "**No**" : "**Yes**"), false);
-				eb.addField("Country", (sb.getCountry() == null ? "**Unknown**" : "**" + sb.getCountry() + "**"), false);
-				String latestVideo = Unirest.get("https://beta.decapi.me/youtube/latest_video/?id=" + channelId).asString().getBody();
+				eb.addField("Country", (sb.getCountry().length() == 0 ? "**Unknown**" : "**" + sb.getCountry() + "**"), false);
+				final String latestVideo = Unirest.get("https://beta.decapi.me/youtube/latest_video/?id=" + channelId).asString().getBody();
 				eb.addField("Latest video", (latestVideo.equals("An error occurred retrieving videos for channel: " + channelId) ? "**This channel has no videos**" : latestVideo), false);
 				msg.editMessage(eb.build()).queue();
 

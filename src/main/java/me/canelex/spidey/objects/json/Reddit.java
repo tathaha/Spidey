@@ -17,22 +17,23 @@ public class Reddit {
     private int active;
     private boolean nsfw;
     private String icon;
+    private String comIcon;
 
-    public Reddit getSubReddit(String name) throws IOException {
+    public final Reddit getSubReddit(final String name) throws IOException {
 
         return exists(name) ? null : fromJson(getJson(
                 "https://reddit.com/r/" + name + "/about.json"));
 
     }
 
-    private boolean exists(String name) throws IOException {
+    private boolean exists(final String name) throws IOException {
         final int i = getJson("https://reddit.com/subreddits/search.json?q=" + name).getJSONObject("data").getInt("dist");
         return i == 0;
     }
 
-    private Reddit fromJson(JSONObject o) {
+    private  Reddit fromJson(final JSONObject o) {
 
-        JSONObject data = o.getJSONObject("data");
+        final JSONObject data = o.getJSONObject("data");
         this.subs = data.getInt("subscribers");
         this.name = data.getString("display_name");
         this.desc = data.getString("public_description");
@@ -40,23 +41,24 @@ public class Reddit {
         this.active = data.getInt("accounts_active");
         this.nsfw = data.getBoolean("over18");
         this.icon = data.getString("icon_img");
+        this.comIcon = data.getString("community_icon");
 
         return this;
 
     }
 
-    private String getUrl(String url) throws IOException {
-        URL obj = new URL(url);
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+    private String getUrl(final String url) throws IOException {
+        final URL obj = new URL(url);
+        final HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
         con.setRequestMethod("GET");
 
-        String userAgent = "me.canelex.spidey";
+        final String userAgent = "me.canelex.spidey";
         con.setRequestProperty("User-Agent", userAgent);
 
-        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        final BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
         String inputLine;
-        StringBuilder response = new StringBuilder();
+        final StringBuilder response = new StringBuilder();
 
         while ((inputLine = in.readLine()) != null) {
             response.append(inputLine);
@@ -66,17 +68,18 @@ public class Reddit {
 
     }
 
-    private JSONObject getJson(String url) throws IOException {
+    private JSONObject getJson(final String url) throws IOException {
         return new JSONObject(getUrl(url));
     }
 
-    public int getSubs(){
+    public final int getSubs(){
         return subs;
     }
-    public String getName() { return name; }
-    public String getDesc() { return desc; }
-    public String getTitle() { return title; }
-    public int getActive() { return active; }
-    public boolean isNsfw() { return nsfw; }
-    public String getIcon() { return icon; }
+    public final String getName() { return name; }
+    public final String getDesc() { return desc; }
+    public final String getTitle() { return title; }
+    public final int getActive() { return active; }
+    public final boolean isNsfw() { return nsfw; }
+    public final String getIcon() { return icon; }
+    public final String getCommunityIcon() { return comIcon; }
 }

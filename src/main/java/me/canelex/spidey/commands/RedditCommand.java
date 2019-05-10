@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 public class RedditCommand implements ICommand {
 
@@ -24,13 +25,17 @@ public class RedditCommand implements ICommand {
 			final Reddit reddit = new Reddit().getSubReddit(subreddit);
 
 			if (reddit == null) {
-				API.sendMessage(e.getChannel(), ":no_entry: Subreddit not found.", false);
+				e.getChannel().sendMessage(":no_entry: Subreddit not found.").queue(m -> {
+					m.delete().queueAfter(5, TimeUnit.SECONDS);
+					e.getMessage().delete().queueAfter(5, TimeUnit.SECONDS);
+				});
 				return;
 			}
 
 			final EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
+			final String comIcon = reddit.getCommunityIcon().length() == 0 ? "https://i.ymastersk.net/LRjhvy" : reddit.getCommunityIcon();
 			eb.setAuthor("r/" + reddit.getName(), "https://reddit.com/r/" + subreddit, "https://i.ymastersk.net/LRjhvy");
-			eb.setThumbnail(reddit.getIcon());
+			eb.setThumbnail(reddit.getIcon().length() == 0 ? comIcon : reddit.getIcon());
 			eb.setColor(16727832);
 			eb.addField("Subscribers", "**" + reddit.getSubs() + "**", false);
 			eb.addField("Active users", "**" + reddit.getActive() + "**", false);

@@ -23,21 +23,20 @@ public class SocialBlade {
     private String country;
     private static final Logger logger = LoggerFactory.getLogger(SocialBlade.class);
 
-    public SocialBlade getYouTube(String id) throws IOException {
-        String password = Secrets.SPASS;
-        String email = Secrets.EMAIL;
-        JSONObject l = getJson(
-                "https://api.socialblade.com/v2/bridge?email=" + email + "&password=" + getMD5(password));
+    public final SocialBlade getYouTube(final String id) throws IOException {
+        final String email = Secrets.EMAIL;
+        final JSONObject l = getJson(
+                "https://api.socialblade.com/v2/bridge?email=" + email + "&password=" + getMD5());
 
-        String token = l.getJSONObject("id").getString("token");
+        final String token = l.getJSONObject("id").getString("token");
         return fromJson(getJson("https://api.socialblade.com/v2/youtube/statistics?query=statistics&username="
                 + id + "&email=" + email + "&token=" + token));
 
     }
 
-    private SocialBlade fromJson(JSONObject o) {
+    private SocialBlade fromJson(final JSONObject o) {
 
-        JSONObject data = o.getJSONObject("data");
+        final JSONObject data = o.getJSONObject("data");
         this.videos = data.getInt("uploads");
         this.subs = data.getInt("subs");
         this.views = data.getLong("views");
@@ -49,36 +48,36 @@ public class SocialBlade {
 
     }
 
-    private String getMD5(String s) {
+    private String getMD5() {
         try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            byte[] encode = s.getBytes();
-            byte[] encoded = md.digest(encode);
+            final MessageDigest md = MessageDigest.getInstance("MD5");
+            final byte[] encode = Secrets.SPASS.getBytes();
+            final byte[] encoded = md.digest(encode);
 
-            StringBuilder sb = new StringBuilder(2 * encoded.length);
-            for (byte b : encoded) {
+            final StringBuilder sb = new StringBuilder(2 * encoded.length);
+            for (final byte b : encoded) {
                 sb.append("0123456789ABCDEF".charAt((b & 0xF0) >> 4));
                 sb.append("0123456789ABCDEF".charAt((b & 0x0F)));
             }
             return sb.toString().toLowerCase();
-        } catch (NoSuchAlgorithmException e) {
+        } catch (final NoSuchAlgorithmException e) {
             logger.error("Exception!", e);
             return null;
         }
     }
 
-    private String getUrl(String url) throws IOException {
-        URL obj = new URL(url);
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+    private String getUrl(final String url) throws IOException {
+        final URL obj = new URL(url);
+        final HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
         con.setRequestMethod("GET");
 
-        String userAgent = "me.canelex.spidey";
+        final String userAgent = "me.canelex.spidey";
         con.setRequestProperty("User-Agent", userAgent);
 
-        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        final BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
         String inputLine;
-        StringBuilder response = new StringBuilder();
+        final StringBuilder response = new StringBuilder();
 
         while ((inputLine = in.readLine()) != null) {
             response.append(inputLine);
@@ -88,27 +87,15 @@ public class SocialBlade {
 
     }
 
-    private JSONObject getJson(String url) throws IOException {
+    private JSONObject getJson(final String url) throws IOException {
         return new JSONObject(getUrl(url));
     }
 
-    public int getSubs(){
-        return subs;
-    }
-    public long getViews(){
-        return views;
-    }
-    public int getVideos(){
-        return videos;
-    }
-    public boolean isVerified(){
-        return verified;
-    }
-    public String getAvatar(){
-        return avatar;
-    }
-    public String getCountry(){
-        return country;
-    }
+    public final int getSubs(){ return subs; }
+    public final long getViews() { return views; }
+    public final int getVideos() { return videos; }
+    public final boolean isVerified(){ return verified; }
+    public final String getAvatar() { return avatar; }
+    public final String getCountry(){ return country; }
 
 }
