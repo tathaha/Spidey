@@ -38,7 +38,6 @@ dependencies {
     implementation group: 'net.dean.jraw', name: 'JRAW', version: '1.1.0'
     implementation group: 'com.google.apis', name: 'google-api-services-youtube', version: 'v3-rev211-1.25.0'
     implementation group: 'com.mashape.unirest', name: 'unirest-java', version: '1.4.9'
-    implementation group: 'at.mukprojects', name: 'giphy4j', version: '1.0.1'
 
 }
 

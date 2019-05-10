@@ -68,7 +68,6 @@ public class Core {
 		commands.put("ytchannel", new YouTubeChannelCommand());
 		commands.put("ud", new UrbanDictionaryCommand());
 		commands.put("8ball", new EightBallCommand());
-		commands.put("gif", new GifCommand());
 		commands.put("slowmode", new SlowmodeCommand());
 		commands.put("roles", new RolesCommand());
 		commands.put("invite", new InviteCommand());
@@ -76,7 +75,6 @@ public class Core {
 	}
 
 	private static final ExecutorService EXECUTOR = Executors.newSingleThreadExecutor();
-
 
 	static void handleCommand(final CommandParser.CommandContainer cmd) {
 
