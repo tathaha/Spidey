@@ -111,4 +111,9 @@ public class DeleteCommand implements ICommand {
 
 	}
 
+	@Override
+	public final boolean isAdmin() {
+		return true;
+	}
+
 }

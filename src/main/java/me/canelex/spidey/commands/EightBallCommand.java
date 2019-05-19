@@ -45,4 +45,9 @@ public class EightBallCommand implements ICommand {
 
 	}
 
+	@Override
+	public final boolean isAdmin() {
+		return false;
+	}
+
 }

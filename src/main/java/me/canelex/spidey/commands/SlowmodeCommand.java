@@ -61,4 +61,9 @@ public class SlowmodeCommand implements ICommand {
 
 	}
 
+	@Override
+	public final boolean isAdmin() {
+		return true;
+	}
+
 }

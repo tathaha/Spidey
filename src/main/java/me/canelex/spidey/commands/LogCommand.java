@@ -72,4 +72,9 @@ public class LogCommand implements ICommand {
 
 	}
 
+	@Override
+	public final boolean isAdmin() {
+		return true;
+	}
+
 }

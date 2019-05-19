@@ -37,4 +37,9 @@ public class InfoCommand implements ICommand {
 		return "Shows you info about me";
 	}
 
+	@Override
+	public final boolean isAdmin() {
+		return false;
+	}
+
 }

@@ -38,4 +38,9 @@ public class LeaveCommand implements ICommand {
 
 	}
 
+	@Override
+	public final boolean isAdmin() {
+		return true;
+	}
+
 }

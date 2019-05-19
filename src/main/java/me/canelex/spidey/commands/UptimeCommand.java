@@ -36,4 +36,9 @@ public class UptimeCommand implements ICommand {
 
 	}
 
+	@Override
+	public final boolean isAdmin() {
+		return false;
+	}
+
 }

@@ -107,4 +107,9 @@ public class YouTubeChannelCommand implements ICommand {
 
 	}
 
+	@Override
+	public final boolean isAdmin() {
+		return false;
+	}
+
 }

@@ -58,4 +58,9 @@ public class RedditCommand implements ICommand {
 
 	}
 
+	@Override
+	public final boolean isAdmin() {
+		return false;
+	}
+
 }

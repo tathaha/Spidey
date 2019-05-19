@@ -28,4 +28,9 @@ public class SupportGuildsCommand implements ICommand {
 
 	}
 
+	@Override
+	public final boolean isAdmin() {
+		return true;
+	}
+
 }

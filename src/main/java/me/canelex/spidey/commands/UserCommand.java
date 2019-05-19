@@ -158,4 +158,9 @@ public class UserCommand implements ICommand {
 
 	}
 
+	@Override
+	public final boolean isAdmin() {
+		return false;
+	}
+
 }

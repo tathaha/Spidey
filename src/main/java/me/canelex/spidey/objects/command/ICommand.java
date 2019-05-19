@@ -6,5 +6,6 @@ public interface ICommand {
 
 	void action(final GuildMessageReceivedEvent e);
 	String help();
+	boolean isAdmin();
 
 }
