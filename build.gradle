@@ -29,12 +29,12 @@ repositories {
 dependencies {
 
     implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.16'
-    implementation (group: 'net.dv8tion', name: 'JDA', version: '4.ALPHA.0_84') {
+    implementation (group: 'net.dv8tion', name: 'JDA', version: '4.ALPHA.0_86') {
         exclude group: 'club.minnced', module: 'opus-java'
     }
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
     implementation group: 'org.apache.commons', name: 'commons-text', version: '1.6'
-    implementation group: 'com.google.apis', name: 'google-api-services-youtube', version: 'v3-rev211-1.25.0'
+    implementation group: 'com.google.apis', name: 'google-api-services-youtube', version: 'v3-rev212-1.25.0'
     implementation group: 'com.mashape.unirest', name: 'unirest-java', version: '1.4.9'
 
 }
