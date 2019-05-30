@@ -92,7 +92,7 @@ public class BanCommand implements ICommand {
 		final String banMsg = banMsgBuilder.toString();
 
 		msg.addReaction(Emojis.CHECK).queue();
-		e.getGuild().getController().ban(mb, delDays, reasonMsg).queue();
+		e.getGuild().ban(mb, delDays, reasonMsg).queue();
 
 		e.getChannel().sendMessage(banMsg).queue(m -> {
 

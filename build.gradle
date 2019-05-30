@@ -29,7 +29,7 @@ repositories {
 dependencies {
 
     implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.16'
-    implementation (group: 'net.dv8tion', name: 'JDA', version: '4.ALPHA.0_86') {
+    implementation (group: 'net.dv8tion', name: 'JDA', version: '4.ALPHA.0_91') {
         exclude group: 'club.minnced', module: 'opus-java'
     }
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
