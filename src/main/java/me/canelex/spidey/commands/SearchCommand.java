@@ -7,7 +7,7 @@ import me.canelex.spidey.utils.Utils;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @SuppressWarnings("unused")
@@ -53,9 +53,7 @@ public class SearchCommand implements ICommand {
 	public final String invoke() { return "g"; }
 	@Override
 	public List<String> aliases() {
-		final List<String> list = new ArrayList<>();
-		list.add("yt");
-		return list;
+		return Collections.singletonList("yt");
 	}
 
 }
