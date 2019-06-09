@@ -1,11 +1,12 @@
 package me.canelex.spidey.commands;
 
 import me.canelex.spidey.objects.command.ICommand;
-import me.canelex.spidey.utils.API;
+import me.canelex.spidey.utils.Utils;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 import java.lang.management.ManagementFactory;
 
+@SuppressWarnings("unused")
 public class UptimeCommand implements ICommand {
 
 	@Override
@@ -22,23 +23,18 @@ public class UptimeCommand implements ICommand {
 
 		String uptime = (years == 0 ? "" : "**" + years + "**y, ") + (months == 0 ? "" : "**" + months + "**mo, ") + (days == 0 ? "" : "**" + days + "**d, ") + (hours == 0 ? "" : "**" + hours + "**h, ") + (minutes == 0 ? "" : "**" + minutes + "**m, ") + (seconds == 0 ? "" : "**" + seconds + "**s, ");
 
-		uptime = API.replaceLast(uptime, ", ", "");
-		uptime = API.replaceLast(uptime, ",", " and");
+		uptime = Utils.replaceLast(uptime, ", ", "");
+		uptime = Utils.replaceLast(uptime, ",", " and");
 
-		API.sendMessage(e.getChannel(), "Uptime: " + uptime + "", false);
-
-	}
-
-	@Override
-	public final String help() {
-
-		return "Shows the uptime of the bot";
+		Utils.sendMessage(e.getChannel(), "Uptime: " + uptime + "", false);
 
 	}
 
 	@Override
-	public final boolean isAdmin() {
-		return false;
-	}
+	public final String help() { return "Shows the uptime of the bot"; }
+	@Override
+	public final boolean isAdmin() { return false; }
+	@Override
+	public final String invoke() { return "uptime"; }
 
 }

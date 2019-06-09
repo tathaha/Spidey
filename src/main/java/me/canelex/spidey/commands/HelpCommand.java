@@ -2,7 +2,7 @@ package me.canelex.spidey.commands;
 
 import me.canelex.spidey.Core;
 import me.canelex.spidey.objects.command.ICommand;
-import me.canelex.spidey.utils.API;
+import me.canelex.spidey.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -11,12 +11,13 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
+@SuppressWarnings("unused")
 public class HelpCommand extends Core implements ICommand {
 
     @Override
     public final void action(final GuildMessageReceivedEvent e) {
 
-        final EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor())
+        final EmbedBuilder eb = Utils.createEmbedBuilder(e.getAuthor())
                 .setColor(Color.WHITE)
                 .setAuthor("Spidey's Commands", "https://github.com/caneleex/Spidey", e.getJDA().getSelfUser().getEffectiveAvatarUrl());
 
@@ -30,7 +31,7 @@ public class HelpCommand extends Core implements ICommand {
         commands.remove("yt");
         commands.remove("help");
 
-        if (!API.hasPerm(e.getMember(), Permission.BAN_MEMBERS)) {
+        if (!Utils.hasPerm(e.getMember(), Permission.BAN_MEMBERS)) {
             commands.keySet().removeIf(com -> Core.commands.get(com).isAdmin());
         }
         for (final String cmd : commands.keySet()) {
@@ -44,20 +45,15 @@ public class HelpCommand extends Core implements ICommand {
             eb.setDescription(sb.toString());
         }
 
-        API.sendMessage(e.getChannel(), eb.build());
+        Utils.sendMessage(e.getChannel(), eb.build());
 
     }
 
     @Override
-    public final String help() {
-
-        return "Shows you this message";
-
-    }
-
+    public final String help() { return "Shows you this message"; }
     @Override
-    public final boolean isAdmin() {
-        return false;
-    }
+    public final boolean isAdmin() { return false; }
+    @Override
+    public final String invoke() { return "help"; }
 
 }

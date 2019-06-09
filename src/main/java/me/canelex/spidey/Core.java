@@ -1,10 +1,11 @@
 package me.canelex.spidey;
 
-import me.canelex.spidey.commands.*;
 import me.canelex.spidey.objects.command.CommandParser;
 import me.canelex.spidey.objects.command.ICommand;
+import me.canelex.spidey.utils.Utils;
 import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,54 +25,20 @@ public class Core {
 
 		try {
 
-			new JDABuilder(AccountType.BOT)
-					.setToken(Secrets.TOKEN)
-					.addEventListeners(new Events())
-					.setActivity(Activity.streaming("discord.gg/cnAgKrv", "https://twitch.tv/canelex_"))
-					.build().awaitReady();
+			JDABuilder jda = new JDABuilder(AccountType.BOT)
+                    .setToken(Secrets.TOKEN)
+                    .addEventListeners(new Events())
+                    .setStatus(OnlineStatus.DO_NOT_DISTURB)
+                    .setActivity(Activity.listening("to your commands"));
+			for (int i = 0; i < 10; i++) {
+			    jda.useSharding(i, 10).build().awaitReady();
+            }
 
-		}
-
-		catch (Exception e) {
-
+		} catch (Exception e) {
 			logger.error("Exception!", e);
-
 		}
 
-		setupCommands();
-
-	}
-
-	private static void setupCommands() {
-
-		commands.clear();
-		commands.put("guild", new GuildCommand());
-		commands.put("help", new HelpCommand());
-		commands.put("info", new InfoCommand());
-		commands.put("joindate", new JoindateCommand());
-		commands.put("log", new LogCommand());
-		commands.put("membercount", new MembercountCommand());
-		commands.put("ping", new PingCommand());
-		commands.put("warn", new WarnCommand());
-		commands.put("ban", new BanCommand());
-		commands.put("poll", new PollCommand());
-		commands.put("uptime", new UptimeCommand());
-		commands.put("d", new DeleteCommand());
-		commands.put("user", new UserCommand());
-		commands.put("avatar", new AvatarCommand());
-		commands.put("leave", new LeaveCommand());
-		commands.put("say", new SayCommand());
-		commands.put("sguilds", new SupportGuildsCommand());
-		commands.put("g", new SearchCommand());
-		commands.put("yt", new SearchCommand());
-		commands.put("reddit", new RedditCommand());
-		commands.put("ytchannel", new YouTubeChannelCommand());
-		commands.put("ud", new UrbanDictionaryCommand());
-		commands.put("8ball", new EightBallCommand());
-		commands.put("slowmode", new SlowmodeCommand());
-		commands.put("roles", new RolesCommand());
-		commands.put("invite", new InviteCommand());
-
+        Utils.initializeCommands();
 	}
 
 	private static final ExecutorService EXECUTOR = Executors.newSingleThreadExecutor();

@@ -1,17 +1,26 @@
 package me.canelex.spidey.utils;
 
+import io.github.classgraph.ClassGraph;
+import io.github.classgraph.ClassInfo;
+import io.github.classgraph.ScanResult;
+import me.canelex.spidey.Core;
+import me.canelex.spidey.objects.command.ICommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 
-public class API {
+public class Utils extends Core {
 
 	private static final String INVITE_LINK = "https://discordapp.com/oauth2/authorize?client_id=468523263853592576&scope=bot&permissions=268446900";
+	private static final Logger logger = LoggerFactory.getLogger(Utils.class);
+	private static final ClassGraph graph = new ClassGraph().whitelistPackages("me.canelex.spidey.commands").enableAllInfo().ignoreClassVisibility();
 
-	private API(){
+	private Utils(){
 		super();
 	}
 
@@ -109,7 +118,7 @@ public class API {
 
 	}
 
-	public static void returnError(String errMsg, Message origin) {
+	public static void returnError(final String errMsg, final Message origin) {
 
 		origin.addReaction(Emojis.CROSS).queue();
 		origin.getTextChannel().sendMessage(String.format(":no_entry: %s.", errMsg)).queue(m -> {
@@ -123,10 +132,25 @@ public class API {
 
 	}
 
-	public static String generateSuccess(int count, User u) {
+	public static String generateSuccess(final int count, final User u) {
 
 		return ":white_check_mark: Successfully deleted **" + count + "** message" + (count > 1 ? "s" : "") + (u == null ? "." : String.format(" by user **%s**.", u.getAsTag()));
 
+	}
+
+	public static void initializeCommands() {
+
+		Core.commands.clear();
+		try (final ScanResult result = graph.scan()) {
+			for (final ClassInfo cls : result.getClassesImplementing("me.canelex.spidey.objects.command.ICommand")) {
+				final ICommand cmd = (ICommand) cls.loadClass().getDeclaredConstructor().newInstance();
+				Core.commands.put(cmd.invoke(), cmd);
+				cmd.aliases().forEach(alias -> Core.commands.put(alias, cmd));
+			}
+		}
+		catch (final Exception e) {
+			logger.error("Exception!", e);
+		}
 	}
 
 }

@@ -10,7 +10,7 @@ import com.mashape.unirest.http.Unirest;
 import me.canelex.spidey.Secrets;
 import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.objects.json.SocialBlade;
-import me.canelex.spidey.utils.API;
+import me.canelex.spidey.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -21,6 +21,7 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
+@SuppressWarnings("unused")
 public class YouTubeChannelCommand implements ICommand {
 
 	private final Locale locale = new Locale("en", "EN");
@@ -62,7 +63,7 @@ public class YouTubeChannelCommand implements ICommand {
 				final String creatdate = date.format(cal.getTime());
 				final String creattime = time.format(cal.getTime());
 
-				final EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
+				final EmbedBuilder eb = Utils.createEmbedBuilder(e.getAuthor());
 				final SocialBlade sb = new SocialBlade().getYouTube(channelId);
 				eb.setAuthor(c.getSnippet().getTitle(), "https://youtube.com/channel/" + channelId, "https://i.ymastersk.net/vo96zG");
 				eb.setColor(14765121);
@@ -88,7 +89,7 @@ public class YouTubeChannelCommand implements ICommand {
 
 			else {
 
-				API.sendMessage(e.getChannel(), ":no_entry: No results found.", false);
+				Utils.sendMessage(e.getChannel(), ":no_entry: No results found.", false);
 
 			}
 
@@ -101,15 +102,10 @@ public class YouTubeChannelCommand implements ICommand {
 	}
 
 	@Override
-	public final String help() {
-
-		return "Shows info about entered YouTube channel";
-
-	}
-
+	public final String help() { return "Shows info about entered YouTube channel"; }
 	@Override
-	public final boolean isAdmin() {
-		return false;
-	}
+	public final boolean isAdmin() { return false; }
+	@Override
+	public final String invoke() { return "ytchannel"; }
 
 }

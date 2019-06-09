@@ -3,12 +3,14 @@ package me.canelex.spidey.commands;
 import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.objects.search.GoogleSearch;
 import me.canelex.spidey.objects.search.SearchResult;
-import me.canelex.spidey.utils.API;
+import me.canelex.spidey.utils.Utils;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class SearchCommand implements ICommand {
 
 	@Override
@@ -39,20 +41,21 @@ public class SearchCommand implements ICommand {
 				StringUtils.join(args, "+", 1, args.length)
 						+ ((filter != null) ? ("+" + filter) : ""));
 
-		API.sendMessage(e.getChannel(), results.get(0).getSuggestedReturn(), false);
+		Utils.sendMessage(e.getChannel(), results.get(0).getSuggestedReturn(), false);
 
 	}
 
 	@Override
-	public final String help() {
-
-		return "Allows you to search Google or YouTube";
-
-	}
-
+	public final String help() { return "Allows you to search for results on Google or YouTube"; }
 	@Override
-	public final boolean isAdmin() {
-		return false;
+	public final boolean isAdmin() { return false; }
+	@Override
+	public final String invoke() { return "g"; }
+	@Override
+	public List<String> aliases() {
+		final List<String> list = new ArrayList<>();
+		list.add("yt");
+		return list;
 	}
 
 }

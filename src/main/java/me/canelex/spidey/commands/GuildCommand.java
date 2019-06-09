@@ -1,7 +1,7 @@
 package me.canelex.spidey.commands;
 
 import me.canelex.spidey.objects.command.ICommand;
-import me.canelex.spidey.utils.API;
+import me.canelex.spidey.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Role;
@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("unused")
 public class GuildCommand implements ICommand {
 
 	private final Locale locale = new Locale("en", "EN");
@@ -23,7 +24,7 @@ public class GuildCommand implements ICommand {
 	@Override
 	public final void action(final GuildMessageReceivedEvent e) {
 
-		final EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
+		final EmbedBuilder eb = Utils.createEmbedBuilder(e.getAuthor());
 		eb.setColor(Color.ORANGE);
 		eb.setThumbnail(e.getGuild().getIconUrl());
 
@@ -52,7 +53,7 @@ public class GuildCommand implements ICommand {
 		final String creattime = time.format(cal.getTime());
 		eb.addField("Creation", String.format( "%s | %s", creatdate, creattime), true);
 
-		eb.addField("Custom invite URL", (!API.isPartnered(e.getGuild()) ? "Guild is not partnered" : "discord.gg/" + e.getGuild().retrieveVanityUrl().complete()), true);
+		eb.addField("Custom invite URL", (!Utils.isPartnered(e.getGuild()) ? "Guild is not partnered" : "discord.gg/" + e.getGuild().retrieveVanityUrl().complete()), true);
 
 		StringBuilder st = new StringBuilder();
 
@@ -89,20 +90,17 @@ public class GuildCommand implements ICommand {
 
 		}
 
-		API.sendMessage(e.getChannel(), eb.build());
+		Utils.sendMessage(e.getChannel(), eb.build());
 
 	}
 
 	@Override
-	public final String help() {
-
-		return "Shows you info about this guild";
-
-	}
-
+	public final String help() { return "Shows you info about this guild"; }
 	@Override
 	public final boolean isAdmin() {
 		return false;
 	}
+	@Override
+	public final String invoke() { return "guild"; }
 
 }

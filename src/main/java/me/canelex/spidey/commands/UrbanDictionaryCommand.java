@@ -4,8 +4,8 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import me.canelex.spidey.objects.command.ICommand;
-import me.canelex.spidey.utils.API;
 import me.canelex.spidey.utils.Emojis;
+import me.canelex.spidey.utils.Utils;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -14,6 +14,7 @@ import java.net.URLEncoder;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+@SuppressWarnings("unused")
 public class UrbanDictionaryCommand implements ICommand {
 
 	@Override
@@ -39,28 +40,23 @@ public class UrbanDictionaryCommand implements ICommand {
 					, item.getString("word"), item.getString("definition"), item.getString("example"),
 					item.getString("author"), item.getInt("thumbs_up"), item.getInt("thumbs_down"));
 
-			API.sendMessage(e.getChannel(), result, false);
+			Utils.sendMessage(e.getChannel(), result, false);
 
 		}
 
 		catch (final Exception ex) {
 
-			API.sendMessage(e.getChannel(), ":no_entry: Query not found.", false);
+			Utils.sendMessage(e.getChannel(), ":no_entry: Query not found.", false);
 
 		}
 
 	}
 
 	@Override
-	public final String help() {
-
-		return "Returns a definition of your query from Urban Dictionary";
-
-	}
-
+	public final String help() { return "Returns a definition of your query from Urban Dictionary"; }
 	@Override
-	public final boolean isAdmin() {
-		return false;
-	}
+	public final boolean isAdmin() { return false; }
+	@Override
+	public final String invoke() { return "ud"; }
 
 }

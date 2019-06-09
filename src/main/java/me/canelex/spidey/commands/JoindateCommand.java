@@ -1,7 +1,7 @@
 package me.canelex.spidey.commands;
 
 import me.canelex.spidey.objects.command.ICommand;
-import me.canelex.spidey.utils.API;
+import me.canelex.spidey.utils.Utils;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+@SuppressWarnings("unused")
 public class JoindateCommand implements ICommand {
 
 	private final Locale locale = new Locale("en", "EN");
@@ -19,14 +20,14 @@ public class JoindateCommand implements ICommand {
 	@Override
 	public final void action(final GuildMessageReceivedEvent e) {
 
-		API.deleteMessage(e.getMessage());
+		Utils.deleteMessage(e.getMessage());
 
 		if (e.getMessage().getMentionedUsers().isEmpty()) {
 
 			cal.setTimeInMillis(Objects.requireNonNull(e.getMember()).getTimeJoined().toInstant().toEpochMilli());
 			final String joindate = date.format(cal.getTime());
 			final String jointime = time.format(cal.getTime());
-			API.sendPrivateMessageFormat(e.getAuthor(), "Date and time of joining to guild **%s**: **%s** | **%s** UTC", false, e.getGuild().getName(), joindate, jointime);
+			Utils.sendPrivateMessageFormat(e.getAuthor(), "Date and time of joining to guild **%s**: **%s** | **%s** UTC", false, e.getGuild().getName(), joindate, jointime);
 
 		}
 
@@ -41,7 +42,7 @@ public class JoindateCommand implements ICommand {
 				cal.setTimeInMillis(member.getTimeJoined().toInstant().toEpochMilli());
 				final String joindate = date.format(cal.getTime());
 				final String jointime = time.format(cal.getTime());
-				API.sendPrivateMessageFormat(e.getAuthor(), "(**" + member.getEffectiveName() + "**) " + "Date and time of joining to guild **%s**: **%s** | **%s** UTC", false,  e.getGuild().getName(), joindate, jointime);
+				Utils.sendPrivateMessageFormat(e.getAuthor(), "(**" + member.getEffectiveName() + "**) " + "Date and time of joining to guild **%s**: **%s** | **%s** UTC", false,  e.getGuild().getName(), joindate, jointime);
 
 			}
 
@@ -50,15 +51,10 @@ public class JoindateCommand implements ICommand {
 	}
 
 	@Override
-	public final String help() {
-
-		return "Sends you PM containing joindate of you/mentioned user";
-
-	}
-
+	public final String help() { return "Sends you PM containing joindate of you/mentioned user"; }
 	@Override
-	public final boolean isAdmin() {
-		return false;
-	}
+	public final boolean isAdmin() { return false; }
+	@Override
+	public final String invoke() { return "joindate"; }
 
 }

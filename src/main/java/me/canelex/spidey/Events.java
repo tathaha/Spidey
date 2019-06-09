@@ -1,6 +1,6 @@
 package me.canelex.spidey;
 
-import me.canelex.spidey.utils.API;
+import me.canelex.spidey.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.audit.ActionType;
 import net.dv8tion.jda.api.audit.AuditLogEntry;
@@ -49,7 +49,7 @@ public class Events extends ListenerAdapter {
 			eb.setColor(Color.GREEN);
 			eb.setThumbnail(e.getUser().getEffectiveAvatarUrl());
 			eb.addField("User", "**" + e.getUser().getAsTag() + "**", false);
-			API.sendMessage(log, eb.build());
+			Utils.sendMessage(log, eb.build());
 
 		}
 
@@ -90,7 +90,7 @@ public class Events extends ListenerAdapter {
 			eb.addField("Moderator", banner == null ? "Unknown" : banner.getAsMention(), true);
 			eb.addField("Reason", "**" + reason + "**", true);
 
-			API.sendMessage(log, eb.build());
+			Utils.sendMessage(log, eb.build());
 
 		}
 
@@ -111,7 +111,7 @@ public class Events extends ListenerAdapter {
 			eb.setThumbnail(user.getEffectiveAvatarUrl());
 			eb.addField("User", "**" + user.getAsTag() + "**", true);
 			eb.addField("ID", "**" + user.getId() + "**", true);
-			API.sendMessage(log, eb.build());
+			Utils.sendMessage(log, eb.build());
 
 		}
 
@@ -132,7 +132,7 @@ public class Events extends ListenerAdapter {
 			eb.setColor(Color.RED);
 			eb.addField("User", "**" + user.getAsTag() + "**", true);
 			eb.addField("ID", "**" + user.getId() + "**", true);
-			API.sendMessage(log, eb.build());
+			Utils.sendMessage(log, eb.build());
 
 		}
 
@@ -153,7 +153,7 @@ public class Events extends ListenerAdapter {
 			eb.setColor(Color.GREEN);
 			eb.addField("User", "**" + user.getAsTag() + "**", true);
 			eb.addField("ID", "**" + user.getId() + "**", true);
-			API.sendMessage(log, eb.build());
+			Utils.sendMessage(log, eb.build());
 
 		}
 

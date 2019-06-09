@@ -1,9 +1,9 @@
 package me.canelex.spidey.commands;
 
 import me.canelex.spidey.objects.command.ICommand;
-import me.canelex.spidey.utils.API;
 import me.canelex.spidey.utils.Emojis;
 import me.canelex.spidey.utils.PermissionError;
+import me.canelex.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -12,6 +12,7 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+@SuppressWarnings("unused")
 public class BanCommand implements ICommand {
 
 	@Override
@@ -22,9 +23,9 @@ public class BanCommand implements ICommand {
 
 		e.getMessage().delete().queueAfter(5, TimeUnit.SECONDS);
 
-		if (e.getMember() != null && !API.hasPerm(e.getMember(), Permission.BAN_MEMBERS))  {
+		if (e.getMember() != null && !Utils.hasPerm(e.getMember(), Permission.BAN_MEMBERS))  {
 
-			API.sendMessage(e.getChannel(), PermissionError.getErrorMessage("BAN_MEMBERS"), false);
+			Utils.sendMessage(e.getChannel(), PermissionError.getErrorMessage("BAN_MEMBERS"), false);
 			return;
 
 		}
@@ -33,14 +34,14 @@ public class BanCommand implements ICommand {
 
 		if (args.length < 3) {
 
-			API.returnError("Wrong syntax", msg);
+			Utils.returnError("Wrong syntax", msg);
 			return;
 
 		}
 
 		if (!args[1].matches(Message.MentionType.USER.getPattern().pattern())) {
 
-			API.returnError("Wrong syntax (no mention)", msg);
+			Utils.returnError("Wrong syntax (no mention)", msg);
 			return;
 
 		}
@@ -49,7 +50,7 @@ public class BanCommand implements ICommand {
 
 		if (members.isEmpty()) {
 
-			API.returnError("User wasn't found", msg);
+			Utils.returnError("User wasn't found", msg);
 			return;
 
 		}
@@ -58,7 +59,7 @@ public class BanCommand implements ICommand {
 
 		if (!e.getGuild().getSelfMember().canInteract(mb)) {
 
-			API.returnError("Can't ban the user due to permission hierarchy position", msg);
+			Utils.returnError("Can't ban the user due to permission hierarchy position", msg);
 			return;
 
 		}
@@ -71,7 +72,7 @@ public class BanCommand implements ICommand {
 
 		} catch (final NumberFormatException ex) {
 
-			API.returnError("Please enter a valid number", msg);
+			Utils.returnError("Please enter a valid number", msg);
 			return;
 
 		}
@@ -104,15 +105,10 @@ public class BanCommand implements ICommand {
 	}
 
 	@Override
-	public final String help() {
-
-		return "Bans user";
-
-	}
-
+	public final String help() { return "Bans user"; }
 	@Override
-	public final boolean isAdmin() {
-		return true;
-	}
+	public final boolean isAdmin() { return true; }
+	@Override
+	public final String invoke() { return "ban"; }
 
 }

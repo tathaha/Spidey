@@ -1,12 +1,13 @@
 package me.canelex.spidey.commands;
 
 import me.canelex.spidey.objects.command.ICommand;
-import me.canelex.spidey.utils.API;
 import me.canelex.spidey.utils.PermissionError;
+import me.canelex.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
+@SuppressWarnings("unused")
 public class SayCommand implements ICommand {
 
 	@Override
@@ -14,20 +15,20 @@ public class SayCommand implements ICommand {
 
 		final String neededPerm = "BAN_MEMBERS";
 
-		if (e.getMember() != null && !API.hasPerm(e.getMember(), Permission.valueOf(neededPerm))) {
+		if (e.getMember() != null && !Utils.hasPerm(e.getMember(), Permission.valueOf(neededPerm))) {
 
-			API.sendMessage(e.getChannel(), PermissionError.getErrorMessage(neededPerm), false);
+			Utils.sendMessage(e.getChannel(), PermissionError.getErrorMessage(neededPerm), false);
 
 		}
 
 		else {
 
-			API.deleteMessage(e.getMessage());
+			Utils.deleteMessage(e.getMessage());
 			String toSay = e.getMessage().getContentRaw().substring(6);
 
 			if (e.getMessage().getMentionedChannels().isEmpty()) {
 
-				API.sendMessage(e.getChannel(), toSay, false);
+				Utils.sendMessage(e.getChannel(), toSay, false);
 
 			}
 
@@ -35,7 +36,7 @@ public class SayCommand implements ICommand {
 
 				final TextChannel ch = e.getMessage().getMentionedChannels().get(0);
 				toSay = toSay.substring(0, toSay.lastIndexOf(' '));
-				API.sendMessage(ch, toSay, false);
+				Utils.sendMessage(ch, toSay, false);
 
 			}
 
@@ -44,15 +45,10 @@ public class SayCommand implements ICommand {
 	}
 
 	@Override
-	public final String help() {
-
-		return "Spidey will say something for you (in specified channel)";
-
-	}
-
+	public final String help() { return "Spidey will say something for you (in specified channel)"; }
 	@Override
-	public final boolean isAdmin() {
-		return true;
-	}
+	public final boolean isAdmin() { return true; }
+	@Override
+	public final String invoke() { return "say"; }
 
 }

@@ -1,7 +1,7 @@
 package me.canelex.spidey.commands;
 
 import me.canelex.spidey.objects.command.ICommand;
-import me.canelex.spidey.utils.API;
+import me.canelex.spidey.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Member;
@@ -12,6 +12,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("unused")
 public class MembercountCommand implements ICommand {
 
 	@Override
@@ -24,11 +25,11 @@ public class MembercountCommand implements ICommand {
 		final long online = tonline.size();
 		final long bots = mcv.stream().filter(member -> member.getUser().isBot()).count();
 		final long ponline = online - bonline;
-		final long monline = mcv.stream().filter(API::isMobile).count();
-		final long wonline = (mcv.stream().filter(API::isWeb).count() - bonline);
-		final long donline = mcv.stream().filter(API::isDesktop).count();
+		final long monline = mcv.stream().filter(Utils::isMobile).count();
+		final long wonline = (mcv.stream().filter(Utils::isWeb).count() - bonline);
+		final long donline = mcv.stream().filter(Utils::isDesktop).count();
 
-		final EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
+		final EmbedBuilder eb = Utils.createEmbedBuilder(e.getAuthor());
 		eb.setAuthor("MEMBERCOUNT");
 		eb.setColor(Color.WHITE);
 		eb.addField("Total", "**" + total + "**", true);
@@ -40,20 +41,15 @@ public class MembercountCommand implements ICommand {
 		eb.addField("Desktop users online", "**" + donline + "**", true);
 		eb.addField("Mobile users online", "**" + monline + "**", true);
 		eb.addField("Web users online", "**" + wonline + "**", true);
-		API.sendMessage(e.getChannel(), eb.build());
+		Utils.sendMessage(e.getChannel(), eb.build());
 
 	}
 
 	@Override
-	public final String help() {
-
-		return "Shows you membercount of guild";
-
-	}
-
+	public final String help() { return "Shows you membercount of guild"; }
 	@Override
-	public final boolean isAdmin() {
-		return false;
-	}
+	public final boolean isAdmin() { return false; }
+	@Override
+	public final String invoke() { return "membercount"; }
 
 }

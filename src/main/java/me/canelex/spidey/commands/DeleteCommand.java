@@ -1,8 +1,8 @@
 package me.canelex.spidey.commands;
 
 import me.canelex.spidey.objects.command.ICommand;
-import me.canelex.spidey.utils.API;
 import me.canelex.spidey.utils.PermissionError;
+import me.canelex.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -14,6 +14,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("unused")
 public class DeleteCommand implements ICommand {
 
 	private int count;
@@ -26,9 +27,9 @@ public class DeleteCommand implements ICommand {
 		final TextChannel ch = e.getChannel();
 
 		msg.delete().complete();
-		if (e.getMember() != null && !API.hasPerm(e.getMember(), Permission.BAN_MEMBERS))  {
+		if (e.getMember() != null && !Utils.hasPerm(e.getMember(), Permission.BAN_MEMBERS))  {
 
-			API.sendMessage(ch, PermissionError.getErrorMessage("BAN_MEMBERS"), false);
+			Utils.sendMessage(ch, PermissionError.getErrorMessage("BAN_MEMBERS"), false);
 			return;
 
 		}
@@ -36,7 +37,7 @@ public class DeleteCommand implements ICommand {
 
 		if (args.length < 2) {
 
-			API.returnError("Wrong syntax", msg);
+			Utils.returnError("Wrong syntax", msg);
 			return;
 
 		}
@@ -46,11 +47,11 @@ public class DeleteCommand implements ICommand {
 			try {
 				amount = Integer.parseUnsignedInt(args[1]);
 			} catch (final NumberFormatException ignored) {
-				API.returnError("Entered value is either negative or not a number", msg);
+				Utils.returnError("Entered value is either negative or not a number", msg);
 				return;
 			}
 			if (amount == 0) {
-				API.returnError("Please enter a number from 1-100", msg);
+				Utils.returnError("Please enter a number from 1-100", msg);
 				return;
 			}
 			if (amount == 100) {
@@ -66,7 +67,7 @@ public class DeleteCommand implements ICommand {
 					final List<CompletableFuture<Void>> list = ch.purgeMessages(msgs);
 					future = CompletableFuture.allOf(list.toArray(new CompletableFuture[0]));
 				}
-				future.thenRunAsync(() -> e.getChannel().sendMessage(API.generateSuccess(count, null)).queue(m -> m.delete().queueAfter(5, TimeUnit.SECONDS)));
+				future.thenRunAsync(() -> e.getChannel().sendMessage(Utils.generateSuccess(count, null)).queue(m -> m.delete().queueAfter(5, TimeUnit.SECONDS)));
 			});
 
 		}
@@ -79,11 +80,11 @@ public class DeleteCommand implements ICommand {
 				amount = Integer.parseUnsignedInt(args[2]);
 			}
 			catch (final NumberFormatException ignored) {
-				API.returnError("Entered value is either negative or not a number", msg);
+				Utils.returnError("Entered value is either negative or not a number", msg);
 				return;
 			}
 			if (amount == 0) {
-				API.returnError("Please enter a number from 1-100", msg);
+				Utils.returnError("Please enter a number from 1-100", msg);
 				return;
 			}
 			if (amount == 100) {
@@ -99,21 +100,16 @@ public class DeleteCommand implements ICommand {
 					final List<CompletableFuture<Void>> requests = ch.purgeMessages(newList);
 					future = CompletableFuture.allOf(requests.toArray(new CompletableFuture[0]));
 				}
-				future.thenRunAsync(() -> e.getChannel().sendMessage(API.generateSuccess(newList.size(), user)).queue(m -> m.delete().queueAfter(5, TimeUnit.SECONDS)));
+				future.thenRunAsync(() -> e.getChannel().sendMessage(Utils.generateSuccess(newList.size(), user)).queue(m -> m.delete().queueAfter(5, TimeUnit.SECONDS)));
 			});
 		}
 	}
 
 	@Override
-	public final String help() {
-
-		return "Deletes messages (by mentioned user)";
-
-	}
-
+	public final String help() { return "Deletes messages (by mentioned user)"; }
 	@Override
-	public final boolean isAdmin() {
-		return true;
-	}
+	public final boolean isAdmin() { return true; }
+	@Override
+	public final String invoke() { return "d"; }
 
 }

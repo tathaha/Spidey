@@ -1,11 +1,12 @@
 package me.canelex.spidey.commands;
 
 import me.canelex.spidey.objects.command.ICommand;
-import me.canelex.spidey.utils.API;
 import me.canelex.spidey.utils.PermissionError;
+import me.canelex.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
+@SuppressWarnings("unused")
 public class SlowmodeCommand implements ICommand {
 
 	@Override
@@ -13,9 +14,9 @@ public class SlowmodeCommand implements ICommand {
 
 		final String neededPerm = "ADMINISTRATOR";
 
-		if (e.getMember() != null && !API.hasPerm(e.getMember(), Permission.valueOf(neededPerm))) {
+		if (e.getMember() != null && !Utils.hasPerm(e.getMember(), Permission.valueOf(neededPerm))) {
 
-			API.sendMessage(e.getChannel(), PermissionError.getErrorMessage(neededPerm), false);
+			Utils.sendMessage(e.getChannel(), PermissionError.getErrorMessage(neededPerm), false);
 
 		}
 
@@ -41,7 +42,7 @@ public class SlowmodeCommand implements ICommand {
 
 				catch (final NumberFormatException ignored) {
 
-					API.sendMessage(e.getChannel(), ":no_entry: Couldn't parse argument.", false);
+					Utils.sendMessage(e.getChannel(), ":no_entry: Couldn't parse argument.", false);
 					return;
 
 				}
@@ -56,14 +57,11 @@ public class SlowmodeCommand implements ICommand {
 
 	@Override
 	public final String help() {
-
 		return "Sets a slowmode for channel. Limit: `21600s` - `6h`. Example - `s!slowmode <seconds | off>`";
-
 	}
-
 	@Override
-	public final boolean isAdmin() {
-		return true;
-	}
+	public final boolean isAdmin() { return true; }
+	@Override
+	public final String invoke() { return "slowmode"; }
 
 }

@@ -1,7 +1,7 @@
 package me.canelex.spidey.commands;
 
 import me.canelex.spidey.objects.command.ICommand;
-import me.canelex.spidey.utils.API;
+import me.canelex.spidey.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
@@ -15,6 +15,7 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.TimeZone;
 
+@SuppressWarnings("unused")
 public class UserCommand implements ICommand {
 
 	private final Locale locale = new Locale("en", "EN");
@@ -27,7 +28,7 @@ public class UserCommand implements ICommand {
 
 		if (e.getMessage().getMentionedUsers().isEmpty()) {
 
-			final EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
+			final EmbedBuilder eb = Utils.createEmbedBuilder(e.getAuthor());
 
 			eb.setAuthor("USER INFO - " + e.getAuthor().getAsTag());
 			eb.setColor(Color.WHITE);
@@ -81,7 +82,7 @@ public class UserCommand implements ICommand {
 
 			}
 
-			API.sendMessage(e.getChannel(), eb.build());
+			Utils.sendMessage(e.getChannel(), eb.build());
 
 		}
 
@@ -90,7 +91,7 @@ public class UserCommand implements ICommand {
 			final User user = e.getMessage().getMentionedUsers().get(0);
 			final Member member = e.getGuild().getMember(user);
 
-			final EmbedBuilder eb = API.createEmbedBuilder(e.getAuthor());
+			final EmbedBuilder eb = Utils.createEmbedBuilder(e.getAuthor());
 
 			eb.setAuthor("USER INFO - " + user.getAsTag());
 			eb.setColor(Color.WHITE);
@@ -145,22 +146,17 @@ public class UserCommand implements ICommand {
 
 			}
 
-			API.sendMessage(e.getChannel(), eb.build());
+			Utils.sendMessage(e.getChannel(), eb.build());
 
 		}
 
 	}
 
 	@Override
-	public final String help() {
-
-		return "Shows info about you or mentioned user";
-
-	}
-
+	public final String help() { return "Shows info about you or mentioned user"; }
 	@Override
-	public final boolean isAdmin() {
-		return false;
-	}
+	public final boolean isAdmin() { return false; }
+	@Override
+	public final String invoke() { return "user"; }
 
 }

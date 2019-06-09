@@ -1,11 +1,12 @@
 package me.canelex.spidey.commands;
 
 import me.canelex.spidey.objects.command.ICommand;
-import me.canelex.spidey.utils.API;
+import me.canelex.spidey.utils.Utils;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 import java.util.Random;
 
+@SuppressWarnings("unused")
 public class EightBallCommand implements ICommand {
 
 	private static final String[] a = {
@@ -34,20 +35,15 @@ public class EightBallCommand implements ICommand {
 	@Override
 	public final void action(final GuildMessageReceivedEvent e) {
 
-		API.sendMessage(e.getChannel(), ":crystal_ball: " + a[(new Random().nextInt() * a.length)], false);
+		Utils.sendMessage(e.getChannel(), ":crystal_ball: " + a[(new Random().nextInt() * a.length)], false);
 
 	}
 
 	@Override
-	public final String help() {
-
-		return "Returns a random answer to your question";
-
-	}
-
+	public final String help() { return "Returns a random answer to your question"; }
 	@Override
-	public final boolean isAdmin() {
-		return false;
-	}
+	public final boolean isAdmin() { return false; }
+	@Override
+	public final String invoke() { return "8ball"; }
 
 }
