@@ -138,7 +138,7 @@ public class Utils extends Core {
 
 	}
 
-	public static void initializeCommands() {
+	public static void registerCommands() {
 
 		Core.commands.clear();
 		try (final ScanResult result = graph.scan()) {

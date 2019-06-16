@@ -25,7 +25,7 @@ public class Core {
 
 		try {
 
-			JDABuilder jda = new JDABuilder(AccountType.BOT)
+			final JDABuilder jda = new JDABuilder(AccountType.BOT)
                     .setToken(Secrets.TOKEN)
                     .addEventListeners(new Events())
                     .setStatus(OnlineStatus.DO_NOT_DISTURB)
@@ -38,7 +38,7 @@ public class Core {
 			logger.error("Exception!", e);
 		}
 
-        Utils.initializeCommands();
+        Utils.registerCommands();
 	}
 
 	private static final ExecutorService EXECUTOR = Executors.newSingleThreadExecutor();
