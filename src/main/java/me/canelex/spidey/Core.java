@@ -29,7 +29,7 @@ public class Core {
                     .setToken(Secrets.TOKEN)
                     .addEventListeners(new Events())
                     .setStatus(OnlineStatus.DO_NOT_DISTURB)
-                    .setActivity(Activity.listening("to your commands"));
+                    .setActivity(Activity.listening("your commands"));
 			for (int i = 0; i < 10; i++) {
 			    jda.useSharding(i, 10).build().awaitReady();
             }
