@@ -1,35 +1,24 @@
 plugins {
-
     id 'java'
     id 'application'
-    id 'com.github.johnrengelman.shadow' version '5.0.0'    
-    
+    id 'com.github.johnrengelman.shadow' version '5.0.0'
 }
 
 application {
-
     mainClassName = 'me.canelex.spidey.Core'
-
 }
 
 jar {
-
     baseName = project.name
-
 }
 
-shadowJar.classifier = 'withDependencies'
-
 repositories {
-
     jcenter()
-    
 }
 
 dependencies {
-
     implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.16'
-    implementation (group: 'net.dv8tion', name: 'JDA', version: '4.ALPHA.0_103') {
+    implementation (group: 'net.dv8tion', name: 'JDA', version: '4.BETA.0_1') {
         exclude group: 'club.minnced', module: 'opus-java'
     }
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
@@ -37,12 +26,11 @@ dependencies {
     implementation group: 'com.google.apis', name: 'google-api-services-youtube', version: 'v3-rev212-1.25.0'
     implementation group: 'com.mashape.unirest', name: 'unirest-java', version: '1.4.9'
     implementation group: 'io.github.classgraph', name: 'classgraph', version: '4.8.38'
-
 }
 
 group = 'me.canelex'
-version = 'STABLE'
 description = 'Spidey'
 sourceCompatibility = '8'
 
+shadowJar.setClassifier('')
 compileJava.options.encoding = 'UTF-8'
