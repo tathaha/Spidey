@@ -31,7 +31,7 @@ public class GuildCommand implements ICommand {
 		eb.addField("Server Name", e.getGuild().getName(), true);
 		eb.addField("Server ID", e.getGuild().getId(), true);
 
-		eb.addField("Owner Name", Objects.requireNonNull(e.getGuild().getOwner()).getUser().getAsTag(), true);
+		eb.addField("Owner", Objects.requireNonNull(e.getGuild().getOwner()).getUser().getAsTag(), true);
 		eb.addField("Owner ID", e.getGuild().getOwnerId(), true);
 
 		eb.addField("Text Channels", "" + e.getGuild().getTextChannelCache().size(), true);
@@ -40,12 +40,6 @@ public class GuildCommand implements ICommand {
 		eb.addField("Members", "" + e.getGuild().getMemberCache().size(), true);
 		eb.addField("Verification Level", e.getGuild().getVerificationLevel().name(), true);
 
-		final List<Role> roles = e.getGuild().getRoleCache().stream().collect(Collectors.toCollection(ArrayList::new));
-		roles.remove(e.getGuild().getPublicRole());
-
-		eb.addField("Role count", "" + roles.size(), true);
-		eb.addField("Emote Count", "" + e.getGuild().getEmoteCache().size(), true);
-
 		eb.addField("Region", e.getGuild().getRegionRaw(), true);
 
 		cal.setTimeInMillis(e.getGuild().getTimeCreated().toInstant().toEpochMilli());
@@ -53,41 +47,43 @@ public class GuildCommand implements ICommand {
 		final String creattime = time.format(cal.getTime());
 		eb.addField("Creation", String.format( "%s | %s", creatdate, creattime), true);
 
-		eb.addField("Custom invite URL", (!Utils.isPartnered(e.getGuild()) ? "Guild is not partnered" : "discord.gg/" + e.getGuild().retrieveVanityUrl().complete()), true);
+		//by Minn
+		if (!Utils.canSetVanityUrl(e.getGuild())) {
+			eb.addField("Custom invite/Vanity url", "Guild isn't eligible to set vanity url", true);
+		}
+        else {
+			e.getGuild().retrieveVanityUrl().submit().handle((v, error) -> v == null ? "Guild has no vanity url set" : "discord.gg/" + v)
+					.thenAccept(vanity -> eb.addField("Custom invite/Vanity url", vanity, true));
+		}
+        //thanks for the code
 
-		StringBuilder st = new StringBuilder();
+		final List<Role> roles = e.getGuild().getRoleCache().stream().filter(role -> e.getGuild().getPublicRole() != role).collect(Collectors.toList());
+        eb.addField("Roles", "" + roles.size(), true);
+
+		final StringBuilder st = new StringBuilder();
 
 		int ec = 0;
 		final long an = e.getGuild().getEmotes().stream().filter(Emote::isAnimated).count();
 
 		for (final Emote emote : e.getGuild().getEmotes()) {
-
 			ec++;
-
-			if (ec == e.getGuild().getEmotes().size()) {
-
+			if (ec == e.getGuild().getEmoteCache().size()) {
 				st.append(emote.getAsMention());
-
 			}
 
 			else {
-
 				st.append(emote.getAsMention()).append(" ");
+			}
+		}
 
+		if (ec > 0) {
+			if (st.length() > 1024) {
+				eb.addField(String.format("Emotes (**%s** | **%s** animated)", ec, an), "Limit exceeded", false);
 			}
 
-		}
-
-		if (st.length() > 1024) {
-
-			eb.addField(String.format((ec == 0) ? "Emotes (**0**)" : "Emotes (**%s** | **%s** animated)", ec, an), "Limit exceeded", false);
-
-		}
-
-		else {
-
-			eb.addField(String.format((ec == 0) ? "Emotes (**0**)" : "Emotes (**%s** | **%s** animated)", ec, an), (st.toString().length() == 0) ? "None" : st.toString(), false);
-
+			else {
+				eb.addField(String.format("Emotes (**%s** | **%s** animated)", ec, an), (st.toString().length() == 0) ? "None" : st.toString(), false);
+			}
 		}
 
 		Utils.sendMessage(e.getChannel(), eb.build());
