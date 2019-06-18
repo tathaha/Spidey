@@ -14,6 +14,7 @@ import me.canelex.spidey.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
@@ -28,6 +29,7 @@ public class YouTubeChannelCommand implements ICommand {
 	private final Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/London"));
 	private final SimpleDateFormat date = new SimpleDateFormat("EEEE, d.LLLL Y", locale);
 	private final SimpleDateFormat time = new SimpleDateFormat("HH:mm:ss", locale);
+	private final Logger logger = LoggerFactory.getLogger(YouTubeChannelCommand.class);
 
 	@Override
 	public final void action(final GuildMessageReceivedEvent e) {
@@ -45,10 +47,7 @@ public class YouTubeChannelCommand implements ICommand {
 					.setYouTubeRequestInitializer(new YouTubeRequestInitializer(Secrets.YOUTUBEAPIKEY))
 					.build();
 
-			final YouTube.Search.List search = youtube.search().list("snippet");
-			search.setQ(channel);
-			search.setType("channel");
-
+			final YouTube.Search.List search = youtube.search().list("snippet").setQ(channel).setType("channel");
 			final SearchListResponse searchResponse = search.execute();
 
 			if (!searchResponse.getItems().isEmpty()) {
@@ -96,7 +95,7 @@ public class YouTubeChannelCommand implements ICommand {
 		}
 
 		catch (final Exception ex) {
-			LoggerFactory.getLogger(YouTubeChannelCommand.class).error("Exception!", ex);
+			logger.error("Exception!", ex);
 		}
 
 	}
