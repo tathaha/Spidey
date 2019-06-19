@@ -40,6 +40,9 @@ public class GuildCommand implements ICommand {
 		eb.addField("Members", "" + e.getGuild().getMemberCache().size(), true);
 		eb.addField("Verification Level", e.getGuild().getVerificationLevel().name(), true);
 
+		eb.addField("Boost tier", "" + e.getGuild().getBoostTier().getKey(), true);
+		eb.addField("Boosts", "" + e.getGuild().getBoostCount(), true);
+
 		eb.addField("Region", e.getGuild().getRegionRaw(), true);
 
 		cal.setTimeInMillis(e.getGuild().getTimeCreated().toInstant().toEpochMilli());
@@ -47,15 +50,12 @@ public class GuildCommand implements ICommand {
 		final String creattime = time.format(cal.getTime());
 		eb.addField("Creation", String.format( "%s | %s", creatdate, creattime), true);
 
-		//by Minn
-		if (!Utils.canSetVanityUrl(e.getGuild())) {
+		if (!Utils.canSetVanityUrl(e.getGuild())) { //could use ternary here too, but i don't use it because of readability
 			eb.addField("Custom invite/Vanity url", "Guild isn't eligible to set vanity url", true);
 		}
         else {
-			e.getGuild().retrieveVanityUrl().submit().handle((v, error) -> v == null ? "Guild has no vanity url set" : "discord.gg/" + v)
-					.thenAccept(vanity -> eb.addField("Custom invite/Vanity url", vanity, true));
+			eb.addField("Custom invite/Vanity url", e.getGuild().getVanityUrl() == null ? "Guild has no vanity url set" : e.getGuild().getVanityUrl(), true);
 		}
-        //thanks for the code
 
 		final List<Role> roles = e.getGuild().getRoleCache().stream().filter(role -> e.getGuild().getPublicRole() != role).collect(Collectors.toList());
         eb.addField("Roles", "" + roles.size(), true);

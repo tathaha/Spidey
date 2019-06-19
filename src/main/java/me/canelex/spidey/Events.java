@@ -4,17 +4,15 @@ import me.canelex.spidey.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.audit.ActionType;
 import net.dv8tion.jda.api.audit.AuditLogEntry;
-import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.Guild.Ban;
-import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.guild.GuildBanEvent;
 import net.dv8tion.jda.api.events.guild.GuildLeaveEvent;
 import net.dv8tion.jda.api.events.guild.GuildUnbanEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberLeaveEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleRemoveEvent;
+import net.dv8tion.jda.api.events.guild.update.GuildUpdateBoostTierEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -27,10 +25,24 @@ public class Events extends ListenerAdapter {
 	@Override
 	public final void onGuildMessageReceived(final GuildMessageReceivedEvent e) {
 
+		final Guild guild = e.getGuild();
+
 		if (e.getMessage().getContentRaw().startsWith("s!") && !e.getAuthor().isBot()){
 
 			Core.handleCommand(Core.parser.parse(e.getMessage().getContentRaw(), e));
 
+		}
+
+		if (e.getMessage().getType() == MessageType.GUILD_MEMBER_BOOST && guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong())) != null) {
+			Utils.deleteMessage(e.getMessage());
+			final TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));
+			final EmbedBuilder eb = new EmbedBuilder();
+			eb.setAuthor("NEW BOOST");
+			eb.setColor(16023551);
+			eb.setThumbnail(e.getAuthor().getEffectiveAvatarUrl());
+			eb.addField("Booster", "**" + e.getAuthor().getAsTag() + "**", true);
+			eb.addField("Boosts", "**" + guild.getBoostCount() + "**", true);
+			Utils.sendMessage(log, eb.build());
 		}
 
 	}
@@ -168,6 +180,20 @@ public class Events extends ListenerAdapter {
 
 		}
 
+	}
+
+	@Override
+	public final void onGuildUpdateBoostTier(final GuildUpdateBoostTierEvent e) {
+		final Guild guild = e.getGuild();
+		if (guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong())) != null) {
+			final TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));
+			final EmbedBuilder eb = new EmbedBuilder();
+			eb.setAuthor("GUILD BOOST TIER HAS CHANGED");
+			eb.setColor(16023551);
+			eb.addField("Boost tier", "**" + e.getNewBoostTier().getKey() + "**", true);
+			eb.addField("Boosts", "**" + guild.getBoostCount() + "**", true);
+			Utils.sendMessage(log, eb.build());
+		}
 	}
 
 }

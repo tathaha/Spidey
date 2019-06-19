@@ -26,56 +26,51 @@ public class UserCommand implements ICommand {
 	@Override
 	public final void action(final GuildMessageReceivedEvent e) {
 
-		if (e.getMessage().getMentionedUsers().isEmpty()) {
+		final EmbedBuilder eb = Utils.createEmbedBuilder(e.getAuthor());
 
-			final EmbedBuilder eb = Utils.createEmbedBuilder(e.getAuthor());
+		if (e.getMessage().getMentionedUsers().isEmpty()) {
 
 			eb.setAuthor("USER INFO - " + e.getAuthor().getAsTag());
 			eb.setColor(Color.WHITE);
 			eb.setThumbnail(e.getAuthor().getEffectiveAvatarUrl());
-			eb.addField("ID", "**" + e.getAuthor().getId() + "**", false);
+			eb.addField("ID", e.getAuthor().getId(), false);
 
-			eb.addField("Nickname for this guild", "**" + (Objects.requireNonNull(e.getMember()).getNickname() == null ? "None" : e.getMember().getNickname()) + "**", false);
+			if (Objects.requireNonNull(e.getMember()).getNickname() != null) {
+				eb.addField("Nickname for this guild", e.getMember().getNickname(), false);
+			}
 
 			cal.setTimeInMillis(e.getAuthor().getTimeCreated().toInstant().toEpochMilli());
 			final String creatdate = date.format(cal.getTime());
 			final String creattime = time.format(cal.getTime());
 
-			eb.addField("Account created", String.format( "**%s** | **%s** UTC", creatdate, creattime), false);
+			eb.addField("Account created", String.format( "%s | %s UTC", creatdate, creattime), false);
 
 			cal.setTimeInMillis(e.getMember().getTimeJoined().toInstant().toEpochMilli());
 			final String joindate = date.format(cal.getTime());
 			final String jointime = time.format(cal.getTime());
 
-			eb.addField("User joined", String.format( "**%s** | **%s** UTC", joindate, jointime), false);
+			eb.addField("User joined", String.format( "%s | %s UTC", joindate, jointime), false);
 
-			if (e.getMember().getRoles().isEmpty()) {
-
-				eb.addField("Roles [**0**]", "None", false);
-
+			if (e.getGuild().getBoosters().contains(e.getMember())) {
+				cal.setTimeInMillis(Objects.requireNonNull(e.getMember().getTimeBoosted()).toInstant().toEpochMilli());
+				final String boostdate = date.format(cal.getTime());
+				final String boosttime = time.format(cal.getTime());
+				eb.addField("Boosting since", String.format("%s | %s UTC", boostdate, boosttime), false);
 			}
 
-			else {
+			if (!e.getMember().getRoles().isEmpty()) {
 
 				int i = 0;
 				StringBuilder s = new StringBuilder();
 
 				for (final Role role : e.getMember().getRoles()) {
-
 					i++;
-
 					if (i == e.getMember().getRoles().size()) {
-
 						s.append(role.getName());
-
 					}
-
 					else {
-
 						s.append(role.getName()).append(", ");
-
 					}
-
 				}
 
 				eb.addField("Roles [**" + i + "**]", s.toString(), false);
@@ -83,6 +78,7 @@ public class UserCommand implements ICommand {
 			}
 
 			Utils.sendMessage(e.getChannel(), eb.build());
+			eb.clear();
 
 		}
 
@@ -91,55 +87,48 @@ public class UserCommand implements ICommand {
 			final User user = e.getMessage().getMentionedUsers().get(0);
 			final Member member = e.getGuild().getMember(user);
 
-			final EmbedBuilder eb = Utils.createEmbedBuilder(e.getAuthor());
-
 			eb.setAuthor("USER INFO - " + user.getAsTag());
 			eb.setColor(Color.WHITE);
 			eb.setThumbnail(user.getEffectiveAvatarUrl());
-			eb.addField("ID", "**" + user.getId() + "**", false);
+			eb.addField("ID", user.getId(), false);
 
 			assert member != null;
-			eb.addField("Nickname for this guild", "**" + (member.getNickname() == null ? "None" : member.getNickname()) + "**", false);
+			if (member.getNickname() != null) {
+				eb.addField("Nickname for this guild", member.getNickname(), false);
+			}
 
 			cal.setTimeInMillis(user.getTimeCreated().toInstant().toEpochMilli());
 			final String creatdate = date.format(cal.getTime());
 			final String creattime = time.format(cal.getTime());
 
-			eb.addField("Account created", String.format( "**%s** | **%s** UTC", creatdate, creattime), false);
+			eb.addField("Account created", String.format("%s | %s UTC", creatdate, creattime), false);
 
 			cal.setTimeInMillis(member.getTimeJoined().toInstant().toEpochMilli());
 			final String joindate = date.format(cal.getTime());
 			final String jointime = time.format(cal.getTime());
 
-			eb.addField("User joined", String.format( "**%s** | **%s** UTC", joindate, jointime), false);
+			eb.addField("User joined", String.format("%s | %s UTC", joindate, jointime), false);
 
-			if (member.getRoles().isEmpty()) {
-
-				eb.addField("Roles [**0**]", "None", false);
-
+			if (e.getGuild().getBoosters().contains(member)) {
+				cal.setTimeInMillis(Objects.requireNonNull(member.getTimeBoosted()).toInstant().toEpochMilli());
+				final String boostdate = date.format(cal.getTime());
+				final String boosttime = time.format(cal.getTime());
+				eb.addField("Boosting since", String.format("%s | %s UTC", boostdate, boosttime), false);
 			}
 
-			else {
+			if (!member.getRoles().isEmpty()) {
 
 				int i = 0;
 				StringBuilder s = new StringBuilder();
 
 				for (final Role role : member.getRoles()) {
-
 					i++;
-
 					if (i == member.getRoles().size()) {
-
 						s.append(role.getName());
-
 					}
-
 					else {
-
 						s.append(role.getName()).append(", ");
-
 					}
-
 				}
 
 				eb.addField("Roles [**" + i + "**]", s.toString(), false);
@@ -147,6 +136,7 @@ public class UserCommand implements ICommand {
 			}
 
 			Utils.sendMessage(e.getChannel(), eb.build());
+			eb.clear();
 
 		}
 
