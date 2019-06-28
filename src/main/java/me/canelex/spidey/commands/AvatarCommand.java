@@ -14,31 +14,35 @@ public class AvatarCommand implements ICommand {
 	@Override
 	public final void action(final GuildMessageReceivedEvent e) {
 
+		final EmbedBuilder eb = Utils.createEmbedBuilder(e.getAuthor());
+
 		if (e.getMessage().getMentionedUsers().isEmpty()) {
 
-			final EmbedBuilder eb = Utils.createEmbedBuilder(e.getAuthor());
 			eb.setAuthor("Avatar of user " + e.getAuthor().getAsTag());
+			eb.setDescription(String.format("[Avatar link](%s)", e.getAuthor().getEffectiveAvatarUrl()));
 			eb.setImage(e.getAuthor().getEffectiveAvatarUrl());
 			eb.setColor(Color.WHITE);
 			Utils.sendMessage(e.getChannel(), eb.build());
+			eb.clear();
 
 		}
 
 		else {
 
 			final User u = e.getMessage().getMentionedUsers().get(0);
-			final EmbedBuilder eb = Utils.createEmbedBuilder(u);
 			eb.setAuthor("Avatar of user " + u.getAsTag());
+			eb.setDescription(String.format("[Avatar link](%s)", u.getEffectiveAvatarUrl()));
 			eb.setImage(u.getEffectiveAvatarUrl());
 			eb.setColor(Color.WHITE);
 			Utils.sendMessage(e.getChannel(), eb.build());
+			eb.clear();
 
 		}
 
 	}
 
 	@Override
-	public final String help() { return "Shows avatar of you or mentioned user"; }
+	public final String help() { return "Shows yours or mentioned user's avatar"; }
 	@Override
 	public final boolean isAdmin() { return false; }
 	@Override
