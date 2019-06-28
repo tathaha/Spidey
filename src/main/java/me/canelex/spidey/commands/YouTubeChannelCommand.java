@@ -6,7 +6,6 @@ import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.YouTubeRequestInitializer;
 import com.google.api.services.youtube.model.Channel;
 import com.google.api.services.youtube.model.SearchListResponse;
-import com.mashape.unirest.http.Unirest;
 import me.canelex.spidey.Secrets;
 import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.objects.json.SocialBlade;
@@ -74,7 +73,7 @@ public class YouTubeChannelCommand implements ICommand {
 				eb.addField("Partner", (sb.isPartner() ? "**Yes**" : "**No**"), false);
 				eb.addField("Verified", (sb.isVerified() ? "**Yes**" : "**No**"), false);
 				eb.addField("Country", "**" + sb.getCountry() + "**", false);
-				final String latestVideo = Unirest.get("https://beta.decapi.me/youtube/latest_video/?id=" + channelId).asString().getBody();
+				final String latestVideo = Utils.getSiteContent("https://beta.decapi.me/youtube/latest_video/?id=" + channelId);
 				eb.addField("Latest video", (latestVideo.equals("An error occurred retrieving videos for channel: " + channelId) ? "**This channel has no videos**" : latestVideo), false);
 
 				if (!sb.getBanner().equals("http://s.ytimg.com/yts/img/channels/c4/default_banner-vfl7DRgTn.png")) {

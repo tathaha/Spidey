@@ -1,15 +1,12 @@
 package me.canelex.spidey.objects.json;
 
 import me.canelex.spidey.Secrets;
-import org.json.JSONObject;
+import me.canelex.spidey.utils.Utils;
+import net.dv8tion.jda.api.utils.data.DataObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -27,18 +24,18 @@ public class SocialBlade {
 
     public final SocialBlade getYouTube(final String id) throws IOException {
         final String email = Secrets.EMAIL;
-        final JSONObject l = getJson(
+        final DataObject l = Utils.getJson(
                 "https://api.socialblade.com/v2/bridge?email=" + email + "&password=" + getMD5());
 
-        final String token = l.getJSONObject("id").getString("token");
-        return fromJson(getJson("https://api.socialblade.com/v2/youtube/statistics?query=statistics&username="
+        final String token = l.getObject("id").getString("token");
+        return fromJson(Utils.getJson("https://api.socialblade.com/v2/youtube/statistics?query=statistics&username="
                 + id + "&email=" + email + "&token=" + token));
 
     }
 
-    private SocialBlade fromJson(final JSONObject o) {
+    private SocialBlade fromJson(final DataObject o) {
 
-        final JSONObject data = o.getJSONObject("data");
+        final DataObject data = o.getObject("data");
         this.videos = data.getInt("uploads");
         this.subs = data.getInt("subs");
         this.views = data.getLong("views");
@@ -68,31 +65,6 @@ public class SocialBlade {
             logger.error("Exception!", e);
             return null;
         }
-    }
-
-    private String getUrl(final String url) throws IOException {
-        final URL obj = new URL(url);
-        final HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-
-        con.setRequestMethod("GET");
-
-        final String userAgent = "me.canelex.spidey";
-        con.setRequestProperty("User-Agent", userAgent);
-
-        final BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        final StringBuilder response = new StringBuilder();
-
-        while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
-        }
-        in.close();
-        return response.toString();
-
-    }
-
-    private JSONObject getJson(final String url) throws IOException {
-        return new JSONObject(getUrl(url));
     }
 
     public final int getSubs(){ return subs; }

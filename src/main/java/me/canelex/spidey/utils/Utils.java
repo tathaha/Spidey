@@ -9,9 +9,15 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.utils.data.DataObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
 public class Utils extends Core {
@@ -112,6 +118,30 @@ public class Utils extends Core {
 		catch (final Exception e) {
 			logger.error("Exception!", e);
 		}
+	}
+
+	public static String getSiteContent(String url) throws IOException {
+		final URL obj = new URL(url);
+		final HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+		con.setRequestMethod("GET");
+
+		final String userAgent = "me.canelex.spidey";
+		con.setRequestProperty("User-Agent", userAgent);
+
+		final BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+		String inputLine;
+		final StringBuilder response = new StringBuilder();
+
+		while ((inputLine = in.readLine()) != null) {
+			response.append(inputLine);
+		}
+		in.close();
+		return response.toString();
+	}
+
+	public static DataObject getJson(String url) throws IOException {
+		return DataObject.fromJson(getSiteContent(url));
 	}
 
 }

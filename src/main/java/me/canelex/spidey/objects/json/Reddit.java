@@ -1,12 +1,9 @@
 package me.canelex.spidey.objects.json;
 
-import org.json.JSONObject;
+import me.canelex.spidey.utils.Utils;
+import net.dv8tion.jda.api.utils.data.DataObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 public class Reddit {
 
@@ -21,19 +18,19 @@ public class Reddit {
 
     public final Reddit getSubReddit(final String name) throws IOException {
 
-        return exists(name) ? null : fromJson(getJson(
+        return exists(name) ? null : fromJson(Utils.getJson(
                 "https://reddit.com/r/" + name + "/about.json"));
 
     }
 
     private boolean exists(final String name) throws IOException {
-        final int i = getJson("https://reddit.com/subreddits/search.json?q=" + name).getJSONObject("data").getInt("dist");
+        final int i = Utils.getJson("https://reddit.com/subreddits/search.json?q=" + name).getObject("data").getInt("dist");
         return i == 0;
     }
 
-    private Reddit fromJson(final JSONObject o) {
+    private Reddit fromJson(final DataObject o) {
 
-        final JSONObject data = o.getJSONObject("data");
+        final DataObject data = o.getObject("data");
         this.subs = data.getInt("subscribers");
         this.name = data.getString("display_name");
         this.desc = data.getString("public_description");
@@ -47,34 +44,7 @@ public class Reddit {
 
     }
 
-    private String getUrl(final String url) throws IOException {
-        final URL obj = new URL(url);
-        final HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-
-        con.setRequestMethod("GET");
-
-        final String userAgent = "me.canelex.spidey";
-        con.setRequestProperty("User-Agent", userAgent);
-
-        final BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        final StringBuilder response = new StringBuilder();
-
-        while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
-        }
-        in.close();
-        return response.toString();
-
-    }
-
-    private JSONObject getJson(final String url) throws IOException {
-        return new JSONObject(getUrl(url));
-    }
-
-    public final int getSubs(){
-        return subs;
-    }
+    public final int getSubs(){ return subs; }
     public final String getName() { return name; }
     public final String getDesc() { return desc; }
     public final String getTitle() { return title; }

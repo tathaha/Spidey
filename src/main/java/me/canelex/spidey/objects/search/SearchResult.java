@@ -1,7 +1,7 @@
 package me.canelex.spidey.objects.search;
 
+import net.dv8tion.jda.api.utils.data.DataObject;
 import org.apache.commons.text.StringEscapeUtils;
-import org.json.JSONObject;
 import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
@@ -13,7 +13,7 @@ public class SearchResult {
     private String content;
     private String url;
 
-    static SearchResult fromGoogle(final JSONObject googleResult) {
+    static SearchResult fromGoogle(final DataObject googleResult) {
 
         final SearchResult result = new SearchResult();
         result.title = cleanString(googleResult.getString("title"));

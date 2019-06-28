@@ -36,12 +36,12 @@ public class SearchCommand implements ICommand {
 
 		}
 
-		final List<SearchResult> results = GoogleSearch.performSearch(
+		final SearchResult result = GoogleSearch.performSearch(
 				"015021391643023377625:kq7ex3xgvoq",
 				StringUtils.join(args, "+", 1, args.length)
 						+ ((filter != null) ? ("+" + filter) : ""));
 
-		Utils.sendMessage(e.getChannel(), results.get(0).getSuggestedReturn(), false);
+		Utils.sendMessage(e.getChannel(), result.getSuggestedReturn(), false);
 
 	}
 
