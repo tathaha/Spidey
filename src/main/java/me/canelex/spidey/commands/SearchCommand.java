@@ -20,20 +20,13 @@ public class SearchCommand implements ICommand {
 		final String[] args = e.getMessage().getContentRaw().split("\\s+");
 
 		switch (args[0]) {
-
 			case "s!g":
-
 				break;
-
 			case "s!yt":
-
 				filter = "site:youtube.com";
 				break;
-
 			default:
-
 				return;
-
 		}
 
 		final SearchResult result = GoogleSearch.performSearch(
@@ -41,7 +34,7 @@ public class SearchCommand implements ICommand {
 				StringUtils.join(args, "+", 1, args.length)
 						+ ((filter != null) ? ("+" + filter) : ""));
 
-		Utils.sendMessage(e.getChannel(), result.getSuggestedReturn(), false);
+		Utils.sendMessage(e.getChannel(), result.getContent(), false);
 
 	}
 
@@ -52,8 +45,6 @@ public class SearchCommand implements ICommand {
 	@Override
 	public final String invoke() { return "g"; }
 	@Override
-	public List<String> aliases() {
-		return Collections.singletonList("yt");
-	}
+	public List<String> aliases() { return Collections.singletonList("yt"); }
 
 }

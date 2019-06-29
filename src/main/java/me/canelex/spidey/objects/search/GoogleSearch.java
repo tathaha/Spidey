@@ -23,12 +23,10 @@ public class GoogleSearch {
         SearchResult result = null;
 
         try {
-
             terms = terms.replace(" ", "%20");
             final String searchUrl = String.format(GOOGLE_URL, engineId, GOOGLE_API_KEY, terms);
             final DataObject o = DataObject.fromJson(Utils.getSiteContent(searchUrl)).getArray("items").getObject(0);
             result = SearchResult.fromGoogle(o);
-
         }
 
         catch (final IOException e) {
