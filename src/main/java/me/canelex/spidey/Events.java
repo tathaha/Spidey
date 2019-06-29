@@ -4,14 +4,16 @@ import me.canelex.spidey.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.audit.ActionType;
 import net.dv8tion.jda.api.audit.AuditLogEntry;
-import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Guild.Ban;
+import net.dv8tion.jda.api.entities.MessageType;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.guild.GuildBanEvent;
 import net.dv8tion.jda.api.events.guild.GuildLeaveEvent;
 import net.dv8tion.jda.api.events.guild.GuildUnbanEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberLeaveEvent;
-import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleRemoveEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateBoostTierEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -26,11 +28,10 @@ public class Events extends ListenerAdapter {
 	public final void onGuildMessageReceived(final GuildMessageReceivedEvent e) {
 
 		final Guild guild = e.getGuild();
+		final String content = e.getMessage().getContentRaw();
 
-		if (e.getMessage().getContentRaw().startsWith("s!") && !e.getAuthor().isBot()){
-
+		if (content.startsWith("s!") && !e.getAuthor().isBot()){
 			Core.handleCommand(Core.parser.parse(e.getMessage().getContentRaw(), e));
-
 		}
 
 		if (e.getMessage().getType() == MessageType.GUILD_MEMBER_BOOST && guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong())) != null) {
@@ -43,26 +44,6 @@ public class Events extends ListenerAdapter {
 			eb.addField("Booster", "**" + e.getAuthor().getAsTag() + "**", true);
 			eb.addField("Boosts", "**" + guild.getBoostCount() + "**", true);
 			Utils.sendMessage(log, eb.build());
-		}
-
-	}
-
-	@Override
-	public final void onGuildMemberRoleRemove(final GuildMemberRoleRemoveEvent e) {
-
-		final Guild guild = e.getGuild();
-		final Role muted = guild.getRolesByName("Muted", false).get(0);
-
-		if (e.getRoles().contains(muted) && guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong())) != null) {
-
-			final TextChannel log = guild.getTextChannelById(MySQL.getChannelId(guild.getIdLong()));
-			final EmbedBuilder eb = new EmbedBuilder();
-			eb.setAuthor("UNMUTE");
-			eb.setColor(Color.GREEN);
-			eb.setThumbnail(e.getUser().getEffectiveAvatarUrl());
-			eb.addField("User", "**" + e.getUser().getAsTag() + "**", false);
-			Utils.sendMessage(log, eb.build());
-
 		}
 
 	}

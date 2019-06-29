@@ -1,5 +1,6 @@
 package me.canelex.spidey.commands;
 
+import me.canelex.spidey.objects.category.Category;
 import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.utils.PermissionError;
 import me.canelex.spidey.utils.Utils;
@@ -56,12 +57,14 @@ public class SlowmodeCommand implements ICommand {
 	}
 
 	@Override
-	public final String help() {
-		return "Sets a slowmode for channel. Limit: `21600s` - `6h`. Example - `s!slowmode <seconds | off>`";
-	}
+	public final String getDescription() { return "Sets a slowmode for channel. Limit: `21600s` - `6h`. Example - `s!slowmode <seconds | off>`"; }
 	@Override
 	public final boolean isAdmin() { return true; }
 	@Override
-	public final String invoke() { return "slowmode"; }
+	public final String getInvoke() { return "slowmode"; }
+	@Override
+	public final Category getCategory() { return Category.MODERATION; }
+	@Override
+	public final String getUsage() { return "s!slowmode <seconds/off>"; }
 
 }

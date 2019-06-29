@@ -1,6 +1,7 @@
 package me.canelex.spidey.commands;
 
 import me.canelex.spidey.MySQL;
+import me.canelex.spidey.objects.category.Category;
 import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.utils.PermissionError;
 import me.canelex.spidey.utils.Utils;
@@ -66,10 +67,14 @@ public class LogCommand implements ICommand {
 	}
 
 	@Override
-	public final String help() { return "Sets log channel"; }
+	public final String getDescription() { return "Sets log channel"; }
 	@Override
 	public final boolean isAdmin() { return true; }
 	@Override
-	public final String invoke() { return "log"; }
+	public final String getInvoke() { return "log"; }
+	@Override
+	public final Category getCategory() { return Category.MODERATION; }
+	@Override
+	public final String getUsage() { return "s!log"; }
 
 }

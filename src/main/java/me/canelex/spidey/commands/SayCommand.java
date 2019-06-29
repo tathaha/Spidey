@@ -1,5 +1,6 @@
 package me.canelex.spidey.commands;
 
+import me.canelex.spidey.objects.category.Category;
 import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.utils.PermissionError;
 import me.canelex.spidey.utils.Utils;
@@ -45,10 +46,14 @@ public class SayCommand implements ICommand {
 	}
 
 	@Override
-	public final String help() { return "Spidey will say something for you (in specified channel)"; }
+	public final String getDescription() { return "Spidey will say something for you (in specified channel)"; }
 	@Override
 	public final boolean isAdmin() { return true; }
 	@Override
-	public final String invoke() { return "say"; }
+	public final String getInvoke() { return "say"; }
+	@Override
+	public final Category getCategory() { return Category.UTILITY; }
+	@Override
+	public final String getUsage() { return "s!say <toSay>"; }
 
 }

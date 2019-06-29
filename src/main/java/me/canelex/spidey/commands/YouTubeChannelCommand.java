@@ -7,6 +7,7 @@ import com.google.api.services.youtube.YouTubeRequestInitializer;
 import com.google.api.services.youtube.model.Channel;
 import com.google.api.services.youtube.model.SearchListResponse;
 import me.canelex.spidey.Secrets;
+import me.canelex.spidey.objects.category.Category;
 import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.objects.json.SocialBlade;
 import me.canelex.spidey.utils.Utils;
@@ -100,10 +101,14 @@ public class YouTubeChannelCommand implements ICommand {
 	}
 
 	@Override
-	public final String help() { return "Shows info about entered YouTube channel"; }
+	public final String getDescription() { return "Shows info about entered YouTube channel"; }
 	@Override
 	public final boolean isAdmin() { return false; }
 	@Override
-	public final String invoke() { return "ytchannel"; }
+	public final String getInvoke() { return "ytchannel"; }
+	@Override
+	public final Category getCategory() { return Category.MISC; }
+	@Override
+	public final String getUsage() { return "s!ytchannel <channel/id>"; }
 
 }

@@ -1,6 +1,7 @@
 package me.canelex.spidey.commands;
 
 import me.canelex.spidey.MySQL;
+import me.canelex.spidey.objects.category.Category;
 import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.utils.Emojis;
 import me.canelex.spidey.utils.PermissionError;
@@ -52,10 +53,14 @@ public class PollCommand implements ICommand {
 	}
 
 	@Override
-	public final String help() { return "Creates a new poll"; }
+	public final String getDescription() { return "Creates a new poll"; }
 	@Override
 	public final boolean isAdmin() { return true; }
 	@Override
-	public final String invoke() { return "poll"; }
+	public final String getInvoke() { return "poll"; }
+	@Override
+	public final Category getCategory() { return Category.UTILITY; }
+	@Override
+	public final String getUsage() { return "s!poll <question>"; }
 
 }

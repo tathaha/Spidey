@@ -1,5 +1,6 @@
 package me.canelex.spidey.commands;
 
+import me.canelex.spidey.objects.category.Category;
 import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -23,10 +24,14 @@ public class SupportGuildsCommand implements ICommand {
 	}
 
 	@Override
-	public final String help() { return "Shows you (support) guilds of Spidey"; }
+	public final String getDescription() { return "Shows you (support) guilds of Spidey"; }
 	@Override
 	public final boolean isAdmin() { return true; }
 	@Override
-	public final String invoke() { return "sguilds"; }
+	public final String getInvoke() { return "sguilds"; }
+	@Override
+	public final Category getCategory() { return Category.INFORMATIVE; }
+	@Override
+	public final String getUsage() { return "s!sguilds"; }
 
 }

@@ -1,5 +1,6 @@
 package me.canelex.spidey.commands;
 
+import me.canelex.spidey.objects.category.Category;
 import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.utils.Emojis;
 import me.canelex.spidey.utils.PermissionError;
@@ -105,10 +106,14 @@ public class BanCommand implements ICommand {
 	}
 
 	@Override
-	public final String help() { return "Bans user"; }
+	public final String getDescription() { return "Bans user"; }
 	@Override
 	public final boolean isAdmin() { return true; }
 	@Override
-	public final String invoke() { return "ban"; }
+	public final String getInvoke() { return "ban"; }
+	@Override
+	public final Category getCategory() { return Category.MODERATION; }
+	@Override
+	public final String getUsage() { return "s!ban <@someone> <delDays> <reason>"; }
 
 }

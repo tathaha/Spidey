@@ -1,6 +1,7 @@
 package me.canelex.spidey.commands;
 
 import me.canelex.spidey.MySQL;
+import me.canelex.spidey.objects.category.Category;
 import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.utils.Utils;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -33,10 +34,14 @@ public class LeaveCommand implements ICommand {
 	}
 
 	@Override
-	public final String help() { return "Spidey will leave your server"; }
+	public final String getDescription() { return "Spidey will leave your server"; }
 	@Override
 	public final boolean isAdmin() { return true; }
 	@Override
-	public final String invoke() { return "leave"; }
+	public final String getInvoke() { return "leave"; }
+	@Override
+	public final Category getCategory() { return Category.UTILITY; }
+	@Override
+	public final String getUsage() { return "s!leave"; }
 
 }

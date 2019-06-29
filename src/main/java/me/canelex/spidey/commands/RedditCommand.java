@@ -1,5 +1,6 @@
 package me.canelex.spidey.commands;
 
+import me.canelex.spidey.objects.category.Category;
 import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.objects.json.Reddit;
 import me.canelex.spidey.utils.Utils;
@@ -53,10 +54,14 @@ public class RedditCommand implements ICommand {
 	}
 
 	@Override
-	public final String help() { return "Shows you info about entered subreddit. For example `s!reddit PewdiepieSubmissions`."; }
+	public final String getDescription() { return "Shows you info about entered subreddit. For example `s!reddit PewdiepieSubmissions`."; }
 	@Override
 	public final boolean isAdmin() { return false; }
 	@Override
-	public final String invoke() { return "reddit"; }
+	public final String getInvoke() { return "reddit"; }
+	@Override
+	public final Category getCategory() { return Category.MISC; }
+	@Override
+	public final String getUsage() { return "s!reddit <subreddit>"; }
 
 }

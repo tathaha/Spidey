@@ -1,5 +1,6 @@
 package me.canelex.spidey.commands;
 
+import me.canelex.spidey.objects.category.Category;
 import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.objects.search.GoogleSearch;
 import me.canelex.spidey.objects.search.SearchResult;
@@ -39,12 +40,16 @@ public class SearchCommand implements ICommand {
 	}
 
 	@Override
-	public final String help() { return "Allows you to search for results on Google or YouTube"; }
+	public final String getDescription() { return "Allows you to search for results on Google or YouTube"; }
 	@Override
 	public final boolean isAdmin() { return false; }
 	@Override
-	public final String invoke() { return "g"; }
+	public final String getInvoke() { return "g"; }
 	@Override
-	public List<String> aliases() { return Collections.singletonList("yt"); }
+	public final List<String> getAliases() { return Collections.singletonList("yt"); }
+	@Override
+	public final Category getCategory() { return Category.UTILITY; }
+	@Override
+	public final String getUsage() { return "s!g/yt <query>"; }
 
 }

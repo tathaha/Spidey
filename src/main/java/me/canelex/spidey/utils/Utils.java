@@ -111,8 +111,8 @@ public class Utils extends Core {
 		try (final ScanResult result = graph.scan()) {
 			for (final ClassInfo cls : result.getClassesImplementing("me.canelex.spidey.objects.command.ICommand")) {
 				final ICommand cmd = (ICommand) cls.loadClass().getDeclaredConstructor().newInstance();
-				Core.commands.put(cmd.invoke(), cmd);
-				cmd.aliases().forEach(alias -> Core.commands.put(alias, cmd));
+				Core.commands.put(cmd.getInvoke(), cmd);
+				cmd.getAliases().forEach(alias -> Core.commands.put(alias, cmd));
 			}
 		}
 		catch (final Exception e) {

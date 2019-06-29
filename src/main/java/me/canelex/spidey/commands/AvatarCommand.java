@@ -1,5 +1,6 @@
 package me.canelex.spidey.commands;
 
+import me.canelex.spidey.objects.category.Category;
 import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -42,10 +43,14 @@ public class AvatarCommand implements ICommand {
 	}
 
 	@Override
-	public final String help() { return "Shows yours or mentioned user's avatar"; }
+	public final String getDescription() { return "Shows yours or mentioned user's avatar"; }
 	@Override
 	public final boolean isAdmin() { return false; }
 	@Override
-	public final String invoke() { return "avatar"; }
+	public final String getInvoke() { return "avatar"; }
+	@Override
+	public final Category getCategory() { return Category.INFORMATIVE; }
+	@Override
+	public final String getUsage() { return "s!avatar (@someone)"; }
 
 }

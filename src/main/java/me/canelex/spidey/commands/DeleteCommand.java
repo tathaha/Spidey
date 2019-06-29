@@ -1,5 +1,6 @@
 package me.canelex.spidey.commands;
 
+import me.canelex.spidey.objects.category.Category;
 import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.utils.PermissionError;
 import me.canelex.spidey.utils.Utils;
@@ -106,10 +107,14 @@ public class DeleteCommand implements ICommand {
 	}
 
 	@Override
-	public final String help() { return "Deletes messages (by mentioned user)"; }
+	public final String getDescription() { return "Deletes messages (by mentioned user)"; }
 	@Override
 	public final boolean isAdmin() { return true; }
 	@Override
-	public final String invoke() { return "d"; }
+	public final String getInvoke() { return "d"; }
+	@Override
+	public final Category getCategory() { return Category.MODERATION; }
+	@Override
+	public final String getUsage() { return "s!d <count/@someone> <count>"; }
 
 }

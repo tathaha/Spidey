@@ -1,5 +1,6 @@
 package me.canelex.spidey.commands;
 
+import me.canelex.spidey.objects.category.Category;
 import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.utils.Utils;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -19,10 +20,14 @@ public class InviteCommand implements ICommand {
     }
 
     @Override
-    public final String help() { return "Sends you Spidey's invite link to PM"; }
+    public final String getDescription() { return "Sends you Spidey's invite link to PM"; }
     @Override
     public final boolean isAdmin() { return false; }
     @Override
-    public final String invoke() { return "invite"; }
+    public final String getInvoke() { return "invite"; }
+    @Override
+    public final Category getCategory() { return Category.MISC; }
+    @Override
+    public final String getUsage() { return "s!invite"; }
 
 }
