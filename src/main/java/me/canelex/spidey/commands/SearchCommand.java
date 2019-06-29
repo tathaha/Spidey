@@ -1,6 +1,6 @@
 package me.canelex.spidey.commands;
 
-import me.canelex.spidey.objects.category.Category;
+import me.canelex.spidey.objects.command.Category;
 import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.objects.search.GoogleSearch;
 import me.canelex.spidey.objects.search.SearchResult;

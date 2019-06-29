@@ -7,7 +7,7 @@ import com.google.api.services.youtube.YouTubeRequestInitializer;
 import com.google.api.services.youtube.model.Channel;
 import com.google.api.services.youtube.model.SearchListResponse;
 import me.canelex.spidey.Secrets;
-import me.canelex.spidey.objects.category.Category;
+import me.canelex.spidey.objects.command.Category;
 import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.objects.json.SocialBlade;
 import me.canelex.spidey.utils.Utils;

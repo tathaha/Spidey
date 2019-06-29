@@ -1,6 +1,5 @@
 package me.canelex.spidey.objects.command;
 
-import me.canelex.spidey.objects.category.Category;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 import java.util.Collections;

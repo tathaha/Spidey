@@ -1,7 +1,7 @@
 package me.canelex.spidey.commands;
 
 import me.canelex.spidey.MySQL;
-import me.canelex.spidey.objects.category.Category;
+import me.canelex.spidey.objects.command.Category;
 import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.utils.Emojis;
 import me.canelex.spidey.utils.PermissionError;

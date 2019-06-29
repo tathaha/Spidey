@@ -1,4 +1,4 @@
-package me.canelex.spidey.objects.category;
+package me.canelex.spidey.objects.command;
 
 public enum Category {
     MODERATION("\uD83D\uDD28 Moderation"),
