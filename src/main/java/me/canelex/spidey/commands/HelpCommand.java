@@ -9,10 +9,8 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 @SuppressWarnings("unused")
@@ -28,14 +26,13 @@ public class HelpCommand extends Core implements ICommand {
                 .setColor(Color.WHITE)
                 .setAuthor("Spidey's Commands", "https://github.com/caneleex/Spidey", e.getJDA().getSelfUser().getEffectiveAvatarUrl());
 
-        if (args.length != 2) {
+        if (args.length < 2) {
             for (final Map.Entry<String, ICommand> entry : Core.commands.entrySet()) {
                 commands.put(entry.getKey(), entry.getValue());
             }
-
             commands.remove("help");
 
-            if (!Utils.hasPerm(e.getMember(), Permission.BAN_MEMBERS)) {
+            if (!Utils.hasPerm(Objects.requireNonNull(e.getMember()), Permission.BAN_MEMBERS)) {
                 commands.keySet().removeIf(com -> Core.commands.get(com).isAdmin());
             }
 
@@ -55,7 +52,7 @@ public class HelpCommand extends Core implements ICommand {
             Utils.sendMessage(e.getChannel(), emb.build());
         }
         else {
-            final String cmd = args[1];
+            final String cmd = e.getMessage().getContentRaw().substring(7);
             if (!Core.commands.containsKey(cmd)) {
                 Utils.sendMessage(e.getChannel(), ":no_entry: **" + cmd + "** isn't a valid command.", false);
             }

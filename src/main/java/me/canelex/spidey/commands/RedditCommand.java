@@ -60,7 +60,7 @@ public class RedditCommand implements ICommand {
 	@Override
 	public final String getInvoke() { return "reddit"; }
 	@Override
-	public final Category getCategory() { return Category.MISC; }
+	public final Category getCategory() { return Category.SOCIAL; }
 	@Override
 	public final String getUsage() { return "s!reddit <subreddit>"; }
 

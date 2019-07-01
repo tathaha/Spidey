@@ -18,13 +18,13 @@ public class GoogleSearch {
     private static final String GOOGLE_API_KEY = Secrets.GOOGLE_API_KEY;
     private static final Logger logger = LoggerFactory.getLogger(GoogleSearch.class);
 
-    public static SearchResult performSearch(final String engineId, String terms) {
+    public static SearchResult performSearch(String terms) {
 
         SearchResult result = null;
 
         try {
             terms = terms.replace(" ", "%20");
-            final String searchUrl = String.format(GOOGLE_URL, engineId, GOOGLE_API_KEY, terms);
+            final String searchUrl = String.format(GOOGLE_URL, "015021391643023377625:kq7ex3xgvoq", GOOGLE_API_KEY, terms);
             final DataObject o = DataObject.fromJson(Utils.getSiteContent(searchUrl)).getArray("items").getObject(0);
             result = SearchResult.fromGoogle(o);
         }
