@@ -51,7 +51,6 @@ public class YouTubeChannelCommand implements ICommand {
 			final SearchListResponse searchResponse = search.execute();
 
 			if (!searchResponse.getItems().isEmpty()) {
-
 				final String channelId = searchResponse.getItems().get(0).getSnippet().getChannelId();
 				final YouTube.Channels.List channels = youtube.channels().list("snippet, statistics");
 				channels.setId(channelId);
@@ -81,15 +80,10 @@ public class YouTubeChannelCommand implements ICommand {
 					eb.addBlankField(false);
 					eb.setImage(sb.getBanner());
 				}
-
-				msg.editMessage(eb.build()).queue();
-
+				msg.editMessage(eb.build()).override(true).queue();
 			}
-
 			else {
-
 				Utils.sendMessage(e.getChannel(), ":no_entry: No results found.", false);
-
 			}
 
 		}
