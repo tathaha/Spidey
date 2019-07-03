@@ -11,10 +11,8 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 import java.awt.*;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.TimeZone;
+import java.util.List;
+import java.util.*;
 
 @SuppressWarnings("unused")
 public class UserCommand implements ICommand {
@@ -28,118 +26,58 @@ public class UserCommand implements ICommand {
 	public final void action(final GuildMessageReceivedEvent e) {
 
 		final EmbedBuilder eb = Utils.createEmbedBuilder(e.getAuthor());
+		final List<User> musers = e.getMessage().getMentionedUsers();
+		final User u = musers.isEmpty() ? e.getAuthor() : musers.get(0);
+		final Member m = e.getGuild().getMember(u);
+		
+		eb.setAuthor("USER INFO - " + u.getAsTag());
+		eb.setColor(Color.WHITE);
+		eb.setThumbnail(u.getEffectiveAvatarUrl());
+		eb.addField("ID", u.getId(), false);
 
-		if (e.getMessage().getMentionedUsers().isEmpty()) {
+		if (Objects.requireNonNull(m).getNickname() != null) {
+			eb.addField("Nickname for this guild", m.getNickname(), false);
+		}
 
-			eb.setAuthor("USER INFO - " + e.getAuthor().getAsTag());
-			eb.setColor(Color.WHITE);
-			eb.setThumbnail(e.getAuthor().getEffectiveAvatarUrl());
-			eb.addField("ID", e.getAuthor().getId(), false);
+		cal.setTimeInMillis(u.getTimeCreated().toInstant().toEpochMilli());
+		final String creatdate = date.format(cal.getTime());
+		final String creattime = time.format(cal.getTime());
 
-			if (Objects.requireNonNull(e.getMember()).getNickname() != null) {
-				eb.addField("Nickname for this guild", e.getMember().getNickname(), false);
-			}
+		eb.addField("Account created", String.format( "%s | %s UTC", creatdate, creattime), false);
 
-			cal.setTimeInMillis(e.getAuthor().getTimeCreated().toInstant().toEpochMilli());
-			final String creatdate = date.format(cal.getTime());
-			final String creattime = time.format(cal.getTime());
+		cal.setTimeInMillis(m.getTimeJoined().toInstant().toEpochMilli());
+		final String joindate = date.format(cal.getTime());
+		final String jointime = time.format(cal.getTime());
 
-			eb.addField("Account created", String.format( "%s | %s UTC", creatdate, creattime), false);
+		eb.addField("User joined", String.format( "%s | %s UTC", joindate, jointime), false);
 
-			cal.setTimeInMillis(e.getMember().getTimeJoined().toInstant().toEpochMilli());
-			final String joindate = date.format(cal.getTime());
-			final String jointime = time.format(cal.getTime());
+		if (e.getGuild().getBoosters().contains(m)) {
+			cal.setTimeInMillis(Objects.requireNonNull(m.getTimeBoosted()).toInstant().toEpochMilli());
+			final String boostdate = date.format(cal.getTime());
+			final String boosttime = time.format(cal.getTime());
+			eb.addField("Boosting since", String.format("%s | %s UTC", boostdate, boosttime), false);
+		}
 
-			eb.addField("User joined", String.format( "%s | %s UTC", joindate, jointime), false);
+		if (!m.getRoles().isEmpty()) {
 
-			if (e.getGuild().getBoosters().contains(e.getMember())) {
-				cal.setTimeInMillis(Objects.requireNonNull(e.getMember().getTimeBoosted()).toInstant().toEpochMilli());
-				final String boostdate = date.format(cal.getTime());
-				final String boosttime = time.format(cal.getTime());
-				eb.addField("Boosting since", String.format("%s | %s UTC", boostdate, boosttime), false);
-			}
+			int i = 0;
+			StringBuilder s = new StringBuilder();
 
-			if (!e.getMember().getRoles().isEmpty()) {
-
-				int i = 0;
-				StringBuilder s = new StringBuilder();
-
-				for (final Role role : e.getMember().getRoles()) {
-					i++;
-					if (i == e.getMember().getRoles().size()) {
-						s.append(role.getName());
-					}
-					else {
-						s.append(role.getName()).append(", ");
-					}
+			for (final Role role : m.getRoles()) {
+				i++;
+				if (i == m.getRoles().size()) {
+					s.append(role.getName());
 				}
-
-				eb.addField("Roles [**" + i + "**]", s.toString(), false);
-
+				else {
+					s.append(role.getName()).append(", ");
+				}
 			}
 
-			Utils.sendMessage(e.getChannel(), eb.build());
-			eb.clear();
+			eb.addField("Roles [**" + i + "**]", s.toString(), false);
 
 		}
 
-		else {
-
-			final User user = e.getMessage().getMentionedUsers().get(0);
-			final Member member = e.getGuild().getMember(user);
-
-			eb.setAuthor("USER INFO - " + user.getAsTag());
-			eb.setColor(Color.WHITE);
-			eb.setThumbnail(user.getEffectiveAvatarUrl());
-			eb.addField("ID", user.getId(), false);
-
-			assert member != null;
-			if (member.getNickname() != null) {
-				eb.addField("Nickname for this guild", member.getNickname(), false);
-			}
-
-			cal.setTimeInMillis(user.getTimeCreated().toInstant().toEpochMilli());
-			final String creatdate = date.format(cal.getTime());
-			final String creattime = time.format(cal.getTime());
-
-			eb.addField("Account created", String.format("%s | %s UTC", creatdate, creattime), false);
-
-			cal.setTimeInMillis(member.getTimeJoined().toInstant().toEpochMilli());
-			final String joindate = date.format(cal.getTime());
-			final String jointime = time.format(cal.getTime());
-
-			eb.addField("User joined", String.format("%s | %s UTC", joindate, jointime), false);
-
-			if (e.getGuild().getBoosters().contains(member)) {
-				cal.setTimeInMillis(Objects.requireNonNull(member.getTimeBoosted()).toInstant().toEpochMilli());
-				final String boostdate = date.format(cal.getTime());
-				final String boosttime = time.format(cal.getTime());
-				eb.addField("Boosting since", String.format("%s | %s UTC", boostdate, boosttime), false);
-			}
-
-			if (!member.getRoles().isEmpty()) {
-
-				int i = 0;
-				StringBuilder s = new StringBuilder();
-
-				for (final Role role : member.getRoles()) {
-					i++;
-					if (i == member.getRoles().size()) {
-						s.append(role.getName());
-					}
-					else {
-						s.append(role.getName()).append(", ");
-					}
-				}
-
-				eb.addField("Roles [**" + i + "**]", s.toString(), false);
-
-			}
-
-			Utils.sendMessage(e.getChannel(), eb.build());
-			eb.clear();
-
-		}
+		Utils.sendMessage(e.getChannel(), eb.build());
 
 	}
 

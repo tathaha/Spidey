@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 import java.awt.*;
+import java.util.List;
 
 @SuppressWarnings("unused")
 public class AvatarCommand implements ICommand {
@@ -15,30 +16,15 @@ public class AvatarCommand implements ICommand {
 	@Override
 	public final void action(final GuildMessageReceivedEvent e) {
 
-		final EmbedBuilder eb = Utils.createEmbedBuilder(e.getAuthor());
+		final EmbedBuilder eb = Utils.createEmbedBuilder(e.getAuthor()).setColor(Color.WHITE);
+		final List<User> musers = e.getMessage().getMentionedUsers();
+		final User u = musers.isEmpty() ? e.getAuthor() : musers.get(0);
 
-		if (e.getMessage().getMentionedUsers().isEmpty()) {
+		eb.setAuthor("Avatar of user " + u.getAsTag());
+		eb.setDescription(String.format("[Avatar link](%s)", u.getEffectiveAvatarUrl()));
+		eb.setImage(u.getEffectiveAvatarUrl());
 
-			eb.setAuthor("Avatar of user " + e.getAuthor().getAsTag());
-			eb.setDescription(String.format("[Avatar link](%s)", e.getAuthor().getEffectiveAvatarUrl()));
-			eb.setImage(e.getAuthor().getEffectiveAvatarUrl());
-			eb.setColor(Color.WHITE);
-			Utils.sendMessage(e.getChannel(), eb.build());
-			eb.clear();
-
-		}
-
-		else {
-
-			final User u = e.getMessage().getMentionedUsers().get(0);
-			eb.setAuthor("Avatar of user " + u.getAsTag());
-			eb.setDescription(String.format("[Avatar link](%s)", u.getEffectiveAvatarUrl()));
-			eb.setImage(u.getEffectiveAvatarUrl());
-			eb.setColor(Color.WHITE);
-			Utils.sendMessage(e.getChannel(), eb.build());
-			eb.clear();
-
-		}
+		Utils.sendMessage(e.getChannel(), eb.build());
 
 	}
 
