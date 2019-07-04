@@ -8,10 +8,6 @@ application {
     mainClassName = 'me.canelex.spidey.Core'
 }
 
-jar {
-    archiveFileName = 'Spidey.jar'
-}
-
 repositories {
     jcenter()
 }
@@ -31,5 +27,5 @@ group = 'me.canelex'
 description = 'Spidey'
 sourceCompatibility = '8'
 
-shadowJar.classifier = ''
+shadowJar.setProperty('archiveFileName', 'Spidey.jar')
 compileJava.options.encoding = 'UTF-8'
