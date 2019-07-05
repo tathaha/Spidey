@@ -25,7 +25,7 @@ public class GoogleSearch {
         try {
             terms = terms.replace(" ", "%20");
             final String searchUrl = String.format(GOOGLE_URL, "015021391643023377625:kq7ex3xgvoq", GOOGLE_API_KEY, terms);
-            final DataObject o = DataObject.fromJson(Utils.getSiteContent(searchUrl)).getArray("items").getObject(0);
+            final DataObject o = Utils.getJson(searchUrl).getArray("items").getObject(0);
             result = SearchResult.fromGoogle(o);
         }
 
