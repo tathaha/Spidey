@@ -26,9 +26,7 @@ public class Utils extends Core {
 	private static final Logger logger = LoggerFactory.getLogger(Utils.class);
 	private static final ClassGraph graph = new ClassGraph().whitelistPackages("me.canelex.spidey.commands").enableAllInfo().ignoreClassVisibility();
 
-	private Utils(){
-		super();
-	}
+	private Utils() { super(); }
 
 	public static boolean hasPerm(final Member toCheck, final Permission perm) {
 		return toCheck.hasPermission(perm);

@@ -10,9 +10,7 @@ import java.io.IOException;
 
 public class GoogleSearch {
 
-    private GoogleSearch(){
-        super();
-    }
+    private GoogleSearch() { super(); }
 
     private static final String GOOGLE_URL = "https://www.googleapis.com/customsearch/v1/?cx=%s&key=%s&num=1&q=%s";
     private static final String GOOGLE_API_KEY = Secrets.GOOGLE_API_KEY;

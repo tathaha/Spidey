@@ -9,9 +9,7 @@ public class MySQL {
 
 	private static Connection c;
 
-	private MySQL(){
-		super();
-	}
+	private MySQL() { super(); }
 
 	private static final Logger logger = LoggerFactory.getLogger(MySQL.class);
 
