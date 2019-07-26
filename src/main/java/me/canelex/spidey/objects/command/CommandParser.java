@@ -20,7 +20,7 @@ public class CommandParser {
 
 	}
 
-	public final class CommandContainer { //TODO static
+	public static final class CommandContainer {
 
 		final String raw;
 		final String beheaded;

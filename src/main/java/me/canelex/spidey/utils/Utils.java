@@ -116,7 +116,7 @@ public class Utils extends Core {
 		}
 	}
 
-	public static String getSiteContent(String url) throws IOException { //TODO final String
+	public static String getSiteContent(final String url) throws IOException {
 		final var obj = new URL(url);
 		final var con = (HttpURLConnection) obj.openConnection();
 
@@ -136,7 +136,7 @@ public class Utils extends Core {
 		return response.toString();
 	}
 
-	public static DataObject getJson(String url) throws IOException { //TODO final String
+	public static DataObject getJson(final String url) throws IOException {
 		return DataObject.fromJson(getSiteContent(url));
 	}
 

@@ -2,8 +2,6 @@ package me.canelex.spidey.objects.search;
 
 import net.dv8tion.jda.api.utils.data.DataObject;
 import org.apache.commons.text.StringEscapeUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -13,7 +11,6 @@ public class SearchResult {
     private String title;
     private String content;
     private String url;
-    private static final Logger logger = LoggerFactory.getLogger(SearchResult.class);
 
     static SearchResult fromGoogle(final DataObject googleResult) {
 
