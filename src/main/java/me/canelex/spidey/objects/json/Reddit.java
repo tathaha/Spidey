@@ -17,20 +17,18 @@ public class Reddit {
     private String comIcon;
 
     public final Reddit getSubReddit(final String name) throws IOException {
-
         return exists(name) ? null : fromJson(Utils.getJson(
                 "https://reddit.com/r/" + name + "/about.json"));
-
     }
 
     private boolean exists(final String name) throws IOException {
-        final int i = Utils.getJson("https://reddit.com/subreddits/search.json?q=" + name).getObject("data").getInt("dist");
+        final var i = Utils.getJson("https://reddit.com/subreddits/search.json?q=" + name).getObject("data").getInt("dist");
         return i == 0;
     }
 
     private Reddit fromJson(final DataObject o) {
 
-        final DataObject data = o.getObject("data");
+        final var data = o.getObject("data");
         this.subs = data.getInt("subscribers");
         this.name = data.getString("display_name");
         this.desc = data.getString("public_description");

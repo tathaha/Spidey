@@ -1,8 +1,6 @@
 package me.canelex.spidey.utils;
 
 import io.github.classgraph.ClassGraph;
-import io.github.classgraph.ClassInfo;
-import io.github.classgraph.ScanResult;
 import me.canelex.spidey.Core;
 import me.canelex.spidey.objects.command.ICommand;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -106,9 +104,9 @@ public class Utils extends Core {
 
 	public static void registerCommands() {
 		Core.commands.clear();
-		try (final ScanResult result = graph.scan()) {
-			for (final ClassInfo cls : result.getClassesImplementing("me.canelex.spidey.objects.command.ICommand")) {
-				final ICommand cmd = (ICommand) cls.loadClass().getDeclaredConstructor().newInstance();
+		try (final var result = graph.scan()) {
+			for (final var cls : result.getClassesImplementing("me.canelex.spidey.objects.command.ICommand")) {
+				final var cmd = (ICommand) cls.loadClass().getDeclaredConstructor().newInstance();
 				Core.commands.put(cmd.getInvoke(), cmd);
 				cmd.getAliases().forEach(alias -> Core.commands.put(alias, cmd));
 			}
@@ -118,18 +116,18 @@ public class Utils extends Core {
 		}
 	}
 
-	public static String getSiteContent(String url) throws IOException {
-		final URL obj = new URL(url);
-		final HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+	public static String getSiteContent(String url) throws IOException { //TODO final String
+		final var obj = new URL(url);
+		final var con = (HttpURLConnection) obj.openConnection();
 
 		con.setRequestMethod("GET");
 
-		final String userAgent = "me.canelex.spidey";
+		final var userAgent = "me.canelex.spidey";
 		con.setRequestProperty("User-Agent", userAgent);
 
-		final BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-		String inputLine;
-		final StringBuilder response = new StringBuilder();
+		final var in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+		var inputLine = "";
+		final var response = new StringBuilder();
 
 		while ((inputLine = in.readLine()) != null) {
 			response.append(inputLine);
@@ -138,7 +136,7 @@ public class Utils extends Core {
 		return response.toString();
 	}
 
-	public static DataObject getJson(String url) throws IOException {
+	public static DataObject getJson(String url) throws IOException { //TODO final String
 		return DataObject.fromJson(getSiteContent(url));
 	}
 

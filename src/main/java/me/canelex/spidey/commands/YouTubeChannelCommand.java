@@ -4,15 +4,11 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.YouTubeRequestInitializer;
-import com.google.api.services.youtube.model.Channel;
-import com.google.api.services.youtube.model.SearchListResponse;
 import me.canelex.spidey.Secrets;
 import me.canelex.spidey.objects.command.Category;
 import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.objects.json.SocialBlade;
 import me.canelex.spidey.utils.Utils;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,12 +30,12 @@ public class YouTubeChannelCommand implements ICommand {
 	@Override
 	public final void action(final GuildMessageReceivedEvent e) {
 
-		final String channel = e.getMessage().getContentRaw().substring(12);
-		final Message msg = e.getChannel().sendMessage("Fetching data..").complete(); //TODO temporary solution
+		final var channel = e.getMessage().getContentRaw().substring(12);
+		final var msg = e.getChannel().sendMessage("Fetching data..").complete(); //TODO temporary solution
 
 		try {
 
-			final YouTube youtube = new YouTube.Builder(
+			final var youtube = new YouTube.Builder(
 					new NetHttpTransport(),
 					new JacksonFactory(),
 					request -> {})
@@ -47,22 +43,22 @@ public class YouTubeChannelCommand implements ICommand {
 					.setYouTubeRequestInitializer(new YouTubeRequestInitializer(Secrets.YOUTUBEAPIKEY))
 					.build();
 
-			final YouTube.Search.List search = youtube.search().list("snippet").setQ(channel).setType("channel");
-			final SearchListResponse searchResponse = search.execute();
+			final var search = youtube.search().list("snippet").setQ(channel).setType("channel");
+			final var searchResponse = search.execute();
 
 			if (!searchResponse.getItems().isEmpty()) {
-				final String channelId = searchResponse.getItems().get(0).getSnippet().getChannelId();
-				final YouTube.Channels.List channels = youtube.channels().list("snippet, statistics");
+				final var channelId = searchResponse.getItems().get(0).getSnippet().getChannelId();
+				final var channels = youtube.channels().list("snippet, statistics");
 				channels.setId(channelId);
-				final Channel c = channels.execute().getItems().get(0);
+				final var c = channels.execute().getItems().get(0);
 
 				cal.setTimeInMillis(c.getSnippet().getPublishedAt().getValue());
 
-				final String creatdate = date.format(cal.getTime());
-				final String creattime = time.format(cal.getTime());
+				final var creatdate = date.format(cal.getTime());
+				final var creattime = time.format(cal.getTime());
 
-				final EmbedBuilder eb = Utils.createEmbedBuilder(e.getAuthor());
-				final SocialBlade sb = new SocialBlade().getYouTube(channelId);
+				final var eb = Utils.createEmbedBuilder(e.getAuthor());
+				final var sb = new SocialBlade().getYouTube(channelId);
 				eb.setAuthor(c.getSnippet().getTitle(), "https://youtube.com/channel/" + channelId, "https://i.ymastersk.net/vo96zG");
 				eb.setColor(14765121);
 				eb.setThumbnail(sb.getAvatar());
@@ -73,7 +69,7 @@ public class YouTubeChannelCommand implements ICommand {
 				eb.addField("Partner", (sb.isPartner() ? "**Yes**" : "**No**"), false);
 				eb.addField("Verified", (sb.isVerified() ? "**Yes**" : "**No**"), false);
 				eb.addField("Country", "**" + sb.getCountry() + "**", false);
-				final String latestVideo = Utils.getSiteContent("https://beta.decapi.me/youtube/latest_video/?id=" + channelId);
+				final var latestVideo = Utils.getSiteContent("https://beta.decapi.me/youtube/latest_video/?id=" + channelId);
 				eb.addField("Latest video", (latestVideo.equals("An error occurred retrieving videos for channel: " + channelId) ? "**This channel has no videos**" : latestVideo), false);
 
 				if (!sb.getBanner().equals("http://s.ytimg.com/yts/img/channels/c4/default_banner-vfl7DRgTn.png")) {

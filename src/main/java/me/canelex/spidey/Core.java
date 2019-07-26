@@ -23,11 +23,11 @@ public class Core {
 
 	public static void main(final String[] args) {
 		try {
-			final JDABuilder jda = new JDABuilder(Secrets.TOKEN)
+			final var jda = new JDABuilder(Secrets.TOKEN)
                     .addEventListeners(new Events())
                     .setStatus(OnlineStatus.DO_NOT_DISTURB)
                     .setActivity(Activity.listening("your commands"));
-			for (int i = 0; i < 10; i++) {
+			for (var i = 0; i < 10; i++) {
 			    jda.useSharding(i, 10).build().awaitReady();
             }
 		} catch (final Exception e) {

@@ -3,12 +3,9 @@ package me.canelex.spidey.commands;
 import me.canelex.spidey.objects.command.Category;
 import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.utils.Utils;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 import java.awt.*;
-import java.util.List;
 
 @SuppressWarnings("unused")
 public class AvatarCommand implements ICommand {
@@ -16,9 +13,9 @@ public class AvatarCommand implements ICommand {
 	@Override
 	public final void action(final GuildMessageReceivedEvent e) {
 
-		final EmbedBuilder eb = Utils.createEmbedBuilder(e.getAuthor()).setColor(Color.WHITE);
-		final List<User> musers = e.getMessage().getMentionedUsers();
-		final User u = musers.isEmpty() ? e.getAuthor() : musers.get(0);
+		final var eb = Utils.createEmbedBuilder(e.getAuthor()).setColor(Color.WHITE);
+		final var musers = e.getMessage().getMentionedUsers();
+		final var u = musers.isEmpty() ? e.getAuthor() : musers.get(0);
 
 		eb.setAuthor("Avatar of user " + u.getAsTag());
 		eb.setDescription(String.format("[Avatar link](%s)", u.getEffectiveAvatarUrl()));

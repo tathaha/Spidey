@@ -3,15 +3,15 @@ package me.canelex.spidey.commands;
 import me.canelex.spidey.objects.command.Category;
 import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.utils.Utils;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Emote;
-import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 import java.awt.*;
 import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
@@ -25,7 +25,7 @@ public class GuildCommand implements ICommand {
 	@Override
 	public final void action(final GuildMessageReceivedEvent e) {
 
-		final EmbedBuilder eb = Utils.createEmbedBuilder(e.getAuthor());
+		final var eb = Utils.createEmbedBuilder(e.getAuthor());
 		eb.setColor(Color.ORANGE);
 		eb.setThumbnail(e.getGuild().getIconUrl());
 
@@ -47,8 +47,8 @@ public class GuildCommand implements ICommand {
 		eb.addField("Region", e.getGuild().getRegionRaw(), true);
 
 		cal.setTimeInMillis(e.getGuild().getTimeCreated().toInstant().toEpochMilli());
-		final String creatdate = date.format(cal.getTime());
-		final String creattime = time.format(cal.getTime());
+		final var creatdate = date.format(cal.getTime());
+		final var creattime = time.format(cal.getTime());
 		eb.addField("Creation", String.format( "%s | %s", creatdate, creattime), true);
 
 		if (!Utils.canSetVanityUrl(e.getGuild())) { //could use ternary here too, but i don't use it because of readability
@@ -58,15 +58,15 @@ public class GuildCommand implements ICommand {
 			eb.addField("Custom invite/Vanity url", e.getGuild().getVanityUrl() == null ? "Guild has no vanity url set" : e.getGuild().getVanityUrl(), true);
 		}
 
-		final List<Role> roles = e.getGuild().getRoleCache().stream().filter(role -> e.getGuild().getPublicRole() != role).collect(Collectors.toList());
+		final var roles = e.getGuild().getRoleCache().stream().filter(role -> e.getGuild().getPublicRole() != role).collect(Collectors.toList());
         eb.addField("Roles", "" + roles.size(), true);
 
-		final StringBuilder st = new StringBuilder();
+		final var st = new StringBuilder();
 
-		int ec = 0;
-		final long an = e.getGuild().getEmotes().stream().filter(Emote::isAnimated).count();
+		var ec = 0;
+		final var an = e.getGuild().getEmotes().stream().filter(Emote::isAnimated).count();
 
-		for (final Emote emote : e.getGuild().getEmotes()) {
+		for (final var emote : e.getGuild().getEmotes()) {
 			ec++;
 			if (ec == e.getGuild().getEmoteCache().size()) {
 				st.append(emote.getAsMention());

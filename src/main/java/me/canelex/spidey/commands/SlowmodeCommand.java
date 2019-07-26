@@ -13,7 +13,7 @@ public class SlowmodeCommand implements ICommand {
 	@Override
 	public final void action(final GuildMessageReceivedEvent e) {
 
-		final String neededPerm = "ADMINISTRATOR";
+		final var neededPerm = "ADMINISTRATOR";
 
 		if (e.getMember() != null && !Utils.hasPerm(e.getMember(), Permission.valueOf(neededPerm))) {
 
@@ -23,31 +23,19 @@ public class SlowmodeCommand implements ICommand {
 
 		else {
 
-			int seconds;
-
-			final String par = e.getMessage().getContentRaw().substring(11);
-
+			var seconds = 0;
+			final var par = e.getMessage().getContentRaw().substring(11);
 			if (par.equals("off") || par.equals("false")) {
-
 				seconds = 0;
-
 			}
-
 			else {
-
 				try {
-
 					seconds = Math.max(0, Math.min(Integer.parseInt(par), 21600));
-
 				}
-
 				catch (final NumberFormatException ignored) {
-
 					Utils.sendMessage(e.getChannel(), ":no_entry: Couldn't parse argument.", false);
 					return;
-
 				}
-
 			}
 
 			e.getChannel().getManager().setSlowmode(seconds).queue();

@@ -23,11 +23,11 @@ public class SocialBlade {
     private static final Logger logger = LoggerFactory.getLogger(SocialBlade.class);
 
     public final SocialBlade getYouTube(final String id) throws IOException {
-        final String email = Secrets.EMAIL;
-        final DataObject l = Utils.getJson(
+        final var email = Secrets.EMAIL;
+        final var l = Utils.getJson(
                 "https://api.socialblade.com/v2/bridge?email=" + email + "&password=" + getMD5());
 
-        final String token = l.getObject("id").getString("token");
+        final var token = l.getObject("id").getString("token");
         return fromJson(Utils.getJson("https://api.socialblade.com/v2/youtube/statistics?query=statistics&username="
                 + id + "&email=" + email + "&token=" + token));
 
@@ -35,7 +35,7 @@ public class SocialBlade {
 
     private SocialBlade fromJson(final DataObject o) {
 
-        final DataObject data = o.getObject("data");
+        final var data = o.getObject("data");
         this.videos = data.getInt("uploads");
         this.subs = data.getInt("subs");
         this.views = data.getLong("views");
@@ -51,12 +51,12 @@ public class SocialBlade {
 
     private String getMD5() {
         try {
-            final MessageDigest md = MessageDigest.getInstance("MD5");
-            final byte[] encode = Secrets.SPASS.getBytes();
-            final byte[] encoded = md.digest(encode);
+            final var md = MessageDigest.getInstance("MD5");
+            final var encode = Secrets.SPASS.getBytes();
+            final var encoded = md.digest(encode);
 
-            final StringBuilder sb = new StringBuilder(2 * encoded.length);
-            for (final byte b : encoded) {
+            final var sb = new StringBuilder(2 * encoded.length);
+            for (final var b : encoded) {
                 sb.append("0123456789ABCDEF".charAt((b & 0xF0) >> 4));
                 sb.append("0123456789ABCDEF".charAt((b & 0x0F)));
             }

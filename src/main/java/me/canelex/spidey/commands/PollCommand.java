@@ -6,9 +6,7 @@ import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.utils.Emojis;
 import me.canelex.spidey.utils.PermissionError;
 import me.canelex.spidey.utils.Utils;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 import java.awt.*;
@@ -19,9 +17,9 @@ public class PollCommand implements ICommand {
 	@Override
 	public final void action(final GuildMessageReceivedEvent e) {
 
-		final String neededPerm = "BAN_MEMBERS";
+		final var neededPerm = "BAN_MEMBERS";
 
-		@SuppressWarnings("ConstantConditions") final TextChannel log = e.getGuild().getTextChannelById(MySQL.getChannelId(e.getGuild().getIdLong()));
+		@SuppressWarnings("ConstantConditions") final var log = e.getGuild().getTextChannelById(MySQL.getChannelId(e.getGuild().getIdLong()));
 
 		if (e.getMember() != null && !Utils.hasPerm(e.getMember(), Permission.valueOf(neededPerm))) {
 
@@ -31,14 +29,14 @@ public class PollCommand implements ICommand {
 
 		else {
 
-			final String question = e.getMessage().getContentRaw().substring(7);
+			final var question = e.getMessage().getContentRaw().substring(7);
 			Utils.deleteMessage(e.getMessage());
 			e.getChannel().sendMessage("Poll: **" + question + "**").queue(m -> {
 
 				m.addReaction(Emojis.LIKE).queue();
 				m.addReaction(Emojis.SHRUG).queue();
 				m.addReaction(Emojis.DISLIKE).queue();
-				final EmbedBuilder eb = Utils.createEmbedBuilder(e.getAuthor());
+				final var eb = Utils.createEmbedBuilder(e.getAuthor());
 				eb.setAuthor("NEW POLL");
 				eb.setColor(Color.ORANGE);
 				eb.addField("Question", "**" + question + "**", false);

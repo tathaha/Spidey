@@ -13,12 +13,12 @@ public class UrbanDictionaryCommand implements ICommand {
 	@Override
 	public final void action(final GuildMessageReceivedEvent e) {
 
-		final String term = e.getMessage().getContentRaw().substring(5);
+		final var term = e.getMessage().getContentRaw().substring(5);
 
 		try {
 
-			final UrbanDictionary ud = new UrbanDictionary().getTerm(term);
-			final String result = String.format("Urban Dictionary \n\n"
+			final var ud = new UrbanDictionary().getTerm(term);
+			final var result = String.format("Urban Dictionary \n\n"
 							+ "Definition for **%s**: \n"
 							+ "```\n"
 							+ "%s\n"

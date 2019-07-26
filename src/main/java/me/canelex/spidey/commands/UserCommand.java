@@ -3,16 +3,14 @@ package me.canelex.spidey.commands;
 import me.canelex.spidey.objects.command.Category;
 import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.utils.Utils;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 import java.awt.*;
 import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.TimeZone;
 
 @SuppressWarnings("unused")
 public class UserCommand implements ICommand {
@@ -25,10 +23,10 @@ public class UserCommand implements ICommand {
 	@Override
 	public final void action(final GuildMessageReceivedEvent e) {
 
-		final EmbedBuilder eb = Utils.createEmbedBuilder(e.getAuthor());
-		final List<User> musers = e.getMessage().getMentionedUsers();
-		final User u = musers.isEmpty() ? e.getAuthor() : musers.get(0);
-		final Member m = e.getGuild().getMember(u);
+		final var eb = Utils.createEmbedBuilder(e.getAuthor());
+		final var musers = e.getMessage().getMentionedUsers();
+		final var u = musers.isEmpty() ? e.getAuthor() : musers.get(0);
+		final var m = e.getGuild().getMember(u);
 		
 		eb.setAuthor("USER INFO - " + u.getAsTag());
 		eb.setColor(Color.WHITE);
@@ -40,30 +38,30 @@ public class UserCommand implements ICommand {
 		}
 
 		cal.setTimeInMillis(u.getTimeCreated().toInstant().toEpochMilli());
-		final String creatdate = date.format(cal.getTime());
-		final String creattime = time.format(cal.getTime());
+		final var creatdate = date.format(cal.getTime());
+		final var creattime = time.format(cal.getTime());
 
 		eb.addField("Account created", String.format( "%s | %s UTC", creatdate, creattime), false);
 
 		cal.setTimeInMillis(m.getTimeJoined().toInstant().toEpochMilli());
-		final String joindate = date.format(cal.getTime());
-		final String jointime = time.format(cal.getTime());
+		final var joindate = date.format(cal.getTime());
+		final var jointime = time.format(cal.getTime());
 
 		eb.addField("User joined", String.format( "%s | %s UTC", joindate, jointime), false);
 
 		if (e.getGuild().getBoosters().contains(m)) {
 			cal.setTimeInMillis(Objects.requireNonNull(m.getTimeBoosted()).toInstant().toEpochMilli());
-			final String boostdate = date.format(cal.getTime());
-			final String boosttime = time.format(cal.getTime());
+			final var boostdate = date.format(cal.getTime());
+			final var boosttime = time.format(cal.getTime());
 			eb.addField("Boosting since", String.format("%s | %s UTC", boostdate, boosttime), false);
 		}
 
 		if (!m.getRoles().isEmpty()) {
 
-			int i = 0;
-			StringBuilder s = new StringBuilder();
+			var i = 0;
+			final var s = new StringBuilder();
 
-			for (final Role role : m.getRoles()) {
+			for (final var role : m.getRoles()) {
 				i++;
 				if (i == m.getRoles().size()) {
 					s.append(role.getName());

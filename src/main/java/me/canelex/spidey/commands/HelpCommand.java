@@ -4,13 +4,14 @@ import me.canelex.spidey.Core;
 import me.canelex.spidey.objects.command.Category;
 import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.utils.Utils;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.*;
+import java.util.Objects;
 import java.util.function.Function;
 
 @SuppressWarnings("unused")
@@ -21,13 +22,13 @@ public class HelpCommand extends Core implements ICommand {
 
         final HashMap<String, ICommand> commands = new HashMap<>();
 
-        String[] args = e.getMessage().getContentRaw().split("\\s+");
-        final EmbedBuilder emb = Utils.createEmbedBuilder(e.getAuthor())
+        final var args = e.getMessage().getContentRaw().split("\\s+");
+        final var emb = Utils.createEmbedBuilder(e.getAuthor())
                 .setColor(Color.WHITE)
                 .setAuthor("Spidey's Commands", "https://github.com/caneleex/Spidey", e.getJDA().getSelfUser().getEffectiveAvatarUrl());
 
         if (args.length < 2) {
-            for (final Map.Entry<String, ICommand> entry : Core.commands.entrySet()) {
+            for (final var entry : Core.commands.entrySet()) {
                 commands.put(entry.getKey(), entry.getValue());
             }
             commands.remove("help");
@@ -37,11 +38,11 @@ public class HelpCommand extends Core implements ICommand {
             }
 
             final HashMap<Category, List<ICommand>> categories = new HashMap<>();
-            for (final ICommand cmd : commands.values()) {
-                final List<ICommand> list = categories.computeIfAbsent(cmd.getCategory(), ignored -> new ArrayList<>());
+            for (final var cmd : commands.values()) {
+                final var list = categories.computeIfAbsent(cmd.getCategory(), ignored -> new ArrayList<>());
                 list.add(cmd);
             }
-            final StringBuilder sb = new StringBuilder();
+            final var sb = new StringBuilder();
             categories.forEach((category, commandz) -> {
                 sb.append("\n");
                 sb.append(category.friendlyName());
@@ -52,13 +53,13 @@ public class HelpCommand extends Core implements ICommand {
             Utils.sendMessage(e.getChannel(), emb.build());
         }
         else {
-            final String cmd = e.getMessage().getContentRaw().substring(7);
+            final var cmd = e.getMessage().getContentRaw().substring(7);
             if (!Core.commands.containsKey(cmd)) {
                 Utils.sendMessage(e.getChannel(), ":no_entry: **" + cmd + "** isn't a valid command.", false);
             }
             else {
-                final ICommand command = Core.commands.get(cmd);
-                final EmbedBuilder eb = Utils.createEmbedBuilder(e.getAuthor());
+                final var command = Core.commands.get(cmd);
+                final var eb = Utils.createEmbedBuilder(e.getAuthor());
                 eb.setAuthor("Viewing command info - " + cmd);
                 eb.setColor(Color.WHITE);
                 eb.addField("Description", command.getDescription() == null ? "Unspecified" : command.getDescription(), false);
@@ -71,9 +72,9 @@ public class HelpCommand extends Core implements ICommand {
     }
 
     private String listToString(final List<ICommand> list, final Function<ICommand, String> transformer) {
-        final StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < list.size(); i++) {
-            final ICommand cmd = list.get(i);
+        final var builder = new StringBuilder();
+        for (var i = 0; i < list.size(); i++) {
+            final var cmd = list.get(i);
             builder.append("`").append(transformer.apply(cmd)).append("`");
             if (i != list.size() - 1) {
                 builder.append(", ");

@@ -5,8 +5,8 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 
 public class SearchResult {
 
@@ -17,17 +17,11 @@ public class SearchResult {
 
     static SearchResult fromGoogle(final DataObject googleResult) {
 
-        final SearchResult result = new SearchResult();
+        final var result = new SearchResult();
         result.title = cleanString(googleResult.getString("title"));
         result.content = cleanString(googleResult.getString("snippet"));
 
-        try {
-            result.url = URLDecoder.decode(cleanString(googleResult.getString("link")), "UTF-8");
-        }
-
-        catch (final UnsupportedEncodingException e) {
-            logger.error("Exception!", e);
-        }
+        result.url = URLDecoder.decode(cleanString(googleResult.getString("link")), StandardCharsets.UTF_8);
 
         return result;
 

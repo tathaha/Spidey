@@ -21,7 +21,7 @@ public class UrbanDictionary {
 
     private UrbanDictionary fromJson(final DataObject o) {
 
-        final DataObject data = o.getArray("list").getObject(0);
+        final var data = o.getArray("list").getObject(0);
         this.author = data.getString("author");
         this.definition = data.getString("definition");
         this.example = data.getString("example");

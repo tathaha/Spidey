@@ -17,7 +17,7 @@ public class LogCommand implements ICommand {
 	@Override
 	public final void action(final GuildMessageReceivedEvent e) {
 
-		final String neededPerm = "ADMINISTRATOR";
+		final var neededPerm = "ADMINISTRATOR";
 
 		if (e.getMember() != null && Utils.hasPerm(e.getMember(), Permission.valueOf(neededPerm))) {
 

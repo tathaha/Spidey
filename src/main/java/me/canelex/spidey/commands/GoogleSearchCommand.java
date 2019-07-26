@@ -3,7 +3,6 @@ package me.canelex.spidey.commands;
 import me.canelex.spidey.objects.command.Category;
 import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.objects.search.GoogleSearch;
-import me.canelex.spidey.objects.search.SearchResult;
 import me.canelex.spidey.utils.Utils;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.apache.commons.lang3.StringUtils;
@@ -14,9 +13,9 @@ public class GoogleSearchCommand implements ICommand {
 	@Override
 	public final void action(final GuildMessageReceivedEvent e) {
 
-		final String[] args = e.getMessage().getContentRaw().split("\\s+");
+		final var args = e.getMessage().getContentRaw().split("\\s+");
 
-		final SearchResult result = GoogleSearch.performSearch(
+		final var result = GoogleSearch.performSearch(
 				StringUtils.join(args, "+", 1, args.length));
 
 		Utils.sendMessage(e.getChannel(), result.getContent(), false);

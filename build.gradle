@@ -13,8 +13,8 @@ repositories {
 }
 
 dependencies {
-    implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.16'
-    implementation (group: 'net.dv8tion', name: 'JDA', version: '4.BETA.0_20') {
+    implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.17'
+    implementation (group: 'net.dv8tion', name: 'JDA', version: '4.BETA.0_26') {
         exclude module: 'opus-java'
     }
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
@@ -25,7 +25,7 @@ dependencies {
 
 group = 'me.canelex'
 description = 'Spidey'
-sourceCompatibility = '8'
+sourceCompatibility = JavaVersion.VERSION_11
 
 shadowJar.setProperty('archiveFileName', 'Spidey.jar')
 compileJava.options.encoding = 'UTF-8'

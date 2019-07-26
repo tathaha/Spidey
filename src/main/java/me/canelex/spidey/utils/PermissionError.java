@@ -7,9 +7,7 @@ public class PermissionError {
 	private static final String MISSING_PERMS = ":no_entry: Action can't be completed due to missing permission **";
 
 	public static String getErrorMessage(String permName) {
-
 		return MISSING_PERMS + permName + "**.";
-
 	}
 
 }

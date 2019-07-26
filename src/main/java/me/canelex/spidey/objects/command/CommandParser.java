@@ -9,18 +9,18 @@ public class CommandParser {
 
 	public final CommandContainer parse(final String rw, final GuildMessageReceivedEvent e){
 
-		final String beheaded = rw.replaceFirst("s!", "");
-		final String[] splitbeheaded = beheaded.split(" ");
-		final ArrayList<String> split = new ArrayList<>(Arrays.asList(splitbeheaded));
-		final String invoke = split.get(0).toLowerCase();
-		final String[] args = new String[split.size() - 1];
+		final var beheaded = rw.replaceFirst("s!", "");
+		final var splitbeheaded = beheaded.split(" ");
+		final var split = new ArrayList<>(Arrays.asList(splitbeheaded));
+		final var invoke = split.get(0).toLowerCase();
+		final var args = new String[split.size() - 1];
 		split.subList(1, split.size()).toArray(args);
 
 		return new CommandContainer(rw, beheaded, splitbeheaded, invoke, args, e);
 
 	}
 
-	public final class CommandContainer {
+	public final class CommandContainer { //TODO static
 
 		final String raw;
 		final String beheaded;

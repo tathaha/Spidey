@@ -2,7 +2,6 @@ package me.canelex.spidey.objects.search;
 
 import me.canelex.spidey.Secrets;
 import me.canelex.spidey.utils.Utils;
-import net.dv8tion.jda.api.utils.data.DataObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,8 +21,8 @@ public class GoogleSearch {
 
         try {
             terms = terms.replace(" ", "%20");
-            final String searchUrl = String.format(GOOGLE_URL, "015021391643023377625:kq7ex3xgvoq", GOOGLE_API_KEY, terms);
-            final DataObject o = Utils.getJson(searchUrl).getArray("items").getObject(0);
+            final var searchUrl = String.format(GOOGLE_URL, "015021391643023377625:kq7ex3xgvoq", GOOGLE_API_KEY, terms);
+            final var o = Utils.getJson(searchUrl).getArray("items").getObject(0);
             result = SearchResult.fromGoogle(o);
         }
 

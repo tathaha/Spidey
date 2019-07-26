@@ -4,7 +4,6 @@ import me.canelex.spidey.objects.command.Category;
 import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.objects.json.Reddit;
 import me.canelex.spidey.utils.Utils;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,11 +19,11 @@ public class RedditCommand implements ICommand {
 	@Override
 	public final void action(final GuildMessageReceivedEvent e) {
 
-		final String subreddit = e.getMessage().getContentRaw().substring(9);
+		final var subreddit = e.getMessage().getContentRaw().substring(9);
 
 		try {
 
-			final Reddit reddit = new Reddit().getSubReddit(subreddit);
+			final var reddit = new Reddit().getSubReddit(subreddit);
 
 			if (reddit == null) {
 				e.getChannel().sendMessage(":no_entry: Subreddit not found.").queue(m -> {
@@ -34,8 +33,8 @@ public class RedditCommand implements ICommand {
 				return;
 			}
 
-			final EmbedBuilder eb = Utils.createEmbedBuilder(e.getAuthor());
-			final String comIcon = reddit.getCommunityIcon().length() == 0 ? "https://i.ymastersk.net/LRjhvy" : reddit.getCommunityIcon();
+			final var eb = Utils.createEmbedBuilder(e.getAuthor());
+			final var comIcon = reddit.getCommunityIcon().length() == 0 ? "https://i.ymastersk.net/LRjhvy" : reddit.getCommunityIcon();
 			eb.setAuthor("r/" + reddit.getName(), "https://reddit.com/r/" + subreddit, "https://i.ymastersk.net/LRjhvy");
 			eb.setThumbnail(reddit.getIcon().length() == 0 ? comIcon : reddit.getIcon());
 			eb.setColor(16727832);

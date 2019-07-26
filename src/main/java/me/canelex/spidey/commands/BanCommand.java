@@ -6,11 +6,9 @@ import me.canelex.spidey.utils.Emojis;
 import me.canelex.spidey.utils.PermissionError;
 import me.canelex.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("unused")
@@ -19,10 +17,10 @@ public class BanCommand implements ICommand {
 	@Override
 	public final void action(final GuildMessageReceivedEvent e) {
 
-		final int maxArgs = 4;
-		final Message msg = e.getMessage();
+		final var maxArgs = 4;
+		final var msg = e.getMessage();
 
-		e.getMessage().delete().queueAfter(5, TimeUnit.SECONDS);
+		msg.delete().queueAfter(5, TimeUnit.SECONDS);
 
 		if (e.getMember() != null && !Utils.hasPerm(e.getMember(), Permission.BAN_MEMBERS))  {
 
@@ -31,7 +29,7 @@ public class BanCommand implements ICommand {
 
 		}
 
-		final String[] args = msg.getContentRaw().trim().split("\\s+", maxArgs);
+		final var args = msg.getContentRaw().trim().split("\\s+", maxArgs);
 
 		if (args.length < 3) {
 
@@ -47,7 +45,7 @@ public class BanCommand implements ICommand {
 
 		}
 
-		List<Member> members = msg.getMentionedMembers();
+		final var members = msg.getMentionedMembers();
 
 		if (members.isEmpty()) {
 
@@ -56,7 +54,7 @@ public class BanCommand implements ICommand {
 
 		}
 
-		final Member mb = members.get(0);
+		final var mb = members.get(0);
 
 		if (!e.getGuild().getSelfMember().canInteract(mb)) {
 
@@ -65,7 +63,7 @@ public class BanCommand implements ICommand {
 
 		}
 
-		int delDays;
+		var delDays = 0;
 
 		try {
 
@@ -78,20 +76,20 @@ public class BanCommand implements ICommand {
 
 		}
 
-		final StringBuilder reasonBuilder = new StringBuilder("[Banned by Spidey#2370]");
-		final StringBuilder banMsgBuilder = new StringBuilder(":white_check_mark: Successfully banned user **"
+		final var reasonBuilder = new StringBuilder("[Banned by Spidey#2370]");
+		final var banMsgBuilder = new StringBuilder(":white_check_mark: Successfully banned user **"
 				+ mb.getUser().getAsTag() + "**.");
 
 		if (args.length == maxArgs) {
 
-			final String reason = args[3];
+			final var reason = args[3];
 			reasonBuilder.append(String.format(" %s", reason));
 			banMsgBuilder.deleteCharAt(banMsgBuilder.length() - 1).append(String.format(" with reason **%s**.", reason));
 
 		}
 
-		final String reasonMsg = reasonBuilder.toString();
-		final String banMsg = banMsgBuilder.toString();
+		final var reasonMsg = reasonBuilder.toString();
+		final var banMsg = banMsgBuilder.toString();
 
 		msg.addReaction(Emojis.CHECK).queue();
 		e.getGuild().ban(mb, delDays, reasonMsg).queue();
