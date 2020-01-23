@@ -2,7 +2,7 @@
 
 Click [here](https://discordapp.com/oauth2/authorize?client_id=468523263853592576&scope=bot&permissions=1342188724) to invite Spidey to your guild!
 
-Powered by my *private*(***repository***) JDA fork
+Powered by my [JDA fork](https://github.com/caneleex/JDA)
 
 **Support guild**
 
