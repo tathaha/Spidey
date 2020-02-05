@@ -223,7 +223,7 @@ public class Utils extends Core
                         if (!guildCodes.contains(code))
                             invitesMap.remove(code); // an invite was deleted so we uncache it
                     });
-            }), 60L, 30L, TimeUnit.SECONDS));
+            }), 10, 30, TimeUnit.SECONDS));
     }
 
     public static String cleanString(final String original)
