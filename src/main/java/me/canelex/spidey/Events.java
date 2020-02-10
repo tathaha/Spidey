@@ -7,6 +7,8 @@ import me.canelex.jda.api.entities.MessageType;
 import me.canelex.jda.api.events.ShutdownEvent;
 import me.canelex.jda.api.events.channel.text.TextChannelDeleteEvent;
 import me.canelex.jda.api.events.guild.*;
+import me.canelex.jda.api.events.guild.invite.GuildInviteCreateEvent;
+import me.canelex.jda.api.events.guild.invite.GuildInviteDeleteEvent;
 import me.canelex.jda.api.events.guild.member.GuildMemberJoinEvent;
 import me.canelex.jda.api.events.guild.member.GuildMemberLeaveEvent;
 import me.canelex.jda.api.events.guild.update.GuildUpdateBoostTierEvent;
@@ -184,19 +186,6 @@ public class Events extends ListenerAdapter
 	{
 		final var guild = e.getGuild();
 		Utils.storeInvites(guild);
-		Utils.startInvitesCheck(guild);
-	}
-
-	@Override
-	public final void onGuildUnavailable(@NotNull final GuildUnavailableEvent e)
-	{
-		Utils.stopInvitesCheck(e.getGuild());
-	}
-
-	@Override
-	public final void onGuildAvailable(@NotNull final GuildAvailableEvent e)
-	{
-		Utils.startInvitesCheck(e.getGuild());
 	}
 
 	@Override
@@ -204,7 +193,6 @@ public class Events extends ListenerAdapter
 	{
 		final var guild = e.getGuild();
 		Utils.storeInvites(guild);
-		Utils.startInvitesCheck(guild);
 	}
 
 	@Override
@@ -214,7 +202,6 @@ public class Events extends ListenerAdapter
 		final var id = guild.getIdLong();
 		invitesMap.entrySet().removeIf(entry -> entry.getValue().getGuildId() == id);
 		MySQL.removeChannel(id);
-		Utils.stopInvitesCheck(guild);
 	}
 
 	@Override
@@ -241,6 +228,18 @@ public class Events extends ListenerAdapter
 			eb.addField("Boosts", "**" + guild.getBoostCount() + "**", true);
 			Utils.sendMessage(channel, eb.build());
 		}
+	}
+
+	@Override
+	public final void onGuildInviteCreate(@NotNull final GuildInviteCreateEvent e)
+	{
+		invitesMap.put(e.getCode(), new WrappedInvite(e.getInvite()));
+	}
+
+	@Override
+	public final void onGuildInviteDelete(@NotNull final GuildInviteDeleteEvent e)
+	{
+		invitesMap.remove(e.getCode());
 	}
 
 	@Override

@@ -22,9 +22,13 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.concurrent.*;
-import java.util.stream.Collectors;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.Random;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 
 public class Utils extends Core
 {
@@ -33,7 +37,6 @@ public class Utils extends Core
     private static final ClassGraph graph = new ClassGraph().whitelistPackages("me.canelex.spidey.commands").enableAllInfo().ignoreClassVisibility();
     private static final ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("Spidey").setUncaughtExceptionHandler((t, e) -> LOG.error("There was an exception in thread {}: {}", t.getName(), e.getMessage())).build();
     private static final ScheduledExecutorService EXECUTOR = Executors.newSingleThreadScheduledExecutor(threadFactory);
-    private static final Map<Long, ScheduledFuture<?>> SCHEDULERS = new HashMap<>();
     private static final char[] SUFFIXES = {'k', 'M', 'B'};
 
     private Utils()
@@ -196,34 +199,6 @@ public class Utils extends Core
     public static void storeInvites(final Guild guild)
     {
         guild.retrieveInvites().queue(invites -> invites.forEach(invite -> Events.getInvites().put(invite.getCode(), new WrappedInvite(invite))), failure -> sendPrivateMessage(guild.getOwner().getUser(), "I'm not able to attach the invite a user joined with as i don't have permission to manage the server."));
-    }
-
-    public static void stopInvitesCheck(final Guild guild)
-    {
-        final var id = guild.getIdLong();
-        SCHEDULERS.get(id).cancel(true);
-        SCHEDULERS.remove(id);
-    }
-
-    public static void startInvitesCheck(final Guild guild)
-    {
-        final var id = guild.getIdLong();
-        SCHEDULERS.put(id, EXECUTOR.scheduleAtFixedRate(() ->
-            guild.retrieveInvites().queue(invites ->
-            {
-                final var invitesMap = Events.getInvites();
-                final var guildCodes = invites.stream().map(Invite::getCode).collect(Collectors.toList());
-                invites.forEach(invite -> invitesMap.computeIfAbsent(invite.getCode(), ignored -> new WrappedInvite(invite))); // an invite was created so we cache it
-                invitesMap.entrySet()
-                    .stream()
-                    .filter(entry -> entry.getValue().getGuildId() == id)
-                    .map(Map.Entry::getKey)
-                    .forEach(code ->
-                    {
-                        if (!guildCodes.contains(code))
-                            invitesMap.remove(code); // an invite was deleted so we uncache it
-                    });
-            }), 10, 30, TimeUnit.SECONDS));
     }
 
     public static String cleanString(final String original)
