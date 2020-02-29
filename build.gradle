@@ -12,6 +12,9 @@ repositories {
     maven {
         url 'https://dl.bintray.com/canelex/maven'
     }
+    maven {
+        url 'https://maven.google.com'
+    }
     jcenter()
 }
 
