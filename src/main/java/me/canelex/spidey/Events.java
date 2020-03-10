@@ -167,13 +167,16 @@ public class Events extends ListenerAdapter
 				for (var invite : invites)
 				{
 					final var code = invite.getCode();
-					final var wrappedInvite = invitesMap.get(code);
-					if (invitesMap.containsKey(code) && invite.getUses() > wrappedInvite.getUses())
+					if (invitesMap.containsKey(code))
 					{
-						wrappedInvite.incrementUses();
-						eb.addField("Invite link", "**" + invite.getUrl() + "**", false);
-						eb.addField("Inviter", "**" + invite.getInviter().getAsTag() + "**", true);
-						break;
+						final var wrappedInvite = invitesMap.get(code);
+						if (invite.getUses() > wrappedInvite.getUses())
+						{
+							wrappedInvite.incrementUses();
+							eb.addField("Invite link", "**" + invite.getUrl() + "**", false);
+							eb.addField("Inviter", "**" + invite.getInviter().getAsTag() + "**", true);
+							break;
+						}
 					}
 				}
 				Utils.sendMessage(channel, eb.build());
