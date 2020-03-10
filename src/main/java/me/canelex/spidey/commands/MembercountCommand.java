@@ -33,7 +33,7 @@ public class MembercountCommand implements ICommand
 		eb.setColor(Color.WHITE);
 		eb.setTimestamp(Instant.now());
 		eb.addField("Total", "**" + total + "**", true);
-		eb.addField("People", "**" + (total - bots.count()) + "**", true);
+		eb.addField("Humans", "**" + (total - bots.count()) + "**", true);
 		eb.addField("Bots", "**" + bots + "**", true);
 		eb.addField("Total online", "**" + totalOnline + "**", true);
 		eb.addField("Humans online", "**" + humansOnline + "**", true);
