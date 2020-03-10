@@ -8,10 +8,8 @@ import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.utils.Utils;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
+import java.util.*;
 import java.util.function.Function;
 
 @SuppressWarnings("unused")
@@ -41,7 +39,7 @@ public class HelpCommand extends Core implements ICommand
             commandsCopy.remove("help");
             commandsCopy.entrySet().removeIf(entry -> !Utils.hasPerm(message.getMember(), entry.getValue().getRequiredPermission()));
 
-            final HashMap<Category, List<ICommand>> categories = new HashMap<>();
+            final EnumMap<Category, List<ICommand>> categories = new EnumMap<>(Category.class);
             commandsCopy.values().forEach(cmd ->
             {
                 final var list = categories.computeIfAbsent(cmd.getCategory(), ignored -> new ArrayList<>());
