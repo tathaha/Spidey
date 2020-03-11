@@ -19,13 +19,13 @@ public class MembercountCommand implements ICommand
 	public final void action(final String[] args, final Message message)
 	{
 		final var memberCache = message.getGuild().getMemberCache();
-		final var bots = memberCache.applyStream(stream -> stream.filter(member -> member.getUser().isBot()));
+		final var bots = memberCache.applyStream(stream -> stream.filter(member -> member.getUser().isBot()).count());
 		final var totalOnline = memberCache.applyStream(stream -> stream.filter(member -> member.getOnlineStatus() == OnlineStatus.DO_NOT_DISTURB || member.getOnlineStatus() == OnlineStatus.IDLE || member.getOnlineStatus() == OnlineStatus.ONLINE).collect(Collectors.toList()));
 		final var botsOnline = totalOnline.stream().filter(member -> member.getUser().isBot()).count();
 		final var humansOnline = totalOnline.size() - botsOnline;
-		final var desktopOnline = memberCache.applyStream(stream -> stream.filter(Utils::isDesktop)).count();
-		final var mobileOnline = memberCache.applyStream(stream -> stream.filter(Utils::isMobile)).count();
-		final var webOnline = memberCache.applyStream(stream -> stream.filter(Utils::isWeb)).count();
+		final var desktopOnline = memberCache.applyStream(stream -> stream.filter(Utils::isDesktop).count());
+		final var mobileOnline = memberCache.applyStream(stream -> stream.filter(Utils::isMobile).count());
+		final var webOnline = memberCache.applyStream(stream -> stream.filter(Utils::isWeb).count());
 		final var total = memberCache.size();
 
 		final var eb = Utils.createEmbedBuilder(message.getAuthor());
@@ -33,14 +33,14 @@ public class MembercountCommand implements ICommand
 		eb.setColor(Color.WHITE);
 		eb.setTimestamp(Instant.now());
 		eb.addField("Total", "**" + total + "**", true);
-		eb.addField("Humans", "**" + (total - bots.count()) + "**", true);
+		eb.addField("Humans", "**" + (total - bots) + "**", true);
 		eb.addField("Bots", "**" + bots + "**", true);
-		eb.addField("Total online", "**" + totalOnline + "**", true);
+		eb.addField("Total online", "**" + totalOnline.size() + "**", true);
 		eb.addField("Humans online", "**" + humansOnline + "**", true);
 		eb.addField("Bots online", "**" + botsOnline + "**", true);
 		eb.addField("Desktop users online", "**" + desktopOnline + "**", true);
 		eb.addField("Mobile users online", "**" + mobileOnline + "**", true);
-		eb.addField("Web users online", "**" + webOnline + "**", true);
+		eb.addField("Web users online", "**" + (webOnline - botsOnline) + "**", true);
 		Utils.sendMessage(message.getChannel(), eb.build());
 	}
 
