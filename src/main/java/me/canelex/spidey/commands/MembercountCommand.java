@@ -1,7 +1,9 @@
 package me.canelex.spidey.commands;
 
 import me.canelex.jda.api.OnlineStatus;
+import me.canelex.jda.api.entities.Member;
 import me.canelex.jda.api.entities.Message;
+import me.canelex.jda.api.entities.User;
 import me.canelex.spidey.objects.command.Category;
 import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.utils.Utils;
@@ -19,9 +21,9 @@ public class MembercountCommand implements ICommand
 	public final void action(final String[] args, final Message message)
 	{
 		final var memberCache = message.getGuild().getMemberCache();
-		final var bots = memberCache.applyStream(stream -> stream.filter(member -> member.getUser().isBot()).count());
+		final var bots = memberCache.applyStream(stream -> stream.map(Member::getUser).filter(User::isBot).count());
 		final var totalOnline = memberCache.applyStream(stream -> stream.filter(member -> member.getOnlineStatus() == OnlineStatus.DO_NOT_DISTURB || member.getOnlineStatus() == OnlineStatus.IDLE || member.getOnlineStatus() == OnlineStatus.ONLINE).collect(Collectors.toList()));
-		final var botsOnline = totalOnline.stream().filter(member -> member.getUser().isBot()).count();
+		final var botsOnline = totalOnline.stream().map(Member::getUser).filter(User::isBot).count();
 		final var humansOnline = totalOnline.size() - botsOnline;
 		final var desktopOnline = memberCache.applyStream(stream -> stream.filter(Utils::isDesktop).count());
 		final var mobileOnline = memberCache.applyStream(stream -> stream.filter(Utils::isMobile).count());
