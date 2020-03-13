@@ -4,6 +4,7 @@ import me.canelex.jda.api.JDA;
 import me.canelex.jda.api.JDABuilder;
 import me.canelex.jda.api.OnlineStatus;
 import me.canelex.jda.api.requests.GatewayIntent;
+import me.canelex.jda.api.utils.cache.CacheFlag;
 import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.utils.Utils;
 import org.slf4j.Logger;
@@ -23,7 +24,8 @@ public class Core
 	{
 		try
 		{
-			jda = JDABuilder.create(Secrets.TOKEN, EnumSet.of(GatewayIntent.GUILD_BANS, GatewayIntent.GUILD_INVITES, GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES))
+			jda = JDABuilder.create(Secrets.TOKEN, EnumSet.of(GatewayIntent.GUILD_BANS, GatewayIntent.GUILD_INVITES, GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_EMOJIS, GatewayIntent.GUILD_PRESENCES))
+					.setDisabledCacheFlags(EnumSet.of(CacheFlag.ACTIVITY, CacheFlag.VOICE_STATE))
 					.addEventListeners(new Events())
 					.setStatus(OnlineStatus.DO_NOT_DISTURB)
 					.build()
