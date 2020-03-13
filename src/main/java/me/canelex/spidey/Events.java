@@ -10,7 +10,7 @@ import me.canelex.jda.api.events.guild.*;
 import me.canelex.jda.api.events.guild.invite.GuildInviteCreateEvent;
 import me.canelex.jda.api.events.guild.invite.GuildInviteDeleteEvent;
 import me.canelex.jda.api.events.guild.member.GuildMemberJoinEvent;
-import me.canelex.jda.api.events.guild.member.GuildMemberLeaveEvent;
+import me.canelex.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import me.canelex.jda.api.events.guild.update.GuildUpdateBoostTierEvent;
 import me.canelex.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import me.canelex.jda.api.hooks.ListenerAdapter;
@@ -114,7 +114,7 @@ public class Events extends ListenerAdapter
 	}
 
 	@Override
-	public final void onGuildMemberLeave(final GuildMemberLeaveEvent e)
+	public final void onGuildMemberRemove(final GuildMemberRemoveEvent e)
 	{
 		final var user = e.getUser();
 		final var guild = e.getGuild();

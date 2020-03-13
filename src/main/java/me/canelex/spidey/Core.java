@@ -3,11 +3,13 @@ package me.canelex.spidey;
 import me.canelex.jda.api.JDA;
 import me.canelex.jda.api.JDABuilder;
 import me.canelex.jda.api.OnlineStatus;
+import me.canelex.jda.api.requests.GatewayIntent;
 import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,7 +23,7 @@ public class Core
 	{
 		try
 		{
-			jda = new JDABuilder(Secrets.TOKEN)
+			jda = JDABuilder.create(Secrets.TOKEN, EnumSet.of(GatewayIntent.GUILD_BANS, GatewayIntent.GUILD_INVITES, GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES))
 					.addEventListeners(new Events())
 					.setStatus(OnlineStatus.DO_NOT_DISTURB)
 					.build()
