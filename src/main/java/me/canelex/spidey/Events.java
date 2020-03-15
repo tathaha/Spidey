@@ -69,27 +69,29 @@ public class Events extends ListenerAdapter
 		final var channel = guild.getTextChannelById(MySQL.getChannel(guild.getIdLong()));
 		if (channel != null)
 		{
-			final var ban = guild.retrieveBan(user).complete();
-			final var auditbans = guild.retrieveAuditLogs().type(ActionType.BAN).complete();
-			final var banner = auditbans.get(0).getUser();
-			final var eb = new EmbedBuilder();
+			guild.retrieveBan(user).queue(ban ->
+				guild.retrieveAuditLogs().type(ActionType.BAN).queue(bans ->
+				{
+					final var banner = bans.get(0).getUser();
+					final var eb = new EmbedBuilder();
 
-			var reason = "";
-			if (banner != null && banner.equals(e.getJDA().getSelfUser()))
-				reason = (ban.getReason().equals("[Banned by Spidey#2370]") ?  "Unknown" : ban.getReason().substring(24));
-			else
-				reason = (ban.getReason() == null ? "Unknown" : ban.getReason());
+					var reason = "";
+					if (banner != null && banner.equals(e.getJDA().getSelfUser()))
+						reason = (ban.getReason().equals("[Banned by Spidey#2370]") ?  "Unknown" : ban.getReason().substring(24));
+					else
+						reason = (ban.getReason() == null ? "Unknown" : ban.getReason());
 
-			eb.setAuthor("NEW BAN");
-			eb.setThumbnail(user.getAvatarUrl());
-			eb.setColor(Color.RED);
-			eb.setTimestamp(Instant.now());
-			eb.addField("User", "**" + user.getAsTag() + "**", true);
-			eb.addField("ID", "**" + user.getId() + "**", true);
-			eb.addField("Moderator", banner == null ? "Unknown" : banner.getAsMention(), true);
-			eb.addField("Reason", "**" + reason + "**", true);
+					eb.setAuthor("NEW BAN");
+					eb.setThumbnail(user.getAvatarUrl());
+					eb.setColor(Color.RED);
+					eb.setTimestamp(Instant.now());
+					eb.addField("User", "**" + user.getAsTag() + "**", true);
+					eb.addField("ID", "**" + user.getId() + "**", true);
+					eb.addField("Moderator", banner == null ? "Unknown" : banner.getAsMention(), true);
+					eb.addField("Reason", "**" + reason + "**", true);
 
-			Utils.sendMessage(channel, eb.build());
+					Utils.sendMessage(channel, eb.build());
+				}));
 		}
 	}
 

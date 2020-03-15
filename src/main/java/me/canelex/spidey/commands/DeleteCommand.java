@@ -22,7 +22,7 @@ public class DeleteCommand implements ICommand
 		final var channel = message.getChannel();
 		final var mentionedUsers = message.getMentionedUsers();
 
-		message.delete().complete();
+		message.delete().queue();
 
 		final var requiredPermission = getRequiredPermission();
 		if (!Utils.hasPerm(message.getMember(), requiredPermission))

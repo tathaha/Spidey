@@ -19,7 +19,6 @@ public class InfoCommand implements ICommand
 		final var author = message.getAuthor();
 		final var msgCh = message.getChannel();
 		final var jda = message.getJDA();
-		final var dev = jda.retrieveApplicationInfo().complete().getOwner();
 		final var runtime = Runtime.getRuntime();
 		final var memory = runtime.totalMemory() - runtime.freeMemory();
 		final var duration = ManagementFactory.getRuntimeMXBean().getUptime();
@@ -35,15 +34,20 @@ public class InfoCommand implements ICommand
 		uptime = Utils.replaceLast(uptime, ", ", "");
 		uptime = Utils.replaceLast(uptime, ",", " and");
 
-		final var eb = Utils.createEmbedBuilder(author);
-		eb.setAuthor("About me", "https://paypal.me/canelex", jda.getSelfUser().getAvatarUrl());
-		eb.setColor(Color.WHITE);
-		eb.addField("Developer", dev.getAsMention(), false);
-		eb.addField("Ping", "**" + jda.getGatewayPing() + "**, **" + jda.getRestPing().complete() + "** ms", false);
-		eb.addField("Used memory", "**" + (memory / 1000000) + "**MB", false);
-		eb.addField("Uptime", uptime, false);
-		eb.addField("Build date", BUILD_DATE, false);
-		Utils.sendMessage(msgCh, eb.build());
+		final var finalUptime = uptime;
+		jda.retrieveApplicationInfo().queue(info ->
+			jda.getRestPing().queue(ping ->
+			{
+				final var eb = Utils.createEmbedBuilder(author);
+				eb.setAuthor("About me", "https://paypal.me/canelex", jda.getSelfUser().getAvatarUrl());
+				eb.setColor(Color.WHITE);
+				eb.addField("Developer", info.getOwner().getAsMention(), false);
+				eb.addField("Ping", "**" + jda.getGatewayPing() + "**, **" + ping + "** ms", false);
+				eb.addField("Used memory", "**" + (memory / 1000000) + "**MB", false);
+				eb.addField("Uptime", finalUptime, false);
+				eb.addField("Build date", BUILD_DATE, false);
+				Utils.sendMessage(msgCh, eb.build());
+			}));
 	}
 
 	@Override

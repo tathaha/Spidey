@@ -3,12 +3,12 @@ package me.canelex.spidey.objects.command;
 import me.canelex.jda.api.entities.Message;
 import me.canelex.spidey.Core;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 public class CommandHandler
 {
-	private static final ExecutorService EXECUTOR = Executors.newSingleThreadExecutor();
+	private CommandHandler()
+	{
+		super();
+	}
 
 	public static void handle(final Message msg)
 	{
@@ -21,7 +21,7 @@ public class CommandHandler
 			{
 				final var cmd = commands.get(command);
 				final var args = content.split("\\s+", cmd.getMaxArgs());
-				EXECUTOR.submit(() -> cmd.action(args, msg));
+				cmd.action(args, msg);
 			}
 		}
 	}
