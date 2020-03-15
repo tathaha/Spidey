@@ -28,11 +28,11 @@ public class UrbanDictionaryCommand implements ICommand
 							+ "_by %s (" + Emojis.LIKE + "%s  " + Emojis.DISLIKE + "%s)_"
 					, ud.getWord(), ud.getDefinition(), ud.getExample(),
 					ud.getAuthor(), ud.getLikes(), ud.getDislikes());
-			Utils.sendMessage(channel, result, false);
+			Utils.sendMessage(channel, result);
 		}
 		catch (final Exception ex)
 		{
-			Utils.sendMessage(channel, ":no_entry: Query not found.", false);
+			Utils.sendMessage(channel, ":no_entry: Query not found.");
 		}
 	}
 

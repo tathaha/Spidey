@@ -19,7 +19,7 @@ public class LeaveCommand implements ICommand
 		final var channel = message.getChannel();
 		
 		if (!message.getMember().isOwner())
-			Utils.sendMessage(channel, message.getAuthor().getAsMention() + ", you have to be the guild owner to do this.", false);
+			Utils.sendMessage(channel, message.getAuthor().getAsMention() + ", you have to be the guild owner to do this.");
 		else
 		{
 			channel.sendMessage("Bye.").queue(m -> m.delete().queueAfter(5, TimeUnit.SECONDS));

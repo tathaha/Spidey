@@ -27,7 +27,7 @@ public class DeleteCommand implements ICommand
 		final var requiredPermission = getRequiredPermission();
 		if (!Utils.hasPerm(message.getMember(), requiredPermission))
 		{
-			Utils.sendMessage(channel, PermissionError.getErrorMessage(requiredPermission), false);
+			Utils.sendMessage(channel, PermissionError.getErrorMessage(requiredPermission));
 			return;
 		}
 
@@ -36,9 +36,9 @@ public class DeleteCommand implements ICommand
 			Utils.returnError("Wrong syntax", message);
 			return;
 		}
+		var amount = 0;
 		if (mentionedUsers.isEmpty())
 		{
-			var amount = 0;
 			try
 			{
 				amount = Integer.parseUnsignedInt(args[1]);
@@ -69,7 +69,6 @@ public class DeleteCommand implements ICommand
 		}
 		else
 		{
-			var amount = 0;
 			final var user = mentionedUsers.get(0);
 			try
 			{

@@ -15,7 +15,7 @@ public class GoogleSearchCommand implements ICommand
 	{
 		final var result = new GoogleSearch().getResult(
 				StringUtils.join(args, "+", 1, args.length));
-		Utils.sendMessage(message.getChannel(), result.getContent(), false);
+		Utils.sendMessage(message.getChannel(), result.getContent());
 	}
 
 	@Override

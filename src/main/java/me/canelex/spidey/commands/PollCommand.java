@@ -24,7 +24,7 @@ public class PollCommand implements ICommand
 
 		final var requiredPermission = getRequiredPermission();
 		if (!Utils.hasPerm(message.getMember(), requiredPermission))
-			Utils.sendMessage(channel, PermissionError.getErrorMessage(requiredPermission), false);
+			Utils.sendMessage(channel, PermissionError.getErrorMessage(requiredPermission));
 		else
 		{
 			if (log != null)

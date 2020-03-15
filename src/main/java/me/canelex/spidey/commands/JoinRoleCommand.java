@@ -26,7 +26,7 @@ public class JoinRoleCommand implements ICommand
 
         if (!Utils.hasPerm(member, requiredPermission))
         {
-            Utils.sendMessage(channel, PermissionError.getErrorMessage(requiredPermission), false);
+            Utils.sendMessage(channel, PermissionError.getErrorMessage(requiredPermission));
             return;
         }
 
@@ -38,7 +38,7 @@ public class JoinRoleCommand implements ICommand
             else
             {
                 MySQL.removeRole(guildId);
-                Utils.sendMessage(channel, ":white_check_mark: The join Role has been removed.", false);
+                Utils.sendMessage(channel, ":white_check_mark: The join Role has been removed.");
             }
             return;
         }
@@ -66,7 +66,7 @@ public class JoinRoleCommand implements ICommand
         else
         {
             MySQL.setRole(guildId, roleId);
-            Utils.sendMessage(channel, ":white_check_mark: The join Role has been set to Role `" + role.getName() + "`.", false);
+            Utils.sendMessage(channel, ":white_check_mark: The join Role has been set to Role `" + role.getName() + "`.");
         }
     }
 

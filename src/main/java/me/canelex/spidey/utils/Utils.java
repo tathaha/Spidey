@@ -49,12 +49,9 @@ public class Utils extends Core
         return toCheck.hasPermission(perm);
     }
 
-    public static void sendMessage(final MessageChannel ch, final String toSend, final boolean isSpoiler)
+    public static void sendMessage(final MessageChannel ch, final String toSend)
     {
-        if (isSpoiler)
-            ch.sendMessage("||" + toSend + "||").queue();
-        else
-            ch.sendMessage(toSend).queue();
+        ch.sendMessage(toSend).queue();
     }
 
     public static void sendMessage(final MessageChannel ch, final MessageEmbed embed)
@@ -64,7 +61,9 @@ public class Utils extends Core
 
     public static void sendPrivateMessage(final User user, final String toSend)
     {
-        user.openPrivateChannel().queue(channel -> channel.sendMessage(toSend).queue());
+        user.openPrivateChannel()
+            .flatMap(channel -> channel.sendMessage(toSend))
+            .queue();
     }
 
     public static void deleteMessage(final Message msg)

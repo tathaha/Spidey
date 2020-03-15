@@ -23,7 +23,7 @@ public class BanCommand implements ICommand
 		final var requiredPermission = getRequiredPermission();
 		if (!Utils.hasPerm(message.getMember(), requiredPermission))
 		{
-			Utils.sendMessage(channel, PermissionError.getErrorMessage(requiredPermission), false);
+			Utils.sendMessage(channel, PermissionError.getErrorMessage(requiredPermission));
 			return;
 		}
 
@@ -50,7 +50,6 @@ public class BanCommand implements ICommand
 			Utils.returnError("Can't ban the user due to permission hierarchy position", message);
 
 		var delDays = 0;
-
 		try
 		{
 			delDays = Math.max(0, Math.min(Integer.parseUnsignedInt(args[2]), 7));

@@ -17,7 +17,7 @@ public class SlowmodeCommand implements ICommand
 		final var channel = message.getChannel();
 		final var requiredPermission = getRequiredPermission();
 		if (!Utils.hasPerm(message.getMember(), requiredPermission))
-			Utils.sendMessage(channel, PermissionError.getErrorMessage(requiredPermission), false);
+			Utils.sendMessage(channel, PermissionError.getErrorMessage(requiredPermission));
 		else
 		{
 			var seconds = 0;
@@ -30,7 +30,7 @@ public class SlowmodeCommand implements ICommand
 				}
 				catch (final NumberFormatException ignored)
 				{
-					Utils.sendMessage(channel, ":no_entry: Couldn't parse argument.", false);
+					Utils.sendMessage(channel, ":no_entry: Couldn't parse argument.");
 					return;
 				}
 			}

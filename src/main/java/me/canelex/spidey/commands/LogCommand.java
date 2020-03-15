@@ -40,7 +40,7 @@ public class LogCommand implements ICommand
 			}
 		}
 		else
-			Utils.sendMessage(channel, PermissionError.getErrorMessage(requiredPermission), false);
+			Utils.sendMessage(channel, PermissionError.getErrorMessage(requiredPermission));
 	}
 
 	@Override

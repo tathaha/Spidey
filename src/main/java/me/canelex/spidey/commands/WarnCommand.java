@@ -25,7 +25,7 @@ public class WarnCommand implements ICommand
 		final var requiredPermission = getRequiredPermission();
 		if (!Utils.hasPerm(member, requiredPermission))
 		{
-			Utils.sendMessage(message.getChannel(), PermissionError.getErrorMessage(requiredPermission), false);
+			Utils.sendMessage(message.getChannel(), PermissionError.getErrorMessage(requiredPermission));
 			return;
 		}
 		

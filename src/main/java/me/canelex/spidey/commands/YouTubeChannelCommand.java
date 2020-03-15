@@ -79,7 +79,7 @@ public class YouTubeChannelCommand implements ICommand
 				channel.sendMessage("Fetching data..").delay(Duration.ofSeconds(4)).flatMap(msg -> msg.editMessage(eb.build()).override(true)).queue();
 			}
 			else
-				Utils.sendMessage(channel, ":no_entry: No results found.", false);
+				Utils.sendMessage(channel, ":no_entry: No results found.");
 		}
 		catch (final Exception ex)
 		{

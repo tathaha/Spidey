@@ -149,7 +149,7 @@ public class Events extends ListenerAdapter
 			{
 				final var selfMember = guild.getSelfMember();
 				if (!selfMember.canInteract(role) || !Utils.hasPerm(selfMember, Permission.MANAGE_ROLES))
-					Utils.sendMessage(channel, "I'm not able to add the joinrole to user **" + user.getAsTag() + "** as i don't have permissions to do so.", false);
+					Utils.sendMessage(channel, "I'm not able to add the joinrole to user **" + user.getAsTag() + "** as i don't have permissions to do so.");
 				else
 					guild.addRoleToMember(userId, role).queue();
 			}

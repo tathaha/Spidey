@@ -71,7 +71,7 @@ public class UploadEmoteCommand implements ICommand
 
         final var requiredPermission = getRequiredPermission();
         if (!Utils.hasPerm(message.getMember(), requiredPermission))
-            Utils.sendMessage(channel, PermissionError.getErrorMessage(requiredPermission), false);
+            Utils.sendMessage(channel, PermissionError.getErrorMessage(requiredPermission));
         else if (guild.getMaxEmotes() == guild.getEmoteCache().size())
             Utils.returnError("Guild has the maximum amount of emotes", message);
         else
@@ -98,7 +98,7 @@ public class UploadEmoteCommand implements ICommand
                     guild.retrieveEmotes().queue(emotes ->
                     {
                         final var amount = guild.getMaxEmotes() - emotes.size();
-                        Utils.sendMessage(channel, "Emote " + emote.getAsMention() + " has been successfully uploaded! Emote slots left: **" + (amount == 0 ? "None" : amount) + "**", false);
+                        Utils.sendMessage(channel, "Emote " + emote.getAsMention() + " has been successfully uploaded! Emote slots left: **" + (amount == 0 ? "None" : amount) + "**");
                     })
                 , failure ->
                     Utils.returnError("Unfortunately, we could not create the emote due to an internal error: **" + failure.getMessage() + "**. Please report this message to the Developer.", message));
