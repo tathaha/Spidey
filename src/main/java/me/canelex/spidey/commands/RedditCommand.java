@@ -27,11 +27,11 @@ public class RedditCommand implements ICommand
 		}
 		final var eb = Utils.createEmbedBuilder(message.getAuthor());
 		final var communityIcon = reddit.getCommunityIcon();
-		final var comIcon = communityIcon.length() == 0 ? "https://canelex.ymastersk.net/up/reddit.png" : communityIcon;
+		final var comIcon = communityIcon.length() == 0 ? "https://up.mlnr.dev/reddit.png" : communityIcon;
 		final var icon = reddit.getIcon();
 		final var title = reddit.getTitle();
 		final var desc = reddit.getDesc();
-		eb.setAuthor("r/" + reddit.getName(), "https://reddit.com/r/" + subreddit, "https://canelex.ymastersk.net/up/reddit.png");
+		eb.setAuthor("r/" + reddit.getName(), "https://reddit.com/r/" + subreddit, "https://up.mlnr.dev/reddit.png");
 		eb.setThumbnail(icon.length() == 0 ? comIcon : icon);
 		eb.setColor(16727832);
 		eb.addField("Subscribers", "**" + reddit.getSubs() + "**", false);

@@ -58,7 +58,7 @@ public class YouTubeChannelCommand implements ICommand
 				final var sb = new SocialBlade().getYouTube(channelId);
 				final var subs = sb.getSubs();
 				final var views = sb.getViews();
-				eb.setAuthor(c.getSnippet().getTitle(), "https://youtube.com/channel/" + channelId, "https://canelex.ymastersk.net/up/yt.png");
+				eb.setAuthor(c.getSnippet().getTitle(), "https://youtube.com/channel/" + channelId, "https://up.mlnr.dev/yt.png");
 				eb.setColor(14765121);
 				eb.setThumbnail(sb.getAvatar());
 				eb.addField("Subscribers", (subs >= 1000 ? "**" + Utils.getCompactNumber(subs) + "** (**" + FORMATTER.format(subs) + "**)" : "**" + subs + "**"), false);
