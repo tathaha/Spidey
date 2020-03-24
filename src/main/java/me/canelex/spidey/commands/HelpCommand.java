@@ -59,7 +59,7 @@ public class HelpCommand extends Core implements ICommand
         }
         else
         {
-            final var cmd = message.getContentRaw().substring(7);
+            final var cmd = message.getContentRaw().substring(8);
             if (!commandsMap.containsKey(cmd))
                 Utils.sendMessage(channel, ":no_entry: **" + cmd + "** isn't a valid command.");
             else
