@@ -1,6 +1,5 @@
 package me.canelex.spidey.commands;
 
-import me.canelex.jda.api.OnlineStatus;
 import me.canelex.jda.api.entities.Member;
 import me.canelex.jda.api.entities.Message;
 import me.canelex.jda.api.entities.User;
@@ -12,7 +11,6 @@ import java.awt.*;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @SuppressWarnings({"unused", "ConstantConditions"})
 public class MembercountCommand implements ICommand
@@ -22,12 +20,6 @@ public class MembercountCommand implements ICommand
 	{
 		final var memberCache = message.getGuild().getMemberCache();
 		final var bots = memberCache.applyStream(stream -> stream.map(Member::getUser).filter(User::isBot).count());
-		final var totalOnline = memberCache.applyStream(stream -> stream.filter(member -> member.getOnlineStatus() == OnlineStatus.DO_NOT_DISTURB || member.getOnlineStatus() == OnlineStatus.IDLE || member.getOnlineStatus() == OnlineStatus.ONLINE).collect(Collectors.toList()));
-		final var botsOnline = totalOnline.stream().map(Member::getUser).filter(User::isBot).count();
-		final var humansOnline = totalOnline.size() - botsOnline;
-		final var desktopOnline = memberCache.applyStream(stream -> stream.filter(Utils::isDesktop).count());
-		final var mobileOnline = memberCache.applyStream(stream -> stream.filter(Utils::isMobile).count());
-		final var webOnline = memberCache.applyStream(stream -> stream.filter(Utils::isWeb).count());
 		final var total = memberCache.size();
 
 		final var eb = Utils.createEmbedBuilder(message.getAuthor());
@@ -37,12 +29,6 @@ public class MembercountCommand implements ICommand
 		eb.addField("Total", "**" + total + "**", true);
 		eb.addField("Humans", "**" + (total - bots) + "**", true);
 		eb.addField("Bots", "**" + bots + "**", true);
-		eb.addField("Total online", "**" + totalOnline.size() + "**", true);
-		eb.addField("Humans online", "**" + humansOnline + "**", true);
-		eb.addField("Bots online", "**" + botsOnline + "**", true);
-		eb.addField("Desktop users online", "**" + desktopOnline + "**", true);
-		eb.addField("Mobile users online", "**" + mobileOnline + "**", true);
-		eb.addField("Web users online", "**" + (webOnline - botsOnline) + "**", true);
 		Utils.sendMessage(message.getChannel(), eb.build());
 	}
 
@@ -53,7 +39,7 @@ public class MembercountCommand implements ICommand
 	@Override
 	public final Category getCategory() { return Category.INFORMATIVE; }
 	@Override
-	public final String getUsage() { return "s!membercount | s!members"; }
+	public final String getUsage() { return "sd!membercount | sd!members"; }
 	@Override
 	public final List<String> getAliases() { return Collections.singletonList("members"); }
 }

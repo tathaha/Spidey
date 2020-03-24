@@ -33,5 +33,5 @@ public class AvatarCommand implements ICommand
 	@Override
 	public final Category getCategory() { return Category.INFORMATIVE; }
 	@Override
-	public final String getUsage() { return "s!avatar (@someone)"; }
+	public final String getUsage() { return "sd!avatar (@someone)"; }
 }

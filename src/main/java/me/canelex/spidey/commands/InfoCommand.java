@@ -57,5 +57,5 @@ public class InfoCommand implements ICommand
 	@Override
 	public final Category getCategory() { return Category.INFORMATIVE; }
 	@Override
-	public final String getUsage() { return "s!info"; }
+	public final String getUsage() { return "sd!info"; }
 }

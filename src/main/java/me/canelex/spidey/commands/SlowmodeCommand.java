@@ -43,7 +43,7 @@ public class SlowmodeCommand implements ICommand
 	{
 		final var maxSlowmode = TextChannel.MAX_SLOWMODE;
 		final var hours = maxSlowmode / 3600;
-		return "Sets the slowmode of the channel. Limit: `" + maxSlowmode + "s` - `" + hours + "h`. Example - `s!slowmode <seconds | off>`";
+		return "Sets the slowmode of the channel. Limit: `" + maxSlowmode + "s` - `" + hours + "h`. Example - `sd!slowmode <seconds | off>`";
 	}
 	@Override
 	public final Permission getRequiredPermission() { return Permission.MANAGE_CHANNEL; }
@@ -52,5 +52,5 @@ public class SlowmodeCommand implements ICommand
 	@Override
 	public final Category getCategory() { return Category.MODERATION; }
 	@Override
-	public final String getUsage() { return "s!slowmode <seconds/off>"; }
+	public final String getUsage() { return "sd!slowmode <seconds/off>"; }
 }

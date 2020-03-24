@@ -37,5 +37,5 @@ public class LeaveCommand implements ICommand
 	@Override
 	public final Category getCategory() { return Category.UTILITY; }
 	@Override
-	public final String getUsage() { return "s!leave"; }
+	public final String getUsage() { return "sd!leave"; }
 }

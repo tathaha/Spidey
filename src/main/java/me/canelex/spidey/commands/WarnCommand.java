@@ -86,5 +86,5 @@ public class WarnCommand implements ICommand
 	@Override
 	public final Category getCategory() { return Category.MODERATION; }
 	@Override
-	public final String getUsage() { return "s!warn <@someone> <reason>"; }
+	public final String getUsage() { return "sd!warn <@someone> <reason>"; }
 }

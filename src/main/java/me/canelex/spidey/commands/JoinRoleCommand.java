@@ -79,5 +79,5 @@ public class JoinRoleCommand implements ICommand
     @Override
     public final Category getCategory() { return Category.UTILITY; }
     @Override
-    public final String getUsage() { return "s!joinrole (id of the Role, if not given, the Role will be reset if set)"; }
+    public final String getUsage() { return "sd!joinrole (id of the Role, if not given, the Role will be reset if set)"; }
 }

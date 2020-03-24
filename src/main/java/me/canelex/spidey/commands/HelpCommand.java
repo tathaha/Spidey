@@ -53,7 +53,7 @@ public class HelpCommand extends Core implements ICommand
                 sb.append(category.getFriendlyName());
                 sb.append(" ").append("-").append(" ");
                 sb.append(listToString(commandz, ICommand::getInvoke));
-                eb.setDescription("Prefix: **s!**\n" + sb.toString());
+                eb.setDescription("Prefix: **sd!**\n" + sb.toString());
             });
             Utils.sendMessage(channel, eb.build());
         }
@@ -100,7 +100,7 @@ public class HelpCommand extends Core implements ICommand
     @Override
     public final String getDescription() { return "Shows the help message"; }
     @Override
-    public final String getUsage() { return "s!help (command)"; }
+    public final String getUsage() { return "sd!help (command)"; }
     @Override
     public final Category getCategory() { return Category.INFORMATIVE; }
 }

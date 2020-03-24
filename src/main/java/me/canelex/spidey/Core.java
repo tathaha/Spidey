@@ -24,8 +24,8 @@ public class Core
 	{
 		try
 		{
-			jda = JDABuilder.create(Secrets.TOKEN, EnumSet.of(GatewayIntent.GUILD_BANS, GatewayIntent.GUILD_INVITES, GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_EMOJIS, GatewayIntent.GUILD_PRESENCES))
-					.setDisabledCacheFlags(EnumSet.of(CacheFlag.ACTIVITY, CacheFlag.VOICE_STATE))
+			jda = JDABuilder.create(Secrets.TOKEN, EnumSet.of(GatewayIntent.GUILD_BANS, GatewayIntent.GUILD_INVITES, GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_EMOJIS))
+					.disableCache(EnumSet.of(CacheFlag.ACTIVITY, CacheFlag.VOICE_STATE, CacheFlag.CLIENT_STATUS))
 					.addEventListeners(new Events())
 					.setStatus(OnlineStatus.DO_NOT_DISTURB)
 					.build()

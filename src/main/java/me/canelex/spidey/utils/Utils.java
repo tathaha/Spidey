@@ -3,7 +3,6 @@ package me.canelex.spidey.utils;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import io.github.classgraph.ClassGraph;
 import me.canelex.jda.api.EmbedBuilder;
-import me.canelex.jda.api.OnlineStatus;
 import me.canelex.jda.api.Permission;
 import me.canelex.jda.api.entities.*;
 import me.canelex.jda.api.utils.data.DataObject;
@@ -99,21 +98,6 @@ public class Utils extends Core
     public static void sendPrivateMessageFormat(final User u, final String message, final Object... args)
     {
         sendPrivateMessage(u, String.format(message, args));
-    }
-
-    public static boolean isWeb(final Member member)
-    {
-        return member.getOnlineStatus(ClientType.WEB) != OnlineStatus.OFFLINE;
-    }
-
-    public static boolean isDesktop(final Member member)
-    {
-        return member.getOnlineStatus(ClientType.DESKTOP) != OnlineStatus.OFFLINE;
-    }
-
-    public static boolean isMobile(final Member member)
-    {
-        return member.getOnlineStatus(ClientType.MOBILE) != OnlineStatus.OFFLINE;
     }
 
     public static void returnError(final String errMsg, final Message origin)

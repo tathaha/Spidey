@@ -25,5 +25,5 @@ public class GoogleSearchCommand implements ICommand
 	@Override
 	public final Category getCategory() { return Category.MISC; }
 	@Override
-	public final String getUsage() { return "s!g <query>"; }
+	public final String getUsage() { return "sd!g <query>"; }
 }

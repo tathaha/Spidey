@@ -41,7 +41,7 @@ public class Events extends ListenerAdapter
 		final var message = e.getMessage();
 		final var author = e.getAuthor();
 
-		if (message.getContentRaw().startsWith("s!") && !author.isBot())
+		if (message.getContentRaw().startsWith("sd!") && !author.isBot())
 			CommandHandler.handle(message);
 
 		final var channel = guild.getTextChannelById(MySQL.getChannel(guild.getIdLong()));
