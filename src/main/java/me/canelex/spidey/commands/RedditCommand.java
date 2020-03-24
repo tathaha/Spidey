@@ -43,11 +43,11 @@ public class RedditCommand implements ICommand
 	}
 
 	@Override
-	public final String getDescription() { return "Shows you info about entered subreddit. For example `sd!reddit PewdiepieSubmissions`."; }
+	public final String getDescription() { return "Shows you info about entered subreddit. For example `s!reddit PewdiepieSubmissions`."; }
 	@Override
 	public final String getInvoke() { return "reddit"; }
 	@Override
 	public final Category getCategory() { return Category.SOCIAL; }
 	@Override
-	public final String getUsage() { return "sd!reddit <subreddit>"; }
+	public final String getUsage() { return "s!reddit <subreddit>"; }
 }

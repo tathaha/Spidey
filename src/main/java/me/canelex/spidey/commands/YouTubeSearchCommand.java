@@ -25,5 +25,5 @@ public class YouTubeSearchCommand implements ICommand
     @Override
     public final Category getCategory() { return Category.SOCIAL; }
     @Override
-    public final String getUsage() { return "sd!yt <query>"; }
+    public final String getUsage() { return "s!yt <query>"; }
 }

@@ -27,5 +27,5 @@ public class SupportGuildsCommand implements ICommand
 	@Override
 	public final Category getCategory() { return Category.INFORMATIVE; }
 	@Override
-	public final String getUsage() { return "sd!sguilds"; }
+	public final String getUsage() { return "s!sguilds"; }
 }

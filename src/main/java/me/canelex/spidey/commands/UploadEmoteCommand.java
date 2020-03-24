@@ -114,5 +114,5 @@ public class UploadEmoteCommand implements ICommand
     @Override
     public final Category getCategory() { return Category.UTILITY; }
     @Override
-    public final String getUsage() { return "sd!uploademote <link> (name)"; }
+    public final String getUsage() { return "s!uploademote <link> (name)"; }
 }

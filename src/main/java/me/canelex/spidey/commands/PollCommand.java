@@ -56,5 +56,5 @@ public class PollCommand implements ICommand
 	@Override
 	public final Category getCategory() { return Category.UTILITY; }
 	@Override
-	public final String getUsage() { return "sd!poll <question>"; }
+	public final String getUsage() { return "s!poll <question>"; }
 }

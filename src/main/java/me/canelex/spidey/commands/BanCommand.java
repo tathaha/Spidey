@@ -95,5 +95,5 @@ public class BanCommand implements ICommand
 	@Override
 	public final Category getCategory() { return Category.MODERATION; }
 	@Override
-	public final String getUsage() { return "sd!ban <@someone> <delDays> <reason>"; }
+	public final String getUsage() { return "s!ban <@someone> <delDays> <reason>"; }
 }

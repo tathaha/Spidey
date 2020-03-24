@@ -43,5 +43,5 @@ public class UrbanDictionaryCommand implements ICommand
 	@Override
 	public final Category getCategory() { return Category.MISC; }
 	@Override
-	public final String getUsage() { return "sd!ud <phrase>"; }
+	public final String getUsage() { return "s!ud <phrase>"; }
 }

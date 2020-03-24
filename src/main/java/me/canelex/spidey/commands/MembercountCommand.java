@@ -39,7 +39,7 @@ public class MembercountCommand implements ICommand
 	@Override
 	public final Category getCategory() { return Category.INFORMATIVE; }
 	@Override
-	public final String getUsage() { return "sd!membercount | sd!members"; }
+	public final String getUsage() { return "s!membercount | s!members"; }
 	@Override
 	public final List<String> getAliases() { return Collections.singletonList("members"); }
 }

@@ -12,7 +12,7 @@ public class CommandHandler
 
 	public static void handle(final Message msg)
 	{
-		final var content = msg.getContentRaw().replace("sd!", "");
+		final var content = msg.getContentRaw().replace("s!", "");
 		if (content.length() != 0)
 		{
 			final var command = content.contains(" ") ? content.substring(0, content.indexOf(' ')) : content;

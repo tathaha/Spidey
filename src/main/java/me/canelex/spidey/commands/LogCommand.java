@@ -52,5 +52,5 @@ public class LogCommand implements ICommand
 	@Override
 	public final Category getCategory() { return Category.MODERATION; }
 	@Override
-	public final String getUsage() { return "sd!log"; }
+	public final String getUsage() { return "s!log"; }
 }

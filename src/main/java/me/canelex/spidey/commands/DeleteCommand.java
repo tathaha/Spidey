@@ -112,5 +112,5 @@ public class DeleteCommand implements ICommand
 	@Override
 	public final Category getCategory() { return Category.MODERATION; }
 	@Override
-	public final String getUsage() { return "sd!d <count/@someone> <count>"; }
+	public final String getUsage() { return "s!d <count/@someone> <count>"; }
 }

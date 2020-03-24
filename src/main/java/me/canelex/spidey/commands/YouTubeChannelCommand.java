@@ -94,5 +94,5 @@ public class YouTubeChannelCommand implements ICommand
 	@Override
 	public final Category getCategory() { return Category.SOCIAL; }
 	@Override
-	public final String getUsage() { return "sd!ytchannel <channel/id>"; }
+	public final String getUsage() { return "s!ytchannel <channel/id>"; }
 }
