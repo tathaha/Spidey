@@ -2,6 +2,7 @@ package me.canelex.spidey.objects.command;
 
 import me.canelex.jda.api.entities.Message;
 import me.canelex.spidey.Core;
+import me.canelex.spidey.utils.Utils;
 
 public class CommandHandler
 {
@@ -12,7 +13,7 @@ public class CommandHandler
 
 	public static void handle(final Message msg)
 	{
-		final var content = msg.getContentRaw().replace("s!", "");
+		final var content = msg.getContentRaw().toLowerCase().replace("s!", "");
 		if (content.length() != 0)
 		{
 			final var command = content.contains(" ") ? content.substring(0, content.indexOf(' ')) : content;
@@ -23,6 +24,10 @@ public class CommandHandler
 				final var args = content.split("\\s+", cmd.getMaxArgs());
 				cmd.action(args, msg);
 			}
+			else
+				Utils.returnError("**" + command + "** isn't a valid command", msg);
 		}
+		else
+			Utils.returnError("Please specify a command", msg);
 	}
 }
