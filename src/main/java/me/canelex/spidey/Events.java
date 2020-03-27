@@ -166,19 +166,15 @@ public class Events extends ListenerAdapter
 
 			guild.retrieveInvites().queue(invites ->
 			{
-				for (var invite : invites)
+				for (final var invite : invites)
 				{
-					final var code = invite.getCode();
-					if (invitesMap.containsKey(code))
+					final var wrappedInvite = invitesMap.get(invite.getCode());
+					if (invite.getUses() > wrappedInvite.getUses())
 					{
-						final var wrappedInvite = invitesMap.get(code);
-						if (invite.getUses() > wrappedInvite.getUses())
-						{
-							wrappedInvite.incrementUses();
-							eb.addField("Invite link", "**" + invite.getUrl() + "**", false);
-							eb.addField("Inviter", "**" + invite.getInviter().getAsTag() + "**", true);
-							break;
-						}
+						wrappedInvite.incrementUses();
+						eb.addField("Invite link", "**" + invite.getUrl() + "**", false);
+						eb.addField("Inviter", "**" + invite.getInviter().getAsTag() + "**", true);
+						break;
 					}
 				}
 				Utils.sendMessage(channel, eb.build());
