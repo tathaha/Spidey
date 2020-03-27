@@ -8,7 +8,6 @@ import me.canelex.spidey.utils.PermissionError;
 import me.canelex.spidey.utils.Utils;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
@@ -64,7 +63,9 @@ public class DeleteCommand implements ICommand
 					future = messages.get(0).delete().submit();
 				else
 					future = CompletableFuture.allOf(channel.purgeMessages(messages).toArray(new CompletableFuture[0]));
-				future.thenRunAsync(() -> channel.sendMessage(Utils.generateSuccess(count, null)).queue(m -> m.delete().queueAfter(5, TimeUnit.SECONDS)));
+				future.thenRunAsync(() -> channel.sendMessage(Utils.generateSuccess(count, null))
+					   							 .flatMap(Message::delete)
+					   							 .queue());
 			});
 		}
 		else
@@ -96,7 +97,9 @@ public class DeleteCommand implements ICommand
 					future = newList.get(0).delete().submit();
 				else
 					future = CompletableFuture.allOf(channel.purgeMessages(newList).toArray(new CompletableFuture[0]));
-				future.thenRunAsync(() -> channel.sendMessage(Utils.generateSuccess(newList.size(), user)).queue(m -> m.delete().queueAfter(5, TimeUnit.SECONDS)));
+				future.thenRunAsync(() -> channel.sendMessage(Utils.generateSuccess(newList.size(), user))
+												 .flatMap(Message::delete)
+												 .queue());
 			});
 		}
 	}

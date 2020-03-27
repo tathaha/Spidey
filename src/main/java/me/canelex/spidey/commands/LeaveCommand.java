@@ -7,7 +7,7 @@ import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.utils.PermissionError;
 import me.canelex.spidey.utils.Utils;
 
-import java.util.concurrent.TimeUnit;
+import java.time.Duration;
 
 @SuppressWarnings("unused")
 public class LeaveCommand implements ICommand
@@ -23,9 +23,13 @@ public class LeaveCommand implements ICommand
 			Utils.sendMessage(channel, PermissionError.getErrorMessage(requiredPermission));
 		else
 		{
-			channel.sendMessage("Bye.").queue(m -> m.delete().queueAfter(5, TimeUnit.SECONDS));
-			Utils.deleteMessage(message);
-			guild.leave().queue();
+			channel.sendMessage("Bye.")
+				   .delay(Duration.ofSeconds(5))
+				   .flatMap(Message::delete)
+				   .delay(Duration.ofSeconds(0))
+				   .flatMap(ignored -> message.delete())
+				   .flatMap(ignored -> guild.leave())
+				   .queue();
 		}
 	}
 

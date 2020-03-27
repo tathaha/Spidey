@@ -21,6 +21,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.Random;
@@ -85,11 +86,6 @@ public class Utils extends Core
         return new EmbedBuilder().setFooter("Command executed by " + u.getAsTag(), u.getAvatarUrl());
     }
 
-    public static String getInviteUrl(final long guildId)
-    {
-        return String.format("https://discordapp.com/oauth2/authorize?client_id=468523263853592576&guild_id=%s&scope=bot&permissions=1342188724", guildId);
-    }
-
     public static String getInviteUrl()
     {
         return INVITE_LINK;
@@ -103,11 +99,11 @@ public class Utils extends Core
     public static void returnError(final String errMsg, final Message origin)
     {
         origin.addReaction(Emojis.CROSS).queue();
-        origin.getTextChannel().sendMessage(String.format(":no_entry: %s.", errMsg)).queue(m ->
-        {
-            origin.delete().queueAfter(5, TimeUnit.SECONDS, null, userGone -> {});
-            m.delete().queueAfter(5, TimeUnit.SECONDS, null, botGone -> {});
-        });
+        origin.getTextChannel().sendMessage(String.format(":no_entry: %s.", errMsg))
+                               .delay(Duration.ofSeconds(5))
+                               .flatMap(Message::delete)
+                               .flatMap(ignored -> origin.delete())
+                               .queue();
     }
 
     public static String generateSuccess(final int count, final User u)

@@ -5,7 +5,7 @@ import me.canelex.spidey.objects.command.Category;
 import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.utils.Utils;
 
-import java.util.concurrent.TimeUnit;
+import java.time.Duration;
 
 @SuppressWarnings("unused")
 public class InviteCommand implements ICommand
@@ -13,9 +13,12 @@ public class InviteCommand implements ICommand
     @Override
     public final void action(final String[] args, final Message message)
     {
-        message.delete().queueAfter(5, TimeUnit.SECONDS);
         Utils.sendPrivateMessageFormat(message.getAuthor(), "Link for inviting me: ||" + Utils.getInviteUrl() + "||");
-        message.getChannel().sendMessage(":white_check_mark: Sent you an invite link.").queue(m -> m.delete().queueAfter(5, TimeUnit.SECONDS));
+        message.getChannel().sendMessage(":white_check_mark: Sent you an invite link.")
+                            .delay(Duration.ofSeconds(5))
+                            .flatMap(Message::delete)
+                            .flatMap(ignored -> message.delete())
+                            .queue();
     }
 
     @Override

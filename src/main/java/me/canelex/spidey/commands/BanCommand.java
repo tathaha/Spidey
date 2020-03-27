@@ -8,7 +8,7 @@ import me.canelex.spidey.utils.Emojis;
 import me.canelex.spidey.utils.PermissionError;
 import me.canelex.spidey.utils.Utils;
 
-import java.util.concurrent.TimeUnit;
+import java.time.Duration;
 
 @SuppressWarnings("unused")
 public class BanCommand implements ICommand
@@ -19,7 +19,6 @@ public class BanCommand implements ICommand
 		final var channel = message.getChannel();
 		final var guild = message.getGuild();
 
-		message.delete().queueAfter(5, TimeUnit.SECONDS);
 		final var requiredPermission = getRequiredPermission();
 		if (!Utils.hasPerm(message.getMember(), requiredPermission))
 		{
@@ -77,11 +76,11 @@ public class BanCommand implements ICommand
 		message.addReaction(Emojis.CHECK).queue();
 		guild.ban(mb, delDays, reasonMessage).queue();
 
-		channel.sendMessage(banMessage).queue(m ->
-		{
-			message.delete().queueAfter(5, TimeUnit.SECONDS, null, userGone -> {});
-			m.delete().queueAfter(5, TimeUnit.SECONDS, null, botGone -> {});
-		});
+		channel.sendMessage(banMessage)
+			   .delay(Duration.ofSeconds(5))
+			   .flatMap(Message::delete)
+			   .flatMap(ignored -> message.delete())
+			   .queue();
 	}
 
 	@Override

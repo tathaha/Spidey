@@ -6,8 +6,6 @@ import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.objects.json.Reddit;
 import me.canelex.spidey.utils.Utils;
 
-import java.util.concurrent.TimeUnit;
-
 @SuppressWarnings("unused")
 public class RedditCommand implements ICommand
 {
@@ -18,11 +16,7 @@ public class RedditCommand implements ICommand
 		final var reddit = new Reddit().getSubReddit(subreddit);
 		if (reddit == null)
 		{
-			message.getChannel().sendMessage(":no_entry: Subreddit not found.").queue(m ->
-			{
-				m.delete().queueAfter(5, TimeUnit.SECONDS);
-				message.delete().queueAfter(5, TimeUnit.SECONDS);
-			});
+			Utils.returnError("Subreddit not found", message);
 			return;
 		}
 		final var eb = Utils.createEmbedBuilder(message.getAuthor());
