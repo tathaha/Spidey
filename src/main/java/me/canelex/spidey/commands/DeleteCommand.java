@@ -7,6 +7,7 @@ import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.utils.PermissionError;
 import me.canelex.spidey.utils.Utils;
 
+import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -64,6 +65,7 @@ public class DeleteCommand implements ICommand
 				else
 					future = CompletableFuture.allOf(channel.purgeMessages(messages).toArray(new CompletableFuture[0]));
 				future.thenRunAsync(() -> channel.sendMessage(Utils.generateSuccess(count, null))
+						                         .delay(Duration.ofSeconds(5))
 					   							 .flatMap(Message::delete)
 					   							 .queue());
 			});
@@ -98,6 +100,7 @@ public class DeleteCommand implements ICommand
 				else
 					future = CompletableFuture.allOf(channel.purgeMessages(newList).toArray(new CompletableFuture[0]));
 				future.thenRunAsync(() -> channel.sendMessage(Utils.generateSuccess(newList.size(), user))
+						                         .delay(Duration.ofSeconds(5))
 												 .flatMap(Message::delete)
 												 .queue());
 			});
