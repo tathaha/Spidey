@@ -128,8 +128,8 @@ public class Utils extends Core
             for (final var cls : result.getClassesImplementing("me.canelex.spidey.objects.command.ICommand"))
             {
                 final var cmd = (ICommand) cls.loadClass().getDeclaredConstructor().newInstance();
-                Core.getCommands().put(cmd.getInvoke().toLowerCase(), cmd);
-                cmd.getAliases().forEach(alias -> Core.getCommands().put(alias.toLowerCase(), cmd));
+                Core.getCommands().put(cmd.getInvoke(), cmd);
+                cmd.getAliases().forEach(alias -> Core.getCommands().put(alias, cmd));
             }
         }
         catch (final Exception e)
