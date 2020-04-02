@@ -1,6 +1,5 @@
 package me.canelex.spidey.objects.json;
 
-import me.canelex.jda.api.utils.data.DataObject;
 import me.canelex.spidey.Secrets;
 import me.canelex.spidey.utils.Utils;
 import org.slf4j.Logger;
@@ -19,31 +18,33 @@ public class SocialBlade
     private String avatar;
     private String country;
     private String banner;
+    private final String id;
     private static final Logger LOG = LoggerFactory.getLogger(SocialBlade.class);
 
-    public final SocialBlade getYouTube(final String id)
+    public SocialBlade(final String id)
     {
-        final var email = Secrets.EMAIL;
-        final var l = Utils.getJson(
-                "https://api.socialblade.com/v2/bridge?email=" + email + "&password=" + getMD5());
-
-        final var token = l.getObject("id").getString("token");
-        return fromJson(Utils.getJson("https://api.socialblade.com/v2/youtube/statistics?query=statistics&username="
-                + id + "&email=" + email + "&token=" + token));
+        this.id = id;
+        setData();
     }
 
-    private SocialBlade fromJson(final DataObject o)
+    private void setData()
     {
-        final var data = o.getObject("data");
-        this.videos = data.getInt("uploads");
-        this.subs = data.getInt("subs");
-        this.views = data.getLong("views");
-        this.partner = 1 == data.getInt("partner");
-        this.verified = 1 == data.getInt("isVerified");
-        this.avatar = data.getString("avatar").replace("//a//", "/a/").replace("s88", "s300");
-        this.country = data.getString("country");
-        this.banner = data.getString("banner");
-        return this;
+        final var email = Secrets.EMAIL;
+        final var auth = Utils.getJson("https://api.socialblade.com/v2/bridge?email=" + email + "&password=" + getMD5());
+        final var json = Utils.getJson("https://api.socialblade.com/v2/youtube/statistics?query=statistics&username="
+                + id + "&email=" + email + "&token=" + auth.getObject("id").getString("token"));
+        if (json.getObject("status").getInt("response") == 200)
+        {
+            final var data = json.getObject("data");
+            this.videos = data.getInt("uploads");
+            this.subs = data.getInt("subs");
+            this.views = data.getLong("views");
+            this.partner = 1 == data.getInt("partner");
+            this.verified = 1 == data.getInt("isVerified");
+            this.avatar = data.getString("avatar").replace("//a//", "/a/").replace("s88", "s300");
+            this.country = data.getString("country");
+            this.banner = data.getString("banner");
+        }
     }
 
     private String getMD5()

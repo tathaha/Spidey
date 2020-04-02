@@ -47,6 +47,12 @@ public class YouTubeChannelCommand implements ICommand
 
 			if (!searchResponse.getItems().isEmpty())
 			{
+				final var eb = Utils.createEmbedBuilder(message.getAuthor());
+				channel.sendMessage("Fetching data...")
+					   .delay(Duration.ofSeconds(4))
+					   .flatMap(msg -> msg.editMessage(eb.build()).override(true))
+					   .queue();
+
 				final var channelId = searchResponse.getItems().get(0).getSnippet().getChannelId();
 				final var channels = youtube.channels().list("snippet, statistics").setId(channelId);
 				final var c = channels.execute().getItems().get(0);
@@ -54,8 +60,7 @@ public class YouTubeChannelCommand implements ICommand
 				cal.setTimeInMillis(c.getSnippet().getPublishedAt().getValue());
 				final var creation = date.format(cal.getTime());
 
-				final var eb = Utils.createEmbedBuilder(message.getAuthor());
-				final var sb = new SocialBlade().getYouTube(channelId);
+				final var sb = new SocialBlade(channelId);
 				final var subs = sb.getSubs();
 				final var views = sb.getViews();
 				eb.setAuthor(c.getSnippet().getTitle(), "https://youtube.com/channel/" + channelId, "https://up.mlnr.dev/yt.png");
@@ -76,7 +81,6 @@ public class YouTubeChannelCommand implements ICommand
 					eb.addBlankField(false);
 					eb.setImage(sb.getBanner());
 				}
-				channel.sendMessage("Fetching data..").delay(Duration.ofSeconds(4)).flatMap(msg -> msg.editMessage(eb.build()).override(true)).queue();
 			}
 			else
 				Utils.sendMessage(channel, ":no_entry: No results found.");
