@@ -13,8 +13,8 @@ public class RedditCommand implements ICommand
 	public final void action(final String[] args, final Message message)
 	{
 		final var subreddit = message.getContentRaw().substring(9);
-		final var reddit = new Reddit().getSubReddit(subreddit);
-		if (reddit == null)
+		final var reddit = new Reddit(subreddit);
+		if (!reddit.exists())
 		{
 			Utils.returnError("Subreddit not found", message);
 			return;

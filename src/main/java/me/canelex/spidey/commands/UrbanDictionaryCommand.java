@@ -15,25 +15,23 @@ public class UrbanDictionaryCommand implements ICommand
 	{
 		final var term = message.getContentRaw().substring(5);
 		final var channel = message.getChannel();
-		try
-		{
-			final var ud = new UrbanDictionary().getTerm(term);
-			final var result = String.format("Urban Dictionary \n\n"
-							+ "Definition for **%s**: \n"
-							+ "```\n"
-							+ "%s\n"
-							+ "```\n"
-							+ "**example**: \n"
-							+ "%s" + "\n\n"
-							+ "_by %s (" + Emojis.LIKE + "%s  " + Emojis.DISLIKE + "%s)_"
-					, ud.getWord(), ud.getDefinition(), ud.getExample(),
-					ud.getAuthor(), ud.getLikes(), ud.getDislikes());
-			Utils.sendMessage(channel, result);
-		}
-		catch (final Exception ex)
+		final var ud = new UrbanDictionary(term);
+		if (!ud.exists())
 		{
 			Utils.sendMessage(channel, ":no_entry: Query not found.");
+			return;
 		}
+		final var result = String.format("Urban Dictionary \n\n"
+						+ "Definition for **%s**: \n"
+						+ "```\n"
+						+ "%s\n"
+						+ "```\n"
+						+ "**example**: \n"
+						+ "%s" + "\n\n"
+						+ "_by %s (" + Emojis.LIKE + "%s  " + Emojis.DISLIKE + "%s)_"
+				, ud.getWord(), ud.getDefinition(), ud.getExample(),
+				ud.getAuthor(), ud.getLikes(), ud.getDislikes());
+		Utils.sendMessage(channel, result);
 	}
 
 	@Override

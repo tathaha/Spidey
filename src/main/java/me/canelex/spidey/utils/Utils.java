@@ -202,11 +202,11 @@ public class Utils extends Core
         final var length = sn.length();
         if (number < 1000)
             return sn;
-        final int magnitude = (length - 1) / 3;
-        int digits = (length - 1) % 3 + 1;
+        final var magnitude = (length - 1) / 3;
+        var digits = (length - 1) % 3 + 1;
 
-        char[] value = new char[4];
-        for (int i = 0; i < digits; i++)
+        var value = new char[4];
+        for (var i = 0; i < digits; i++)
         {
             value[i] = sn.charAt(i);
         }
