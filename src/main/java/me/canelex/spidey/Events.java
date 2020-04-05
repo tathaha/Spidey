@@ -40,11 +40,13 @@ public class Events extends ListenerAdapter
 		final var guild = e.getGuild();
 		final var message = e.getMessage();
 		final var author = e.getAuthor();
+		final var id = guild.getIdLong();
+		final var prefix = Utils.getPrefix(id);
 
-		if (message.getContentRaw().toLowerCase().startsWith("s!") && !author.isBot())
-			CommandHandler.handle(message);
+		if (message.getContentRaw().startsWith(prefix) && !author.isBot())
+			CommandHandler.handle(message, prefix);
 
-		final var channel = guild.getTextChannelById(MySQL.getChannel(guild.getIdLong()));
+		final var channel = guild.getTextChannelById(MySQL.getChannel(id));
 		if (message.getType() == MessageType.GUILD_MEMBER_BOOST && channel != null)
 		{
 			Utils.deleteMessage(message);

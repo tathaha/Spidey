@@ -30,34 +30,68 @@ public class MySQL
 		return null;
 	}
 
-	private static long getProperty(final long guildId, final String property)
+	public static long getChannel(final long guildId)
 	{
-		if (!hasProperty(guildId, property))
-			return 0;
-
-		try (final var c = getConnection(); final var ps = c.prepareStatement("SELECT `" + property + "` FROM `guilds` WHERE `guild_id`=?;"))
+		try (final var c = getConnection(); final var ps = c.prepareStatement("SELECT `channel_id` FROM `guilds` WHERE `guild_id`=?;"))
 		{
 			ps.setLong(1, guildId);
 			try (final var rs = ps.executeQuery())
 			{
 				rs.next();
-				return rs.getLong(property);
+				return rs.getLong("channel_id");
 			}
 		}
 		catch (final SQLException e)
 		{
-			LOG.error("There was an error while requesting the {} property for guild {}!", property, guildId, e);
+			LOG.error("There was an error while requesting the channel_id property for guild {}!", guildId, e);
 		}
 		return 0;
 	}
 
-	private static void setProperty(final long guildId, final long id, final String property)
+	public static long getRole(final long guildId)
 	{
-		try (final var c = getConnection(); final var ps = c.prepareStatement("REPLACE INTO `guilds` (`guild_id`, `channel_id`, `role_id`) VALUES (?, ?, ?);"))
+		try (final var c = getConnection(); final var ps = c.prepareStatement("SELECT `role_id` FROM `guilds` WHERE `guild_id`=?;"))
 		{
 			ps.setLong(1, guildId);
-			ps.setLong(2, (property.equals("channel_id") ? id : getChannel(guildId)));
-			ps.setLong(3, (property.equals("role_id") ? id : getRole(guildId)));
+			try (final var rs = ps.executeQuery())
+			{
+				rs.next();
+				return rs.getLong("role_id");
+			}
+		}
+		catch (final SQLException e)
+		{
+			LOG.error("There was an error while requesting the role_id property for guild {}!", guildId, e);
+		}
+		return 0;
+	}
+
+	public static String getPrefix(final long guildId)
+	{
+		try (final var c = getConnection(); final var ps = c.prepareStatement("SELECT `prefix` FROM `guilds` WHERE `guild_id`=?;"))
+		{
+			ps.setLong(1, guildId);
+			try (final var rs = ps.executeQuery())
+			{
+				rs.next();
+				return rs.getString("prefix");
+			}
+		}
+		catch (final SQLException e)
+		{
+			LOG.error("There was an error while requesting the prefix property for guild {}!", guildId, e);
+		}
+		return null;
+	}
+
+	private static void setProperty(final long guildId, final String value, final String property)
+	{
+		try (final var c = getConnection(); final var ps = c.prepareStatement("REPLACE INTO `guilds` (`guild_id`, `channel_id`, `role_id`, `prefix`) VALUES (?, ?, ?, ?);"))
+		{
+			ps.setLong(1, guildId);
+			ps.setLong(2, (property.equals("channel_id") ? Long.parseLong(value) : getChannel(guildId)));
+			ps.setLong(3, (property.equals("role_id") ? Long.parseLong(value) : getRole(guildId)));
+			ps.setString(4, value);
 			ps.executeUpdate();
 		}
 		catch (final SQLException e)
@@ -68,9 +102,6 @@ public class MySQL
 
 	private static void removeProperty(final long guildId, final String property)
 	{
-		if (!hasProperty(guildId, property))
-			return;
-
 		try (final var c = getConnection(); final var ps = c.prepareStatement("UPDATE `guilds` SET `" + property + "`=0 WHERE `guild_id`=?;"))
 		{
 			ps.setLong(1, guildId);
@@ -82,43 +113,19 @@ public class MySQL
 		}
 	}
 
-	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
-	private static boolean hasProperty(final long guildId, final String property)
-	{
-		try (final var c = getConnection(); final var ps = c.prepareStatement("SELECT SUM(`" + property + "` > 0) AS total FROM `guilds` WHERE `guild_id`=?;"))
-		{
-			ps.setLong(1, guildId);
-			try (final var rs = ps.executeQuery())
-			{
-				rs.next();
-				return rs.getInt("total") != 0;
-			}
-		}
-		catch (final SQLException e)
-		{
-			LOG.error("There was an error while checking if guild {} has the {} property set!", guildId, property, e);
-		}
-		return false;
-	}
-
-	public static long getChannel(final long guildId)
-	{
-		return getProperty(guildId, "channel_id");
-	}
-
-	public static long getRole(final long guildId)
-	{
-		return getProperty(guildId, "role_id");
-	}
-
 	public static void setChannel(final long guildId, final long id)
 	{
-		setProperty(guildId, id, "channel_id");
+		setProperty(guildId, Long.toString(id), "channel_id");
 	}
 
 	public static void setRole(final long guildId, final long id)
 	{
-		setProperty(guildId, id, "role_id");
+		setProperty(guildId, Long.toString(id), "role_id");
+	}
+
+	public static void setPrefix(final long guildId, final String prefix)
+	{
+		setProperty(guildId, prefix, "prefix");
 	}
 
 	public static void removeChannel(final long guildId)

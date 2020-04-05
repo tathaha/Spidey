@@ -8,6 +8,7 @@ import me.canelex.jda.api.entities.*;
 import me.canelex.jda.api.utils.data.DataObject;
 import me.canelex.spidey.Core;
 import me.canelex.spidey.Events;
+import me.canelex.spidey.MySQL;
 import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.objects.invites.WrappedInvite;
 import org.apache.commons.text.StringEscapeUtils;
@@ -217,5 +218,11 @@ public class Utils extends Core
         }
         value[digits++] = SUFFIXES[magnitude - 1];
         return new String(value, 0, digits);
+    }
+
+    public static String getPrefix(final long guildId)
+    {
+        final var tmp = MySQL.getPrefix(guildId);
+        return tmp == null ? "s!" : tmp;
     }
 }

@@ -25,6 +25,7 @@ public class HelpCommand extends Core implements ICommand
         final var eb = Utils.createEmbedBuilder(author)
                             .setColor(Color.WHITE)
                             .setAuthor("Spidey's Commands", "https://github.com/caneleex/Spidey", message.getJDA().getSelfUser().getAvatarUrl());
+        final var prefix = Utils.getPrefix(message.getGuild().getIdLong());
 
         if (args.length < 2)
         {
@@ -53,13 +54,13 @@ public class HelpCommand extends Core implements ICommand
                 sb.append(category.getFriendlyName());
                 sb.append(" ").append("-").append(" ");
                 sb.append(listToString(commandz, ICommand::getInvoke));
-                eb.setDescription("Prefix: **s!**\n" + sb.toString());
             });
+            eb.setDescription("Prefix: **" + prefix + "**\n" + sb.toString());
             Utils.sendMessage(channel, eb.build());
         }
         else
         {
-            final var cmd = message.getContentRaw().substring(7).toLowerCase();
+            final var cmd = message.getContentRaw().substring(prefix.length() + 5).toLowerCase();
             if (!commandsMap.containsKey(cmd))
                 Utils.returnError("**" + cmd + "** isn't a valid command", message);
             else

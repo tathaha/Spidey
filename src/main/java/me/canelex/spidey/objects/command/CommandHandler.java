@@ -11,9 +11,9 @@ public class CommandHandler
 		super();
 	}
 
-	public static void handle(final Message msg)
+	public static void handle(final Message msg, final String prefix)
 	{
-		final var content = msg.getContentRaw().toLowerCase().replace("s!", "");
+		final var content = msg.getContentRaw().replace(prefix, "");
 		if (content.length() != 0)
 		{
 			final var command = content.contains(" ") ? content.substring(0, content.indexOf(' ')) : content;
