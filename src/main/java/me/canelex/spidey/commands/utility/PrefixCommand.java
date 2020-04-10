@@ -1,4 +1,4 @@
-package me.canelex.spidey.commands;
+package me.canelex.spidey.commands.utility;
 
 import me.canelex.jda.api.Permission;
 import me.canelex.jda.api.entities.Message;
