@@ -25,11 +25,7 @@ import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.Calendar;
 import java.util.Locale;
-import java.util.Random;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 public class Utils extends Core
 {
@@ -115,6 +111,7 @@ public class Utils extends Core
     public static void startup()
     {
         final var jda = Core.getJDA();
+        final var random = ThreadLocalRandom.current();
         final var activities = new Activity[]
         {
             Activity.listening("your commands"),
@@ -139,7 +136,7 @@ public class Utils extends Core
         }
 
         EXECUTOR.scheduleAtFixedRate(() ->
-            jda.getPresence().setActivity(activities[new Random().nextInt(activities.length)]), 0L, 30L, TimeUnit.SECONDS);
+            jda.getPresence().setActivity(activities[random.nextInt(activities.length)]), 0L, 30L, TimeUnit.SECONDS);
     }
 
     public static String getSiteContent(final String url)
