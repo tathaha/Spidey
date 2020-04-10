@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
@@ -73,12 +72,13 @@ public class UploadEmoteCommand implements ICommand
         }
 
         final var requiredPermission = getRequiredPermission();
-        final var used = new AtomicInteger();
-        guild.retrieveEmotes().queue(emotes -> used.set(emotes.stream().collect(Collectors.groupingBy(ListedEmote::isAnimated)).get(extension.equals("gif")).size()));
+        final var used = guild.retrieveEmotes().complete().stream()
+                                                          .collect(Collectors.groupingBy(ListedEmote::isAnimated))
+                                                          .get(extension.equals("gif")).size();
 
         if (!Utils.hasPerm(message.getMember(), requiredPermission))
             Utils.sendMessage(channel, PermissionError.getErrorMessage(requiredPermission));
-        else if (guild.getMaxEmotes() == used.get())
+        else if (guild.getMaxEmotes() == used)
         {
             Utils.returnError("Guild has the maximum amount of emotes", message);
             return;
@@ -105,7 +105,7 @@ public class UploadEmoteCommand implements ICommand
         {
             guild.createEmote(name, Icon.from(image.toByteArray())).queue(emote -> guild.retrieveEmotes().queue(emotes ->
             {
-                final var left = guild.getMaxEmotes() - used.get() - 1;
+                final var left = guild.getMaxEmotes() - used - 1;
                 Utils.sendMessage(channel, "Emote " + emote.getAsMention() + " has been successfully uploaded! Emote slots left: **" + (left == 0 ? "None" : left) + "**");
             }), failure -> Utils.returnError("Unfortunately, we could not create the emote due to an internal error: **" + failure.getMessage() + "**. Please report this message to the Developer", message));
         }
