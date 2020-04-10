@@ -193,7 +193,7 @@ public class Utils extends Core
     public static String getBuildDate()
     {
         final var cal = Calendar.getInstance();
-        cal.setTimeInMillis(new File("Spidey.jar").lastModified());
+        cal.setTimeInMillis(new File("SpideyDev.jar").lastModified());
         return new SimpleDateFormat("EE, d.LLL Y | HH:mm:ss", new Locale("en", "EN")).format(cal.getTime());
     }
 
@@ -223,6 +223,6 @@ public class Utils extends Core
     public static String getPrefix(final long guildId)
     {
         final var tmp = MySQL.getPrefix(guildId);
-        return tmp == null ? "s!" : tmp;
+        return tmp.length() == 0 ? "s!" : tmp;
     }
 }

@@ -18,23 +18,34 @@ public class PrefixCommand implements ICommand
         final var guildId = guild.getIdLong();
         final var channel = message.getChannel();
         final var requiredPermission = getRequiredPermission();
+        final var actualPrefix = Utils.getPrefix(guildId);
 
         if (!Utils.hasPerm(message.getMember(), requiredPermission))
         {
             Utils.sendMessage(channel, PermissionError.getErrorMessage(requiredPermission));
             return;
         }
+        if (args.length == 1)
+        {
+            if (actualPrefix.equals("s!"))
+                Utils.returnError("The prefix for this server is already set to the default one", message);
+            else
+            {
+                MySQL.setPrefix(guildId, "s!");
+                Utils.sendMessage(channel, ":white_check_mark: The prefix for this server has been reset to `s!`!");
+            }
+            return;
+        }
 
         final var newPrefix = args[1];
-        final var actualPrefix = Utils.getPrefix(guildId);
-        if (newPrefix.equals(actualPrefix))
+        if (actualPrefix.equals(newPrefix))
         {
             Utils.returnError("The prefix for this server is already set to `" + actualPrefix +"`", message);
             return;
         }
         if (newPrefix.contains("`"))
         {
-            Utils.returnError("The prefix can't contain ` character", message);
+            Utils.returnError("The prefix can't contain **`** character", message);
             return;
         }
         if (newPrefix.length() > 10)
@@ -44,7 +55,7 @@ public class PrefixCommand implements ICommand
         }
 
         MySQL.setPrefix(guildId, newPrefix);
-        Utils.sendMessage(channel, "The prefix has been successfully changed to `" + newPrefix + "`!");
+        Utils.sendMessage(channel, ":white_check_mark: The prefix has been successfully changed to `" + newPrefix + "`!");
     }
 
     @Override
@@ -52,11 +63,9 @@ public class PrefixCommand implements ICommand
     @Override
     public final Permission getRequiredPermission() { return Permission.ADMINISTRATOR; }
     @Override
-    public final int getMaxArgs() { return 2; }
-    @Override
     public final String getInvoke() { return "prefix"; }
     @Override
     public final Category getCategory() { return Category.UTILITY; }
     @Override
-    public final String getUsage() { return "s!prefix <new prefix>"; }
+    public final String getUsage() { return "s!prefix (new prefix, if not given, the prefix will be reset if set)"; }
 }

@@ -13,7 +13,7 @@ public class CommandHandler
 
 	public static void handle(final Message msg, final String prefix)
 	{
-		final var content = msg.getContentRaw().replace(prefix, "");
+		final var content = msg.getContentRaw().substring(prefix.length());
 		if (content.length() != 0)
 		{
 			final var command = content.contains(" ") ? content.substring(0, content.indexOf(' ')) : content;
