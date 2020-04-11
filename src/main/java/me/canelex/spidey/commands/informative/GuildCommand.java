@@ -90,7 +90,7 @@ public class GuildCommand implements ICommand
 	@Override
 	public final Category getCategory() { return Category.INFORMATIVE; }
 	@Override
-	public final String getUsage() { return "s!guild"; }
+	public final String getUsage() { return "s!guild | s!server"; }
 	@Override
 	public final List<String> getAliases() { return Collections.singletonList("server"); }
 }
