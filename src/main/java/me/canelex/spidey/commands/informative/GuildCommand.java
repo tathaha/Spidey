@@ -9,6 +9,8 @@ import me.canelex.spidey.utils.Utils;
 import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 
 @SuppressWarnings("unused")
@@ -89,4 +91,6 @@ public class GuildCommand implements ICommand
 	public final Category getCategory() { return Category.INFORMATIVE; }
 	@Override
 	public final String getUsage() { return "s!guild"; }
+	@Override
+	public final List<String> getAliases() { return Collections.singletonList("server"); }
 }
