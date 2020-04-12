@@ -27,19 +27,25 @@ public class LogCommand implements ICommand
 			if (guild.getSystemChannel() != null)
 				guild.getManager().setSystemChannel(null).queue();
 
-			if (MySQL.getChannel(idLong) == channel.getIdLong())
+			final var channelId = channel.getIdLong();
+			if (MySQL.getChannel(idLong) == channelId)
 			{
 				final var defaultChannel = guild.getDefaultChannel();
-				MySQL.setChannel(idLong, defaultChannel.getIdLong());
-				channel.sendMessage(":white_check_mark: Log channel has been set to " + defaultChannel.getAsMention() + ". Type this command again in the channel you want to set as the log channel.")
-				       .delay(Duration.ofSeconds(5))
-				       .flatMap(Message::delete)
-					   .queue();
+				if (defaultChannel == null)
+					Utils.returnError("There is no default channel to set as the log channel", message);
+				else
+				{
+					MySQL.setChannel(idLong, defaultChannel.getIdLong());
+					channel.sendMessage(":white_check_mark: The log channel has been set to " + defaultChannel.getAsMention() + ". Type this command again in the channel you want to set as the log channel.")
+						   .delay(Duration.ofSeconds(5))
+						   .flatMap(Message::delete)
+						   .queue();
+				}
 			}
 			else
 			{
-				MySQL.setChannel(idLong, channel.getIdLong());
-				channel.sendMessage(":white_check_mark: Log channel has been set to <#" + channel.getIdLong() + ">. Type this command again to set the log channel to default guild channel.")
+				MySQL.setChannel(idLong, channelId);
+				channel.sendMessage(":white_check_mark: The log channel has been set to <#" + channelId + ">. Type this command again to set the log channel to the default guild channel (if present).")
 					   .delay(Duration.ofSeconds(5))
 					   .flatMap(Message::delete)
 					   .queue();
