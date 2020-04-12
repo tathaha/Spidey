@@ -44,7 +44,10 @@ public class Events extends ListenerAdapter
 		final var prefix = Utils.getPrefix(id);
 
 		if (message.getContentRaw().startsWith(prefix) && !author.isBot())
+		{
 			CommandHandler.handle(message, prefix);
+			return;
+		}
 
 		final var channel = guild.getTextChannelById(MySQL.getChannel(id));
 		if (message.getType() == MessageType.GUILD_MEMBER_BOOST && channel != null)
@@ -195,6 +198,9 @@ public class Events extends ListenerAdapter
 	public final void onGuildJoin(final GuildJoinEvent e)
 	{
 		final var guild = e.getGuild();
+		final var defaultChannel = e.getGuild().getDefaultChannel();
+		if (defaultChannel != null && defaultChannel.canTalk(guild.getSelfMember()))
+			Utils.sendMessage(defaultChannel, "Hey! I'm **Spidey**. Thanks for inviting me. To start, check `s!help`.");
 		Utils.storeInvites(guild);
 	}
 
