@@ -43,7 +43,7 @@ public class MySQL
 		}
 		catch (final SQLException e)
 		{
-			LOG.error("There was an error while requesting the channel_id property for guild {}!", guildId, e);
+			LOG.error("There was an error while requesting the channel_id property for guild {}!", guildId);
 		}
 		return 0;
 	}
@@ -61,7 +61,7 @@ public class MySQL
 		}
 		catch (final SQLException e)
 		{
-			LOG.error("There was an error while requesting the role_id property for guild {}!", guildId, e);
+			LOG.error("There was an error while requesting the role_id property for guild {}!", guildId);
 		}
 		return 0;
 	}
@@ -79,7 +79,7 @@ public class MySQL
 		}
 		catch (final SQLException e)
 		{
-			LOG.error("There was an error while requesting the prefix property for guild {}!", guildId, e);
+			LOG.error("There was an error while requesting the prefix property for guild {}!", guildId);
 		}
 		return null;
 	}
@@ -91,12 +91,12 @@ public class MySQL
 			ps.setLong(1, guildId);
 			ps.setLong(2, (property.equals("channel_id") ? Long.parseLong(value) : getChannel(guildId)));
 			ps.setLong(3, (property.equals("role_id") ? Long.parseLong(value) : getRole(guildId)));
-			ps.setString(4, value);
+			ps.setString(4, (property.equals("prefix") ? value : getPrefix(guildId)));
 			ps.executeUpdate();
 		}
 		catch (final SQLException e)
 		{
-			LOG.error("There was an error while upserting the {} property for guild {}!", property, guildId, e);
+			LOG.error("There was an error while upserting the {} property for guild {}!", property, guildId);
 		}
 	}
 
@@ -109,7 +109,7 @@ public class MySQL
 		}
 		catch (final SQLException e)
 		{
-			LOG.error("There was an error while removing the {} property of guild {}!", property, guildId, e);
+			LOG.error("There was an error while removing the {} property of guild {}!", property, guildId);
 		}
 	}
 
