@@ -81,7 +81,7 @@ public class MySQL
 		{
 			LOG.error("There was an error while requesting the prefix property for guild {}!", guildId);
 		}
-		return null;
+		return "";
 	}
 
 	private static void setProperty(final long guildId, final String value, final String property)

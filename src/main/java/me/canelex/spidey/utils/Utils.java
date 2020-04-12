@@ -220,6 +220,6 @@ public class Utils extends Core
     public static String getPrefix(final long guildId)
     {
         final var tmp = MySQL.getPrefix(guildId);
-        return tmp == null ? "s!" : tmp;
+        return tmp.length() == 0 ? "s!" : tmp;
     }
 }
