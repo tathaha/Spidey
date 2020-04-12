@@ -1,6 +1,6 @@
 package me.canelex.spidey.commands.informative;
 
-import me.canelex.jda.api.entities.Emote;
+import me.canelex.jda.api.entities.ListedEmote;
 import me.canelex.jda.api.entities.Message;
 import me.canelex.spidey.objects.command.Category;
 import me.canelex.spidey.objects.command.ICommand;
@@ -12,6 +12,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
 public class GuildCommand implements ICommand
@@ -59,8 +60,8 @@ public class GuildCommand implements ICommand
 		final var st = new StringBuilder();
 
 		var ec = 0;
-		final var emotes = guild.getEmoteCache();
-		final var an = emotes.stream().filter(Emote::isAnimated).count();
+		final var emotes = guild.retrieveEmotes().complete();
+		final var an = emotes.stream().collect(Collectors.groupingBy(ListedEmote::isAnimated)).get(true).size();
 
 		for (final var emote : emotes)
 		{
