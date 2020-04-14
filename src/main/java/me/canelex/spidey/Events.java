@@ -130,12 +130,10 @@ public class Events extends ListenerAdapter
 		if (channel != null)
 		{
 			final var eb = new EmbedBuilder();
-			eb.setAuthor("USER HAS LEFT");
-			eb.setThumbnail(user.getAvatarUrl());
-			eb.setColor(Color.RED);
+			eb.setDescription("\uD83D\uDCE4 **" + user.getAsTag() + "** (" + user.getId() + ") has `left` the server.");
+			eb.setColor(14495300);
+			eb.setFooter("User leave", user.getAvatarUrl());
 			eb.setTimestamp(Instant.now());
-			eb.addField("User", "**" + user.getAsTag() + "**", true);
-			eb.addField("ID", "**" + user.getId() + "**", true);
 			Utils.sendMessage(channel, eb.build());
 		}
 	}
@@ -162,13 +160,6 @@ public class Events extends ListenerAdapter
 			}
 
 			final var eb = new EmbedBuilder();
-			eb.setAuthor("USER HAS JOINED");
-			eb.setThumbnail(user.getAvatarUrl());
-			eb.setColor(Color.GREEN);
-			eb.setTimestamp(Instant.now());
-			eb.addField("User", "**" + user.getAsTag() + "**", true);
-			eb.addField("ID", "**" + userId + "**", true);
-
 			guild.retrieveInvites().queue(invites ->
 			{
 				for (final var invite : invites)
@@ -177,8 +168,11 @@ public class Events extends ListenerAdapter
 					if (invite.getUses() > wrappedInvite.getUses())
 					{
 						wrappedInvite.incrementUses();
-						eb.addField("Invite link", "**" + invite.getUrl() + "**", false);
-						eb.addField("Inviter", "**" + invite.getInviter().getAsTag() + "**", true);
+						eb.setDescription("\uD83D\uDCE5 **" + user.getAsTag() + "** (" + userId + ") has `joined` the server with invite **"
+										  + invite.getUrl() + "** (**" + invite.getInviter().getAsTag() + "**)");
+						eb.setColor(7844437);
+						eb.setFooter("User join", user.getAvatarUrl());
+						eb.setTimestamp(Instant.now());
 						break;
 					}
 				}
