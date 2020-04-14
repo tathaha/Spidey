@@ -16,10 +16,10 @@ import me.canelex.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import me.canelex.jda.api.hooks.ListenerAdapter;
 import me.canelex.spidey.objects.command.CommandHandler;
 import me.canelex.spidey.objects.invites.WrappedInvite;
+import me.canelex.spidey.utils.Emojis;
 import me.canelex.spidey.utils.Utils;
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.*;
 import java.time.Instant;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -54,13 +54,12 @@ public class Events extends ListenerAdapter
 		{
 			Utils.deleteMessage(message);
 			final var eb = new EmbedBuilder();
+			eb.setDescription(e.getJDA().getEmoteById(699731065052332123L).getAsMention() + " **" + author.getAsTag() + "** has `boosted` " +
+					"the server. The server currently has **" + guild.getBoostCount() + "** boosts.");
 			eb.setAuthor("NEW BOOST");
 			eb.setColor(16023551);
-			eb.setThumbnail(author.getAvatarUrl());
+			eb.setFooter("User boost", author.getAvatarUrl());
 			eb.setTimestamp(Instant.now());
-			eb.addField("Booster", "**" + author.getAsTag() + "**", true);
-			eb.addField("Boosts", "**" + guild.getBoostCount() + "**", true);
-
 			Utils.sendMessage(channel, eb.build());
 		}
 	}
@@ -81,20 +80,17 @@ public class Events extends ListenerAdapter
 					final var eb = new EmbedBuilder();
 
 					var reason = "";
-					if (banner != null && banner.equals(e.getJDA().getSelfUser()))
-						reason = (ban.getReason().equals("[Banned by Spidey#2370]") ?  "Unknown" : ban.getReason().substring(24));
+					final var providedReason = ban.getReason();
+					if (providedReason != null && banner.equals(e.getJDA().getSelfUser()))
+						reason = (providedReason.equals("[Banned by Spidey#2370]") ?  "Unknown" : providedReason.substring(24));
 					else
-						reason = (ban.getReason() == null ? "Unknown" : ban.getReason());
+						reason = (providedReason == null ? "Unknown" : providedReason);
 
-					eb.setAuthor("NEW BAN");
-					eb.setThumbnail(user.getAvatarUrl());
-					eb.setColor(Color.RED);
+					eb.setDescription(Emojis.CROSS + " **" + user.getAsTag() + "** (" + user.getId() + ") has been `banned` by " +
+							         "**" + banner.getAsTag() + "** for **" + reason + "**.");
+					eb.setColor(14495300);
+					eb.setFooter("User ban", user.getAvatarUrl());
 					eb.setTimestamp(Instant.now());
-					eb.addField("User", "**" + user.getAsTag() + "**", true);
-					eb.addField("ID", "**" + user.getId() + "**", true);
-					eb.addField("Moderator", banner == null ? "Unknown" : banner.getAsMention(), true);
-					eb.addField("Reason", "**" + reason + "**", true);
-
 					Utils.sendMessage(channel, eb.build());
 				}));
 		}
@@ -109,14 +105,16 @@ public class Events extends ListenerAdapter
 		final var channel = guild.getTextChannelById(MySQL.getChannel(guild.getIdLong()));
 		if (channel != null)
 		{
-			final var eb = new EmbedBuilder();
-			eb.setAuthor("UNBAN");
-			eb.setColor(Color.GREEN);
-			eb.setThumbnail(user.getAvatarUrl());
-			eb.setTimestamp(Instant.now());
-			eb.addField("User", "**" + user.getAsTag() + "**", true);
-			eb.addField("ID", "**" + user.getId() + "**", true);
-			Utils.sendMessage(channel, eb.build());
+			guild.retrieveAuditLogs().type(ActionType.UNBAN).queue(unbans ->
+			{
+				final var eb = new EmbedBuilder();
+				eb.setDescription(Emojis.CHECK + " **" + user.getAsTag() + "** (" + user.getId() + ") has been `unbanned` " +
+						"by **" + unbans.get(0).getUser().getAsTag() + "**.");
+				eb.setColor(7844437);
+				eb.setFooter("User unban", user.getAvatarUrl());
+				eb.setTimestamp(Instant.now());
+				Utils.sendMessage(channel, eb.build());
+			});
 		}
 	}
 
@@ -169,7 +167,7 @@ public class Events extends ListenerAdapter
 					{
 						wrappedInvite.incrementUses();
 						eb.setDescription("\uD83D\uDCE5 **" + user.getAsTag() + "** (" + userId + ") has `joined` the server with invite **"
-										  + invite.getUrl() + "** (**" + invite.getInviter().getAsTag() + "**)");
+										  + invite.getUrl() + "** (**" + invite.getInviter().getAsTag() + "**).");
 						eb.setColor(7844437);
 						eb.setFooter("User join", user.getAvatarUrl());
 						eb.setTimestamp(Instant.now());
