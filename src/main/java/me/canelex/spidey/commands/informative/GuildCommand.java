@@ -42,7 +42,7 @@ public class GuildCommand implements ICommand
 		eb.addField("Boost tier", "" + guild.getBoostTier().getKey(), true);
 		eb.addField("Boosts", "" + guild.getBoostCount(), true);
 
-		eb.addField("Region", guild.getRegionRaw(), true);
+		eb.addField("Region", guild.getRegion().getName(), true);
 
 		cal.setTimeInMillis(guild.getTimeCreated().toInstant().toEpochMilli());
 		final var creation = date.format(cal.getTime());
