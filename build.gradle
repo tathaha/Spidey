@@ -28,7 +28,7 @@ dependencies {
 }
 
 group = 'me.canelex'
-description = 'Spidey'
+description = 'SpideyDev'
 
-shadowJar.setProperty('archiveFileName', 'Spidey.jar')
+shadowJar.setProperty('archiveFileName', 'SpideyDev.jar')
 compileJava.options.encoding = 'UTF-8'
