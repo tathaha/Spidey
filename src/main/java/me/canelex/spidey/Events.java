@@ -171,10 +171,10 @@ public class Events extends ListenerAdapter
 						eb.setColor(7844437);
 						eb.setFooter("User join", user.getAvatarUrl());
 						eb.setTimestamp(Instant.now());
+						Utils.sendMessage(channel, eb.build());
 						break;
 					}
 				}
-				Utils.sendMessage(channel, eb.build());
 			});
 		}
 	}
