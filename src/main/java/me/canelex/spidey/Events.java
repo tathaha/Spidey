@@ -21,10 +21,12 @@ import me.canelex.spidey.utils.Utils;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Instant;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.stream.Collectors;
 
-@SuppressWarnings("ConstantConditions")
+@SuppressWarnings({"ConstantConditions", "StringBufferReplaceableByString"})
 public class Events extends ListenerAdapter
 {
 	private static final ConcurrentMap<String, WrappedInvite> invitesMap = new ConcurrentHashMap<>();
@@ -54,8 +56,9 @@ public class Events extends ListenerAdapter
 		{
 			Utils.deleteMessage(message);
 			final var eb = new EmbedBuilder();
-			eb.setDescription(e.getJDA().getEmoteById(699731065052332123L).getAsMention() + " **" + author.getAsTag() + "** has `boosted` " +
-					"the server. The server currently has **" + guild.getBoostCount() + "** boosts.");
+			eb.setDescription(new StringBuilder().append(e.getJDA().getEmoteById(699731065052332123L).getAsMention())
+					.append(" **").append(author.getAsTag()).append("** has `boosted` ")
+					.append("the server. The server currently has **").append(guild.getBoostCount()).append("** boosts.").toString());
 			eb.setAuthor("NEW BOOST");
 			eb.setColor(16023551);
 			eb.setFooter("User boost", author.getAvatarUrl());
@@ -86,8 +89,9 @@ public class Events extends ListenerAdapter
 					else
 						reason = (providedReason == null ? "Unknown" : providedReason);
 
-					eb.setDescription(Emojis.CROSS + " **" + user.getAsTag() + "** (" + user.getId() + ") has been `banned` by " +
-							         "**" + banner.getAsTag() + "** for **" + reason + "**.");
+					eb.setDescription(new StringBuilder().append(Emojis.CROSS).append(" **").append(user.getAsTag())
+							.append("** (").append(user.getId()).append(") has been `banned` by ").append("**")
+							.append(banner.getAsTag()).append("** for **").append(reason).append("**.").toString());
 					eb.setColor(14495300);
 					eb.setFooter("User ban", user.getAvatarUrl());
 					eb.setTimestamp(Instant.now());
@@ -108,8 +112,9 @@ public class Events extends ListenerAdapter
 			guild.retrieveAuditLogs().type(ActionType.UNBAN).queue(unbans ->
 			{
 				final var eb = new EmbedBuilder();
-				eb.setDescription(Emojis.CHECK + " **" + user.getAsTag() + "** (" + user.getId() + ") has been `unbanned` " +
-						"by **" + unbans.get(0).getUser().getAsTag() + "**.");
+				eb.setDescription(new StringBuilder().append(Emojis.CHECK).append(" **")
+						.append(user.getAsTag()).append("** (").append(user.getId()).append(") has been `unbanned` ")
+						.append("by **").append(unbans.get(0).getUser().getAsTag()).append("**.").toString());
 				eb.setColor(7844437);
 				eb.setFooter("User unban", user.getAvatarUrl());
 				eb.setTimestamp(Instant.now());
@@ -128,7 +133,8 @@ public class Events extends ListenerAdapter
 		if (channel != null)
 		{
 			final var eb = new EmbedBuilder();
-			eb.setDescription("\uD83D\uDCE4 **" + user.getAsTag() + "** (" + user.getId() + ") has `left` the server.");
+			eb.setDescription(new StringBuilder().append("\uD83D\uDCE4 **").append(user.getAsTag())
+					.append("** (").append(user.getId()).append(") has `left` the server.").toString());
 			eb.setColor(14495300);
 			eb.setFooter("User leave", user.getAvatarUrl());
 			eb.setTimestamp(Instant.now());
@@ -158,19 +164,26 @@ public class Events extends ListenerAdapter
 			}
 
 			final var eb = new EmbedBuilder();
+			eb.setDescription("\uD83D\uDCE5 **" + user.getAsTag() + "** (" + userId + ") has `joined` the server");
+			eb.setColor(7844437);
+			eb.setFooter("User join", user.getAvatarUrl());
+			eb.setTimestamp(Instant.now());
+			if (user.isBot())
+			{
+				eb.appendDescription(".");
+				Utils.sendMessage(channel, eb.build());
+				return;
+			}
 			guild.retrieveInvites().queue(invites ->
 			{
+				final var guildInvites = invitesMap.entrySet().stream().filter(entry -> entry.getValue().getGuildId() == id).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 				for (final var invite : invites)
 				{
-					final var wrappedInvite = invitesMap.get(invite.getCode());
+					final var wrappedInvite = guildInvites.get(invite.getCode());
 					if (invite.getUses() > wrappedInvite.getUses())
 					{
 						wrappedInvite.incrementUses();
-						eb.setDescription("\uD83D\uDCE5 **" + user.getAsTag() + "** (" + userId + ") has `joined` the server with invite **"
-										  + invite.getUrl() + "** (**" + invite.getInviter().getAsTag() + "**).");
-						eb.setColor(7844437);
-						eb.setFooter("User join", user.getAvatarUrl());
-						eb.setTimestamp(Instant.now());
+						eb.appendDescription(" with invite **" + invite.getUrl() + "** (**" + invite.getInviter().getAsTag() + "**).");
 						Utils.sendMessage(channel, eb.build());
 						break;
 					}
@@ -190,7 +203,7 @@ public class Events extends ListenerAdapter
 	public final void onGuildJoin(final GuildJoinEvent e)
 	{
 		final var guild = e.getGuild();
-		final var defaultChannel = e.getGuild().getDefaultChannel();
+		final var defaultChannel = guild.getDefaultChannel();
 		if (defaultChannel != null && defaultChannel.canTalk(guild.getSelfMember()))
 			Utils.sendMessage(defaultChannel, "Hey! I'm **Spidey**. Thanks for inviting me. To start, check `s!help`.");
 		Utils.storeInvites(guild);
