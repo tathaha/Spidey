@@ -14,6 +14,7 @@ import me.canelex.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import me.canelex.jda.api.events.guild.update.GuildUpdateBoostTierEvent;
 import me.canelex.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import me.canelex.jda.api.hooks.ListenerAdapter;
+import me.canelex.jda.api.utils.MarkdownSanitizer;
 import me.canelex.spidey.objects.command.CommandHandler;
 import me.canelex.spidey.objects.invites.WrappedInvite;
 import me.canelex.spidey.utils.Emojis;
@@ -57,7 +58,7 @@ public class Events extends ListenerAdapter
 			Utils.deleteMessage(message);
 			final var eb = new EmbedBuilder();
 			eb.setDescription(new StringBuilder().append(e.getJDA().getEmoteById(699731065052332123L).getAsMention())
-					.append(" **").append(author.getAsTag()).append("** has `boosted` ")
+					.append(" **").append(MarkdownSanitizer.escape(author.getAsTag())).append("** has `boosted` ")
 					.append("the server. The server currently has **").append(guild.getBoostCount()).append("** boosts.").toString());
 			eb.setAuthor("NEW BOOST");
 			eb.setColor(16023551);
@@ -89,7 +90,7 @@ public class Events extends ListenerAdapter
 					else
 						reason = (providedReason == null ? "Unknown" : providedReason);
 
-					eb.setDescription(new StringBuilder().append(Emojis.CROSS).append(" **").append(user.getAsTag())
+					eb.setDescription(new StringBuilder().append(Emojis.CROSS).append(" **").append(MarkdownSanitizer.escape(user.getAsTag()))
 							.append("** (").append(user.getId()).append(") has been `banned` by ").append("**")
 							.append(banner.getAsTag()).append("** for **").append(reason).append("**.").toString());
 					eb.setColor(14495300);
@@ -113,7 +114,7 @@ public class Events extends ListenerAdapter
 			{
 				final var eb = new EmbedBuilder();
 				eb.setDescription(new StringBuilder().append(Emojis.CHECK).append(" **")
-						.append(user.getAsTag()).append("** (").append(user.getId()).append(") has been `unbanned` ")
+						.append(MarkdownSanitizer.escape(user.getAsTag())).append("** (").append(user.getId()).append(") has been `unbanned` ")
 						.append("by **").append(unbans.get(0).getUser().getAsTag()).append("**.").toString());
 				eb.setColor(7844437);
 				eb.setFooter("User unban", user.getAvatarUrl());
@@ -133,7 +134,7 @@ public class Events extends ListenerAdapter
 		if (channel != null)
 		{
 			final var eb = new EmbedBuilder();
-			eb.setDescription(new StringBuilder().append("\uD83D\uDCE4 **").append(user.getAsTag())
+			eb.setDescription(new StringBuilder().append("\uD83D\uDCE4 **").append(MarkdownSanitizer.escape(user.getAsTag()))
 					.append("** (").append(user.getId()).append(") has `left` the server.").toString());
 			eb.setColor(14495300);
 			eb.setFooter("User leave", user.getAvatarUrl());
@@ -164,7 +165,7 @@ public class Events extends ListenerAdapter
 			}
 
 			final var eb = new EmbedBuilder();
-			eb.setDescription("\uD83D\uDCE5 **" + user.getAsTag() + "** (" + userId + ") has `joined` the server");
+			eb.setDescription("\uD83D\uDCE5 **" + MarkdownSanitizer.escape(user.getAsTag()) + "** (" + userId + ") has `joined` the server");
 			eb.setColor(7844437);
 			eb.setFooter("User join", user.getAvatarUrl());
 			eb.setTimestamp(Instant.now());
