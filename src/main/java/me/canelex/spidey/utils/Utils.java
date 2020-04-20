@@ -27,7 +27,7 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.concurrent.*;
 
-public class Utils extends Core
+public class Utils
 {
     private static final String INVITE_LINK = "https://discordapp.com/oauth2/authorize?client_id=468523263853592576&scope=bot&permissions=1342188724";
     private static final Logger LOG = LoggerFactory.getLogger(Utils.class);
