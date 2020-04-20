@@ -13,7 +13,7 @@ import java.util.*;
 import java.util.function.Function;
 
 @SuppressWarnings("unused")
-public class HelpCommand extends Core implements ICommand
+public class HelpCommand implements ICommand
 {
     @Override
     public final void action(final String[] args, final Message message)
@@ -30,7 +30,10 @@ public class HelpCommand extends Core implements ICommand
         if (args.length < 2)
         {
             commandsMap.forEach(commandsCopy::put);
-            final var iter = commandsCopy.entrySet().iterator();
+            final var entries = commandsCopy.entrySet();
+            entries.removeIf(entry -> !Utils.hasPerm(message.getMember(), entry.getValue().getRequiredPermission()));
+            final var hidden = commandsMap.size() - commandsCopy.size();
+            final var iter = entries.iterator();
             final var valueSet = new HashSet<>();
             while (iter.hasNext())
             {
@@ -38,14 +41,9 @@ public class HelpCommand extends Core implements ICommand
                     iter.remove();
             }
             commandsCopy.remove("help");
-            commandsCopy.entrySet().removeIf(entry -> !Utils.hasPerm(message.getMember(), entry.getValue().getRequiredPermission()));
 
             final EnumMap<Category, List<ICommand>> categories = new EnumMap<>(Category.class);
-            commandsCopy.values().forEach(cmd ->
-            {
-                final var list = categories.computeIfAbsent(cmd.getCategory(), ignored -> new ArrayList<>());
-                list.add(cmd);
-            });
+            commandsCopy.values().forEach(cmd -> categories.computeIfAbsent(cmd.getCategory(), ignored -> new ArrayList<>()).add(cmd));
 
             final var sb = new StringBuilder();
             categories.forEach((category, commandz) ->
@@ -56,6 +54,8 @@ public class HelpCommand extends Core implements ICommand
                 sb.append(listToString(commandz, ICommand::getInvoke));
             });
             eb.setDescription("Prefix: **" + prefix + "**\n" + sb.toString());
+            if (hidden > 0)
+                eb.appendDescription("\n\n **" + hidden + "** commands were hidden as you don't have permissions to use them.");
             Utils.sendMessage(channel, eb.build());
         }
         else
