@@ -14,20 +14,20 @@ public class CommandHandler
 	public static void handle(final Message msg, final String prefix)
 	{
 		final var content = msg.getContentRaw().substring(prefix.length());
-		if (content.length() != 0)
+		if (content.length() == 0)
 		{
-			final var command = content.contains(" ") ? content.substring(0, content.indexOf(' ')) : content;
-			final var commands = Core.getCommands();
-			if (commands.containsKey(command))
-			{
-				final var cmd = commands.get(command);
-				final var args = content.split("\\s+", cmd.getMaxArgs());
-				cmd.action(args, msg);
-			}
-			else
-				Utils.returnError("**" + command + "** isn't a valid command", msg);
-		}
-		else
 			Utils.returnError("Please specify a command", msg);
+			return;
+		}
+		final var command = content.contains(" ") ? content.substring(0, content.indexOf(' ')) : content;
+		final var commands = Core.getCommands();
+		if (!commands.containsKey(command))
+		{
+			Utils.returnError("**" + command + "** isn't a valid command", msg);
+			return;
+		}
+		final var cmd = commands.get(command);
+		final var args = content.split("\\s+", cmd.getMaxArgs());
+		cmd.action(args, msg);
 	}
 }
