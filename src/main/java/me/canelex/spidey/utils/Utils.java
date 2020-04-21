@@ -127,7 +127,6 @@ public class Utils
             for (final var cls : result.getClassesImplementing("me.canelex.spidey.objects.command.ICommand"))
             {
                 final var cmd = (ICommand) cls.loadClass().getDeclaredConstructor().newInstance();
-
                 commandsMap.put(cmd.getInvoke(), cmd);
                 cmd.getAliases().forEach(alias -> commandsMap.put(alias, cmd));
             }
