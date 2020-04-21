@@ -40,7 +40,7 @@ public class PrefixCommand implements ICommand
         final var newPrefix = args[1];
         if (actualPrefix.equals(newPrefix))
         {
-            Utils.returnError("The prefix for this server is already set to `" + actualPrefix +"`", message);
+            Utils.returnError("The prefix for this server is already set to `" + actualPrefix + "`", message);
             return;
         }
         if (newPrefix.contains("`"))
