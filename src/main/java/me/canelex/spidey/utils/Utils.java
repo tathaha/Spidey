@@ -112,6 +112,7 @@ public class Utils
     {
         final var jda = Core.getJDA();
         final var random = ThreadLocalRandom.current();
+        final var commandsMap = Core.getCommands();
         final var activities = new Activity[]
         {
             Activity.listening("your commands"),
@@ -120,14 +121,15 @@ public class Utils
             Activity.watching(jda.getUserCache().size() + " users")
         };
 
-        Core.getCommands().clear(); //just to make sure that the commands map is empty
+        commandsMap.clear(); //just to make sure that the commands map is empty
         try (final var result = graph.scan())
         {
             for (final var cls : result.getClassesImplementing("me.canelex.spidey.objects.command.ICommand"))
             {
                 final var cmd = (ICommand) cls.loadClass().getDeclaredConstructor().newInstance();
-                Core.getCommands().put(cmd.getInvoke(), cmd);
-                cmd.getAliases().forEach(alias -> Core.getCommands().put(alias, cmd));
+
+                commandsMap.put(cmd.getInvoke(), cmd);
+                cmd.getAliases().forEach(alias -> commandsMap.put(alias, cmd));
             }
         }
         catch (final Exception e)
