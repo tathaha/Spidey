@@ -225,6 +225,12 @@ public class Utils
         return new String(value, 0, digits);
     }
 
+    public static void setPrefix(final long guildId, final String prefix)
+    {
+        MySQL.setPrefix(guildId, prefix);
+        Utils.getPrefixes().put(guildId, prefix);
+    }
+
     public static String getPrefix(final long guildId)
     {
         if (PREFIXES.containsKey(guildId))
