@@ -26,6 +26,7 @@ import java.time.Duration;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.*;
 
 public class Utils
@@ -228,19 +229,19 @@ public class Utils
     public static void setPrefix(final long guildId, final String prefix)
     {
         MySQL.setPrefix(guildId, prefix);
-        getPrefixes().put(guildId, prefix);
+        PREFIXES.put(guildId, prefix);
+    }
+
+    private static String getPrefixFromRequest(final long guildId)
+    {
+        final var tmp = MySQL.getPrefix(guildId);
+        final var prefix = tmp.length() == 0 ? "s!" : tmp;
+        PREFIXES.put(guildId, prefix);
+        return prefix;
     }
 
     public static String getPrefix(final long guildId)
     {
-        if (PREFIXES.containsKey(guildId))
-            return PREFIXES.get(guildId);
-        else
-        {
-            final var tmp = MySQL.getPrefix(guildId);
-            final var prefix = tmp.length() == 0 ? "s!" : tmp;
-            PREFIXES.put(guildId, prefix);
-            return prefix;
-        }
+        return Objects.requireNonNullElseGet(PREFIXES.get(guildId), () -> getPrefixFromRequest(guildId));
     }
 }
