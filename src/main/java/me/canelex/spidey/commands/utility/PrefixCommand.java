@@ -55,6 +55,7 @@ public class PrefixCommand implements ICommand
         }
 
         MySQL.setPrefix(guildId, newPrefix);
+        Utils.getPrefixes().put(guildId, newPrefix);
         Utils.sendMessage(channel, ":white_check_mark: The prefix has been successfully changed to `" + newPrefix + "`!");
     }
 
