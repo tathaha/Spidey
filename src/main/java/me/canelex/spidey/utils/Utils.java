@@ -24,6 +24,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.concurrent.*;
 
@@ -35,10 +36,16 @@ public class Utils
     private static final ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("Spidey").setUncaughtExceptionHandler((t, e) -> LOG.error("There was an exception in thread {}: {}", t.getName(), e.getMessage())).build();
     private static final ScheduledExecutorService EXECUTOR = Executors.newSingleThreadScheduledExecutor(threadFactory);
     private static final char[] SUFFIXES = {'k', 'M', 'B'};
+    private static final HashMap<Long, String> PREFIXES = new HashMap<>();
 
     private Utils()
     {
         super();
+    }
+
+    public static HashMap<Long, String> getPrefixes()
+    {
+        return PREFIXES;
     }
 
     public static boolean hasPerm(final Member toCheck, final Permission perm)
@@ -218,9 +225,22 @@ public class Utils
         return new String(value, 0, digits);
     }
 
+    public static void setPrefix(final long guildId, final String prefix)
+    {
+        MySQL.setPrefix(guildId, prefix);
+        getPrefixes().put(guildId, prefix);
+    }
+
     public static String getPrefix(final long guildId)
     {
-        final var tmp = MySQL.getPrefix(guildId);
-        return tmp.length() == 0 ? "s!" : tmp;
+        if (PREFIXES.containsKey(guildId))
+            return PREFIXES.get(guildId);
+        else
+        {
+            final var tmp = MySQL.getPrefix(guildId);
+            final var prefix = tmp.length() == 0 ? "s!" : tmp;
+            PREFIXES.put(guildId, prefix);
+            return prefix;
+        }
     }
 }
