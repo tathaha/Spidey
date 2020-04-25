@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 
 public class EventWaiter implements EventListener
 {
-    private final HashMap<Class<?>, Set<WaitingEvent>> waitingEvents;
+    private final HashMap<Class<?>, Set<WaitingEvent<?>>> waitingEvents;
     private final ScheduledExecutorService threadpool;
     private static final ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("EventWaiter").build();
     private final boolean shutdownAutomatically;
@@ -55,8 +55,8 @@ public class EventWaiter implements EventListener
         Checks.notNull(condition, "The provided condition predicate");
         Checks.notNull(action, "The provided action consumer");
 
-        WaitingEvent we = new WaitingEvent<>(condition, action);
-        Set<WaitingEvent> set = waitingEvents.computeIfAbsent(classType, c -> new HashSet<>());
+        final var we = new WaitingEvent<>(condition, action);
+        final var set = waitingEvents.computeIfAbsent(classType, c -> new HashSet<>());
         set.add(we);
 
         if (timeout > 0 && unit != null)
@@ -74,14 +74,14 @@ public class EventWaiter implements EventListener
     @SuppressWarnings("unchecked")
     public final void onEvent(GenericEvent event)
     {
-        Class c = event.getClass();
+        Class<?> c = event.getClass();
 
         while (c != null)
         {
             if (waitingEvents.containsKey(c))
             {
-                Set<WaitingEvent> set = waitingEvents.get(c);
-                WaitingEvent[] toRemove = set.toArray(new WaitingEvent[0]);
+                final var set = waitingEvents.get(c);
+                final var toRemove = set.toArray(new WaitingEvent[0]);
                 set.removeAll(Stream.of(toRemove).filter(i -> i.attempt(event)).collect(Collectors.toSet()));
             }
             if (event instanceof ShutdownEvent && shutdownAutomatically)
@@ -90,7 +90,7 @@ public class EventWaiter implements EventListener
         }
     }
 
-    private class WaitingEvent<T extends GenericEvent>
+    private static class WaitingEvent<T extends GenericEvent>
     {
         final Predicate<T> condition;
         final Consumer<T> action;
