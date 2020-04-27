@@ -44,11 +44,6 @@ public class Utils
         super();
     }
 
-    public static HashMap<Long, String> getPrefixes()
-    {
-        return PREFIXES;
-    }
-
     public static boolean hasPerm(final Member toCheck, final Permission perm)
     {
         return toCheck.hasPermission(perm);
