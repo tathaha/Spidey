@@ -23,11 +23,13 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.*;
+import java.util.function.Supplier;
+
+import static java.util.Arrays.asList;
+import static me.canelex.jda.api.entities.Activity.listening;
+import static me.canelex.jda.api.entities.Activity.watching;
 
 public class Utils
 {
@@ -38,6 +40,7 @@ public class Utils
     private static final ScheduledExecutorService EXECUTOR = Executors.newSingleThreadScheduledExecutor(threadFactory);
     private static final char[] SUFFIXES = {'k', 'M', 'B'};
     private static final HashMap<Long, String> PREFIXES = new HashMap<>();
+    private static final ThreadLocalRandom random = ThreadLocalRandom.current();
 
     private Utils()
     {
@@ -114,15 +117,13 @@ public class Utils
     public static void startup()
     {
         final var jda = Core.getJDA();
-        final var random = ThreadLocalRandom.current();
         final var commandsMap = Core.getCommands();
-        final var activities = new Activity[]
-        {
-            Activity.listening("your commands"),
-            Activity.watching("you"),
-            Activity.watching(jda.getGuildCache().size() + " guilds"),
-            Activity.watching(jda.getUserCache().size() + " users")
-        };
+        final ArrayList<Supplier<Activity>> activities = new ArrayList<>(asList(
+                () -> listening("your commands"),
+                () -> watching("you"),
+                () -> watching(jda.getGuildCache().size() + " guilds"),
+                () -> watching(jda.getUserCache().size() + " users")
+        ));
 
         commandsMap.clear(); //just to make sure that the commands map is empty
         try (final var result = graph.scan())
@@ -140,7 +141,12 @@ public class Utils
         }
 
         EXECUTOR.scheduleAtFixedRate(() ->
-            jda.getPresence().setActivity(activities[random.nextInt(activities.length)]), 0L, 30L, TimeUnit.SECONDS);
+            jda.getPresence().setActivity(nextActivity(activities)), 0L, 30L, TimeUnit.SECONDS);
+    }
+
+    private static Activity nextActivity(final ArrayList<Supplier<Activity>> activities)
+    {
+        return activities.get(random.nextInt(activities.size())).get();
     }
 
     public static String getSiteContent(final String url)
