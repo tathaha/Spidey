@@ -153,8 +153,7 @@ public class Utils
             LOG.error("There was an error while registering the commands!", e);
         }
 
-        EXECUTOR.scheduleAtFixedRate(() ->
-            jda.getPresence().setActivity(nextActivity(activities)), 0L, 30L, TimeUnit.SECONDS);
+        EXECUTOR.scheduleAtFixedRate(() -> jda.getPresence().setActivity(nextActivity(activities)), 0L, 30L, TimeUnit.SECONDS);
     }
 
     private static Activity nextActivity(final ArrayList<Supplier<Activity>> activities)
