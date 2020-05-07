@@ -5,6 +5,8 @@ import io.github.classgraph.ClassGraph;
 import me.canelex.jda.api.EmbedBuilder;
 import me.canelex.jda.api.Permission;
 import me.canelex.jda.api.entities.*;
+import me.canelex.jda.api.exceptions.ErrorHandler;
+import me.canelex.jda.api.requests.ErrorResponse;
 import me.canelex.jda.api.utils.data.DataObject;
 import me.canelex.spidey.Core;
 import me.canelex.spidey.Events;
@@ -67,7 +69,7 @@ public class Utils
     {
         user.openPrivateChannel()
             .flatMap(channel -> channel.sendMessage(toSend))
-            .queue();
+            .queue(null, new ErrorHandler().ignore(ErrorResponse.CANNOT_SEND_TO_USER));
     }
 
     public static void deleteMessage(final Message msg)
