@@ -14,7 +14,7 @@ import java.util.Locale;
 public class UserCommand implements ICommand
 {
 	private final Calendar cal = Calendar.getInstance();
-	private final SimpleDateFormat date = new SimpleDateFormat("EE, d.LLL Y | HH:mm:ss", new Locale("en", "EN"));
+	private final SimpleDateFormat date = new SimpleDateFormat("EE, d.LLL y | HH:mm:ss", new Locale("en", "EN"));
 
 	@Override
 	public final void action(final String[] args, final Message message)

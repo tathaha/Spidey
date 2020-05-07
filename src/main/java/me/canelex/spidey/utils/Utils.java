@@ -201,7 +201,7 @@ public class Utils
     {
         final var cal = Calendar.getInstance();
         cal.setTimeInMillis(new File("SpideyDev.jar").lastModified());
-        return new SimpleDateFormat("EE, d.LLL Y | HH:mm:ss", new Locale("en", "EN")).format(cal.getTime());
+        return new SimpleDateFormat("EE, d.LLL y | HH:mm:ss", new Locale("en", "EN")).format(cal.getTime());
     }
 
     public static String getCompactNumber(final long number)
