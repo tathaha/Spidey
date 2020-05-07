@@ -9,7 +9,6 @@ import me.canelex.jda.api.exceptions.ErrorHandler;
 import me.canelex.jda.api.requests.ErrorResponse;
 import me.canelex.jda.api.utils.data.DataObject;
 import me.canelex.spidey.Core;
-import me.canelex.spidey.Events;
 import me.canelex.spidey.MySQL;
 import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.objects.invites.WrappedInvite;
@@ -49,6 +48,7 @@ public class Utils
     private static final String NO_PERMS = ":no_entry: Action can't be completed because you don't have **%s** permission";
     private static final SimpleDateFormat SDF = new SimpleDateFormat("EE, d.LLL y | HH:mm:ss");
     private static final Calendar CAL = Calendar.getInstance();
+    private static final ConcurrentMap<String, WrappedInvite> invitesMap = new ConcurrentHashMap<>();
 
     private Utils()
     {
@@ -198,7 +198,7 @@ public class Utils
 
     public static void storeInvites(final Guild guild)
     {
-        guild.retrieveInvites().queue(invites -> invites.forEach(invite -> Events.getInvites().put(invite.getCode(), new WrappedInvite(invite))), failure -> sendPrivateMessage(guild.getOwner().getUser(), "I'm not able to attach the invite a user joined with as i don't have permission to manage the server."));
+        guild.retrieveInvites().queue(invites -> invites.forEach(invite -> invitesMap.put(invite.getCode(), new WrappedInvite(invite))), failure -> sendPrivateMessage(guild.getOwner().getUser(), "I'm not able to attach the invite a user joined with as i don't have permission to manage the server."));
     }
 
     public static String cleanString(final String original)
@@ -261,5 +261,10 @@ public class Utils
     {
         CAL.setTimeInMillis(millis);
         return SDF.format(CAL.getTime());
+    }
+
+    public static ConcurrentMap<String, WrappedInvite> getInvites()
+    {
+        return invitesMap;
     }
 }

@@ -23,20 +23,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.time.Instant;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
 @SuppressWarnings({"ConstantConditions", "StringBufferReplaceableByString"})
 public class Events extends ListenerAdapter
 {
-	private static final ConcurrentMap<String, WrappedInvite> invitesMap = new ConcurrentHashMap<>();
-
-	public static ConcurrentMap<String, WrappedInvite> getInvites()
-	{
-		return invitesMap;
-	}
-
 	@Override
 	public final void onGuildMessageReceived(final GuildMessageReceivedEvent e)
 	{
@@ -177,7 +168,7 @@ public class Events extends ListenerAdapter
 			}
 			guild.retrieveInvites().queue(invites ->
 			{
-				final var guildInvites = invitesMap.entrySet().stream().filter(entry -> entry.getValue().getGuildId() == id).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+				final var guildInvites = Utils.getInvites().entrySet().stream().filter(entry -> entry.getValue().getGuildId() == id).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 				for (final var invite : invites)
 				{
 					final var wrappedInvite = guildInvites.get(invite.getCode());
@@ -215,7 +206,7 @@ public class Events extends ListenerAdapter
 	{
 		final var guild = e.getGuild();
 		final var id = guild.getIdLong();
-		invitesMap.entrySet().removeIf(entry -> entry.getValue().getGuildId() == id);
+		Utils.getInvites().entrySet().removeIf(entry -> entry.getValue().getGuildId() == id);
 		MySQL.removeChannel(id);
 	}
 
@@ -248,18 +239,18 @@ public class Events extends ListenerAdapter
 	@Override
 	public final void onGuildInviteCreate(@NotNull final GuildInviteCreateEvent e)
 	{
-		invitesMap.put(e.getCode(), new WrappedInvite(e.getInvite()));
+		Utils.getInvites().put(e.getCode(), new WrappedInvite(e.getInvite()));
 	}
 
 	@Override
 	public final void onGuildInviteDelete(@NotNull final GuildInviteDeleteEvent e)
 	{
-		invitesMap.remove(e.getCode());
+		Utils.getInvites().remove(e.getCode());
 	}
 
 	@Override
 	public final void onShutdown(@NotNull final ShutdownEvent e)
 	{
-		invitesMap.clear();
+		Utils.getInvites().clear();
 	}
 }
