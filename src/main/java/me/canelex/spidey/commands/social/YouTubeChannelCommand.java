@@ -14,16 +14,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.time.Duration;
-import java.util.Calendar;
-import java.util.Locale;
 
 @SuppressWarnings("unused")
 public class YouTubeChannelCommand implements ICommand
 {
-	private final Calendar cal = Calendar.getInstance();
-	private final SimpleDateFormat date = new SimpleDateFormat("EE, d.LLL Y | HH:mm:ss", new Locale("en", "EN"));
 	private static final Logger LOG = LoggerFactory.getLogger(YouTubeChannelCommand.class);
 	private static final DecimalFormat FORMATTER = new DecimalFormat("#,###");
 
@@ -56,10 +51,7 @@ public class YouTubeChannelCommand implements ICommand
 				final var channelId = searchResponse.getItems().get(0).getSnippet().getChannelId();
 				final var channels = youtube.channels().list("snippet, statistics").setId(channelId);
 				final var c = channels.execute().getItems().get(0);
-
-				cal.setTimeInMillis(c.getSnippet().getPublishedAt().getValue());
-				final var creation = date.format(cal.getTime());
-
+				final var creation = Utils.getTime(c.getSnippet().getPublishedAt().getValue());
 				final var sb = new SocialBlade(channelId);
 				final var subs = sb.getSubs();
 				final var views = sb.getViews();

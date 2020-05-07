@@ -25,7 +25,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Objects;
 import java.util.concurrent.*;
 import java.util.function.Supplier;
 
@@ -44,6 +47,8 @@ public class Utils
     private static final HashMap<Long, String> PREFIXES = new HashMap<>();
     private static final ThreadLocalRandom random = ThreadLocalRandom.current();
     private static final String NO_PERMS = ":no_entry: Action can't be completed because you don't have **%s** permission";
+    private static final SimpleDateFormat SDF = new SimpleDateFormat("EE, d.LLL y | HH:mm:ss");
+    private static final Calendar CAL = Calendar.getInstance();
 
     private Utils()
     {
@@ -207,9 +212,7 @@ public class Utils
 
     public static String getBuildDate()
     {
-        final var cal = Calendar.getInstance();
-        cal.setTimeInMillis(new File("Spidey.jar").lastModified());
-        return new SimpleDateFormat("EE, d.LLL y | HH:mm:ss", new Locale("en", "EN")).format(cal.getTime());
+        return getTime(new File("Spidey.jar").lastModified());
     }
 
     public static String getCompactNumber(final long number)
@@ -252,5 +255,11 @@ public class Utils
     public static String getPrefix(final long guildId)
     {
         return Objects.requireNonNullElseGet(PREFIXES.get(guildId), () -> getPrefixFromRequest(guildId));
+    }
+
+    public static String getTime(final long millis)
+    {
+        CAL.setTimeInMillis(millis);
+        return SDF.format(CAL.getTime());
     }
 }
