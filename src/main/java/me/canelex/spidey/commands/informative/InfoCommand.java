@@ -11,8 +11,6 @@ import java.lang.management.ManagementFactory;
 @SuppressWarnings("unused")
 public class InfoCommand implements ICommand
 {
-	private static final String BUILD_DATE = Utils.getBuildDate();
-
 	@Override
 	public final void action(final String[] args, final Message message)
 	{
@@ -45,7 +43,7 @@ public class InfoCommand implements ICommand
 				eb.addField("Ping", "**" + jda.getGatewayPing() + "**, **" + ping + "** ms", false);
 				eb.addField("Used memory", "**" + (memory / 1000000) + "**MB", false);
 				eb.addField("Uptime", finalUptime, false);
-				eb.addField("Build date", BUILD_DATE, false);
+				eb.addField("Build date", Utils.getBuildDate(), false);
 				Utils.sendMessage(msgCh, eb.build());
 			}));
 	}

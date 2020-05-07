@@ -208,7 +208,7 @@ public class Utils
     public static String getBuildDate()
     {
         final var cal = Calendar.getInstance();
-        cal.setTimeInMillis(new File("SpideyDev.jar").lastModified());
+        cal.setTimeInMillis(new File("Spidey.jar").lastModified());
         return new SimpleDateFormat("EE, d.LLL y | HH:mm:ss", new Locale("en", "EN")).format(cal.getTime());
     }
 
