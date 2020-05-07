@@ -45,7 +45,7 @@ public class Utils
     private static final char[] SUFFIXES = {'k', 'M', 'B'};
     private static final HashMap<Long, String> PREFIXES = new HashMap<>();
     private static final ThreadLocalRandom random = ThreadLocalRandom.current();
-    private static final String NO_PERMS = ":no_entry: Action can't be completed because you don't have **%s** permission";
+    private static final String NO_PERMS = "Action can't be completed because you don't have **%s** permission";
     private static final SimpleDateFormat SDF = new SimpleDateFormat("EE, d.LLL y | HH:mm:ss");
     private static final Calendar CAL = Calendar.getInstance();
     private static final ConcurrentMap<String, WrappedInvite> invitesMap = new ConcurrentHashMap<>();
