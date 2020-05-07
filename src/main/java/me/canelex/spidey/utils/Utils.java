@@ -41,6 +41,7 @@ public class Utils
     private static final char[] SUFFIXES = {'k', 'M', 'B'};
     private static final HashMap<Long, String> PREFIXES = new HashMap<>();
     private static final ThreadLocalRandom random = ThreadLocalRandom.current();
+    private static final String NO_PERMS = ":no_entry: Action can't be completed because you don't have **%s** permission";
 
     private Utils()
     {
@@ -107,6 +108,11 @@ public class Utils
                                .flatMap(Message::delete)
                                .flatMap(ignored -> origin.delete())
                                .queue();
+    }
+
+    public static void getPermissionsError(final Permission perm, final Message message)
+    {
+        returnError(String.format(NO_PERMS, perm.getName()), message);
     }
 
     public static String generateSuccess(final int count, final User u)

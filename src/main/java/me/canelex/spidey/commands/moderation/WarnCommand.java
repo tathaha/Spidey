@@ -6,7 +6,6 @@ import me.canelex.jda.api.entities.Message;
 import me.canelex.spidey.MySQL;
 import me.canelex.spidey.objects.command.Category;
 import me.canelex.spidey.objects.command.ICommand;
-import me.canelex.spidey.utils.PermissionError;
 import me.canelex.spidey.utils.Utils;
 
 import java.awt.*;
@@ -25,7 +24,7 @@ public class WarnCommand implements ICommand
 		final var requiredPermission = getRequiredPermission();
 		if (!Utils.hasPerm(member, requiredPermission))
 		{
-			Utils.sendMessage(message.getChannel(), PermissionError.getErrorMessage(requiredPermission));
+			Utils.getPermissionsError(requiredPermission, message);
 			return;
 		}
 		

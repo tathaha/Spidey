@@ -5,7 +5,6 @@ import me.canelex.jda.api.entities.Message;
 import me.canelex.spidey.MySQL;
 import me.canelex.spidey.objects.command.Category;
 import me.canelex.spidey.objects.command.ICommand;
-import me.canelex.spidey.utils.PermissionError;
 import me.canelex.spidey.utils.Utils;
 
 import java.util.regex.Pattern;
@@ -26,7 +25,7 @@ public class JoinRoleCommand implements ICommand
 
         if (!Utils.hasPerm(member, requiredPermission))
         {
-            Utils.sendMessage(channel, PermissionError.getErrorMessage(requiredPermission));
+            Utils.getPermissionsError(requiredPermission, message);
             return;
         }
 

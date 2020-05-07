@@ -6,7 +6,6 @@ import me.canelex.jda.api.entities.ListedEmote;
 import me.canelex.jda.api.entities.Message;
 import me.canelex.spidey.objects.command.Category;
 import me.canelex.spidey.objects.command.ICommand;
-import me.canelex.spidey.utils.PermissionError;
 import me.canelex.spidey.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,7 +77,7 @@ public class UploadEmoteCommand implements ICommand
                                                           .get(extension.equals("gif")).size();
 
         if (!Utils.hasPerm(message.getMember(), requiredPermission))
-            Utils.sendMessage(channel, PermissionError.getErrorMessage(requiredPermission));
+            Utils.getPermissionsError(requiredPermission, message);
         else if (maxEmotes == used)
         {
             Utils.returnError("Guild has the maximum amount of emotes", message);

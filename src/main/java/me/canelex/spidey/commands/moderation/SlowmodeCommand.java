@@ -5,7 +5,6 @@ import me.canelex.jda.api.entities.Message;
 import me.canelex.jda.api.entities.TextChannel;
 import me.canelex.spidey.objects.command.Category;
 import me.canelex.spidey.objects.command.ICommand;
-import me.canelex.spidey.utils.PermissionError;
 import me.canelex.spidey.utils.Utils;
 
 @SuppressWarnings("unused")
@@ -17,7 +16,7 @@ public class SlowmodeCommand implements ICommand
 		final var channel = message.getChannel();
 		final var requiredPermission = getRequiredPermission();
 		if (!Utils.hasPerm(message.getMember(), requiredPermission))
-			Utils.sendMessage(channel, PermissionError.getErrorMessage(requiredPermission));
+			Utils.getPermissionsError(requiredPermission, message);
 		else
 		{
 			var seconds = 0;

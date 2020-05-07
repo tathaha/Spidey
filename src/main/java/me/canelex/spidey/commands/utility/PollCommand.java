@@ -6,7 +6,6 @@ import me.canelex.spidey.MySQL;
 import me.canelex.spidey.objects.command.Category;
 import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.utils.Emojis;
-import me.canelex.spidey.utils.PermissionError;
 import me.canelex.spidey.utils.Utils;
 
 import java.awt.*;
@@ -24,7 +23,7 @@ public class PollCommand implements ICommand
 
 		final var requiredPermission = getRequiredPermission();
 		if (!Utils.hasPerm(message.getMember(), requiredPermission))
-			Utils.sendMessage(channel, PermissionError.getErrorMessage(requiredPermission));
+			Utils.getPermissionsError(requiredPermission, message);
 		else
 		{
 			if (log != null)

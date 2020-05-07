@@ -4,7 +4,6 @@ import me.canelex.jda.api.Permission;
 import me.canelex.jda.api.entities.Message;
 import me.canelex.spidey.objects.command.Category;
 import me.canelex.spidey.objects.command.ICommand;
-import me.canelex.spidey.utils.PermissionError;
 import me.canelex.spidey.utils.Utils;
 
 @SuppressWarnings("unused")
@@ -21,7 +20,7 @@ public class PrefixCommand implements ICommand
 
         if (!Utils.hasPerm(message.getMember(), requiredPermission))
         {
-            Utils.sendMessage(channel, PermissionError.getErrorMessage(requiredPermission));
+            Utils.getPermissionsError(requiredPermission, message);
             return;
         }
         if (args.length == 1)
