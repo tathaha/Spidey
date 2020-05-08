@@ -18,7 +18,6 @@ public class HelpCommand implements ICommand
     @Override
     public final void action(final String[] args, final Message message)
     {
-        final HashMap<String, ICommand> commandsCopy = new HashMap<>();
         final var commandsMap = Core.getCommands();
         final var channel = message.getChannel();
         final var author = message.getAuthor();
@@ -29,7 +28,7 @@ public class HelpCommand implements ICommand
 
         if (args.length < 2)
         {
-            commandsMap.forEach(commandsCopy::put);
+            final var commandsCopy = new HashMap<>(commandsMap);
             final var entries = commandsCopy.entrySet();
             entries.removeIf(entry -> !Utils.hasPerm(message.getMember(), entry.getValue().getRequiredPermission()));
             final var hidden = commandsMap.size() - commandsCopy.size();
