@@ -52,7 +52,7 @@ public class Events extends ListenerAdapter
 			return;
 		}
 
-		final var channel = guild.getTextChannelById(MySQL.getChannel(id));
+		final var channel = Utils.getLogChannel(id);
 		if (message.getType() == MessageType.GUILD_MEMBER_BOOST && channel != null)
 		{
 			Utils.deleteMessage(message);
@@ -74,7 +74,7 @@ public class Events extends ListenerAdapter
 		final var user = e.getUser();
 		final var guild = e.getGuild();
 
-		final var channel = guild.getTextChannelById(MySQL.getChannel(guild.getIdLong()));
+		final var channel = Utils.getLogChannel(guild.getIdLong());
 		if (channel != null)
 		{
 			guild.retrieveBan(user).queue(ban ->
@@ -107,7 +107,7 @@ public class Events extends ListenerAdapter
 		final var user = e.getUser();
 		final var guild = e.getGuild();
 
-		final var channel = guild.getTextChannelById(MySQL.getChannel(guild.getIdLong()));
+		final var channel = Utils.getLogChannel(guild.getIdLong());
 		if (channel != null)
 		{
 			guild.retrieveAuditLogs().type(ActionType.UNBAN).queue(unbans ->
@@ -130,7 +130,7 @@ public class Events extends ListenerAdapter
 		final var user = e.getUser();
 		final var guild = e.getGuild();
 
-		final var channel = guild.getTextChannelById(MySQL.getChannel(guild.getIdLong()));
+		final var channel = Utils.getLogChannel(guild.getIdLong());
 		if (channel != null)
 		{
 			final var eb = new EmbedBuilder();
@@ -149,7 +149,7 @@ public class Events extends ListenerAdapter
 		final var user = e.getUser();
 		final var guild = e.getGuild();
 		final var id = guild.getIdLong();
-		final var channel = guild.getTextChannelById(MySQL.getChannel(id));
+		final var channel = Utils.getLogChannel(id);
 		final var role = guild.getRoleById(MySQL.getRole(id));
 		final var userId = user.getId();
 
@@ -232,7 +232,7 @@ public class Events extends ListenerAdapter
 	{
 		final var guild = e.getGuild();
 
-		final var channel = guild.getTextChannelById(MySQL.getChannel(guild.getIdLong()));
+		final var channel = Utils.getLogChannel(guild.getIdLong());
 		if (channel != null)
 		{
 			final var eb = new EmbedBuilder();

@@ -2,7 +2,6 @@ package me.canelex.spidey.commands.utility;
 
 import me.canelex.jda.api.Permission;
 import me.canelex.jda.api.entities.Message;
-import me.canelex.spidey.MySQL;
 import me.canelex.spidey.objects.command.Category;
 import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.utils.Emojis;
@@ -17,7 +16,7 @@ public class PollCommand implements ICommand
 	public final void action(final String[] args, final Message message)
 	{
 		final var guild = message.getGuild();
-		final var log = guild.getTextChannelById(MySQL.getChannel(guild.getIdLong()));
+		final var log = Utils.getLogChannel(guild.getIdLong());
 		final var author = message.getAuthor();
 		final var channel = message.getChannel();
 

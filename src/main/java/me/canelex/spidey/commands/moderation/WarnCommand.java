@@ -3,7 +3,6 @@ package me.canelex.spidey.commands.moderation;
 import me.canelex.jda.api.EmbedBuilder;
 import me.canelex.jda.api.Permission;
 import me.canelex.jda.api.entities.Message;
-import me.canelex.spidey.MySQL;
 import me.canelex.spidey.objects.command.Category;
 import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.utils.Utils;
@@ -57,7 +56,7 @@ public class WarnCommand implements ICommand
 		final var eb = new EmbedBuilder();
 		final var guild = message.getGuild();
 
-		final var channel = guild.getTextChannelById(MySQL.getChannel(guild.getIdLong()));
+		final var channel = Utils.getLogChannel(guild.getIdLong());
 		if (channel != null)
 		{
 			final var user = mb.getUser();

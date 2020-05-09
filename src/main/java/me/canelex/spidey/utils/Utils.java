@@ -253,4 +253,9 @@ public class Utils
     {
         return Objects.requireNonNullElseGet(PREFIXES.get(guildId), () -> getPrefixFromRequest(guildId));
     }
+
+    public static TextChannel getLogChannel(final long guildId)
+    {
+        return Core.getJDA().getGuildById(guildId).getTextChannelById(MySQL.getChannel(guildId));
+    }
 }
