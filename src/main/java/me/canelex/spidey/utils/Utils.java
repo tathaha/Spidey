@@ -256,6 +256,6 @@ public class Utils
 
     public static TextChannel getLogChannel(final long guildId)
     {
-        return Core.getJDA().getGuildById(guildId).getTextChannelById(MySQL.getChannel(guildId));
+        return Core.getJDA().getTextChannelById(MySQL.getChannel(guildId));
     }
 }
