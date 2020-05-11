@@ -74,7 +74,7 @@ public class Utils
 
     public static void deleteMessage(final Message msg)
     {
-        msg.delete().queue();
+        msg.delete().queue(null, new ErrorHandler().ignore(ErrorResponse.UNKNOWN_MESSAGE));
     }
 
     public static boolean canSetVanityUrl(final Guild g)
@@ -105,11 +105,11 @@ public class Utils
     public static void returnError(final String errMsg, final Message origin)
     {
         origin.addReaction(Emojis.CROSS).queue();
+        deleteMessage(origin);
         origin.getTextChannel().sendMessage(String.format(":no_entry: %s.", errMsg))
                                .delay(Duration.ofSeconds(5))
                                .flatMap(Message::delete)
-                               .flatMap(ignored -> origin.delete())
-                               .queue();
+                               .queue(null, new ErrorHandler().ignore(ErrorResponse.UNKNOWN_MESSAGE));
     }
 
     public static void getPermissionsError(final Permission perm, final Message message)
