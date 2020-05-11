@@ -9,7 +9,9 @@ import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.utils.Emojis;
 import me.canelex.spidey.utils.Utils;
 
+import java.time.Duration;
 import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings({"unused", "StringBufferReplaceableByString"})
@@ -49,13 +51,13 @@ public class DeleteCommand implements ICommand
         }
 
         final var mentioned = message.getMentionedUsers();
+        final var user = mentioned.isEmpty() ? null : mentioned.get(0);
         final var it = channel.getIterableHistory();
         final var finalAmount = amount;
-        final var action = mentioned.isEmpty() ? it.takeAsync(amount)
-                                               : it.takeWhileAsync(amount, msg -> msg.getAuthor().equals(mentioned.get(0)));
+        final var action = user == null ? it.takeAsync(amount)
+                                        : it.takeWhileAsync(amount, msg -> msg.getAuthor().equals(user));
         action.thenAcceptAsync(messages ->
         {
-            final var size = messages.size();
             final var toDelete = new ArrayList<>(messages);
             final var pinned = messages.stream().filter(Message::isPinned).count();
 
@@ -94,7 +96,15 @@ public class DeleteCommand implements ICommand
                             }
                         }, 1, TimeUnit.MINUTES, () -> Utils.returnError("Sorry, you took too long", message));
                 });
+                return;
             }
+            final var tasks = channel.purgeMessages(toDelete);
+            final var future = CompletableFuture.allOf(tasks.toArray(new CompletableFuture[0]));
+            future.thenRunAsync(() ->
+                    channel.sendMessage(Utils.generateSuccess(tasks.size(), user))
+                   .delay(Duration.ofSeconds(5))
+                   .flatMap(Message::delete)
+                   .queue());
         });
     }
 
