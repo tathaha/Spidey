@@ -76,17 +76,19 @@ public class DeleteCommand implements ICommand
                 final var equalsOne = pinned == 1;
                 final var builder = new StringBuilder("There ");
                 builder.append(equalsOne ? "is" : "are").append(" **").append(pinned)
-                       .append("** pinned message").append(equalsOne ? "" : "s").append(" that will be deleted if you proceed.")
-                       .append("\n\nReacting with :white_check_mark: will delete a given amount of messages including pinned ones.")
-                       .append("\nReacting with :x: will cancel the deletion process.")
-                       .append("\nReacting with :wastebasket: will delete a given amount of messages except the pinned ones.")
-                       .append("\n\nYou have **1 minute** to react.");
+                       .append("** pinned message").append(equalsOne ? "" : "s").append(" selected for deletion. ")
+                       .append("Are you sure you want to delete ").append(equalsOne ? "it" : "them").append("? ")
+                       .append("Deleting a message will also unpin it.")
+                       .append("\n\nReacting with :white_check_mark: will delete ").append(equalsOne ? "this message" : "these messages").append(".")
+                       .append("\nReacting with :wastebasket: will delete each unpinned message.")
+                       .append("\nReacting with :x: will cancel the deletion.")
+                       .append("\n\nThe deletion will be cancelled automatically in **1 minute** if a decision isn't made.");
                 channel.sendMessage(builder.toString()).queue(msg ->
                 {
                     final var wastebasket = "\uD83D\uDDD1";
                     msg.addReaction(Emojis.CHECK).queue();
-                    msg.addReaction(Emojis.CROSS).queue();
                     msg.addReaction(wastebasket).queue();
+                    msg.addReaction(Emojis.CROSS).queue();
 
                     Core.getWaiter().waitForEvent(GuildMessageReactionAddEvent.class,
                         ev ->
