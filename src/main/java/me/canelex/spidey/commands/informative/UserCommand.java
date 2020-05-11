@@ -6,16 +6,10 @@ import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.utils.Utils;
 
 import java.awt.*;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
 
 @SuppressWarnings("unused")
 public class UserCommand implements ICommand
 {
-	private final Calendar cal = Calendar.getInstance();
-	private final SimpleDateFormat date = new SimpleDateFormat("EE, d.LLL y | HH:mm:ss", new Locale("en", "EN"));
-
 	@Override
 	public final void action(final String[] args, final Message message)
 	{
@@ -35,20 +29,11 @@ public class UserCommand implements ICommand
 		if (nick != null)
 			eb.addField("Nickname for this guild", nick, false);
 
-		cal.setTimeInMillis(u.getTimeCreated().toInstant().toEpochMilli());
-		final var creation = date.format(cal.getTime());
-		eb.addField("Account created", creation, true);
-
-		cal.setTimeInMillis(m.getTimeJoined().toInstant().toEpochMilli());
-		final var join = date.format(cal.getTime());
-		eb.addField("User joined", join, false);
+		eb.addField("Account created", Utils.getTime(u.getTimeCreated().toInstant().toEpochMilli()), true);
+		eb.addField("User joined", Utils.getTime(m.getTimeJoined().toInstant().toEpochMilli()), false);
 
 		if (guild.getBoosters().contains(m))
-		{
-			cal.setTimeInMillis(m.getTimeBoosted().toInstant().toEpochMilli());
-			final var boost = date.format(cal.getTime());
-			eb.addField("Boosting since", boost, false);
-		}
+			eb.addField("Boosting since", Utils.getTime(m.getTimeBoosted().toInstant().toEpochMilli()), false);
 
 		if (!m.getRoles().isEmpty())
 		{

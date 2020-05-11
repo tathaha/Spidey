@@ -7,18 +7,12 @@ import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.utils.Utils;
 
 import java.awt.*;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 @SuppressWarnings("unused")
 public class GuildCommand implements ICommand
 {
-	private final Calendar cal = Calendar.getInstance();
-	private final SimpleDateFormat date = new SimpleDateFormat("EE, d.LLL y | HH:mm:ss", new Locale("en", "EN"));
-
 	@Override
 	public final void action(final String[] args, final Message message)
 	{
@@ -43,10 +37,7 @@ public class GuildCommand implements ICommand
 		eb.addField("Boosts", "" + guild.getBoostCount(), true);
 
 		eb.addField("Region", guild.getRegion().getName(), true);
-
-		cal.setTimeInMillis(guild.getTimeCreated().toInstant().toEpochMilli());
-		final var creation = date.format(cal.getTime());
-		eb.addField("Creation", creation, true);
+		eb.addField("Creation", Utils.getTime(guild.getTimeCreated().toInstant().toEpochMilli()), true);
 
 		final var vanityUrl = guild.getVanityUrl();
 		if (!Utils.canSetVanityUrl(guild)) //could use ternary here too, but i don't use it because of readability

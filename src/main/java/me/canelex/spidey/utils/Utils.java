@@ -9,7 +9,6 @@ import me.canelex.jda.api.exceptions.ErrorHandler;
 import me.canelex.jda.api.requests.ErrorResponse;
 import me.canelex.jda.api.utils.data.DataObject;
 import me.canelex.spidey.Core;
-import me.canelex.spidey.Events;
 import me.canelex.spidey.MySQL;
 import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.objects.invites.WrappedInvite;
@@ -25,7 +24,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Objects;
 import java.util.concurrent.*;
 import java.util.function.Supplier;
 
@@ -43,7 +45,10 @@ public class Utils
     private static final char[] SUFFIXES = {'k', 'M', 'B'};
     private static final HashMap<Long, String> PREFIXES = new HashMap<>();
     private static final ThreadLocalRandom random = ThreadLocalRandom.current();
-    private static final String NO_PERMS = ":no_entry: Action can't be completed because you don't have **%s** permission";
+    private static final String NO_PERMS = "Action can't be completed because you don't have **%s** permission";
+    private static final SimpleDateFormat SDF = new SimpleDateFormat("EE, d.LLL y | HH:mm:ss");
+    private static final Calendar CAL = Calendar.getInstance();
+    private static final ConcurrentMap<String, WrappedInvite> invitesMap = new ConcurrentHashMap<>();
 
     private Utils()
     {
@@ -148,8 +153,7 @@ public class Utils
             LOG.error("There was an error while registering the commands!", e);
         }
 
-        EXECUTOR.scheduleAtFixedRate(() ->
-            jda.getPresence().setActivity(nextActivity(activities)), 0L, 30L, TimeUnit.SECONDS);
+        EXECUTOR.scheduleAtFixedRate(() -> jda.getPresence().setActivity(nextActivity(activities)), 0L, 30L, TimeUnit.SECONDS);
     }
 
     private static Activity nextActivity(final ArrayList<Supplier<Activity>> activities)
@@ -193,7 +197,7 @@ public class Utils
 
     public static void storeInvites(final Guild guild)
     {
-        guild.retrieveInvites().queue(invites -> invites.forEach(invite -> Events.getInvites().put(invite.getCode(), new WrappedInvite(invite))), failure -> sendPrivateMessage(guild.getOwner().getUser(), "I'm not able to attach the invite a user joined with as i don't have permission to manage the server."));
+        guild.retrieveInvites().queue(invites -> invites.forEach(invite -> invitesMap.put(invite.getCode(), new WrappedInvite(invite))), failure -> sendPrivateMessage(guild.getOwner().getUser(), "I'm not able to attach the invite a user joined with as i don't have permission to manage the server."));
     }
 
     public static String cleanString(final String original)
@@ -207,9 +211,7 @@ public class Utils
 
     public static String getBuildDate()
     {
-        final var cal = Calendar.getInstance();
-        cal.setTimeInMillis(new File("SpideyDev.jar").lastModified());
-        return new SimpleDateFormat("EE, d.LLL y | HH:mm:ss", new Locale("en", "EN")).format(cal.getTime());
+        return getTime(new File("Spidey.jar").lastModified());
     }
 
     public static String getCompactNumber(final long number)
@@ -252,6 +254,17 @@ public class Utils
     public static String getPrefix(final long guildId)
     {
         return Objects.requireNonNullElseGet(PREFIXES.get(guildId), () -> getPrefixFromRequest(guildId));
+    }
+
+    public static String getTime(final long millis)
+    {
+        CAL.setTimeInMillis(millis);
+        return SDF.format(CAL.getTime());
+    }
+
+    public static ConcurrentMap<String, WrappedInvite> getInvites()
+    {
+        return invitesMap;
     }
 
     public static TextChannel getLogChannel(final long guildId)
