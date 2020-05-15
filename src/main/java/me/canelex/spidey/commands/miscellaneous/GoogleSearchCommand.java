@@ -1,10 +1,10 @@
 package me.canelex.spidey.commands.miscellaneous;
 
-import me.canelex.jda.api.entities.Message;
 import me.canelex.spidey.objects.command.Category;
 import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.objects.search.GoogleSearch;
 import me.canelex.spidey.utils.Utils;
+import net.dv8tion.jda.api.entities.Message;
 import org.apache.commons.lang3.StringUtils;
 
 @SuppressWarnings("unused")

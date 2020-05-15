@@ -1,13 +1,13 @@
 package me.canelex.spidey.commands.utility;
 
-import me.canelex.jda.api.Permission;
-import me.canelex.jda.api.entities.Message;
-import me.canelex.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import me.canelex.spidey.Core;
 import me.canelex.spidey.objects.command.Category;
 import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.utils.Emojis;
 import me.canelex.spidey.utils.Utils;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;

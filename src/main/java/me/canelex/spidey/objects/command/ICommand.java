@@ -1,7 +1,7 @@
 package me.canelex.spidey.objects.command;
 
-import me.canelex.jda.api.Permission;
-import me.canelex.jda.api.entities.Message;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Message;
 
 import java.util.Collections;
 import java.util.List;

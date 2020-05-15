@@ -1,11 +1,11 @@
 package me.canelex.spidey.commands.utility;
 
-import me.canelex.jda.api.Permission;
-import me.canelex.jda.api.entities.Message;
 import me.canelex.spidey.MySQL;
 import me.canelex.spidey.objects.command.Category;
 import me.canelex.spidey.objects.command.ICommand;
 import me.canelex.spidey.utils.Utils;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Message;
 
 import java.util.regex.Pattern;
 
