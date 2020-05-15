@@ -69,11 +69,11 @@ public class DeleteCommand implements ICommand
                 return;
             }
             final var toDelete = new ArrayList<>(msgs);
-            final var pinned = msgs.stream().filter(Message::isPinned).count();
+            final var pinned = msgs.stream().filter(Message::isPinned).collect(Collectors.toList());
 
-            if (pinned > 0)
+            if (!pinned.isEmpty())
             {
-                final var equalsOne = pinned == 1;
+                final var equalsOne = pinned.size() == 1;
                 final var builder = new StringBuilder("There ");
                 builder.append(equalsOne ? "is" : "are").append(" **").append(pinned)
                        .append("** pinned message").append(equalsOne ? "" : "s").append(" selected for deletion. ")
@@ -107,7 +107,7 @@ public class DeleteCommand implements ICommand
                                     Utils.deleteMessage(msg);
                                     return;
                                 case wastebasket:
-                                    toDelete.removeIf(Message::isPinned);
+                                    toDelete.removeAll(pinned);
                                     if (toDelete.isEmpty())
                                     {
                                         Utils.returnError("There are no messages to be deleted", msg);
