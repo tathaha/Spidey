@@ -4,17 +4,22 @@ import me.canelex.jda.api.EmbedBuilder;
 import me.canelex.jda.api.Permission;
 import me.canelex.jda.api.entities.Message;
 import me.canelex.spidey.objects.command.Category;
-import me.canelex.spidey.objects.command.ICommand;
+import me.canelex.spidey.objects.command.Command;
 import me.canelex.spidey.utils.Utils;
 
 import java.awt.*;
 import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("unused")
-public class WarnCommand implements ICommand
+public class WarnCommand extends Command
 {
+	public WarnCommand()
+	{
+		super("warn", new String[]{}, "Warns a user", "warn <@someone> <reason>", Category.MODERATION, Permission.BAN_MEMBERS, 3);
+	}
+
 	@Override
-	public final void action(final String[] args, final Message message)
+	public final void execute(final String[] args, final Message message)
 	{
 		final var member = message.getMember();
 
@@ -72,17 +77,4 @@ public class WarnCommand implements ICommand
 			Utils.sendPrivateMessageFormat(user, ":warning: You've been warned in the guild **%s** from **%s** for **%s**.", guild.getName(), author.getName(), args[2]);
 		}
 	}
-
-	@Override
-	public final String getDescription() { return "Warns user"; }
-	@Override
-	public final Permission getRequiredPermission() { return Permission.BAN_MEMBERS; }
-	@Override
-	public final int getMaxArgs() { return 3; }
-	@Override
-	public final String getInvoke() { return "warn"; }
-	@Override
-	public final Category getCategory() { return Category.MODERATION; }
-	@Override
-	public final String getUsage() { return "s!warn <@someone> <reason>"; }
 }

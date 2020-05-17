@@ -28,6 +28,6 @@ public class CommandHandler
 		}
 		final var cmd = commands.get(command);
 		final var args = content.split("\\s+", cmd.getMaxArgs());
-		cmd.action(args, msg);
+		cmd.execute(args, msg);
 	}
 }

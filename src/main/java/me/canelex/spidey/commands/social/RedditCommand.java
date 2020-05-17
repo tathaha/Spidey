@@ -1,16 +1,23 @@
 package me.canelex.spidey.commands.social;
 
+import me.canelex.jda.api.Permission;
 import me.canelex.jda.api.entities.Message;
 import me.canelex.spidey.objects.command.Category;
-import me.canelex.spidey.objects.command.ICommand;
+import me.canelex.spidey.objects.command.Command;
 import me.canelex.spidey.objects.json.Reddit;
 import me.canelex.spidey.utils.Utils;
 
 @SuppressWarnings("unused")
-public class RedditCommand implements ICommand
+public class RedditCommand extends Command
 {
+	public RedditCommand()
+	{
+		super("reddit", new String[]{}, "Shows you info about entered subreddit. For example `reddit PewdiepieSubmissions`.",
+				"reddit <subreddit>", Category.SOCIAL, Permission.UNKNOWN, 0);
+	}
+
 	@Override
-	public final void action(final String[] args, final Message message)
+	public final void execute(final String[] args, final Message message)
 	{
 		final var subreddit = message.getContentRaw().substring(9);
 		final var reddit = new Reddit(subreddit);
@@ -35,13 +42,4 @@ public class RedditCommand implements ICommand
 		eb.addField("NSFW", "**" + (reddit.isNsfw() ? "Yes" : "No") + "**", false);
 		Utils.sendMessage(message.getChannel(), eb.build());
 	}
-
-	@Override
-	public final String getDescription() { return "Shows you info about entered subreddit. For example `s!reddit PewdiepieSubmissions`."; }
-	@Override
-	public final String getInvoke() { return "reddit"; }
-	@Override
-	public final Category getCategory() { return Category.SOCIAL; }
-	@Override
-	public final String getUsage() { return "s!reddit <subreddit>"; }
 }

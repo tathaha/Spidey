@@ -4,10 +4,11 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.YouTubeRequestInitializer;
+import me.canelex.jda.api.Permission;
 import me.canelex.jda.api.entities.Message;
 import me.canelex.spidey.Secrets;
 import me.canelex.spidey.objects.command.Category;
-import me.canelex.spidey.objects.command.ICommand;
+import me.canelex.spidey.objects.command.Command;
 import me.canelex.spidey.objects.json.SocialBlade;
 import me.canelex.spidey.utils.Utils;
 import org.slf4j.Logger;
@@ -17,13 +18,19 @@ import java.text.DecimalFormat;
 import java.time.Duration;
 
 @SuppressWarnings("unused")
-public class YouTubeChannelCommand implements ICommand
+public class YouTubeChannelCommand extends Command
 {
 	private static final Logger LOG = LoggerFactory.getLogger(YouTubeChannelCommand.class);
 	private static final DecimalFormat FORMATTER = new DecimalFormat("#,###");
 
+	public YouTubeChannelCommand()
+	{
+		super("ytchannel", new String[]{}, "Shows info about entered YouTube channel", "ytchannel <channel/id>",
+				Category.SOCIAL, Permission.UNKNOWN, 0);
+	}
+
 	@Override
-	public final void action(final String[] args, final Message message)
+	public final void execute(final String[] args, final Message message)
 	{
 		final var channel = message.getChannel();
 
@@ -82,13 +89,4 @@ public class YouTubeChannelCommand implements ICommand
 			LOG.error("There was an error requesting channel {}!", channel, ex);
 		}
 	}
-
-	@Override
-	public final String getDescription() { return "Shows info about entered YouTube channel"; }
-	@Override
-	public final String getInvoke() { return "ytchannel"; }
-	@Override
-	public final Category getCategory() { return Category.SOCIAL; }
-	@Override
-	public final String getUsage() { return "s!ytchannel <channel/id>"; }
 }

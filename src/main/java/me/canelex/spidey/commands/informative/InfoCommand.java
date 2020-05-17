@@ -1,18 +1,24 @@
 package me.canelex.spidey.commands.informative;
 
+import me.canelex.jda.api.Permission;
 import me.canelex.jda.api.entities.Message;
 import me.canelex.spidey.objects.command.Category;
-import me.canelex.spidey.objects.command.ICommand;
+import me.canelex.spidey.objects.command.Command;
 import me.canelex.spidey.utils.Utils;
 
 import java.awt.*;
 import java.lang.management.ManagementFactory;
 
 @SuppressWarnings("unused")
-public class InfoCommand implements ICommand
+public class InfoCommand extends Command
 {
+	public InfoCommand()
+	{
+		super("info", new String[]{}, "Shows you info about me", "info", Category.INFORMATIVE, Permission.UNKNOWN, 0);
+	}
+
 	@Override
-	public final void action(final String[] args, final Message message)
+	public final void execute(final String[] args, final Message message)
 	{
 		final var author = message.getAuthor();
 		final var msgCh = message.getChannel();
@@ -47,13 +53,4 @@ public class InfoCommand implements ICommand
 				Utils.sendMessage(msgCh, eb.build());
 			}));
 	}
-
-	@Override
-	public final String getDescription() { return "Shows you info about me"; }
-	@Override
-	public final String getInvoke() { return "info"; }
-	@Override
-	public final Category getCategory() { return Category.INFORMATIVE; }
-	@Override
-	public final String getUsage() { return "s!info"; }
 }

@@ -7,7 +7,7 @@ import me.canelex.jda.api.entities.User;
 import me.canelex.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import me.canelex.spidey.Core;
 import me.canelex.spidey.objects.command.Category;
-import me.canelex.spidey.objects.command.ICommand;
+import me.canelex.spidey.objects.command.Command;
 import me.canelex.spidey.utils.Emojis;
 import me.canelex.spidey.utils.Utils;
 
@@ -19,10 +19,16 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @SuppressWarnings({"unused", "StringBufferReplaceableByString"})
-public class DeleteCommand implements ICommand
+public class DeleteCommand extends Command
 {
+    public DeleteCommand()
+    {
+        super("d", new String[]{}, "Deletes messages (by mentioned user)", "d <count> (user)", Category.MODERATION,
+                Permission.MESSAGE_MANAGE, 3);
+    }
+
     @Override
-    public final void action(final String[] args, final Message message)
+    public final void execute(final String[] args, final Message message)
     {
         final var channel = message.getChannel();
         final var requiredPermission = getRequiredPermission();
@@ -135,17 +141,4 @@ public class DeleteCommand implements ICommand
                         .flatMap(Message::delete)
                         .queue());
     }
-
-    @Override
-    public final String getDescription() { return "Deletes messages (by mentioned user)"; }
-    @Override
-    public final Permission getRequiredPermission() { return Permission.MESSAGE_MANAGE; }
-    @Override
-    public final int getMaxArgs() { return 3; }
-    @Override
-    public final String getInvoke() { return "d"; }
-    @Override
-    public final Category getCategory() { return Category.MODERATION; }
-    @Override
-    public final String getUsage() { return "s!d <count> (user)"; }
 }

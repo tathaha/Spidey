@@ -1,22 +1,27 @@
 package me.canelex.spidey.commands.informative;
 
+import me.canelex.jda.api.Permission;
 import me.canelex.jda.api.entities.Member;
 import me.canelex.jda.api.entities.Message;
 import me.canelex.jda.api.entities.User;
 import me.canelex.spidey.objects.command.Category;
-import me.canelex.spidey.objects.command.ICommand;
+import me.canelex.spidey.objects.command.Command;
 import me.canelex.spidey.utils.Utils;
 
 import java.awt.*;
 import java.time.Instant;
-import java.util.Collections;
-import java.util.List;
 
 @SuppressWarnings({"unused", "ConstantConditions"})
-public class MembercountCommand implements ICommand
+public class MembercountCommand extends Command
 {
+	public MembercountCommand()
+	{
+		super("membercount", new String[]{"members"}, "Shows you the membercount of the guild", "membercount",
+				Category.INFORMATIVE, Permission.UNKNOWN, 0);
+	}
+
 	@Override
-	public final void action(final String[] args, final Message message)
+	public final void execute(final String[] args, final Message message)
 	{
 		final var memberCache = message.getGuild().getMemberCache();
 		final var bots = memberCache.applyStream(stream -> stream.map(Member::getUser).filter(User::isBot).count());
@@ -31,15 +36,4 @@ public class MembercountCommand implements ICommand
 		eb.addField("Bots", "**" + bots + "**", true);
 		Utils.sendMessage(message.getChannel(), eb.build());
 	}
-
-	@Override
-	public final String getDescription() { return "Shows you the membercount of the guild"; }
-	@Override
-	public final String getInvoke() { return "membercount"; }
-	@Override
-	public final Category getCategory() { return Category.INFORMATIVE; }
-	@Override
-	public final String getUsage() { return "s!membercount | s!members"; }
-	@Override
-	public final List<String> getAliases() { return Collections.singletonList("members"); }
 }

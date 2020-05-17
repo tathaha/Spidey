@@ -4,14 +4,23 @@ import me.canelex.jda.api.Permission;
 import me.canelex.jda.api.entities.Message;
 import me.canelex.jda.api.entities.TextChannel;
 import me.canelex.spidey.objects.command.Category;
-import me.canelex.spidey.objects.command.ICommand;
+import me.canelex.spidey.objects.command.Command;
 import me.canelex.spidey.utils.Utils;
 
 @SuppressWarnings("unused")
-public class SlowmodeCommand implements ICommand
+public class SlowmodeCommand extends Command
 {
+	private static final int maxSlowmode = TextChannel.MAX_SLOWMODE;
+	private static final int hours = maxSlowmode / 3600;
+	private static final String desc = "Sets the slowmode of the channel. Limit: `" + maxSlowmode + "s` - `" + hours + "h`. Example - `slowmode <seconds | off>`";
+
+	public SlowmodeCommand()
+	{
+		super("slowmode", new String[]{}, desc, "slowmode <seconds/off>", Category.MODERATION, Permission.MANAGE_CHANNEL, 0);
+	}
+
 	@Override
-	public final void action(final String[] args, final Message message)
+	public final void execute(final String[] args, final Message message)
 	{
 		final var channel = message.getChannel();
 		final var requiredPermission = getRequiredPermission();
@@ -36,20 +45,4 @@ public class SlowmodeCommand implements ICommand
 			message.getTextChannel().getManager().setSlowmode(seconds).queue();
 		}
 	}
-
-	@Override
-	public final String getDescription()
-	{
-		final var maxSlowmode = TextChannel.MAX_SLOWMODE;
-		final var hours = maxSlowmode / 3600;
-		return "Sets the slowmode of the channel. Limit: `" + maxSlowmode + "s` - `" + hours + "h`. Example - `s!slowmode <seconds | off>`";
-	}
-	@Override
-	public final Permission getRequiredPermission() { return Permission.MANAGE_CHANNEL; }
-	@Override
-	public final String getInvoke() { return "slowmode"; }
-	@Override
-	public final Category getCategory() { return Category.MODERATION; }
-	@Override
-	public final String getUsage() { return "s!slowmode <seconds/off>"; }
 }

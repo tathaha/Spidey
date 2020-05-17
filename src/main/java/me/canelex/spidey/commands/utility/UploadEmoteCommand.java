@@ -5,7 +5,7 @@ import me.canelex.jda.api.entities.Icon;
 import me.canelex.jda.api.entities.ListedEmote;
 import me.canelex.jda.api.entities.Message;
 import me.canelex.spidey.objects.command.Category;
-import me.canelex.spidey.objects.command.ICommand;
+import me.canelex.spidey.objects.command.Command;
 import me.canelex.spidey.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,12 +18,18 @@ import java.net.URL;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
-public class UploadEmoteCommand implements ICommand
+public class UploadEmoteCommand extends Command
 {
     private static final Logger LOG = LoggerFactory.getLogger(UploadEmoteCommand.class);
 
+    public UploadEmoteCommand()
+    {
+        super("uploademote", new String[]{}, "Uploads the image from the provided url as an emote if possible",
+                "uploademote <link> (name)", Category.UTILITY, Permission.MANAGE_EMOTES, 0);
+    }
+
     @Override
-    public final void action(final String[] args, final Message message)
+    public final void execute(final String[] args, final Message message)
     {
         final var channel = message.getChannel();
         final var guild = message.getGuild();
@@ -110,15 +116,4 @@ public class UploadEmoteCommand implements ICommand
             }), failure -> Utils.returnError("Unfortunately, we could not create the emote due to an internal error: **" + failure.getMessage() + "**. Please report this message to the Developer", message));
         }
     }
-
-    @Override
-    public final String getDescription() { return "Uploads the image from the provided url as an emote if possible"; }
-    @Override
-    public final Permission getRequiredPermission() { return Permission.MANAGE_EMOTES; }
-    @Override
-    public final String getInvoke() { return "uploademote"; }
-    @Override
-    public final Category getCategory() { return Category.UTILITY; }
-    @Override
-    public final String getUsage() { return "s!uploademote <link> (name)"; }
 }

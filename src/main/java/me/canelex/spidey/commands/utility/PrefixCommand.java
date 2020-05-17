@@ -3,14 +3,20 @@ package me.canelex.spidey.commands.utility;
 import me.canelex.jda.api.Permission;
 import me.canelex.jda.api.entities.Message;
 import me.canelex.spidey.objects.command.Category;
-import me.canelex.spidey.objects.command.ICommand;
+import me.canelex.spidey.objects.command.Command;
 import me.canelex.spidey.utils.Utils;
 
 @SuppressWarnings("unused")
-public class PrefixCommand implements ICommand
+public class PrefixCommand extends Command
 {
+    public PrefixCommand()
+    {
+        super("prefix", new String[]{}, "Sets/removes the prefix for this server",
+                "prefix (new prefix, if not given, the prefix will be reset if set)", Category.UTILITY, Permission.ADMINISTRATOR, 0);
+    }
+
     @Override
-    public final void action(final String[] args, final Message message)
+    public final void execute(final String[] args, final Message message)
     {
         final var guild = message.getGuild();
         final var guildId = guild.getIdLong();
@@ -55,15 +61,4 @@ public class PrefixCommand implements ICommand
         Utils.setPrefix(guildId, newPrefix);
         Utils.sendMessage(channel, ":white_check_mark: The prefix has been successfully changed to `" + newPrefix + "`!");
     }
-
-    @Override
-    public final String getDescription() { return "Sets/removes the prefix for this server"; }
-    @Override
-    public final Permission getRequiredPermission() { return Permission.ADMINISTRATOR; }
-    @Override
-    public final String getInvoke() { return "prefix"; }
-    @Override
-    public final Category getCategory() { return Category.UTILITY; }
-    @Override
-    public final String getUsage() { return "s!prefix (new prefix, if not given, the prefix will be reset if set)"; }
 }

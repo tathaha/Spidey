@@ -1,17 +1,24 @@
 package me.canelex.spidey.commands.informative;
 
+import me.canelex.jda.api.Permission;
 import me.canelex.jda.api.entities.Message;
 import me.canelex.spidey.objects.command.Category;
-import me.canelex.spidey.objects.command.ICommand;
+import me.canelex.spidey.objects.command.Command;
 import me.canelex.spidey.utils.Utils;
 
 import java.awt.*;
 
 @SuppressWarnings("unused")
-public class UserCommand implements ICommand
+public class UserCommand extends Command
 {
+	public UserCommand()
+	{
+		super("user", new String[]{}, "Shows info about you or mentioned user", "user (@someone)", Category.INFORMATIVE,
+				Permission.UNKNOWN, 0);
+	}
+
 	@Override
-	public final void action(final String[] args, final Message message)
+	public final void execute(final String[] args, final Message message)
 	{
 		final var author = message.getAuthor();
 		final var eb = Utils.createEmbedBuilder(author);
@@ -52,13 +59,4 @@ public class UserCommand implements ICommand
 		}
 		Utils.sendMessage(message.getChannel(), eb.build());
 	}
-
-	@Override
-	public final String getDescription() { return "Shows info about you or mentioned user"; }
-	@Override
-	public final String getInvoke() { return "user"; }
-	@Override
-	public final Category getCategory() { return Category.INFORMATIVE; }
-	@Override
-	public final String getUsage() { return "s!user (@someone)"; }
 }

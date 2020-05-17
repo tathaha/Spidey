@@ -1,20 +1,24 @@
 package me.canelex.spidey.commands.informative;
 
+import me.canelex.jda.api.Permission;
 import me.canelex.jda.api.entities.Emote;
 import me.canelex.jda.api.entities.Message;
 import me.canelex.spidey.objects.command.Category;
-import me.canelex.spidey.objects.command.ICommand;
+import me.canelex.spidey.objects.command.Command;
 import me.canelex.spidey.utils.Utils;
 
 import java.awt.*;
-import java.util.Collections;
-import java.util.List;
 
 @SuppressWarnings("unused")
-public class GuildCommand implements ICommand
+public class GuildCommand extends Command
 {
+	public GuildCommand()
+	{
+		super("guild", new String[]{"server"}, "Shows you info about this guild", "guild", Category.INFORMATIVE, Permission.UNKNOWN, 0);
+	}
+
 	@Override
-	public final void action(final String[] args, final Message message)
+	public final void execute(final String[] args, final Message message)
 	{
 		final var eb = Utils.createEmbedBuilder(message.getAuthor());
 		final var guild = message.getGuild();
@@ -73,15 +77,4 @@ public class GuildCommand implements ICommand
 
 		Utils.sendMessage(message.getChannel(), eb.build());
 	}
-
-	@Override
-	public final String getDescription() { return "Shows you info about this guild"; }
-	@Override
-	public final String getInvoke() { return "guild"; }
-	@Override
-	public final Category getCategory() { return Category.INFORMATIVE; }
-	@Override
-	public final String getUsage() { return "s!guild | s!server"; }
-	@Override
-	public final List<String> getAliases() { return Collections.singletonList("server"); }
 }

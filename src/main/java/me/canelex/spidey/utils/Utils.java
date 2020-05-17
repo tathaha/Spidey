@@ -10,7 +10,7 @@ import me.canelex.jda.api.requests.ErrorResponse;
 import me.canelex.jda.api.utils.data.DataObject;
 import me.canelex.spidey.Core;
 import me.canelex.spidey.MySQL;
-import me.canelex.spidey.objects.command.ICommand;
+import me.canelex.spidey.objects.command.Command;
 import me.canelex.spidey.objects.invites.WrappedInvite;
 import org.apache.commons.text.StringEscapeUtils;
 import org.slf4j.Logger;
@@ -39,7 +39,7 @@ public class Utils
 {
     private static final String INVITE_LINK = "https://discordapp.com/oauth2/authorize?client_id=468523263853592576&scope=bot&permissions=1342188724";
     private static final Logger LOG = LoggerFactory.getLogger(Utils.class);
-    private static final ClassGraph graph = new ClassGraph().whitelistPackages("me.canelex.spidey.commands").enableAllInfo().ignoreClassVisibility();
+    private static final ClassGraph graph = new ClassGraph().whitelistPackages("me.canelex.spidey.commands");
     private static final ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("Spidey").setUncaughtExceptionHandler((t, e) -> LOG.error("There was an exception in thread {}: {}", t.getName(), e.getMessage())).build();
     private static final ScheduledExecutorService EXECUTOR = Executors.newSingleThreadScheduledExecutor(threadFactory);
     private static final char[] SUFFIXES = {'k', 'M', 'B'};
@@ -141,11 +141,14 @@ public class Utils
         commandsMap.clear(); //just to make sure that the commands map is empty
         try (final var result = graph.scan())
         {
-            for (final var cls : result.getClassesImplementing("me.canelex.spidey.objects.command.ICommand"))
+            for (final var cls : result.getAllClasses())
             {
-                final var cmd = (ICommand) cls.loadClass().getDeclaredConstructor().newInstance();
+                final var cmd = (Command) cls.loadClass().getDeclaredConstructor().newInstance();
                 commandsMap.put(cmd.getInvoke(), cmd);
-                cmd.getAliases().forEach(alias -> commandsMap.put(alias, cmd));
+                for (final var alias : cmd.getAliases())
+                {
+                    commandsMap.put(alias, cmd);
+                }
             }
         }
         catch (final Exception e)

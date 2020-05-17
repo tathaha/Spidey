@@ -4,16 +4,21 @@ import me.canelex.jda.api.Permission;
 import me.canelex.jda.api.entities.Message;
 import me.canelex.spidey.MySQL;
 import me.canelex.spidey.objects.command.Category;
-import me.canelex.spidey.objects.command.ICommand;
+import me.canelex.spidey.objects.command.Command;
 import me.canelex.spidey.utils.Utils;
 
 import java.time.Duration;
 
 @SuppressWarnings("unused")
-public class LogCommand implements ICommand
+public class LogCommand extends Command
 {
+	public LogCommand()
+	{
+		super ("log", new String[]{}, "Sets log channel", "log", Category.MODERATION, Permission.ADMINISTRATOR, 0);
+	}
+
 	@Override
-	public final void action(final String[] args, final Message message)
+	public final void execute(final String[] args, final Message message)
 	{
 		final var guild = message.getGuild();
 		final var idLong = guild.getIdLong();
@@ -53,15 +58,4 @@ public class LogCommand implements ICommand
 		else
 			Utils.getPermissionsError(requiredPermission, message);
 	}
-
-	@Override
-	public final String getDescription() { return "Sets log channel"; }
-	@Override
-	public final Permission getRequiredPermission() { return Permission.ADMINISTRATOR; }
-	@Override
-	public final String getInvoke() { return "log"; }
-	@Override
-	public final Category getCategory() { return Category.MODERATION; }
-	@Override
-	public final String getUsage() { return "s!log"; }
 }

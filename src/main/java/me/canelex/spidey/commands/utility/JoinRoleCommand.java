@@ -4,18 +4,24 @@ import me.canelex.jda.api.Permission;
 import me.canelex.jda.api.entities.Message;
 import me.canelex.spidey.MySQL;
 import me.canelex.spidey.objects.command.Category;
-import me.canelex.spidey.objects.command.ICommand;
+import me.canelex.spidey.objects.command.Command;
 import me.canelex.spidey.utils.Utils;
 
 import java.util.regex.Pattern;
 
 @SuppressWarnings("unused")
-public class JoinRoleCommand implements ICommand
+public class JoinRoleCommand extends Command
 {
     private static final Pattern ID_PATTERN = Pattern.compile("\\d+");
 
+    public JoinRoleCommand()
+    {
+        super("joinrole", new String[]{}, "Sets/removes the Role that is added to a member after joining",
+                "joinrole (id of the Role, if not given, the Role will be reset if set)", Category.UTILITY, Permission.ADMINISTRATOR, 0);
+    }
+
     @Override
-    public final void action(final String[] args, final Message message)
+    public final void execute(final String[] args, final Message message)
     {
         final var guild = message.getGuild();
         final var guildId = guild.getIdLong();
@@ -68,15 +74,4 @@ public class JoinRoleCommand implements ICommand
             Utils.sendMessage(channel, ":white_check_mark: The join Role has been set to Role `" + role.getName() + "`.");
         }
     }
-
-    @Override
-    public final String getDescription() { return "Sets/removes the Role that is added to a member after joining"; }
-    @Override
-    public final Permission getRequiredPermission() { return Permission.ADMINISTRATOR; }
-    @Override
-    public final String getInvoke() { return "joinrole"; }
-    @Override
-    public final Category getCategory() { return Category.UTILITY; }
-    @Override
-    public final String getUsage() { return "s!joinrole (id of the Role, if not given, the Role will be reset if set)"; }
 }

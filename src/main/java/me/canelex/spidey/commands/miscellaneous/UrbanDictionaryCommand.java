@@ -1,17 +1,23 @@
 package me.canelex.spidey.commands.miscellaneous;
 
+import me.canelex.jda.api.Permission;
 import me.canelex.jda.api.entities.Message;
 import me.canelex.spidey.objects.command.Category;
-import me.canelex.spidey.objects.command.ICommand;
+import me.canelex.spidey.objects.command.Command;
 import me.canelex.spidey.objects.json.UrbanDictionary;
 import me.canelex.spidey.utils.Emojis;
 import me.canelex.spidey.utils.Utils;
 
 @SuppressWarnings("unused")
-public class UrbanDictionaryCommand implements ICommand
+public class UrbanDictionaryCommand extends Command
 {
+	public UrbanDictionaryCommand()
+	{
+		super("ud", new String[]{}, "Returns the definition(s) of a phrase", "ud <phrase>", Category.MISC, Permission.UNKNOWN, 0);
+	}
+
 	@Override
-	public final void action(final String[] args, final Message message)
+	public final void execute(final String[] args, final Message message)
 	{
 		final var term = message.getContentRaw().substring(5);
 		final var channel = message.getChannel();
@@ -33,13 +39,4 @@ public class UrbanDictionaryCommand implements ICommand
 				ud.getAuthor(), ud.getLikes(), ud.getDislikes());
 		Utils.sendMessage(channel, result);
 	}
-
-	@Override
-	public final String getDescription() { return "Returns the definition(s) of a phrase"; }
-	@Override
-	public final String getInvoke() { return "ud"; }
-	@Override
-	public final Category getCategory() { return Category.MISC; }
-	@Override
-	public final String getUsage() { return "s!ud <phrase>"; }
 }

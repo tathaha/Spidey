@@ -4,7 +4,7 @@ import me.canelex.jda.api.Permission;
 import me.canelex.jda.api.entities.Message;
 import me.canelex.spidey.Core;
 import me.canelex.spidey.objects.command.Category;
-import me.canelex.spidey.objects.command.ICommand;
+import me.canelex.spidey.objects.command.Command;
 import me.canelex.spidey.utils.Utils;
 
 import java.awt.*;
@@ -13,10 +13,15 @@ import java.util.*;
 import java.util.function.Function;
 
 @SuppressWarnings("unused")
-public class HelpCommand implements ICommand
+public class HelpCommand extends Command
 {
+    public HelpCommand()
+    {
+        super("help", new String[]{}, "Shows the help message", "help (command)", Category.INFORMATIVE, Permission.UNKNOWN, 0);
+    }
+
     @Override
-    public final void action(final String[] args, final Message message)
+    public final void execute(final String[] args, final Message message)
     {
         final var commandsMap = Core.getCommands();
         final var channel = message.getChannel();
@@ -41,7 +46,7 @@ public class HelpCommand implements ICommand
             }
             commandsCopy.remove("help");
 
-            final EnumMap<Category, List<ICommand>> categories = new EnumMap<>(Category.class);
+            final EnumMap<Category, List<Command>> categories = new EnumMap<>(Category.class);
             commandsCopy.values().forEach(cmd -> categories.computeIfAbsent(cmd.getCategory(), ignored -> new ArrayList<>()).add(cmd));
 
             final var sb = new StringBuilder();
@@ -50,7 +55,7 @@ public class HelpCommand implements ICommand
                 sb.append("\n");
                 sb.append(category.getFriendlyName());
                 sb.append(" ").append("-").append(" ");
-                sb.append(listToString(commandz, ICommand::getInvoke));
+                sb.append(listToString(commandz, Command::getInvoke));
             });
             eb.setDescription("Prefix: **" + prefix + "**\n" + sb.toString());
             if (hidden > 0)
@@ -72,35 +77,26 @@ public class HelpCommand implements ICommand
                 eb.setAuthor("Viewing command info - " + cmd);
                 eb.setColor(Color.WHITE);
                 eb.addField("Description", description == null ? "Unspecified" : description, false);
-                eb.addField("Usage", usage == null ? "Unspecified" : "`" + usage + "` (<> = required, () = optional)", false);
+                eb.addField("Usage", usage == null ? "Unspecified" : "`" + prefix + usage + "` (<> = required, () = optional)", false);
                 eb.addField("Category",  command.getCategory().getFriendlyName(), false);
                 eb.addField("Required permission", requiredPermission == Permission.UNKNOWN ? "None" : requiredPermission.getName(), false);
-                eb.addField("Aliases", aliases.isEmpty() ? "None" : String.join(", ", aliases), false);
+                eb.addField("Aliases", aliases.length == 0 ? "None" : String.join(", ", aliases), false);
                 Utils.sendMessage(channel, eb.build());
             }
         }
     }
 
-    private String listToString(final List<ICommand> list, final Function<ICommand, String> transformer)
+    private String listToString(final List<Command> list, final Function<Command, String> transformer)
     {
         final var builder = new StringBuilder();
         for (var i = 0; i < list.size(); i++)
         {
             final var cmd = list.get(i);
             final var aliases = cmd.getAliases();
-            builder.append("`").append(transformer.apply(cmd)).append("`").append(aliases.isEmpty() ? "" : " (`" + String.join(", ", aliases) + "`)");
+            builder.append("`").append(transformer.apply(cmd)).append("`").append(aliases.length == 0 ? "" : " (`" + String.join(", ", aliases) + "`)");
             if (i != list.size() - 1)
                 builder.append(", ");
         }
         return builder.toString();
     }
-
-    @Override
-    public final String getInvoke() { return "help"; }
-    @Override
-    public final String getDescription() { return "Shows the help message"; }
-    @Override
-    public final String getUsage() { return "s!help (command)"; }
-    @Override
-    public final Category getCategory() { return Category.INFORMATIVE; }
 }
