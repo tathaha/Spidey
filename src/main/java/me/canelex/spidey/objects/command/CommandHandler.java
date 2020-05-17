@@ -1,8 +1,8 @@
 package me.canelex.spidey.objects.command;
 
-import me.canelex.jda.api.entities.Message;
 import me.canelex.spidey.Core;
 import me.canelex.spidey.utils.Utils;
+import net.dv8tion.jda.api.entities.Message;
 
 public class CommandHandler
 {

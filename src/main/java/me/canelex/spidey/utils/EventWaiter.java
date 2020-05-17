@@ -1,12 +1,12 @@
 package me.canelex.spidey.utils;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import me.canelex.jda.api.events.Event;
-import me.canelex.jda.api.events.GenericEvent;
-import me.canelex.jda.api.events.ShutdownEvent;
-import me.canelex.jda.api.hooks.EventListener;
-import me.canelex.jda.api.hooks.SubscribeEvent;
-import me.canelex.jda.internal.utils.Checks;
+import net.dv8tion.jda.api.events.Event;
+import net.dv8tion.jda.api.events.GenericEvent;
+import net.dv8tion.jda.api.events.ShutdownEvent;
+import net.dv8tion.jda.api.hooks.EventListener;
+import net.dv8tion.jda.api.hooks.SubscribeEvent;
+import net.dv8tion.jda.internal.utils.Checks;
 
 import java.util.HashMap;
 import java.util.HashSet;

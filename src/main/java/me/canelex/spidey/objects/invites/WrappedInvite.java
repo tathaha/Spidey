@@ -1,6 +1,6 @@
 package me.canelex.spidey.objects.invites;
 
-import me.canelex.jda.api.entities.Invite;
+import net.dv8tion.jda.api.entities.Invite;
 
 public class WrappedInvite
 {

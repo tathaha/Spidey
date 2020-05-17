@@ -2,16 +2,16 @@ package me.canelex.spidey.utils;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import io.github.classgraph.ClassGraph;
-import me.canelex.jda.api.EmbedBuilder;
-import me.canelex.jda.api.Permission;
-import me.canelex.jda.api.entities.*;
-import me.canelex.jda.api.exceptions.ErrorHandler;
-import me.canelex.jda.api.requests.ErrorResponse;
-import me.canelex.jda.api.utils.data.DataObject;
 import me.canelex.spidey.Core;
 import me.canelex.spidey.MySQL;
 import me.canelex.spidey.objects.command.Command;
 import me.canelex.spidey.objects.invites.WrappedInvite;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.exceptions.ErrorHandler;
+import net.dv8tion.jda.api.requests.ErrorResponse;
+import net.dv8tion.jda.api.utils.data.DataObject;
 import org.apache.commons.text.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,8 +32,8 @@ import java.util.concurrent.*;
 import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
-import static me.canelex.jda.api.entities.Activity.listening;
-import static me.canelex.jda.api.entities.Activity.watching;
+import static net.dv8tion.jda.api.entities.Activity.listening;
+import static net.dv8tion.jda.api.entities.Activity.watching;
 
 public class Utils
 {

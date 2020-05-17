@@ -1,15 +1,15 @@
 package me.canelex.spidey.commands.moderation;
 
-import me.canelex.jda.api.Permission;
-import me.canelex.jda.api.entities.Message;
-import me.canelex.jda.api.entities.MessageChannel;
-import me.canelex.jda.api.entities.User;
-import me.canelex.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import me.canelex.spidey.Core;
 import me.canelex.spidey.objects.command.Category;
 import me.canelex.spidey.objects.command.Command;
 import me.canelex.spidey.utils.Emojis;
 import me.canelex.spidey.utils.Utils;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -75,11 +75,11 @@ public class DeleteCommand extends Command
                 return;
             }
             final var toDelete = new ArrayList<>(msgs);
-            final var pinned = msgs.stream().filter(Message::isPinned).count();
+            final var pinned = msgs.stream().filter(Message::isPinned).collect(Collectors.toList());
 
-            if (pinned > 0)
+            if (!pinned.isEmpty())
             {
-                final var equalsOne = pinned == 1;
+                final var equalsOne = pinned.size() == 1;
                 final var builder = new StringBuilder("There ");
                 builder.append(equalsOne ? "is" : "are").append(" **").append(pinned)
                        .append("** pinned message").append(equalsOne ? "" : "s").append(" selected for deletion. ")
@@ -113,7 +113,7 @@ public class DeleteCommand extends Command
                                     Utils.deleteMessage(msg);
                                     return;
                                 case wastebasket:
-                                    toDelete.removeIf(Message::isPinned);
+                                    toDelete.removeAll(pinned);
                                     if (toDelete.isEmpty())
                                     {
                                         Utils.returnError("There are no messages to be deleted", msg);
