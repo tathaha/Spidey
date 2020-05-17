@@ -1,10 +1,10 @@
 package me.canelex.spidey.commands.informative;
 
-import me.canelex.jda.api.Permission;
-import me.canelex.jda.api.entities.Message;
 import me.canelex.spidey.objects.command.Category;
 import me.canelex.spidey.objects.command.Command;
 import me.canelex.spidey.utils.Utils;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Message;
 
 import java.awt.*;
 import java.lang.management.ManagementFactory;

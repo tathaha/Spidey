@@ -1,12 +1,12 @@
 package me.canelex.spidey.commands.miscellaneous;
 
-import me.canelex.jda.api.Permission;
-import me.canelex.jda.api.entities.Message;
 import me.canelex.spidey.objects.command.Category;
 import me.canelex.spidey.objects.command.Command;
 import me.canelex.spidey.objects.json.UrbanDictionary;
 import me.canelex.spidey.utils.Emojis;
 import me.canelex.spidey.utils.Utils;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Message;
 
 @SuppressWarnings("unused")
 public class UrbanDictionaryCommand extends Command
