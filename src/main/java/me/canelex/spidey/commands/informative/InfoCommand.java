@@ -43,7 +43,7 @@ public class InfoCommand extends Command
 			jda.getRestPing().queue(ping ->
 			{
 				final var eb = Utils.createEmbedBuilder(author);
-				eb.setAuthor("About me", "https://paypal.me/canelex", jda.getSelfUser().getAvatarUrl());
+				eb.setAuthor("About me", "https://paypal.me/caneleex", jda.getSelfUser().getAvatarUrl());
 				eb.setColor(Color.WHITE);
 				eb.addField("Developer", info.getOwner().getAsMention(), false);
 				eb.addField("Ping", "**" + jda.getGatewayPing() + "**, **" + ping + "** ms", false);
