@@ -200,7 +200,9 @@ public class Utils
 
     public static void storeInvites(final Guild guild)
     {
-        guild.retrieveInvites().queue(invites -> invites.forEach(invite -> invitesMap.put(invite.getCode(), new WrappedInvite(invite))), failure -> sendPrivateMessage(guild.getOwner().getUser(), "I'm not able to attach the invite a user joined with as i don't have permission to manage the server."));
+        guild.retrieveInvites()
+             .queue(invites -> invites.forEach(invite -> invitesMap.put(invite.getCode(), new WrappedInvite(invite))),
+                    failure -> sendPrivateMessage(guild.getOwner().getUser(), "I'm not able to attach the invite a user joined with as i don't have permission to manage the server."));
     }
 
     public static String cleanString(final String original)
