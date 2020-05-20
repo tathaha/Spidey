@@ -94,7 +94,7 @@ public class Utils
 
     public static EmbedBuilder createEmbedBuilder(final User u)
     {
-        return new EmbedBuilder().setFooter("Command executed by " + u.getAsTag(), u.getAvatarUrl());
+        return new EmbedBuilder().setFooter("Command executed by " + u.getAsTag(), u.getEffectiveAvatarUrl());
     }
 
     public static String getInviteUrl()

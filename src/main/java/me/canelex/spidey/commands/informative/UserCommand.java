@@ -30,7 +30,7 @@ public class UserCommand extends Command
 		
 		eb.setAuthor("USER INFO - " + u.getAsTag());
 		eb.setColor(Color.WHITE);
-		eb.setThumbnail(u.getAvatarUrl());
+		eb.setThumbnail(u.getEffectiveAvatarUrl());
 		eb.addField("ID", u.getId(), false);
 
 		if (nick != null)

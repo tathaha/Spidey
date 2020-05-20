@@ -21,7 +21,7 @@ public class SupportGuildsCommand extends Command
 	public final void execute(final String[] args, final Message message)
 	{
 		final var eb = Utils.createEmbedBuilder(message.getAuthor());
-		eb.setAuthor("Guilds of Spidey", "https://discord.gg/cnAgKrv", message.getJDA().getSelfUser().getAvatarUrl());
+		eb.setAuthor("Guilds of Spidey", "https://discord.gg/cnAgKrv", message.getJDA().getSelfUser().getEffectiveAvatarUrl());
 		eb.addField("Spidey's Guild", "[Click to join](https://discord.gg/cnAgKrv)", true);
 		eb.setColor(Color.BLACK);
 		Utils.sendMessage(message.getChannel(), eb.build());

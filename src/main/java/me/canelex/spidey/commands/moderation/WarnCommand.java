@@ -67,7 +67,7 @@ public class WarnCommand extends Command
 			final var user = mb.getUser();
 			final var author = message.getAuthor();
 			eb.setAuthor("NEW WARN");
-			eb.setThumbnail(user.getAvatarUrl());
+			eb.setThumbnail(user.getEffectiveAvatarUrl());
 			eb.addField("User", "**" + user.getAsTag() + "**", true);
 			eb.addField("ID", "**" + user.getId() + "**", true);
 			eb.addField("Moderator", "**" + author.getAsTag() + "**", true);

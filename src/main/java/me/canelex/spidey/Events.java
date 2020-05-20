@@ -53,7 +53,7 @@ public class Events extends ListenerAdapter
 					.append("the server. The server currently has **").append(guild.getBoostCount()).append("** boosts.").toString());
 			eb.setAuthor("NEW BOOST");
 			eb.setColor(16023551);
-			eb.setFooter("User boost", author.getAvatarUrl());
+			eb.setFooter("User boost", author.getEffectiveAvatarUrl());
 			eb.setTimestamp(Instant.now());
 			Utils.sendMessage(channel, eb.build());
 		}
@@ -85,7 +85,7 @@ public class Events extends ListenerAdapter
 							.append("** (").append(user.getId()).append(") has been `banned` by ").append("**")
 							.append(banner.getAsTag()).append("** for **").append(reason).append("**.").toString());
 					eb.setColor(14495300);
-					eb.setFooter("User ban", user.getAvatarUrl());
+					eb.setFooter("User ban", user.getEffectiveAvatarUrl());
 					eb.setTimestamp(Instant.now());
 					Utils.sendMessage(channel, eb.build());
 				}));
@@ -108,7 +108,7 @@ public class Events extends ListenerAdapter
 						.append(MarkdownSanitizer.escape(user.getAsTag())).append("** (").append(user.getId()).append(") has been `unbanned` ")
 						.append("by **").append(unbans.get(0).getUser().getAsTag()).append("**.").toString());
 				eb.setColor(7844437);
-				eb.setFooter("User unban", user.getAvatarUrl());
+				eb.setFooter("User unban", user.getEffectiveAvatarUrl());
 				eb.setTimestamp(Instant.now());
 				Utils.sendMessage(channel, eb.build());
 			});
@@ -128,7 +128,7 @@ public class Events extends ListenerAdapter
 			eb.setDescription(new StringBuilder().append("\uD83D\uDCE4 **").append(MarkdownSanitizer.escape(user.getAsTag()))
 					.append("** (").append(user.getId()).append(") has `left` the server.").toString());
 			eb.setColor(14495300);
-			eb.setFooter("User leave", user.getAvatarUrl());
+			eb.setFooter("User leave", user.getEffectiveAvatarUrl());
 			eb.setTimestamp(Instant.now());
 			Utils.sendMessage(channel, eb.build());
 		}
@@ -158,7 +158,7 @@ public class Events extends ListenerAdapter
 			final var eb = new EmbedBuilder();
 			eb.setDescription("\uD83D\uDCE5 **" + MarkdownSanitizer.escape(user.getAsTag()) + "** (" + userId + ") has `joined` the server");
 			eb.setColor(7844437);
-			eb.setFooter("User join", user.getAvatarUrl());
+			eb.setFooter("User join", user.getEffectiveAvatarUrl());
 			eb.setTimestamp(Instant.now());
 			if (user.isBot())
 			{

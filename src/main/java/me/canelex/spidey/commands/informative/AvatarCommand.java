@@ -24,7 +24,7 @@ public class AvatarCommand extends Command
 		final var eb = Utils.createEmbedBuilder(author).setColor(Color.WHITE);
 		final var users = message.getMentionedUsers();
 		final var u = users.isEmpty() ? author : users.get(0);
-		final var avatarUrl = u.getAvatarUrl();
+		final var avatarUrl = u.getEffectiveAvatarUrl();
 
 		eb.setAuthor("Avatar of user " + u.getAsTag());
 		eb.setDescription(String.format("[Avatar link](%s)", avatarUrl));

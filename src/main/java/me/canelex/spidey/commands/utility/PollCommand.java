@@ -43,7 +43,7 @@ public class PollCommand extends Command
 					eb.setAuthor("NEW POLL");
 					eb.setColor(Color.ORANGE);
 					eb.addField("Question", "**" + question + "**", false);
-					eb.setFooter("Poll created by " + author.getAsTag(), author.getAvatarUrl());
+					eb.setFooter("Poll created by " + author.getAsTag(), author.getEffectiveAvatarUrl());
 					Utils.sendMessage(log, eb.build());
 				});
 			}
