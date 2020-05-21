@@ -34,7 +34,7 @@ import static net.dv8tion.jda.api.entities.Activity.watching;
 
 public class Utils
 {
-    private static final String INVITE_LINK = "https://discordapp.com/oauth2/authorize?client_id=468523263853592576&scope=bot&permissions=1342188724";
+    private static final String INVITE_LINK = "https://discord.com/oauth2/authorize?client_id=468523263853592576&scope=bot&permissions=1342188724";
     private static final Logger LOG = LoggerFactory.getLogger(Utils.class);
     private static final ClassGraph graph = new ClassGraph().whitelistPackages("me.canelex.spidey.commands");
     private static final ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("Spidey").setUncaughtExceptionHandler((t, e) -> LOG.error("There was an exception in thread {}: {}", t.getName(), e.getMessage())).build();
