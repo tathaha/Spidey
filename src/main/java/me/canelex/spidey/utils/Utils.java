@@ -24,10 +24,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.Supplier;
 
@@ -48,7 +45,7 @@ public class Utils
     private static final String NO_PERMS = "Action can't be completed because you don't have **%s** permission";
     private static final SimpleDateFormat SDF = new SimpleDateFormat("EE, d.LLL y | HH:mm:ss");
     private static final Calendar CAL = Calendar.getInstance();
-    private static final ConcurrentMap<String, WrappedInvite> invitesMap = new ConcurrentHashMap<>();
+    private static final Map<String, WrappedInvite> invitesMap = new HashMap<>();
 
     private Utils()
     {
@@ -267,7 +264,7 @@ public class Utils
         return SDF.format(CAL.getTime());
     }
 
-    public static ConcurrentMap<String, WrappedInvite> getInvites()
+    public static Map<String, WrappedInvite> getInvites()
     {
         return invitesMap;
     }
