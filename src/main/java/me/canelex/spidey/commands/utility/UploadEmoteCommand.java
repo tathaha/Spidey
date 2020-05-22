@@ -33,11 +33,17 @@ public class UploadEmoteCommand extends Command
     {
         final var channel = message.getChannel();
         final var guild = message.getGuild();
+        final var requiredPermission = getRequiredPermission();
+
+        if (!Utils.hasPerm(message.getMember(), requiredPermission))
+        {
+            Utils.getPermissionsError(requiredPermission, message);
+            return;
+        }
 
         if (args.length < 2)
             Utils.returnError("Please provide a URL to retrieve the emote from", message);
 
-        final var index = args[1].lastIndexOf('.');
         final var image = new ByteArrayOutputStream();
         try
         {
@@ -69,7 +75,6 @@ public class UploadEmoteCommand extends Command
             return;
         }
 
-        final var requiredPermission = getRequiredPermission();
         final var maxEmotes = guild.getMaxEmotes();
         final var byteArray = image.toByteArray();
         final var animated = byteArray[0] == 'G' && byteArray[1] == 'I' && byteArray[2] == 'F' && byteArray[3] == '8' && byteArray[4] == '9' && byteArray[5] == 'a';
@@ -77,9 +82,7 @@ public class UploadEmoteCommand extends Command
                                                           .collect(Collectors.partitioningBy(ListedEmote::isAnimated))
                                                           .get(animated).size();
 
-        if (!Utils.hasPerm(message.getMember(), requiredPermission))
-            Utils.getPermissionsError(requiredPermission, message);
-        else if (maxEmotes == used)
+        if (maxEmotes == used)
         {
             Utils.returnError("Guild has the maximum amount of emotes", message);
             return;
@@ -93,7 +96,7 @@ public class UploadEmoteCommand extends Command
             final var tmpIndex = args[1].lastIndexOf('/') + 1;
             try
             {
-                name = args[1].substring(tmpIndex, index);
+                name = args[1].substring(tmpIndex, args[1].lastIndexOf('.'));
             }
             catch (final IndexOutOfBoundsException ex)
             {
