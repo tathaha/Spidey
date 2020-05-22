@@ -38,13 +38,6 @@ public class UploadEmoteCommand extends Command
             Utils.returnError("Please provide a URL to retrieve the emote from", message);
 
         final var index = args[1].lastIndexOf('.');
-        final var extension = args[1].substring(index + 1);
-        if (Icon.IconType.fromExtension(extension) == Icon.IconType.UNKNOWN)
-        {
-            Utils.returnError("Please provide a URL containing an image", message);
-            return;
-        }
-
         final var image = new ByteArrayOutputStream();
         try
         {
@@ -78,9 +71,11 @@ public class UploadEmoteCommand extends Command
 
         final var requiredPermission = getRequiredPermission();
         final var maxEmotes = guild.getMaxEmotes();
+        final var byteArray = image.toByteArray();
+        final var animated = byteArray[0] == 'G' && byteArray[1] == 'I' && byteArray[2] == 'F' && byteArray[3] == '8' && byteArray[4] == '9' && byteArray[5] == 'a';
         final var used = guild.retrieveEmotes().complete().stream()
-                                                          .collect(Collectors.groupingBy(ListedEmote::isAnimated))
-                                                          .get(extension.equals("gif")).size();
+                                                          .collect(Collectors.partitioningBy(ListedEmote::isAnimated))
+                                                          .get(animated).size();
 
         if (!Utils.hasPerm(message.getMember(), requiredPermission))
             Utils.getPermissionsError(requiredPermission, message);
@@ -94,7 +89,17 @@ public class UploadEmoteCommand extends Command
         if (args.length == 3)
             name = args[2];
         else
-            name = args[1].substring(args[1].lastIndexOf('/') + 1, index);
+        {
+            final var tmpIndex = args[1].lastIndexOf('/') + 1;
+            try
+            {
+                name = args[1].substring(tmpIndex, index);
+            }
+            catch (final IndexOutOfBoundsException ex)
+            {
+                name = args[1].substring(tmpIndex);
+            }
+        }
         if (!(name.length() > 1 && name.length() < 33))
         {
             Utils.returnError("The name of the emote has to be between 2 and 32 in length", message);
@@ -109,7 +114,7 @@ public class UploadEmoteCommand extends Command
             Utils.returnError("Spidey does not have the permission to upload emotes", message);
         else
         {
-            guild.createEmote(name, Icon.from(image.toByteArray())).queue(emote -> guild.retrieveEmotes().queue(emotes ->
+            guild.createEmote(name, Icon.from(byteArray)).queue(emote -> guild.retrieveEmotes().queue(emotes ->
             {
                 final var left = maxEmotes - used - 1;
                 Utils.sendMessage(channel, "Emote " + emote.getAsMention() + " has been successfully uploaded! Emote slots left: **" + (left == 0 ? "None" : left) + "**");
