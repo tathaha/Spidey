@@ -21,12 +21,12 @@ public class CommandHandler
 		}
 		final var command = content.contains(" ") ? content.substring(0, content.indexOf(' ')) : content;
 		final var commands = Core.getCommands();
-		if (!commands.containsKey(command))
+		final var cmd = commands.get(command);
+		if (cmd == null)
 		{
 			Utils.returnError("**" + command + "** isn't a valid command", msg);
 			return;
 		}
-		final var cmd = commands.get(command);
 		final var args = content.split("\\s+", cmd.getMaxArgs());
 		cmd.execute(args, msg);
 	}
