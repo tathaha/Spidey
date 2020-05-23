@@ -103,7 +103,7 @@ public class UploadEmoteCommand extends Command
                 name = args[1].substring(tmpIndex);
             }
         }
-        if (!(name.length() > 1 && name.length() < 33))
+        if (!(name.length() >= 2 && name.length() <= 32))
         {
             Utils.returnError("The name of the emote has to be between 2 and 32 in length", message);
             return;
