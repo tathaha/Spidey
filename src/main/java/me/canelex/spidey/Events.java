@@ -17,6 +17,7 @@ import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateBoostTierEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.role.RoleDeleteEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 import org.jetbrains.annotations.NotNull;
@@ -208,6 +209,7 @@ public class Events extends ListenerAdapter
 		final var id = guild.getIdLong();
 		Utils.getInvites().entrySet().removeIf(entry -> entry.getValue().getGuildId() == id);
 		MySQL.removeChannel(id);
+		MySQL.removeRole(id);
 	}
 
 	@Override
@@ -216,6 +218,14 @@ public class Events extends ListenerAdapter
 		final var id = e.getGuild().getIdLong();
 		if (e.getChannel().getIdLong() == MySQL.getChannel(id))
 			MySQL.removeChannel(id);
+	}
+
+	@Override
+	public final void onRoleDelete(final RoleDeleteEvent e)
+	{
+		final var id = e.getGuild().getIdLong();
+		if (e.getRole().getIdLong() == MySQL.getRole(id))
+			MySQL.removeRole(id);
 	}
 
 	@Override
