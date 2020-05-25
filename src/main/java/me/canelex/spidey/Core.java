@@ -26,12 +26,12 @@ public class Core
 	{
 		try
 		{
-			jda = JDABuilder.create(System.getenv("Spidey"), EnumSet.of(GatewayIntent.GUILD_BANS, GatewayIntent.GUILD_INVITES, GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_EMOJIS, GatewayIntent.GUILD_MESSAGE_REACTIONS))
-					.disableCache(EnumSet.of(CacheFlag.ACTIVITY, CacheFlag.VOICE_STATE, CacheFlag.CLIENT_STATUS, CacheFlag.MEMBER_OVERRIDES))
-					.addEventListeners(new Events(), waiter)
-					.setStatus(OnlineStatus.DO_NOT_DISTURB)
-					.build()
-					.awaitReady();
+			jda = JDABuilder.create(System.getenv("Spidey"), EnumSet.of(GatewayIntent.GUILD_BANS, GatewayIntent.GUILD_INVITES, GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MESSAGE_REACTIONS))
+							.disableCache(CacheFlag.MEMBER_OVERRIDES)
+							.addEventListeners(new Events(), waiter)
+							.setStatus(OnlineStatus.DO_NOT_DISTURB)
+							.build()
+							.awaitReady();
 		}
 		catch (final Exception e)
 		{
