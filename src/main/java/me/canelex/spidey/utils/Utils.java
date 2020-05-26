@@ -213,7 +213,7 @@ public class Utils
 
     public static String getBuildDate()
     {
-        return getTime(new File("SpideyDev.jar").lastModified());
+        return getTime(new File("Spidey.jar").lastModified());
     }
 
     public static String getCompactNumber(final long number)
