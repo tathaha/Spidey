@@ -4,8 +4,8 @@ import me.canelex.spidey.objects.command.Category;
 import me.canelex.spidey.objects.command.Command;
 import me.canelex.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Icon;
-import net.dv8tion.jda.api.entities.ListedEmote;
 import net.dv8tion.jda.api.entities.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +38,11 @@ public class UploadEmoteCommand extends Command
         if (!Utils.hasPerm(message.getMember(), requiredPermission))
         {
             Utils.getPermissionsError(requiredPermission, message);
+            return;
+        }
+        if (!Utils.hasPerm(guild.getSelfMember(), requiredPermission))
+        {
+            Utils.returnError("Spidey does not have the permission to upload emotes", message);
             return;
         }
 
@@ -78,9 +83,9 @@ public class UploadEmoteCommand extends Command
         final var maxEmotes = guild.getMaxEmotes();
         final var byteArray = image.toByteArray();
         final var animated = byteArray[0] == 'G' && byteArray[1] == 'I' && byteArray[2] == 'F' && byteArray[3] == '8' && byteArray[4] == '9' && byteArray[5] == 'a';
-        final var used = guild.retrieveEmotes().complete().stream()
-                                                          .collect(Collectors.partitioningBy(ListedEmote::isAnimated))
-                                                          .get(animated).size();
+        final var used = guild.getEmoteCache().applyStream(stream -> stream.filter(emote -> !emote.isManaged())
+                                                                           .collect(Collectors.partitioningBy(Emote::isAnimated))
+                                                                           .get(animated).size());
 
         if (maxEmotes == used)
         {
@@ -113,15 +118,11 @@ public class UploadEmoteCommand extends Command
             Utils.returnError("The name of the emote has to be in a valid format", message);
             return;
         }
-        if (!Utils.hasPerm(guild.getSelfMember(), requiredPermission))
-            Utils.returnError("Spidey does not have the permission to upload emotes", message);
-        else
+
+        guild.createEmote(name, Icon.from(byteArray)).queue(emote ->
         {
-            guild.createEmote(name, Icon.from(byteArray)).queue(emote -> guild.retrieveEmotes().queue(emotes ->
-            {
-                final var left = maxEmotes - used - 1;
-                Utils.sendMessage(channel, "Emote " + emote.getAsMention() + " has been successfully uploaded! Emote slots left: **" + (left == 0 ? "None" : left) + "**");
-            }), failure -> Utils.returnError("Unfortunately, we could not create the emote due to an internal error: **" + failure.getMessage() + "**. Please report this message to the Developer", message));
-        }
+            final var left = maxEmotes - used - 1;
+            Utils.sendMessage(channel, "Emote " + emote.getAsMention() + " has been successfully uploaded! Emote slots left: **" + (left == 0 ? "None" : left) + "**");
+        }, failure -> Utils.returnError("Unfortunately, we could not create the emote due to an internal error: **" + failure.getMessage() + "**. Please report this message to the Developer", message));
     }
 }

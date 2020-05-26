@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Message;
 
 import java.awt.*;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
 public class GuildCommand extends Command
@@ -54,7 +55,8 @@ public class GuildCommand extends Command
 		final var st = new StringBuilder();
 
 		var ec = 0;
-		final var emotes = guild.retrieveEmotes().complete();
+		final var tmp = guild.getEmoteCache();
+		final var emotes = tmp.applyStream(stream -> stream.filter(emote -> !emote.isManaged()).collect(Collectors.toList()));
 		final var an = emotes.stream().filter(Emote::isAnimated).count();
 
 		for (final var emote : emotes)

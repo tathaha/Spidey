@@ -6,7 +6,6 @@ import me.canelex.spidey.utils.Utils;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
-import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
+
+import static net.dv8tion.jda.api.requests.GatewayIntent.*;
 
 public class Core
 {
@@ -26,7 +27,7 @@ public class Core
 	{
 		try
 		{
-			jda = JDABuilder.create(System.getenv("Spidey"), EnumSet.of(GatewayIntent.GUILD_BANS, GatewayIntent.GUILD_INVITES, GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MESSAGE_REACTIONS))
+			jda = JDABuilder.create(System.getenv("SpideyDev"), EnumSet.of(GUILD_BANS, GUILD_INVITES, GUILD_MEMBERS, GUILD_MESSAGES, GUILD_MESSAGE_REACTIONS, GUILD_EMOJIS))
 							.disableCache(CacheFlag.MEMBER_OVERRIDES)
 							.addEventListeners(new Events(), waiter)
 							.setStatus(OnlineStatus.DO_NOT_DISTURB)
