@@ -57,7 +57,7 @@ public class GuildCommand extends Command
 		var ec = 0;
 		final var tmp = guild.getEmoteCache();
 		final var emotes = tmp.applyStream(stream -> stream.filter(emote -> !emote.isManaged()).collect(Collectors.toList()));
-		final var an = emotes.stream().filter(Emote::isAnimated).count();
+		final var an = tmp.applyStream(stream -> stream.filter(Emote::isAnimated).count());
 
 		for (final var emote : emotes)
 		{
