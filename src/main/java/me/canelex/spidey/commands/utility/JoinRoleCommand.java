@@ -61,7 +61,7 @@ public class JoinRoleCommand extends Command
             final var tmp = guild.getRoleById(parsed);
             if (tmp == null)
             {
-                Utils.returnError("There is no such role in this guild", message);
+                Utils.returnError("There is no such role with given ID", message);
                 return;
             }
             role = tmp;
@@ -83,8 +83,14 @@ public class JoinRoleCommand extends Command
                     return;
                 }
                 final var fromName = roles.get(0);
+                final var id = fromName.getIdLong();
+                if (dbRole == id)
+                {
+                    Utils.returnError("The join role is already set to this role", message);
+                    return;
+                }
                 role = fromName;
-                roleId = fromName.getIdLong();
+                roleId = id;
             }
             else
             {
