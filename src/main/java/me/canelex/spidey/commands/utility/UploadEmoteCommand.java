@@ -45,9 +45,11 @@ public class UploadEmoteCommand extends Command
             Utils.returnError("Spidey does not have the permission to upload emotes", message);
             return;
         }
-
         if (args.length < 2)
+        {
             Utils.returnError("Please provide a URL to retrieve the emote from", message);
+            return;
+        }
 
         final var image = new ByteArrayOutputStream();
         try
@@ -113,7 +115,7 @@ public class UploadEmoteCommand extends Command
             Utils.returnError("The name of the emote has to be between 2 and 32 in length", message);
             return;
         }
-        else if (!name.matches("[a-zA-Z0-9-_]+"))
+        else if (!Utils.TEXT_PATTERN.matcher(name).matches())
         {
             Utils.returnError("The name of the emote has to be in a valid format", message);
             return;

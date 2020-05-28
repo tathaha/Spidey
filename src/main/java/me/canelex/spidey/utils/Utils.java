@@ -27,6 +27,7 @@ import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.Supplier;
+import java.util.regex.Pattern;
 
 import static java.util.Arrays.asList;
 import static net.dv8tion.jda.api.entities.Activity.listening;
@@ -46,6 +47,7 @@ public class Utils
     private static final SimpleDateFormat SDF = new SimpleDateFormat("EE, d.LLL y | HH:mm:ss");
     private static final Calendar CAL = Calendar.getInstance();
     private static final Map<String, WrappedInvite> invitesMap = new HashMap<>();
+    public static final Pattern TEXT_PATTERN = Pattern.compile("[a-zA-Z0-9-_]+");
 
     private Utils()
     {

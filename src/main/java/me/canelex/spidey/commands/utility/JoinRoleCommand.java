@@ -6,6 +6,7 @@ import me.canelex.spidey.objects.command.Command;
 import me.canelex.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.Role;
 
 import java.util.regex.Pattern;
 
@@ -16,8 +17,8 @@ public class JoinRoleCommand extends Command
 
     public JoinRoleCommand()
     {
-        super("joinrole", new String[]{}, "Sets/removes the Role that is added to a member after joining",
-                "joinrole (id of the Role, if not given, the Role will be reset if set)", Category.UTILITY, Permission.ADMINISTRATOR, 0);
+        super("joinrole", new String[]{}, "Sets/removes the role that is added to a member after joining",
+                "joinrole (id/name of the role, if not given, the role will be reset if set)", Category.UTILITY, Permission.ADMINISTRATOR, 0);
     }
 
     @Override
@@ -39,39 +40,64 @@ public class JoinRoleCommand extends Command
         if (args.length == 1)
         {
             if (dbRole == 0)
-                Utils.returnError("You don't have the join Role set", message);
+                Utils.returnError("You don't have the join role set", message);
             else
             {
                 MySQL.removeRole(guildId);
-                Utils.sendMessage(channel, ":white_check_mark: The join Role has been removed.");
+                Utils.sendMessage(channel, ":white_check_mark: The join role has been removed.");
             }
             return;
         }
-        if (!ID_PATTERN.matcher(args[1]).matches())
+        long roleId;
+        Role role;
+        if (ID_PATTERN.matcher(args[1]).matches())
         {
-            Utils.returnError("Please enter a valid ID", message);
-            return;
+            final var parsed = Long.parseUnsignedLong(args[1]);
+            if (dbRole == parsed)
+            {
+                Utils.returnError("The join role is already set to this role", message);
+                return;
+            }
+            final var tmp = guild.getRoleById(parsed);
+            if (tmp == null)
+            {
+                Utils.returnError("There is no such role in this guild", message);
+                return;
+            }
+            role = tmp;
+            roleId = parsed;
         }
-
-        final var roleId = Long.parseUnsignedLong(args[1]);
-        if (dbRole == roleId)
+        else
         {
-            Utils.returnError("The join Role is already set to this Role", message);
-            return;
-        }
-
-        final var role = guild.getRoleById(roleId);
-        if (role == null)
-        {
-            Utils.returnError("There is no such Role in this guild", message);
-            return;
+            if (Utils.TEXT_PATTERN.matcher(args[1]).matches())
+            {
+                if (args[1].length() > 100)
+                {
+                    Utils.returnError("The name of the role has to be 100 characters long at max", message);
+                    return;
+                }
+                final var roles = guild.getRolesByName(args[1], false);
+                if (roles.isEmpty())
+                {
+                    Utils.returnError("There is no such role with given name", message);
+                    return;
+                }
+                final var fromName = roles.get(0);
+                role = fromName;
+                roleId = fromName.getIdLong();
+            }
+            else
+            {
+                Utils.returnError("Please enter a valid ID/role name", message);
+                return;
+            }
         }
         if (!member.canInteract(role))
-            Utils.returnError("You can't set the join Role to a Role which you can't interact with", message);
+            Utils.returnError("You can't set the join role to a role which you can't interact with", message);
         else
         {
             MySQL.setRole(guildId, roleId);
-            Utils.sendMessage(channel, ":white_check_mark: The join Role has been set to Role `" + role.getName() + "`.");
+            Utils.sendMessage(channel, ":white_check_mark: The join role has been set to role `" + role.getName() + "`.");
         }
     }
 }
