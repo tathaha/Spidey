@@ -24,25 +24,39 @@ public class SlowmodeCommand extends Command
 	{
 		final var channel = message.getChannel();
 		final var requiredPermission = getRequiredPermission();
+		final var textChannel = message.getTextChannel();
+		final var manager = textChannel.getManager();
+
 		if (!Utils.hasPerm(message.getMember(), requiredPermission))
-			Utils.getPermissionsError(requiredPermission, message);
-		else
 		{
-			var seconds = 0;
-			final var par = message.getContentRaw().substring(11);
-			if (!(par.equalsIgnoreCase("off") || par.equalsIgnoreCase("false")))
-			{
-				try
-				{
-					seconds = Math.max(0, Math.min(Integer.parseInt(par), TextChannel.MAX_SLOWMODE));
-				}
-				catch (final NumberFormatException ignored)
-				{
-					Utils.sendMessage(channel, ":no_entry: Couldn't parse argument.");
-					return;
-				}
-			}
-			message.getTextChannel().getManager().setSlowmode(seconds).queue();
+			Utils.getPermissionsError(requiredPermission, message);
+			return;
 		}
+		if (args.length == 1)
+		{
+			if (textChannel.getSlowmode() == 0)
+				Utils.returnError("There is no slowmode in this channel", message);
+			else
+			{
+				manager.setSlowmode(0).queue();
+				Utils.sendMessage(channel, ":white_check_mark: Slowmode for this channel has been disabled.");
+			}
+			return;
+		}
+
+		var seconds = 0;
+		if (!args[1].equalsIgnoreCase("off"))
+		{
+			try
+			{
+				seconds = Math.max(0, Math.min(Integer.parseInt(args[1]), TextChannel.MAX_SLOWMODE));
+			}
+			catch (final NumberFormatException ignored)
+			{
+				Utils.sendMessage(channel, ":no_entry: Couldn't parse argument.");
+				return;
+			}
+		}
+		manager.setSlowmode(seconds).queue();
 	}
 }
