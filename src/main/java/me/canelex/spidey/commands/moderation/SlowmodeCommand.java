@@ -7,16 +7,17 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 
+import static net.dv8tion.jda.api.entities.TextChannel.MAX_SLOWMODE;
+
 @SuppressWarnings("unused")
 public class SlowmodeCommand extends Command
 {
-	private static final int maxSlowmode = TextChannel.MAX_SLOWMODE;
-	private static final int hours = maxSlowmode / 3600;
-	private static final String desc = "Sets the slowmode of the channel. Limit: `" + maxSlowmode + "s` - `" + hours + "h`. Example - `slowmode <seconds | off>`";
+	private static final int HOURS = MAX_SLOWMODE / 3600;
+	private static final String DESC = "Sets the slowmode of the channel. Limit: `" + MAX_SLOWMODE + "s` - `" + HOURS + "h`. Example - `slowmode <seconds | off>`";
 
 	public SlowmodeCommand()
 	{
-		super("slowmode", new String[]{}, desc, "slowmode <seconds/off>", Category.MODERATION, Permission.MANAGE_CHANNEL, 0);
+		super("slowmode", new String[]{}, DESC, "slowmode <seconds/off>", Category.MODERATION, Permission.MANAGE_CHANNEL, 0);
 	}
 
 	@Override
@@ -34,29 +35,45 @@ public class SlowmodeCommand extends Command
 		}
 		if (args.length == 1)
 		{
-			if (textChannel.getSlowmode() == 0)
-				Utils.returnError("There is no slowmode in this channel", message);
-			else
-			{
-				manager.setSlowmode(0).queue();
-				Utils.sendMessage(channel, ":white_check_mark: Slowmode for this channel has been disabled.");
-			}
+			checkSlowmode(textChannel, message);
+			return;
+		}
+		if (args[1].equalsIgnoreCase("off"))
+		{
+			checkSlowmode(textChannel, message);
 			return;
 		}
 
-		var seconds = 0;
-		if (!args[1].equalsIgnoreCase("off"))
+		try
 		{
-			try
+			var parsed = Math.max(0, Math.min(Integer.parseInt(args[1]), MAX_SLOWMODE));
+			if (parsed == 0)
 			{
-				seconds = Math.max(0, Math.min(Integer.parseInt(args[1]), TextChannel.MAX_SLOWMODE));
-			}
-			catch (final NumberFormatException ignored)
-			{
-				Utils.sendMessage(channel, ":no_entry: Couldn't parse argument.");
+				checkSlowmode(textChannel, message);
 				return;
 			}
+			else if (textChannel.getSlowmode() == parsed)
+			{
+				Utils.returnError("The slowmode for this channel is already set to **" + parsed + "** seconds", message);
+				return;
+			}
+			manager.setSlowmode(parsed).queue();
+			Utils.sendMessage(channel, ":white_check_mark: The slowmode for this channel has been set to **" + parsed + "** seconds!");
 		}
-		manager.setSlowmode(seconds).queue();
+		catch (final NumberFormatException ex)
+		{
+			Utils.returnError("Couldn't parse argument", message);
+		}
+	}
+
+	private void checkSlowmode(final TextChannel channel, final Message message)
+	{
+		if (channel.getSlowmode() == 0)
+			Utils.returnError("There is no slowmode in this channel", message);
+		else
+		{
+			channel.getManager().setSlowmode(0).queue();
+			Utils.sendMessage(channel, ":white_check_mark: The slowmode for this channel has been disabled!");
+		}
 	}
 }
