@@ -82,8 +82,13 @@ public class UploadEmoteCommand extends Command
             return;
         }
 
-        final var maxEmotes = guild.getMaxEmotes();
         final var byteArray = image.toByteArray();
+        if (byteArray.length > 256000)
+        {
+            Utils.returnError("The emote size has to be less than **256KB**", message);
+            return;
+        }
+        final var maxEmotes = guild.getMaxEmotes();
         final var animated = byteArray[0] == 'G' && byteArray[1] == 'I' && byteArray[2] == 'F' && byteArray[3] == '8' && byteArray[4] == '9' && byteArray[5] == 'a';
         final var used = guild.getEmoteCache().applyStream(stream -> stream.filter(emote -> !emote.isManaged())
                                                                            .collect(Collectors.partitioningBy(Emote::isAnimated))
