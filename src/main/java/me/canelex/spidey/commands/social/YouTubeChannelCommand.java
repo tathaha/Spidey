@@ -16,6 +16,9 @@ import org.slf4j.LoggerFactory;
 
 import java.text.DecimalFormat;
 import java.time.Duration;
+import java.time.OffsetDateTime;
+
+import static java.util.List.of;
 
 @SuppressWarnings("unused")
 public class YouTubeChannelCommand extends Command
@@ -44,7 +47,7 @@ public class YouTubeChannelCommand extends Command
 					.setYouTubeRequestInitializer(new YouTubeRequestInitializer(Secrets.YOUTUBEAPIKEY))
 					.build();
 
-			final var search = youtube.search().list("snippet").setQ(message.getContentRaw().substring(12)).setType("channel");
+			final var search = youtube.search().list(of("snippet")).setQ(message.getContentRaw().substring(12)).setType(of("channel"));
 			final var searchResponse = search.execute();
 
 			if (!searchResponse.getItems().isEmpty())
@@ -56,9 +59,9 @@ public class YouTubeChannelCommand extends Command
 					   .queue();
 
 				final var channelId = searchResponse.getItems().get(0).getSnippet().getChannelId();
-				final var channels = youtube.channels().list("snippet, statistics").setId(channelId);
+				final var channels = youtube.channels().list(of("snippet, statistics")).setId(of(channelId));
 				final var c = channels.execute().getItems().get(0);
-				final var creation = Utils.getTime(c.getSnippet().getPublishedAt().getValue());
+				final var creation = Utils.getTime(OffsetDateTime.parse(c.getSnippet().getPublishedAt()).toInstant().toEpochMilli());
 				final var sb = new SocialBlade(channelId);
 				final var subs = sb.getSubs();
 				final var views = sb.getViews();
