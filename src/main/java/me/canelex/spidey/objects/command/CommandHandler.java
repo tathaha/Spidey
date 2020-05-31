@@ -2,10 +2,20 @@ package me.canelex.spidey.objects.command;
 
 import me.canelex.spidey.Core;
 import me.canelex.spidey.utils.Utils;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+
+import java.awt.*;
 
 public class CommandHandler
 {
+	public static final MessageEmbed ADMIN_WARNING = new EmbedBuilder().setAuthor("Potential security risk").setColor(Color.RED)
+												     .appendDescription("I have Administrator permission for this Discord server.")
+												     .appendDescription("\nAs this is a huge security risk, __i'll refuse to handle any command__.")
+												     .appendDescription("\n\nBots shouldn't have Administrator permission unless you *need* it for **your** bot.")
+												     .appendDescription("\nPlease __remove this permission and i'll work properly again__.").build();
+
 	private CommandHandler()
 	{
 		super();

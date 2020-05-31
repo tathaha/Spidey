@@ -36,10 +36,16 @@ public class Events extends ListenerAdapter
 		final var message = e.getMessage();
 		final var author = e.getAuthor();
 		final var id = guild.getIdLong();
+		final var eb = new EmbedBuilder();
 		final var prefix = Utils.getPrefix(id);
 
 		if (message.getContentRaw().startsWith(prefix) && !author.isBot())
 		{
+			if (Utils.hasPerm(guild.getSelfMember(), Permission.ADMINISTRATOR))
+			{
+				Utils.sendMessage(message.getChannel(), CommandHandler.ADMIN_WARNING);
+				return;
+			}
 			CommandHandler.handle(message, prefix);
 			return;
 		}
@@ -48,7 +54,6 @@ public class Events extends ListenerAdapter
 		if (message.getType() == MessageType.GUILD_MEMBER_BOOST && channel != null)
 		{
 			Utils.deleteMessage(message);
-			final var eb = new EmbedBuilder();
 			eb.setDescription(new StringBuilder().append(e.getJDA().getEmoteById(699731065052332123L).getAsMention())
 					.append(" **").append(MarkdownSanitizer.escape(author.getAsTag())).append("** has `boosted` ")
 					.append("the server. The server currently has **").append(guild.getBoostCount()).append("** boosts.").toString());
