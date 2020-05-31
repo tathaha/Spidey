@@ -24,15 +24,9 @@ public class SlowmodeCommand extends Command
 	public final void execute(final String[] args, final Message message)
 	{
 		final var channel = message.getChannel();
-		final var requiredPermission = getRequiredPermission();
 		final var textChannel = message.getTextChannel();
 		final var manager = textChannel.getManager();
 
-		if (!Utils.hasPerm(message.getMember(), requiredPermission))
-		{
-			Utils.getPermissionsError(requiredPermission, message);
-			return;
-		}
 		if (args.length == 1)
 		{
 			checkSlowmode(textChannel, message);

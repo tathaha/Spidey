@@ -24,13 +24,6 @@ public class WarnCommand extends Command
 		final var member = message.getMember();
 
 		message.delete().queueAfter(5, TimeUnit.SECONDS);
-
-		final var requiredPermission = getRequiredPermission();
-		if (!Utils.hasPerm(member, requiredPermission))
-		{
-			Utils.getPermissionsError(requiredPermission, message);
-			return;
-		}
 		
 		if (args.length < 3)
 		{

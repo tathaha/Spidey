@@ -10,6 +10,7 @@ import java.awt.*;
 
 public class CommandHandler
 {
+	private static final String NO_PERMS = "Action can't be completed because you don't have **%s** permission";
 	public static final MessageEmbed ADMIN_WARNING = new EmbedBuilder().setAuthor("Potential security risk").setColor(Color.RED)
 												     .appendDescription("I have Administrator permission for this Discord server.")
 												     .appendDescription("\nAs this is a huge security risk, __i'll refuse to handle any command__.")
@@ -35,6 +36,12 @@ public class CommandHandler
 		if (cmd == null)
 		{
 			Utils.returnError("**" + command + "** isn't a valid command", msg);
+			return;
+		}
+		final var requiredPermission = cmd.getRequiredPermission();
+		if (!Utils.hasPerm(msg.getMember(), requiredPermission))
+		{
+			Utils.returnError(String.format(NO_PERMS, requiredPermission.getName()), msg);
 			return;
 		}
 		final var args = content.split("\\s+", cmd.getMaxArgs());

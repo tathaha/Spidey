@@ -28,13 +28,6 @@ public class JoinRoleCommand extends Command
         final var guildId = guild.getIdLong();
         final var channel = message.getChannel();
         final var member = message.getMember();
-        final var requiredPermission = getRequiredPermission();
-
-        if (!Utils.hasPerm(member, requiredPermission))
-        {
-            Utils.getPermissionsError(requiredPermission, message);
-            return;
-        }
 
         final var dbRole = MySQL.getRole(guildId);
         if (args.length == 1)

@@ -25,28 +25,22 @@ public class PollCommand extends Command
 		final var author = message.getAuthor();
 		final var channel = message.getChannel();
 
-		final var requiredPermission = getRequiredPermission();
-		if (!Utils.hasPerm(message.getMember(), requiredPermission))
-			Utils.getPermissionsError(requiredPermission, message);
-		else
+		if (log != null)
 		{
-			if (log != null)
+			final var question = message.getContentRaw().substring(7);
+			Utils.deleteMessage(message);
+			channel.sendMessage("Poll: **" + question + "**").queue(m ->
 			{
-				final var question = message.getContentRaw().substring(7);
-				Utils.deleteMessage(message);
-				channel.sendMessage("Poll: **" + question + "**").queue(m ->
-				{
-					m.addReaction(Emojis.LIKE).queue();
-					m.addReaction(Emojis.SHRUG).queue();
-					m.addReaction(Emojis.DISLIKE).queue();
-					final var eb = Utils.createEmbedBuilder(author);
-					eb.setAuthor("NEW POLL");
-					eb.setColor(Color.ORANGE);
-					eb.addField("Question", "**" + question + "**", false);
-					eb.setFooter("Poll created by " + author.getAsTag(), author.getEffectiveAvatarUrl());
-					Utils.sendMessage(log, eb.build());
-				});
-			}
+				m.addReaction(Emojis.LIKE).queue();
+				m.addReaction(Emojis.SHRUG).queue();
+				m.addReaction(Emojis.DISLIKE).queue();
+				final var eb = Utils.createEmbedBuilder(author);
+				eb.setAuthor("NEW POLL");
+				eb.setColor(Color.ORANGE);
+				eb.addField("Question", "**" + question + "**", false);
+				eb.setFooter("Poll created by " + author.getAsTag(), author.getEffectiveAvatarUrl());
+				Utils.sendMessage(log, eb.build());
+			});
 		}
 	}
 }

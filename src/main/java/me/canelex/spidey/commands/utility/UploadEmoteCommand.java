@@ -33,14 +33,8 @@ public class UploadEmoteCommand extends Command
     {
         final var channel = message.getChannel();
         final var guild = message.getGuild();
-        final var requiredPermission = getRequiredPermission();
 
-        if (!Utils.hasPerm(message.getMember(), requiredPermission))
-        {
-            Utils.getPermissionsError(requiredPermission, message);
-            return;
-        }
-        if (!Utils.hasPerm(guild.getSelfMember(), requiredPermission))
+        if (!Utils.hasPerm(guild.getSelfMember(), getRequiredPermission()))
         {
             Utils.returnError("Spidey does not have the permission to upload emotes", message);
             return;

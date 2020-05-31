@@ -21,13 +21,6 @@ public class LogCommand extends Command
 		final var guild = message.getGuild();
 		final var guildId = guild.getIdLong();
 		final var channel = message.getChannel();
-		final var requiredPermission = getRequiredPermission();
-
-		if (!Utils.hasPerm(message.getMember(), requiredPermission))
-		{
-			Utils.getPermissionsError(requiredPermission, message);
-			return;
-		}
 
 		if (guild.getSystemChannel() != null)
 			guild.getManager().setSystemChannel(null).queue();

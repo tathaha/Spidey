@@ -21,14 +21,8 @@ public class PrefixCommand extends Command
         final var guild = message.getGuild();
         final var guildId = guild.getIdLong();
         final var channel = message.getChannel();
-        final var requiredPermission = getRequiredPermission();
         final var actualPrefix = Utils.getPrefix(guildId);
 
-        if (!Utils.hasPerm(message.getMember(), requiredPermission))
-        {
-            Utils.getPermissionsError(requiredPermission, message);
-            return;
-        }
         if (args.length == 1)
         {
             if (actualPrefix.equals("s!"))

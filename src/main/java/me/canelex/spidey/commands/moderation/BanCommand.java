@@ -24,13 +24,6 @@ public class BanCommand extends Command
 		final var channel = message.getChannel();
 		final var guild = message.getGuild();
 
-		final var requiredPermission = getRequiredPermission();
-		if (!Utils.hasPerm(message.getMember(), requiredPermission))
-		{
-			Utils.getPermissionsError(requiredPermission, message);
-			return;
-		}
-
 		if (args.length < 3)
 		{
 			Utils.returnError("Wrong syntax", message);

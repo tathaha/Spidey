@@ -31,15 +31,8 @@ public class DeleteCommand extends Command
     public final void execute(final String[] args, final Message message)
     {
         final var channel = message.getChannel();
-        final var requiredPermission = getRequiredPermission();
 
         message.delete().complete();
-
-        if (!Utils.hasPerm(message.getMember(), requiredPermission))
-        {
-            Utils.getPermissionsError(requiredPermission, message);
-            return;
-        }
 
         if (args.length < 2)
         {
