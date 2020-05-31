@@ -44,7 +44,7 @@ public class Utils
     private static final ThreadLocalRandom random = ThreadLocalRandom.current();
     private static final SimpleDateFormat SDF = new SimpleDateFormat("EE, d.LLL y | HH:mm:ss");
     private static final Calendar CAL = Calendar.getInstance();
-    private static final Map<String, WrappedInvite> invitesMap = new HashMap<>();
+    private static final Map<String, WrappedInvite> INVITES = new HashMap<>();
     public static final Pattern TEXT_PATTERN = Pattern.compile("[a-zA-Z0-9-_]+");
 
     private Utils()
@@ -82,11 +82,6 @@ public class Utils
     public static boolean canSetVanityUrl(final Guild g)
     {
         return g.getFeatures().contains("VANITY_URL");
-    }
-
-    public static String replaceLast(final String text, final String regex, final String replacement)
-    {
-        return text.replaceFirst("(?s)(.*)" + regex, "$1" + replacement);
     }
 
     public static EmbedBuilder createEmbedBuilder(final User u)
@@ -193,7 +188,7 @@ public class Utils
     public static void storeInvites(final Guild guild)
     {
         guild.retrieveInvites()
-             .queue(invites -> invites.forEach(invite -> invitesMap.put(invite.getCode(), new WrappedInvite(invite))),
+             .queue(invites -> invites.forEach(invite -> INVITES.put(invite.getCode(), new WrappedInvite(invite))),
                     failure -> sendPrivateMessage(guild.getOwner().getUser(), "I'm not able to attach the invite a user joined with as i don't have permission to manage the server."));
     }
 
@@ -256,7 +251,7 @@ public class Utils
 
     public static Map<String, WrappedInvite> getInvites()
     {
-        return invitesMap;
+        return INVITES;
     }
 
     public static TextChannel getLogChannel(final long guildId)
