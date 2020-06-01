@@ -23,7 +23,7 @@ public class PrefixCommand extends Command
         final var channel = message.getChannel();
         final var actualPrefix = Utils.getPrefix(guildId);
 
-        if (args.length == 1)
+        if (args.length == 0)
         {
             if (actualPrefix.equals("s!"))
                 Utils.returnError("The prefix for this server is already set to the default one", message);
@@ -35,7 +35,7 @@ public class PrefixCommand extends Command
             return;
         }
 
-        final var newPrefix = args[1];
+        final var newPrefix = args[0];
         if (actualPrefix.equals(newPrefix))
         {
             Utils.returnError("The prefix for this server is already set to `" + actualPrefix + "`", message);

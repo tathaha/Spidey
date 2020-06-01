@@ -15,7 +15,7 @@ public class WarnCommand extends Command
 {
 	public WarnCommand()
 	{
-		super("warn", new String[]{}, "Warns a user", "warn <@someone> <reason>", Category.MODERATION, Permission.BAN_MEMBERS, 3);
+		super("warn", new String[]{}, "Warns a user", "warn <@someone> <reason>", Category.MODERATION, Permission.BAN_MEMBERS, 2);
 	}
 
 	@Override
@@ -25,13 +25,13 @@ public class WarnCommand extends Command
 
 		message.delete().queueAfter(5, TimeUnit.SECONDS);
 		
-		if (args.length < 3)
+		if (args.length < 2)
 		{
 			Utils.returnError("Wrong syntax", message);
 			return;
 		}
 
-		if (!Message.MentionType.USER.getPattern().matcher(args[1]).matches())
+		if (!Message.MentionType.USER.getPattern().matcher(args[0]).matches())
 		{
 			Utils.returnError("Wrong syntax (no mention)", message);
 			return;
@@ -64,7 +64,7 @@ public class WarnCommand extends Command
 			eb.addField("User", "**" + user.getAsTag() + "**", true);
 			eb.addField("ID", "**" + user.getId() + "**", true);
 			eb.addField("Moderator", "**" + author.getAsTag() + "**", true);
-			eb.addField("Reason", "**" + args[2] + "**", true);
+			eb.addField("Reason", "**" + args[1] + "**", true);
 			eb.setColor(Color.ORANGE);
 			Utils.sendMessage(channel, eb.build());
 			Utils.sendPrivateMessageFormat(user, ":warning: You've been warned in the guild **%s** from **%s** for **%s**.", guild.getName(), author.getName(), args[2]);

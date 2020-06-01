@@ -35,8 +35,12 @@ public class YouTubeChannelCommand extends Command
 	@Override
 	public final void execute(final String[] args, final Message message)
 	{
+		if (args.length == 0)
+		{
+			Utils.returnError("Please specify a YouTube channel", message);
+			return;
+		}
 		final var channel = message.getChannel();
-
 		try
 		{
 			final var youtube = new YouTube.Builder(
@@ -47,7 +51,7 @@ public class YouTubeChannelCommand extends Command
 					.setYouTubeRequestInitializer(new YouTubeRequestInitializer(Secrets.YOUTUBEAPIKEY))
 					.build();
 
-			final var search = youtube.search().list(of("snippet")).setQ(message.getContentRaw().substring(12)).setType(of("channel"));
+			final var search = youtube.search().list(of("snippet")).setQ(args[0]).setType(of("channel"));
 			final var searchResponse = search.execute();
 
 			if (!searchResponse.getItems().isEmpty())

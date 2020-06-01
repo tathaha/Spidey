@@ -19,7 +19,7 @@ public class GoogleSearchCommand extends Command
 	@Override
 	public final void execute(final String[] args, final Message message)
 	{
-		final var result = new GoogleSearch().getResult(StringUtils.join(args, "+", 1, args.length));
+		final var result = new GoogleSearch().getResult(StringUtils.join(args, "+", 0, args.length));
 		Utils.sendMessage(message.getChannel(), result.getContent());
 	}
 }

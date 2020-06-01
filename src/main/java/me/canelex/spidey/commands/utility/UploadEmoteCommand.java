@@ -39,7 +39,7 @@ public class UploadEmoteCommand extends Command
             Utils.returnError("Spidey does not have the permission to upload emotes", message);
             return;
         }
-        if (args.length < 2)
+        if (args.length == 0)
         {
             Utils.returnError("Please provide a URL to retrieve the emote from", message);
             return;
@@ -48,7 +48,7 @@ public class UploadEmoteCommand extends Command
         final var image = new ByteArrayOutputStream();
         try
         {
-            final var con = (HttpURLConnection) new URL(args[1]).openConnection();
+            final var con = (HttpURLConnection) new URL(args[0]).openConnection();
             con.setRequestProperty("User-Agent", "me.canelex.spidey");
 
             try (final var stream = con.getInputStream())
@@ -65,7 +65,7 @@ public class UploadEmoteCommand extends Command
         }
         catch (final MalformedURLException ex)
         {
-            LOG.error("There was an error while parsing the URL. URL: {}", args[1], ex);
+            LOG.error("There was an error while parsing the URL. URL: {}", args[0], ex);
             Utils.returnError("Please provide a valid URL to retrieve the emote from", message);
             return;
         }
@@ -95,18 +95,18 @@ public class UploadEmoteCommand extends Command
         }
 
         var name = "";
-        if (args.length == 3)
-            name = args[2];
+        if (args.length == 2)
+            name = args[1];
         else
         {
-            final var tmpIndex = args[1].lastIndexOf('/') + 1;
+            final var tmpIndex = args[0].lastIndexOf('/') + 1;
             try
             {
-                name = args[1].substring(tmpIndex, args[1].lastIndexOf('.'));
+                name = args[0].substring(tmpIndex, args[0].lastIndexOf('.'));
             }
             catch (final IndexOutOfBoundsException ex)
             {
-                name = args[1].substring(tmpIndex);
+                name = args[0].substring(tmpIndex);
             }
         }
         if (!(name.length() >= 2 && name.length() <= 32))

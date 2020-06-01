@@ -24,7 +24,7 @@ public class DeleteCommand extends Command
     public DeleteCommand()
     {
         super("d", new String[]{}, "Deletes messages (by mentioned user)", "d <count> (user)", Category.MODERATION,
-                Permission.MESSAGE_MANAGE, 3);
+                Permission.MESSAGE_MANAGE, 2);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class DeleteCommand extends Command
 
         message.delete().complete();
 
-        if (args.length < 2)
+        if (args.length == 0)
         {
             Utils.returnError("Wrong syntax", message);
             return;
@@ -43,7 +43,7 @@ public class DeleteCommand extends Command
         var amount = 0;
         try
         {
-            amount = Integer.parseInt(args[1]);
+            amount = Integer.parseInt(args[0]);
         }
         catch (final NumberFormatException ignored)
         {

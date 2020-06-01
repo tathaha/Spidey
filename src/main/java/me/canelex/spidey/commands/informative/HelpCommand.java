@@ -31,7 +31,7 @@ public class HelpCommand extends Command
                             .setAuthor("Spidey's Commands", "https://github.com/caneleex/Spidey", message.getJDA().getSelfUser().getEffectiveAvatarUrl());
         final var prefix = Utils.getPrefix(message.getGuild().getIdLong());
 
-        if (args.length < 2)
+        if (args.length == 0)
         {
             final var commandsCopy = new HashMap<>(commandsMap);
             final var entries = commandsCopy.entrySet();
@@ -64,7 +64,7 @@ public class HelpCommand extends Command
         }
         else
         {
-            final var cmd = message.getContentRaw().substring(prefix.length() + 5).toLowerCase();
+            final var cmd = args[0].toLowerCase();
             if (!commandsMap.containsKey(cmd))
                 Utils.returnError("**" + cmd + "** isn't a valid command", message);
             else

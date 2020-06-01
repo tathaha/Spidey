@@ -15,7 +15,7 @@ public class BanCommand extends Command
 	public BanCommand()
 	{
 		super("ban", new String[]{}, "Bans the given user", "ban <@someone> <delDays> <reason>", Category.MODERATION,
-				Permission.BAN_MEMBERS, 4);
+				Permission.BAN_MEMBERS, 3);
 	}
 
 	@Override
@@ -24,12 +24,12 @@ public class BanCommand extends Command
 		final var channel = message.getChannel();
 		final var guild = message.getGuild();
 
-		if (args.length < 3)
+		if (args.length < 2)
 		{
 			Utils.returnError("Wrong syntax", message);
 			return;
 		}
-		if (!Message.MentionType.USER.getPattern().matcher(args[1]).matches())
+		if (!Message.MentionType.USER.getPattern().matcher(args[0]).matches())
 		{
 			Utils.returnError("Wrong syntax (no mention)", message);
 			return;
@@ -49,7 +49,7 @@ public class BanCommand extends Command
 		var delDays = 0;
 		try
 		{
-			delDays = Math.max(0, Math.min(Integer.parseUnsignedInt(args[2]), 7));
+			delDays = Math.max(0, Math.min(Integer.parseUnsignedInt(args[1]), 7));
 		}
 		catch (final NumberFormatException ex)
 		{
@@ -58,18 +58,18 @@ public class BanCommand extends Command
 		}
 
 		final var reasonBuilder = new StringBuilder("[Banned by Spidey#2370]");
-		final var banmessageBuilder = new StringBuilder(":white_check_mark: Successfully banned user **"
+		final var banMessageBuilder = new StringBuilder(":white_check_mark: Successfully banned user **"
 				+ mb.getUser().getAsTag() + "**.");
 
 		if (args.length == getMaxArgs())
 		{
-			final var reason = args[3];
+			final var reason = args[2];
 			reasonBuilder.append(String.format(" %s", reason));
-			banmessageBuilder.deleteCharAt(banmessageBuilder.length() - 1).append(String.format(" with reason **%s**.", reason));
+			banMessageBuilder.deleteCharAt(banMessageBuilder.length() - 1).append(String.format(" with reason **%s**.", reason));
 		}
 
 		final var reasonMessage = reasonBuilder.toString();
-		final var banMessage = banmessageBuilder.toString();
+		final var banMessage = banMessageBuilder.toString();
 
 		message.addReaction(Emojis.CHECK).queue();
 		guild.ban(mb, delDays, reasonMessage).queue();

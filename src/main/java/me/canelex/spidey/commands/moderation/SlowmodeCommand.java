@@ -27,12 +27,12 @@ public class SlowmodeCommand extends Command
 		final var textChannel = message.getTextChannel();
 		final var manager = textChannel.getManager();
 
-		if (args.length == 1)
+		if (args.length == 0)
 		{
 			checkSlowmode(textChannel, message);
 			return;
 		}
-		if (args[1].equalsIgnoreCase("off"))
+		if (args[0].equalsIgnoreCase("off"))
 		{
 			checkSlowmode(textChannel, message);
 			return;
@@ -40,7 +40,7 @@ public class SlowmodeCommand extends Command
 
 		try
 		{
-			var parsed = Math.max(0, Math.min(Integer.parseInt(args[1]), MAX_SLOWMODE));
+			var parsed = Math.max(0, Math.min(Integer.parseInt(args[0]), MAX_SLOWMODE));
 			if (parsed == 0)
 			{
 				checkSlowmode(textChannel, message);

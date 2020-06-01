@@ -20,6 +20,11 @@ public class PollCommand extends Command
 	@Override
 	public final void execute(final String[] args, final Message message)
 	{
+		if (args.length == 0)
+		{
+			Utils.returnError("Please enter a question", message);
+			return;
+		}
 		final var guild = message.getGuild();
 		final var log = Utils.getLogChannel(guild.getIdLong());
 		final var author = message.getAuthor();
@@ -27,7 +32,7 @@ public class PollCommand extends Command
 
 		if (log != null)
 		{
-			final var question = message.getContentRaw().substring(7);
+			final var question = args[0];
 			Utils.deleteMessage(message);
 			channel.sendMessage("Poll: **" + question + "**").queue(m ->
 			{
