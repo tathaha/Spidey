@@ -19,7 +19,12 @@ public class RedditCommand extends Command
 	@Override
 	public final void execute(final String[] args, final Message message)
 	{
-		final var subreddit = message.getContentRaw().substring(9);
+		if (args.length == 0)
+		{
+			Utils.returnError("Please specify a subreddit", message);
+			return;
+		}
+		final var subreddit = args[0];
 		final var reddit = new Reddit(subreddit);
 		if (!reddit.exists())
 		{

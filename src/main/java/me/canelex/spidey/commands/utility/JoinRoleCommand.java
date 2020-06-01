@@ -30,7 +30,7 @@ public class JoinRoleCommand extends Command
         final var member = message.getMember();
 
         final var dbRole = MySQL.getRole(guildId);
-        if (args.length == 1)
+        if (args.length == 0)
         {
             if (dbRole == 0)
                 Utils.returnError("You don't have the join role set", message);
@@ -43,9 +43,9 @@ public class JoinRoleCommand extends Command
         }
         long roleId;
         Role role;
-        if (ID_PATTERN.matcher(args[1]).matches())
+        if (ID_PATTERN.matcher(args[0]).matches())
         {
-            final var parsed = Long.parseUnsignedLong(args[1]);
+            final var parsed = Long.parseUnsignedLong(args[0]);
             if (dbRole == parsed)
             {
                 Utils.returnError("The join role is already set to this role", message);
@@ -62,14 +62,14 @@ public class JoinRoleCommand extends Command
         }
         else
         {
-            if (Utils.TEXT_PATTERN.matcher(args[1]).matches())
+            if (Utils.TEXT_PATTERN.matcher(args[0]).matches())
             {
-                if (args[1].length() > 100)
+                if (args[0].length() > 100)
                 {
                     Utils.returnError("The name of the role has to be 100 characters long at max", message);
                     return;
                 }
-                final var roles = guild.getRolesByName(args[1], false);
+                final var roles = guild.getRolesByName(args[0], false);
                 if (roles.isEmpty())
                 {
                     Utils.returnError("There is no such role with given name", message);

@@ -20,7 +20,7 @@ public class YouTubeSearchCommand extends Command
     @Override
     public final void execute(final String[] args, final Message message)
     {
-        final var result = new GoogleSearch().getResult(StringUtils.join(args, "+", 1, args.length) + "+site:youtube.com");
+        final var result = new GoogleSearch().getResult(StringUtils.join(args, "+", 0, args.length) + "+site:youtube.com");
         Utils.sendMessage(message.getChannel(), result.getContent());
     }
 }

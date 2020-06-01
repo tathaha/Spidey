@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import java.awt.*;
+import java.util.Arrays;
 
 public class CommandHandler
 {
@@ -44,7 +45,9 @@ public class CommandHandler
 			Utils.returnError(String.format(NO_PERMS, requiredPermission.getName()), msg);
 			return;
 		}
-		final var args = content.split("\\s+", cmd.getMaxArgs());
+		final var maxArgs = cmd.getMaxArgs();
+		final var tmp = content.split("\\s+", maxArgs > 0 ? maxArgs + 1 : maxArgs);
+		final var args = Arrays.copyOfRange(tmp, 1, tmp.length);
 		cmd.execute(args, msg);
 	}
 }

@@ -19,7 +19,12 @@ public class UrbanDictionaryCommand extends Command
 	@Override
 	public final void execute(final String[] args, final Message message)
 	{
-		final var term = message.getContentRaw().substring(5);
+		if (args.length == 0)
+		{
+			Utils.returnError("Please specify a term", message);
+			return;
+		}
+		final var term = args[0];
 		final var channel = message.getChannel();
 		final var ud = new UrbanDictionary(term);
 		if (!ud.exists())
