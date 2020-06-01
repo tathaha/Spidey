@@ -14,17 +14,17 @@ import net.dv8tion.jda.api.entities.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.DecimalFormat;
 import java.time.Duration;
-import java.time.OffsetDateTime;
 
+import static java.time.OffsetDateTime.parse;
 import static java.util.List.of;
+import static me.canelex.spidey.utils.Utils.format;
+import static me.canelex.spidey.utils.Utils.getCompactNumber;
 
 @SuppressWarnings("unused")
 public class YouTubeChannelCommand extends Command
 {
 	private static final Logger LOG = LoggerFactory.getLogger(YouTubeChannelCommand.class);
-	private static final DecimalFormat FORMATTER = new DecimalFormat("#,###");
 
 	public YouTubeChannelCommand()
 	{
@@ -65,15 +65,15 @@ public class YouTubeChannelCommand extends Command
 				final var channelId = searchResponse.getItems().get(0).getSnippet().getChannelId();
 				final var channels = youtube.channels().list(of("snippet, statistics")).setId(of(channelId));
 				final var c = channels.execute().getItems().get(0);
-				final var creation = Utils.getTime(OffsetDateTime.parse(c.getSnippet().getPublishedAt()).toInstant().toEpochMilli());
+				final var creation = Utils.getTime(parse(c.getSnippet().getPublishedAt()).toInstant().toEpochMilli());
 				final var sb = new SocialBlade(channelId);
 				final var subs = sb.getSubs();
 				final var views = sb.getViews();
 				eb.setAuthor(c.getSnippet().getTitle(), "https://youtube.com/channel/" + channelId, "https://up.mlnr.dev/yt.png");
 				eb.setColor(14765121);
 				eb.setThumbnail(sb.getAvatar());
-				eb.addField("Subscribers", (subs >= 1000 ? "**" + Utils.getCompactNumber(subs) + "** (**" + FORMATTER.format(subs) + "**)" : "**" + subs + "**"), false);
-				eb.addField("Views", (views >= 1000 ? "**" + Utils.getCompactNumber(views) + "** (**" + FORMATTER.format(views) + "**)" : "**" + views + "**"), false);
+				eb.addField("Subscribers", (subs >= 1000 ? "**" + getCompactNumber(subs) + "** (**" + format(subs) + "**)" : "**" + subs + "**"), false);
+				eb.addField("Views", (views >= 1000 ? "**" + getCompactNumber(views) + "** (**" + format(views) + "**)" : "**" + views + "**"), false);
 				eb.addField("Videos", "**" + sb.getVideos() + "**", false);
 				eb.addField("Created", "**" + creation + "**", false);
 				eb.addField("Partner", (sb.isPartner() ? "**Yes**" : "**No**"), false);
