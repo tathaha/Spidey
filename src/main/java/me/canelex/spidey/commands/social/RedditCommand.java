@@ -7,6 +7,9 @@ import me.canelex.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 
+import static me.canelex.spidey.utils.Utils.format;
+import static me.canelex.spidey.utils.Utils.getCompactNumber;
+
 @SuppressWarnings("unused")
 public class RedditCommand extends Command
 {
@@ -37,11 +40,13 @@ public class RedditCommand extends Command
 		final var icon = reddit.getIcon();
 		final var title = reddit.getTitle();
 		final var desc = reddit.getDesc();
+		final var subs = reddit.getSubs();
+		final var active = reddit.getActive();
 		eb.setAuthor("r/" + reddit.getName(), "https://reddit.com/r/" + subreddit, "https://up.mlnr.dev/reddit.png");
 		eb.setThumbnail(icon.length() == 0 ? comIcon : icon);
 		eb.setColor(16727832);
-		eb.addField("Subscribers", "**" + reddit.getSubs() + "**", false);
-		eb.addField("Active users", "**" + reddit.getActive() + "**", false);
+		eb.addField("Subscribers", (subs >= 1000 ? "**" + getCompactNumber(subs) + "** (**" + format(subs) + "**)" : "**" + subs + "**"), false);
+		eb.addField("Active users", (active >= 1000 ? "**" + getCompactNumber(active) + "** (**" + format(active) + "**)" : "**" + active + "**"), false);
 		eb.addField("Title", (title.length() == 0 ? "**None**" : title), false);
 		eb.addField("Description", (desc.length() == 0 ? "**None**" : desc), false);
 		eb.addField("NSFW", "**" + (reddit.isNsfw() ? "Yes" : "No") + "**", false);

@@ -6,4 +6,4 @@ Powered by [JDA](https://github.com/DV8FromTheWorld/JDA)
 
 **Support guild**
 
-[![](https://discord.com/api/guilds/539029656309989386/embed.png?style=banner1)](https://discord.gg/cnAgKrv)
+[![](https://discord.com/api/guilds/539029656309989386/embed.png?style=banner2)](https://discord.gg/cnAgKrv)

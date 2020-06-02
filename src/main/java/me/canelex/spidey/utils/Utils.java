@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.*;
@@ -45,6 +46,7 @@ public class Utils
     private static final SimpleDateFormat SDF = new SimpleDateFormat("EE, d.LLL y | HH:mm:ss");
     private static final Calendar CAL = Calendar.getInstance();
     private static final Map<String, WrappedInvite> INVITES = new HashMap<>();
+    private static final DecimalFormat FORMATTER = new DecimalFormat("#,###");
     public static final Pattern TEXT_PATTERN = Pattern.compile("[a-zA-Z0-9-_]+");
 
     private Utils()
@@ -257,5 +259,10 @@ public class Utils
     public static TextChannel getLogChannel(final long guildId)
     {
         return Core.getJDA().getTextChannelById(MySQL.getChannel(guildId));
+    }
+
+    public static String format(final long input)
+    {
+        return FORMATTER.format(input);
     }
 }
