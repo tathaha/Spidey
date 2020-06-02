@@ -45,6 +45,32 @@ public class UploadEmoteCommand extends Command
             return;
         }
 
+        var name = "";
+        if (args.length == 2)
+            name = args[1];
+        else
+        {
+            final var tmpIndex = args[0].lastIndexOf('/') + 1;
+            try
+            {
+                name = args[0].substring(tmpIndex, args[0].lastIndexOf('.'));
+            }
+            catch (final IndexOutOfBoundsException ex)
+            {
+                name = args[0].substring(tmpIndex);
+            }
+        }
+        if (!(name.length() >= 2 && name.length() <= 32))
+        {
+            Utils.returnError("The name of the emote has to be between 2 and 32 in length", message);
+            return;
+        }
+        else if (!Utils.TEXT_PATTERN.matcher(name).matches())
+        {
+            Utils.returnError("The name of the emote has to be in a valid format", message);
+            return;
+        }
+
         final var image = new ByteArrayOutputStream();
         try
         {
@@ -91,32 +117,6 @@ public class UploadEmoteCommand extends Command
         if (maxEmotes == used)
         {
             Utils.returnError("Guild has the maximum amount of emotes", message);
-            return;
-        }
-
-        var name = "";
-        if (args.length == 2)
-            name = args[1];
-        else
-        {
-            final var tmpIndex = args[0].lastIndexOf('/') + 1;
-            try
-            {
-                name = args[0].substring(tmpIndex, args[0].lastIndexOf('.'));
-            }
-            catch (final IndexOutOfBoundsException ex)
-            {
-                name = args[0].substring(tmpIndex);
-            }
-        }
-        if (!(name.length() >= 2 && name.length() <= 32))
-        {
-            Utils.returnError("The name of the emote has to be between 2 and 32 in length", message);
-            return;
-        }
-        else if (!Utils.TEXT_PATTERN.matcher(name).matches())
-        {
-            Utils.returnError("The name of the emote has to be in a valid format", message);
             return;
         }
 
