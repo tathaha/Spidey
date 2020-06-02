@@ -53,7 +53,15 @@ public class UploadEmoteCommand extends Command
             final var tmpIndex = args[0].lastIndexOf('/') + 1;
             try
             {
-                name = args[0].substring(tmpIndex, args[0].lastIndexOf('.'));
+                final var index = args[0].lastIndexOf('.');
+                final var tmp = args[0].substring(tmpIndex, index); // possible name, if it doesn't throw, check for the extension
+                final var ext = args[0].substring(index + 1);
+                if (Icon.IconType.fromExtension(ext) == Icon.IconType.UNKNOWN)
+                {
+                    Utils.returnError("Please provide a URL with a valid format - JP(E)G, PNG, WEBP or GIF", message);
+                    return;
+                }
+                name = tmp;
             }
             catch (final IndexOutOfBoundsException ex)
             {
