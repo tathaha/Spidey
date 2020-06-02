@@ -14,7 +14,7 @@ public class AvatarCommand extends Command
 	public AvatarCommand()
 	{
 		super("avatar", new String[]{}, "Shows avatar of you or of the mentioned user", "avatar (@someone)", Category.INFORMATIVE,
-				Permission.UNKNOWN, 0);
+				Permission.UNKNOWN, 0, 0);
 	}
 
 	@Override

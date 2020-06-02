@@ -14,7 +14,7 @@ public class SupportGuildsCommand extends Command
 	public SupportGuildsCommand()
 	{
 		super("sguilds", new String[]{}, "Shows you the (support) guilds of Spidey", "guilds", Category.INFORMATIVE,
-				Permission.UNKNOWN, 0);
+				Permission.UNKNOWN, 0, 0);
 	}
 
 	@Override

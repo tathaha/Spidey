@@ -13,7 +13,7 @@ public class UrbanDictionaryCommand extends Command
 {
 	public UrbanDictionaryCommand()
 	{
-		super("ud", new String[]{}, "Returns the definition(s) of a phrase", "ud <phrase>", Category.MISC, Permission.UNKNOWN, 0);
+		super("ud", new String[]{}, "Returns the definition(s) of a phrase", "ud <phrase>", Category.MISC, Permission.UNKNOWN, 0, 0);
 	}
 
 	@Override

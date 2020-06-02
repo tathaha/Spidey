@@ -17,7 +17,7 @@ public class MembercountCommand extends Command
 	public MembercountCommand()
 	{
 		super("membercount", new String[]{"members"}, "Shows you the membercount of the guild", "membercount",
-				Category.INFORMATIVE, Permission.UNKNOWN, 0);
+				Category.INFORMATIVE, Permission.UNKNOWN, 0, 0);
 	}
 
 	@Override

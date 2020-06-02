@@ -9,6 +9,9 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import java.awt.*;
 import java.util.Arrays;
 
+import static me.canelex.spidey.objects.command.Cooldowns.cooldown;
+import static me.canelex.spidey.objects.command.Cooldowns.isOnCooldown;
+
 public class CommandHandler
 {
 	private static final String NO_PERMS = "Action can't be completed because you don't have **%s** permission";
@@ -45,9 +48,16 @@ public class CommandHandler
 			Utils.returnError(String.format(NO_PERMS, requiredPermission.getName()), msg);
 			return;
 		}
+		final var guildId = msg.getGuild().getIdLong();
+		if (isOnCooldown(guildId, cmd))
+		{
+			Utils.returnError("The command is on cooldown", msg);
+			return;
+		}
 		final var maxArgs = cmd.getMaxArgs();
 		final var tmp = content.split("\\s+", maxArgs > 0 ? maxArgs + 1 : maxArgs);
 		final var args = Arrays.copyOfRange(tmp, 1, tmp.length);
 		cmd.execute(args, msg);
+		cooldown(guildId, cmd);
 	}
 }

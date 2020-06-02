@@ -17,7 +17,7 @@ public class HelpCommand extends Command
 {
     public HelpCommand()
     {
-        super("help", new String[]{}, "Shows the help message", "help (command)", Category.INFORMATIVE, Permission.UNKNOWN, 0);
+        super("help", new String[]{}, "Shows the help message", "help (command)", Category.INFORMATIVE, Permission.UNKNOWN, 0, 0);
     }
 
     @Override

@@ -17,7 +17,7 @@ public class LeaveCommand extends Command
 {
 	public LeaveCommand()
 	{
-		super("leave", new String[]{}, "Spidey will leave your server", "leave", Category.UTILITY, Permission.ADMINISTRATOR, 0);
+		super("leave", new String[]{}, "Spidey will leave your server", "leave", Category.UTILITY, Permission.ADMINISTRATOR, 0, 0);
 	}
 
 	@Override

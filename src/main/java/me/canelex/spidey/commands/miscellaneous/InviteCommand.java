@@ -13,7 +13,7 @@ public class InviteCommand extends Command
 {
     public InviteCommand()
     {
-        super("invite", new String[]{}, "Sends you Spidey's invite link to PM", "invite", Category.MISC, Permission.UNKNOWN, 0);
+        super("invite", new String[]{}, "Sends you Spidey's invite link to PM", "invite", Category.MISC, Permission.UNKNOWN, 0, 0);
     }
 
     @Override

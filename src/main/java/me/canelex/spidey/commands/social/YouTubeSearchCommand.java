@@ -14,7 +14,7 @@ public class YouTubeSearchCommand extends Command
     public YouTubeSearchCommand()
     {
         super("yt", new String[]{}, "Allows you to search for results on YouTube", "yt <query>", Category.SOCIAL,
-                Permission.UNKNOWN, 0);
+                Permission.UNKNOWN, 0, 0);
     }
 
     @Override

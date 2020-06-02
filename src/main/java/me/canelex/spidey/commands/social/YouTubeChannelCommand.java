@@ -29,7 +29,7 @@ public class YouTubeChannelCommand extends Command
 	public YouTubeChannelCommand()
 	{
 		super("ytchannel", new String[]{}, "Shows info about entered YouTube channel", "ytchannel <channel/id>",
-				Category.SOCIAL, Permission.UNKNOWN, 0);
+				Category.SOCIAL, Permission.UNKNOWN, 0, 0);
 	}
 
 	@Override

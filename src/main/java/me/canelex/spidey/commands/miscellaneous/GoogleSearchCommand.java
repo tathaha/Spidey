@@ -13,7 +13,7 @@ public class GoogleSearchCommand extends Command
 {
 	public GoogleSearchCommand()
 	{
-		super("g", new String[]{}, "Allows you to search for results on Google", "g <query>", Category.MISC, Permission.UNKNOWN, 0);
+		super("g", new String[]{}, "Allows you to search for results on Google", "g <query>", Category.MISC, Permission.UNKNOWN, 0, 0);
 	}
 
 	@Override

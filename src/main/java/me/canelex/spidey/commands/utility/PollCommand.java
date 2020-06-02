@@ -14,7 +14,7 @@ public class PollCommand extends Command
 {
 	public PollCommand()
 	{
-		super("poll", new String[]{}, "Creates a new poll", "poll <question>", Category.UTILITY, Permission.ADMINISTRATOR, 0);
+		super("poll", new String[]{}, "Creates a new poll", "poll <question>", Category.UTILITY, Permission.ADMINISTRATOR, 0, 0);
 	}
 
 	@Override

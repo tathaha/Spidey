@@ -16,7 +16,7 @@ public class RedditCommand extends Command
 	public RedditCommand()
 	{
 		super("reddit", new String[]{}, "Shows you info about entered subreddit. For example `reddit PewdiepieSubmissions`.",
-				"reddit <subreddit>", Category.SOCIAL, Permission.UNKNOWN, 0);
+				"reddit <subreddit>", Category.SOCIAL, Permission.UNKNOWN, 0, 0);
 	}
 
 	@Override
