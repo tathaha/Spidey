@@ -14,7 +14,7 @@ public class InfoCommand extends Command
 {
 	public InfoCommand()
 	{
-		super("info", new String[]{}, "Shows you info about me", "info", Category.INFORMATIVE, Permission.UNKNOWN, 0);
+		super("info", new String[]{}, "Shows you info about me", "info", Category.INFORMATIVE, Permission.UNKNOWN, 0, 0);
 	}
 
 	@Override

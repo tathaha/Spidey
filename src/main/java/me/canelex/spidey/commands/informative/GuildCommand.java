@@ -15,7 +15,7 @@ public class GuildCommand extends Command
 {
 	public GuildCommand()
 	{
-		super("guild", new String[]{"server"}, "Shows you info about this guild", "guild", Category.INFORMATIVE, Permission.UNKNOWN, 0);
+		super("guild", new String[]{"server"}, "Shows you info about this guild", "guild", Category.INFORMATIVE, Permission.UNKNOWN, 0, 0);
 	}
 
 	@Override

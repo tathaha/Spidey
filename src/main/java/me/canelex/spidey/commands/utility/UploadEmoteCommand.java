@@ -25,7 +25,7 @@ public class UploadEmoteCommand extends Command
     public UploadEmoteCommand()
     {
         super("uploademote", new String[]{}, "Uploads the image from the provided url as an emote if possible",
-                "uploademote <link> (name)", Category.UTILITY, Permission.MANAGE_EMOTES, 0);
+                "uploademote <link> (name)", Category.UTILITY, Permission.MANAGE_EMOTES, 0, 3);
     }
 
     @Override

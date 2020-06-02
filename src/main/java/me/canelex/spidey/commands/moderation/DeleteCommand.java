@@ -10,9 +10,10 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
+import net.dv8tion.jda.api.exceptions.ErrorHandler;
+import net.dv8tion.jda.api.requests.ErrorResponse;
 
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -24,15 +25,13 @@ public class DeleteCommand extends Command
     public DeleteCommand()
     {
         super("d", new String[]{}, "Deletes messages (by mentioned user)", "d <count> (user)", Category.MODERATION,
-                Permission.MESSAGE_MANAGE, 2);
+                Permission.MESSAGE_MANAGE, 2, 7);
     }
 
     @Override
     public final void execute(final String[] args, final Message message)
     {
         final var channel = message.getChannel();
-
-        message.delete().complete();
 
         if (args.length == 0)
         {
@@ -59,16 +58,18 @@ public class DeleteCommand extends Command
         final var mentioned = message.getMentionedUsers();
         final var user = mentioned.isEmpty() ? null : mentioned.get(0);
         final var finalAmount = amount;
+
+        Utils.deleteMessage(message);
         channel.getIterableHistory().takeAsync(100).thenAcceptAsync(messages ->
         {
             final var msgs = user == null ? messages.subList(0, finalAmount) : messages.stream().filter(msg -> msg.getAuthor().equals(user)).limit(finalAmount).collect(Collectors.toList());
             if (msgs.isEmpty())
             {
-                Utils.returnError("There are no messages to be deleted.", message);
+                Utils.returnError("There are no messages to be deleted", message);
                 return;
             }
-            final var toDelete = new ArrayList<>(msgs);
             final var pinned = msgs.stream().filter(Message::isPinned).collect(Collectors.toList());
+            final var guildId = message.getGuild().getIdLong();
 
             if (!pinned.isEmpty())
             {
@@ -90,11 +91,7 @@ public class DeleteCommand extends Command
                     msg.addReaction(Emojis.CROSS).queue();
 
                     Core.getWaiter().waitForEvent(GuildMessageReactionAddEvent.class,
-                        ev ->
-                        {
-                            final var name = ev.getReactionEmote().getName();
-                            return ev.getUser() == message.getAuthor() && ev.getMessageIdLong() == msg.getIdLong() && (name.equals(Emojis.CHECK) || name.equals(Emojis.CROSS) || name.equals(wastebasket));
-                        },
+                        ev -> ev.getUser() == message.getAuthor() && ev.getMessageIdLong() == msg.getIdLong(),
                         ev ->
                         {
                             switch (ev.getReactionEmote().getName())
@@ -106,32 +103,32 @@ public class DeleteCommand extends Command
                                     Utils.deleteMessage(msg);
                                     return;
                                 case wastebasket:
-                                    toDelete.removeAll(pinned);
-                                    if (toDelete.isEmpty())
+                                    msgs.removeAll(pinned);
+                                    if (msgs.isEmpty())
                                     {
                                         Utils.returnError("There are no messages to be deleted", msg);
                                         return;
                                     }
                                     Utils.deleteMessage(msg);
                                     break;
-                                default: break;
+                                default:
                             }
-                            proceed(toDelete, user, channel);
+                            proceed(msgs, user, channel);
                         }, 1, TimeUnit.MINUTES, () -> Utils.returnError("Sorry, you took too long", msg));
                 });
             }
             else
-                proceed(toDelete, user, channel);
+                proceed(msgs, user, channel);
         });
     }
 
-    private void proceed(final List<Message> toDelete, final User user, MessageChannel channel)
+    private void proceed(final List<Message> toDelete, final User user, final MessageChannel channel)
     {
         final var future = CompletableFuture.allOf(channel.purgeMessages(toDelete).toArray(new CompletableFuture[0]));
         future.thenRunAsync(() ->
                 channel.sendMessage(Utils.generateSuccess(toDelete.size(), user))
                         .delay(Duration.ofSeconds(5))
                         .flatMap(Message::delete)
-                        .queue());
+                        .queue(null, new ErrorHandler().ignore(ErrorResponse.UNKNOWN_MESSAGE)));
     }
 }

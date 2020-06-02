@@ -12,7 +12,7 @@ public class PrefixCommand extends Command
     public PrefixCommand()
     {
         super("prefix", new String[]{}, "Sets/removes the prefix for this server",
-                "prefix (new prefix, if not given, the prefix will be reset if set)", Category.UTILITY, Permission.ADMINISTRATOR, 0);
+                "prefix (new prefix, if not given, the prefix will be reset if set)", Category.UTILITY, Permission.ADMINISTRATOR, 0, 5);
     }
 
     @Override

@@ -12,9 +12,10 @@ public abstract class Command
     private final Category category;
     private final Permission requiredPermission;
     private final int maxArgs;
+    private final int cooldown;
 
     public Command(final String invoke, final String[] aliases, final String description, final String usage, final Category category, final Permission requiredPermission,
-                   final int maxArgs)
+                   final int maxArgs, final int cooldown)
     {
         this.invoke = invoke;
         this.aliases = aliases;
@@ -23,6 +24,7 @@ public abstract class Command
         this.category = category;
         this.requiredPermission = requiredPermission;
         this.maxArgs = maxArgs;
+        this.cooldown = cooldown;
     }
 
     public abstract void execute(final String[] args, final Message msg);
@@ -60,5 +62,10 @@ public abstract class Command
     public int getMaxArgs()
     {
         return this.maxArgs;
+    }
+
+    public int getCooldown()
+    {
+        return this.cooldown;
     }
 }
