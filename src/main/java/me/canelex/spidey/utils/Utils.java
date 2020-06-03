@@ -12,15 +12,13 @@ import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.exceptions.ErrorHandler;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import net.dv8tion.jda.api.utils.data.DataObject;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import org.apache.commons.text.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
@@ -47,6 +45,7 @@ public class Utils
     private static final Calendar CAL = Calendar.getInstance();
     private static final Map<String, WrappedInvite> INVITES = new HashMap<>();
     private static final DecimalFormat FORMATTER = new DecimalFormat("#,###");
+    private static final OkHttpClient HTTP_CLIENT = new OkHttpClient();
     public static final Pattern TEXT_PATTERN = Pattern.compile("[a-zA-Z0-9-_]+");
 
     private Utils()
@@ -155,31 +154,16 @@ public class Utils
 
     public static String getSiteContent(final String url)
     {
-        var content = "";
-        try
+        final var request = new Request.Builder().url(url).header("user-agent", "me.canelex.spidey").build();
+        try (final var body = HTTP_CLIENT.newCall(request).execute().body())
         {
-            final var con = (HttpURLConnection) new URL(url).openConnection();
-            con.setRequestMethod("GET");
-            con.setRequestProperty("User-Agent", "me.canelex.spidey");
-
-            var inputLine = "";
-            final var response = new StringBuilder();
-
-            try (final var in = new BufferedReader(new InputStreamReader(con.getInputStream())))
-            {
-                while ((inputLine = in.readLine()) != null)
-                {
-                    response.append(inputLine);
-                }
-            }
-            con.disconnect();
-            content = response.toString();
+            return body != null ? body.string() : "";
         }
-        catch (final IOException e)
+        catch (final IOException ex)
         {
-            LOG.error("There was an error parsing the site content!", e);
+            LOG.error("There was an error while executing a request for url {}", url);
         }
-        return content;
+        return "";
     }
 
     public static DataObject getJson(final String url)
