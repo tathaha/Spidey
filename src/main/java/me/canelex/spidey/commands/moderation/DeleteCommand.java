@@ -24,7 +24,7 @@ public class DeleteCommand extends Command
 {
     public DeleteCommand()
     {
-        super("d", new String[]{}, "Deletes messages (by mentioned user)", "d <count> (user)", Category.MODERATION,
+        super("delete", new String[]{"d"}, "Deletes messages (by mentioned user)", "delete <count> (user)", Category.MODERATION,
                 Permission.MESSAGE_MANAGE, 2, 7);
     }
 
@@ -69,8 +69,6 @@ public class DeleteCommand extends Command
                 return;
             }
             final var pinned = msgs.stream().filter(Message::isPinned).collect(Collectors.toList());
-            final var guildId = message.getGuild().getIdLong();
-
             if (!pinned.isEmpty())
             {
                 final var equalsOne = pinned.size() == 1;
