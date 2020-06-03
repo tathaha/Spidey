@@ -74,6 +74,7 @@ public class HelpCommand extends Command
                 final var usage = command.getUsage();
                 final var requiredPermission = command.getRequiredPermission();
                 final var aliases = command.getAliases();
+                final var cooldown = command.getCooldown();
                 eb.setAuthor("Viewing command info - " + cmd);
                 eb.setColor(Color.WHITE);
                 eb.addField("Description", description == null ? "Unspecified" : description, false);
@@ -81,6 +82,7 @@ public class HelpCommand extends Command
                 eb.addField("Category",  command.getCategory().getFriendlyName(), false);
                 eb.addField("Required permission", requiredPermission == Permission.UNKNOWN ? "None" : requiredPermission.getName(), false);
                 eb.addField("Aliases", aliases.length == 0 ? "None" : String.join(", ", aliases), false);
+                eb.addField("Cooldown", cooldown == 0 ? "None" : cooldown + " seconds", false);
                 Utils.sendMessage(channel, eb.build());
             }
         }
