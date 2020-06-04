@@ -134,9 +134,7 @@ public class Utils
                 final var cmd = (Command) cls.loadClass().getDeclaredConstructor().newInstance();
                 commandsMap.put(cmd.getInvoke(), cmd);
                 for (final var alias : cmd.getAliases())
-                {
                     commandsMap.put(alias, cmd);
-                }
             }
         }
         catch (final Exception e)
