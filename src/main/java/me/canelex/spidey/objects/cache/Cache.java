@@ -36,7 +36,7 @@ public class Cache
     private static String getPrefixByRequest(final long guildId)
     {
         final var tmp = MySQL.getPrefix(guildId);
-        final var prefix = tmp == null ? "s!" : tmp;
+        final var prefix = tmp.length() == 0 ? "s!" : tmp;
         PREFIX_CACHE.put(guildId, prefix);
         return prefix;
     }
