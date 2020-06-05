@@ -1,6 +1,5 @@
 package me.canelex.spidey.utils;
 
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import net.dv8tion.jda.api.events.Event;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.ShutdownEvent;
@@ -11,9 +10,7 @@ import net.dv8tion.jda.internal.utils.Checks;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -24,13 +21,7 @@ public class EventWaiter implements EventListener
 {
     private final HashMap<Class<?>, Set<WaitingEvent<?>>> waitingEvents;
     private final ScheduledExecutorService threadpool;
-    private static final ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("EventWaiter").build();
     private final boolean shutdownAutomatically;
-
-    public EventWaiter()
-    {
-        this(Executors.newSingleThreadScheduledExecutor(threadFactory), true);
-    }
 
     public EventWaiter(ScheduledExecutorService threadpool, boolean shutdownAutomatically)
     {

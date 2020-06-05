@@ -36,8 +36,6 @@ public class Utils
     private static final String INVITE_LINK = "https://discord.com/oauth2/authorize?client_id=545938274368356352&scope=bot&permissions=1342188724";
     private static final Logger LOG = LoggerFactory.getLogger(Utils.class);
     private static final ClassGraph graph = new ClassGraph().whitelistPackages("me.canelex.spidey.commands");
-    private static final ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("Spidey").setUncaughtExceptionHandler((t, e) -> LOG.error("There was an exception in thread {}: {}", t.getName(), e.getMessage())).build();
-    private static final ScheduledExecutorService EXECUTOR = Executors.newSingleThreadScheduledExecutor(threadFactory);
     private static final char[] SUFFIXES = {'k', 'M', 'B'};
     private static final HashMap<Long, String> PREFIXES = new HashMap<>();
     private static final ThreadLocalRandom random = ThreadLocalRandom.current();
@@ -46,6 +44,7 @@ public class Utils
     private static final Map<String, WrappedInvite> INVITES = new HashMap<>();
     private static final DecimalFormat FORMATTER = new DecimalFormat("#,###");
     private static final OkHttpClient HTTP_CLIENT = new OkHttpClient();
+    private static final ThreadFactoryBuilder THREAD_FACTORY = new ThreadFactoryBuilder().setUncaughtExceptionHandler((t, e) -> LOG.error("There was an exception in thread {}: {}", t.getName(), e.getMessage()));
     public static final Pattern TEXT_PATTERN = Pattern.compile("[a-zA-Z0-9-_]+");
 
     private Utils()
@@ -142,7 +141,7 @@ public class Utils
             LOG.error("There was an error while registering the commands!", e);
         }
 
-        EXECUTOR.scheduleAtFixedRate(() -> jda.getPresence().setActivity(nextActivity(activities)), 0L, 30L, TimeUnit.SECONDS);
+        Core.getExecutor().scheduleAtFixedRate(() -> jda.getPresence().setActivity(nextActivity(activities)), 0L, 30L, TimeUnit.SECONDS);
     }
 
     private static Activity nextActivity(final ArrayList<Supplier<Activity>> activities)
@@ -217,7 +216,7 @@ public class Utils
     private static String getPrefixFromRequest(final long guildId)
     {
         final var tmp = MySQL.getPrefix(guildId);
-        final var prefix = tmp.length() == 0 ? "s!" : tmp;
+        final var prefix = tmp == null ? "s!" : tmp;
         PREFIXES.put(guildId, prefix);
         return prefix;
     }
@@ -246,5 +245,15 @@ public class Utils
     public static String format(final long input)
     {
         return FORMATTER.format(input);
+    }
+
+    public static ScheduledExecutorService createScheduledThread(final String name)
+    {
+        return Executors.newSingleThreadScheduledExecutor(THREAD_FACTORY.setNameFormat(name).build());
+    }
+
+    public static ExecutorService createThread(final String name)
+    {
+        return Executors.newSingleThreadExecutor(THREAD_FACTORY.setNameFormat(name).build());
     }
 }

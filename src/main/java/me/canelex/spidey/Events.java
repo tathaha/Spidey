@@ -63,6 +63,7 @@ public class Events extends ListenerAdapter
 			eb.setTimestamp(Instant.now());
 			Utils.sendMessage(channel, eb.build());
 		}
+
 	}
 
 	@Override
@@ -189,6 +190,7 @@ public class Events extends ListenerAdapter
 			});
 		}
 	}
+
 
 	@Override
 	public final void onGuildReady(@NotNull final GuildReadyEvent e)

@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ScheduledExecutorService;
 
 import static net.dv8tion.jda.api.requests.GatewayIntent.*;
 
@@ -20,14 +21,15 @@ public class Core
 {
 	protected static final Map<String, Command> commands = new HashMap<>();
 	private static final Logger LOG = LoggerFactory.getLogger(Core.class);
+	private static final ScheduledExecutorService EXECUTOR = Utils.createScheduledThread("Spidey Misc");
+	private static final EventWaiter waiter = new EventWaiter(EXECUTOR, true);
 	private static JDA jda;
-	private static final EventWaiter waiter = new EventWaiter();
 
 	public static void main(final String[] args)
 	{
 		try
 		{
-			jda = JDABuilder.create(System.getenv("Spidey"), EnumSet.of(GUILD_BANS, GUILD_INVITES, GUILD_MEMBERS, GUILD_MESSAGES, GUILD_MESSAGE_REACTIONS, GUILD_EMOJIS))
+			jda = JDABuilder.create(System.getenv("SpideyDev"), EnumSet.of(GUILD_BANS, GUILD_INVITES, GUILD_MEMBERS, GUILD_MESSAGES, GUILD_MESSAGE_REACTIONS, GUILD_EMOJIS))
 							.disableCache(CacheFlag.MEMBER_OVERRIDES)
 							.addEventListeners(new Events(), waiter)
 							.setStatus(OnlineStatus.DO_NOT_DISTURB)
@@ -54,5 +56,10 @@ public class Core
 	public static Map<String, Command> getCommands()
 	{
 		return commands;
+	}
+
+	public static ScheduledExecutorService getExecutor()
+	{
+		return EXECUTOR;
 	}
 }
