@@ -1,6 +1,7 @@
 package me.canelex.spidey.commands.informative;
 
 import me.canelex.spidey.Core;
+import me.canelex.spidey.objects.cache.Cache;
 import me.canelex.spidey.objects.command.Category;
 import me.canelex.spidey.objects.command.Command;
 import me.canelex.spidey.utils.Utils;
@@ -29,7 +30,7 @@ public class HelpCommand extends Command
         final var eb = Utils.createEmbedBuilder(author)
                             .setColor(Color.WHITE)
                             .setAuthor("Spidey's Commands", "https://github.com/caneleex/Spidey", message.getJDA().getSelfUser().getEffectiveAvatarUrl());
-        final var prefix = Utils.getPrefix(message.getGuild().getIdLong());
+        final var prefix = Cache.getPrefix(message.getGuild().getIdLong());
 
         if (args.length == 0)
         {

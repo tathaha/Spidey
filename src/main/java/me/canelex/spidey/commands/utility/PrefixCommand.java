@@ -1,5 +1,6 @@
 package me.canelex.spidey.commands.utility;
 
+import me.canelex.spidey.objects.cache.Cache;
 import me.canelex.spidey.objects.command.Category;
 import me.canelex.spidey.objects.command.Command;
 import me.canelex.spidey.utils.Utils;
@@ -21,7 +22,7 @@ public class PrefixCommand extends Command
         final var guild = message.getGuild();
         final var guildId = guild.getIdLong();
         final var channel = message.getChannel();
-        final var actualPrefix = Utils.getPrefix(guildId);
+        final var actualPrefix = Cache.getPrefix(guildId);
 
         if (args.length == 0)
         {
@@ -29,7 +30,7 @@ public class PrefixCommand extends Command
                 Utils.returnError("The prefix for this server is already set to the default one", message);
             else
             {
-                Utils.setPrefix(guildId, "s!");
+                Cache.setPrefix(guildId, "s!");
                 Utils.sendMessage(channel, ":white_check_mark: The prefix for this server has been reset to `s!`!");
             }
             return;
@@ -52,7 +53,7 @@ public class PrefixCommand extends Command
             return;
         }
 
-        Utils.setPrefix(guildId, newPrefix);
+        Cache.setPrefix(guildId, newPrefix);
         Utils.sendMessage(channel, ":white_check_mark: The prefix has been successfully changed to `" + newPrefix + "`!");
     }
 }

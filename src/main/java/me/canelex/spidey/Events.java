@@ -1,5 +1,6 @@
 package me.canelex.spidey;
 
+import me.canelex.spidey.objects.cache.Cache;
 import me.canelex.spidey.objects.command.CommandHandler;
 import me.canelex.spidey.objects.invites.WrappedInvite;
 import me.canelex.spidey.utils.Emojis;
@@ -35,9 +36,9 @@ public class Events extends ListenerAdapter
 		final var guild = e.getGuild();
 		final var message = e.getMessage();
 		final var author = e.getAuthor();
-		final var id = guild.getIdLong();
+		final var guildId = guild.getIdLong();
 		final var eb = new EmbedBuilder();
-		final var prefix = Utils.getPrefix(id);
+		final var prefix = Cache.getPrefix(guildId);
 
 		if (message.getContentRaw().startsWith(prefix) && !author.isBot())
 		{
@@ -50,9 +51,11 @@ public class Events extends ListenerAdapter
 			return;
 		}
 
-		final var channel = Utils.getLogChannel(id);
-		if (message.getType() == MessageType.GUILD_MEMBER_BOOST && channel != null)
+		if (message.getType() == MessageType.GUILD_MEMBER_BOOST)
 		{
+			final var channel = Cache.getLogAsChannel(guildId);
+			if (channel == null)
+				return;
 			Utils.deleteMessage(message);
 			eb.setDescription(new StringBuilder().append(e.getJDA().getEmoteById(699731065052332123L).getAsMention())
 					.append(" **").append(MarkdownSanitizer.escape(author.getAsTag())).append("** has `boosted` ")
@@ -63,7 +66,6 @@ public class Events extends ListenerAdapter
 			eb.setTimestamp(Instant.now());
 			Utils.sendMessage(channel, eb.build());
 		}
-
 	}
 
 	@Override
@@ -72,31 +74,29 @@ public class Events extends ListenerAdapter
 		final var user = e.getUser();
 		final var guild = e.getGuild();
 
-		final var channel = Utils.getLogChannel(guild.getIdLong());
-		if (channel != null)
+		final var channel = Cache.getLogAsChannel(guild.getIdLong());
+		if (channel == null)
+			return;
+		guild.retrieveBan(user).queue(ban -> guild.retrieveAuditLogs().type(ActionType.BAN).queue(bans ->
 		{
-			guild.retrieveBan(user).queue(ban ->
-				guild.retrieveAuditLogs().type(ActionType.BAN).queue(bans ->
-				{
-					final var banner = bans.get(0).getUser();
-					final var eb = new EmbedBuilder();
+			final var banner = bans.get(0).getUser();
+			final var eb = new EmbedBuilder();
 
-					var reason = "";
-					final var providedReason = ban.getReason();
-					if (providedReason != null && banner.equals(e.getJDA().getSelfUser()))
-						reason = (providedReason.equals("[Banned by Spidey#2370]") ?  "Unknown" : providedReason.substring(24));
-					else
-						reason = (providedReason == null ? "Unknown" : providedReason);
+			var reason = "";
+			final var providedReason = ban.getReason();
+			if (providedReason != null && banner.equals(e.getJDA().getSelfUser()))
+				reason = (providedReason.equals("[Banned by Spidey#2370]") ?  "Unknown" : providedReason.substring(24));
+			else
+				reason = (providedReason == null ? "Unknown" : providedReason);
 
-					eb.setDescription(new StringBuilder().append(Emojis.CROSS).append(" **").append(MarkdownSanitizer.escape(user.getAsTag()))
-							.append("** (").append(user.getId()).append(") has been `banned` by ").append("**")
-							.append(banner.getAsTag()).append("** for **").append(reason).append("**.").toString());
-					eb.setColor(14495300);
-					eb.setFooter("User ban", user.getEffectiveAvatarUrl());
-					eb.setTimestamp(Instant.now());
-					Utils.sendMessage(channel, eb.build());
-				}));
-		}
+			eb.setDescription(new StringBuilder().append(Emojis.CROSS).append(" **").append(MarkdownSanitizer.escape(user.getAsTag()))
+					.append("** (").append(user.getId()).append(") has been `banned` by ").append("**")
+					.append(banner.getAsTag()).append("** for **").append(reason).append("**.").toString());
+			eb.setColor(14495300);
+			eb.setFooter("User ban", user.getEffectiveAvatarUrl());
+			eb.setTimestamp(Instant.now());
+			Utils.sendMessage(channel, eb.build());
+		}));
 	}
 
 	@Override
@@ -105,21 +105,20 @@ public class Events extends ListenerAdapter
 		final var user = e.getUser();
 		final var guild = e.getGuild();
 
-		final var channel = Utils.getLogChannel(guild.getIdLong());
-		if (channel != null)
+		final var channel = Cache.getLogAsChannel(guild.getIdLong());
+		if (channel == null)
+			return;
+		guild.retrieveAuditLogs().type(ActionType.UNBAN).queue(unbans ->
 		{
-			guild.retrieveAuditLogs().type(ActionType.UNBAN).queue(unbans ->
-			{
-				final var eb = new EmbedBuilder();
-				eb.setDescription(new StringBuilder().append(Emojis.CHECK).append(" **")
-						.append(MarkdownSanitizer.escape(user.getAsTag())).append("** (").append(user.getId()).append(") has been `unbanned` ")
-						.append("by **").append(unbans.get(0).getUser().getAsTag()).append("**.").toString());
-				eb.setColor(7844437);
-				eb.setFooter("User unban", user.getEffectiveAvatarUrl());
-				eb.setTimestamp(Instant.now());
-				Utils.sendMessage(channel, eb.build());
-			});
-		}
+			final var eb = new EmbedBuilder();
+			eb.setDescription(new StringBuilder().append(Emojis.CHECK).append(" **")
+					.append(MarkdownSanitizer.escape(user.getAsTag())).append("** (").append(user.getId()).append(") has been `unbanned` ")
+					.append("by **").append(unbans.get(0).getUser().getAsTag()).append("**.").toString());
+			eb.setColor(7844437);
+			eb.setFooter("User unban", user.getEffectiveAvatarUrl());
+			eb.setTimestamp(Instant.now());
+			Utils.sendMessage(channel, eb.build());
+		});
 	}
 
 	@Override
@@ -127,18 +126,17 @@ public class Events extends ListenerAdapter
 	{
 		final var user = e.getUser();
 		final var guild = e.getGuild();
+		final var channel = Cache.getLogAsChannel(guild.getIdLong());
 
-		final var channel = Utils.getLogChannel(guild.getIdLong());
-		if (channel != null)
-		{
-			final var eb = new EmbedBuilder();
-			eb.setDescription(new StringBuilder().append("\uD83D\uDCE4 **").append(MarkdownSanitizer.escape(user.getAsTag()))
-					.append("** (").append(user.getId()).append(") has `left` the server.").toString());
-			eb.setColor(14495300);
-			eb.setFooter("User leave", user.getEffectiveAvatarUrl());
-			eb.setTimestamp(Instant.now());
-			Utils.sendMessage(channel, eb.build());
-		}
+		if (channel == null)
+			return;
+		final var eb = new EmbedBuilder();
+		eb.setDescription(new StringBuilder().append("\uD83D\uDCE4 **").append(MarkdownSanitizer.escape(user.getAsTag()))
+				.append("** (").append(user.getId()).append(") has `left` the server.").toString());
+		eb.setColor(14495300);
+		eb.setFooter("User leave", user.getEffectiveAvatarUrl());
+		eb.setTimestamp(Instant.now());
+		Utils.sendMessage(channel, eb.build());
 	}
 
 	@Override
@@ -146,51 +144,49 @@ public class Events extends ListenerAdapter
 	{
 		final var user = e.getUser();
 		final var guild = e.getGuild();
-		final var id = guild.getIdLong();
-		final var channel = Utils.getLogChannel(id);
-		final var role = guild.getRoleById(MySQL.getRole(id));
+		final var guildId = guild.getIdLong();
+		final var channel = Cache.getLogAsChannel(guildId);
+		final var role = guild.getRoleById(Cache.getJoinRole(guildId));
 		final var userId = user.getId();
 
-		if (channel != null)
+		if (channel == null)
+			return;
+		if (role != null)
 		{
-			if (role != null)
-			{
-				final var selfMember = guild.getSelfMember();
-				if (!selfMember.canInteract(role) || !Utils.hasPerm(selfMember, Permission.MANAGE_ROLES))
-					Utils.sendMessage(channel, "I'm not able to add the joinrole to user **" + user.getAsTag() + "** as i don't have permissions to do so.");
-				else
-					guild.addRoleToMember(userId, role).queue();
-			}
-
-			final var eb = new EmbedBuilder();
-			eb.setDescription("\uD83D\uDCE5 **" + MarkdownSanitizer.escape(user.getAsTag()) + "** (" + userId + ") has `joined` the server");
-			eb.setColor(7844437);
-			eb.setFooter("User join", user.getEffectiveAvatarUrl());
-			eb.setTimestamp(Instant.now());
-			if (user.isBot())
-			{
-				eb.appendDescription(".");
-				Utils.sendMessage(channel, eb.build());
-				return;
-			}
-			guild.retrieveInvites().queue(invites ->
-			{
-				final var guildInvites = Utils.getInvites().entrySet().stream().filter(entry -> entry.getValue().getGuildId() == id).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-				for (final var invite : invites)
-				{
-					final var wrappedInvite = guildInvites.get(invite.getCode());
-					if (invite.getUses() > wrappedInvite.getUses())
-					{
-						wrappedInvite.incrementUses();
-						eb.appendDescription(" with invite **" + invite.getUrl() + "** (**" + invite.getInviter().getAsTag() + "**).");
-						Utils.sendMessage(channel, eb.build());
-						break;
-					}
-				}
-			});
+			final var selfMember = guild.getSelfMember();
+			if (!selfMember.canInteract(role) || !Utils.hasPerm(selfMember, Permission.MANAGE_ROLES))
+				Utils.sendMessage(channel, "I'm not able to add the joinrole to user **" + user.getAsTag() + "** as i don't have permissions to do so.");
+			else
+				guild.addRoleToMember(userId, role).queue();
 		}
-	}
 
+		final var eb = new EmbedBuilder();
+		eb.setDescription("\uD83D\uDCE5 **" + MarkdownSanitizer.escape(user.getAsTag()) + "** (" + userId + ") has `joined` the server");
+		eb.setColor(7844437);
+		eb.setFooter("User join", user.getEffectiveAvatarUrl());
+		eb.setTimestamp(Instant.now());
+		if (user.isBot())
+		{
+			eb.appendDescription(".");
+			Utils.sendMessage(channel, eb.build());
+			return;
+		}
+		guild.retrieveInvites().queue(invites ->
+		{
+			final var guildInvites = Cache.getInviteCache().entrySet().stream().filter(entry -> entry.getValue().getGuildId() == guildId).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+			for (final var invite : invites)
+			{
+				final var wrappedInvite = guildInvites.get(invite.getCode());
+				if (invite.getUses() > wrappedInvite.getUses())
+				{
+					wrappedInvite.incrementUses();
+					eb.appendDescription(" with invite **" + invite.getUrl() + "** (**" + invite.getInviter().getAsTag() + "**).");
+					Utils.sendMessage(channel, eb.build());
+					break;
+				}
+			}
+		});
+	}
 
 	@Override
 	public final void onGuildReady(@NotNull final GuildReadyEvent e)
@@ -213,61 +209,59 @@ public class Events extends ListenerAdapter
 	public final void onGuildLeave(final GuildLeaveEvent e)
 	{
 		final var guild = e.getGuild();
-		final var id = guild.getIdLong();
-		Utils.getInvites().entrySet().removeIf(entry -> entry.getValue().getGuildId() == id);
-		MySQL.removeChannel(id);
-		MySQL.removeRole(id);
+		final var guildId = guild.getIdLong();
+		Cache.getInviteCache().entrySet().removeIf(entry -> entry.getValue().getGuildId() == guildId);
+		Cache.removeLogChannel(guildId);
+		Cache.removeJoinRole(guildId);
 	}
 
 	@Override
 	public final void onTextChannelDelete(final TextChannelDeleteEvent e)
 	{
-		final var id = e.getGuild().getIdLong();
-		if (e.getChannel().getIdLong() == MySQL.getChannel(id))
-			MySQL.removeChannel(id);
+		final var guildId = e.getGuild().getIdLong();
+		if (e.getChannel().getIdLong() == Cache.getLogChannel(guildId))
+			Cache.removeLogChannel(guildId);
 	}
 
 	@Override
 	public final void onRoleDelete(final RoleDeleteEvent e)
 	{
-		final var id = e.getGuild().getIdLong();
-		if (e.getRole().getIdLong() == MySQL.getRole(id))
-			MySQL.removeRole(id);
+		final var guildId = e.getGuild().getIdLong();
+		if (e.getRole().getIdLong() == Cache.getJoinRole(guildId))
+			Cache.removeJoinRole(guildId);
 	}
 
 	@Override
 	public final void onGuildUpdateBoostTier(final GuildUpdateBoostTierEvent e)
 	{
 		final var guild = e.getGuild();
-
-		final var channel = Utils.getLogChannel(guild.getIdLong());
-		if (channel != null)
-		{
-			final var eb = new EmbedBuilder();
-			eb.setAuthor("GUILD BOOST TIER HAS CHANGED");
-			eb.setColor(16023551);
-			eb.setTimestamp(Instant.now());
-			eb.addField("Boost tier", "**" + e.getNewBoostTier().getKey() + "**", true);
-			eb.addField("Boosts", "**" + guild.getBoostCount() + "**", true);
-			Utils.sendMessage(channel, eb.build());
-		}
+		final var channel = Cache.getLogAsChannel(guild.getIdLong());
+		if (channel == null)
+			return;
+		final var eb = new EmbedBuilder();
+		eb.setAuthor("GUILD BOOST TIER HAS CHANGED");
+		eb.setColor(16023551);
+		eb.setTimestamp(Instant.now());
+		eb.addField("Boost tier", "**" + e.getNewBoostTier().getKey() + "**", true);
+		eb.addField("Boosts", "**" + guild.getBoostCount() + "**", true);
+		Utils.sendMessage(channel, eb.build());
 	}
 
 	@Override
 	public final void onGuildInviteCreate(@NotNull final GuildInviteCreateEvent e)
 	{
-		Utils.getInvites().put(e.getCode(), new WrappedInvite(e.getInvite()));
+		Cache.getInviteCache().put(e.getCode(), new WrappedInvite(e.getInvite()));
 	}
 
 	@Override
 	public final void onGuildInviteDelete(@NotNull final GuildInviteDeleteEvent e)
 	{
-		Utils.getInvites().remove(e.getCode());
+		Cache.getInviteCache().remove(e.getCode());
 	}
 
 	@Override
 	public final void onShutdown(@NotNull final ShutdownEvent e)
 	{
-		Utils.getInvites().clear();
+		Cache.getInviteCache().clear();
 	}
 }

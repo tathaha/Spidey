@@ -1,5 +1,6 @@
 package me.canelex.spidey.commands.moderation;
 
+import me.canelex.spidey.objects.cache.Cache;
 import me.canelex.spidey.objects.command.Category;
 import me.canelex.spidey.objects.command.Command;
 import me.canelex.spidey.utils.Utils;
@@ -54,20 +55,19 @@ public class WarnCommand extends Command
 		final var eb = new EmbedBuilder();
 		final var guild = message.getGuild();
 
-		final var channel = Utils.getLogChannel(guild.getIdLong());
-		if (channel != null)
-		{
-			final var user = mb.getUser();
-			final var author = message.getAuthor();
-			eb.setAuthor("NEW WARN");
-			eb.setThumbnail(user.getEffectiveAvatarUrl());
-			eb.addField("User", "**" + user.getAsTag() + "**", true);
-			eb.addField("ID", "**" + user.getId() + "**", true);
-			eb.addField("Moderator", "**" + author.getAsTag() + "**", true);
-			eb.addField("Reason", "**" + args[1] + "**", true);
-			eb.setColor(Color.ORANGE);
-			Utils.sendMessage(channel, eb.build());
-			Utils.sendPrivateMessageFormat(user, ":warning: You've been warned in the guild **%s** from **%s** for **%s**.", guild.getName(), author.getName(), args[2]);
-		}
+		final var channel = Cache.getLogAsChannel(guild.getIdLong());
+		if (channel == null)
+			return;
+		final var user = mb.getUser();
+		final var author = message.getAuthor();
+		eb.setAuthor("NEW WARN");
+		eb.setThumbnail(user.getEffectiveAvatarUrl());
+		eb.addField("User", "**" + user.getAsTag() + "**", true);
+		eb.addField("ID", "**" + user.getId() + "**", true);
+		eb.addField("Moderator", "**" + author.getAsTag() + "**", true);
+		eb.addField("Reason", "**" + args[1] + "**", true);
+		eb.setColor(Color.ORANGE);
+		Utils.sendMessage(channel, eb.build());
+		Utils.sendPrivateMessageFormat(user, ":warning: You've been warned in the guild **%s** from **%s** for **%s**.", guild.getName(), author.getName(), args[2]);
 	}
 }

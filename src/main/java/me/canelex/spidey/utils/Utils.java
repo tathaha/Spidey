@@ -3,7 +3,7 @@ package me.canelex.spidey.utils;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import io.github.classgraph.ClassGraph;
 import me.canelex.spidey.Core;
-import me.canelex.spidey.MySQL;
+import me.canelex.spidey.objects.cache.Cache;
 import me.canelex.spidey.objects.command.Command;
 import me.canelex.spidey.objects.invites.WrappedInvite;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -22,7 +22,8 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.concurrent.*;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
@@ -37,11 +38,9 @@ public class Utils
     private static final Logger LOG = LoggerFactory.getLogger(Utils.class);
     private static final ClassGraph graph = new ClassGraph().whitelistPackages("me.canelex.spidey.commands");
     private static final char[] SUFFIXES = {'k', 'M', 'B'};
-    private static final HashMap<Long, String> PREFIXES = new HashMap<>();
     private static final ThreadLocalRandom random = ThreadLocalRandom.current();
     private static final SimpleDateFormat SDF = new SimpleDateFormat("EE, d.LLL y | HH:mm:ss");
     private static final Calendar CAL = Calendar.getInstance();
-    private static final Map<String, WrappedInvite> INVITES = new HashMap<>();
     private static final DecimalFormat FORMATTER = new DecimalFormat("#,###");
     private static final OkHttpClient HTTP_CLIENT = new OkHttpClient();
     private static final ThreadFactoryBuilder THREAD_FACTORY = new ThreadFactoryBuilder().setUncaughtExceptionHandler((t, e) -> LOG.error("There was an exception in thread {}: {}", t.getName(), e.getMessage()));
@@ -171,7 +170,7 @@ public class Utils
     public static void storeInvites(final Guild guild)
     {
         guild.retrieveInvites()
-             .queue(invites -> invites.forEach(invite -> INVITES.put(invite.getCode(), new WrappedInvite(invite))),
+             .queue(invites -> invites.forEach(invite -> Cache.getInviteCache().put(invite.getCode(), new WrappedInvite(invite))),
                     failure -> sendPrivateMessage(guild.getOwner().getUser(), "I'm not able to attach the invite a user joined with as i don't have permission to manage the server."));
     }
 
@@ -207,39 +206,10 @@ public class Utils
         return new String(value, 0, digits);
     }
 
-    public static void setPrefix(final long guildId, final String prefix)
-    {
-        MySQL.setPrefix(guildId, prefix);
-        PREFIXES.put(guildId, prefix);
-    }
-
-    private static String getPrefixFromRequest(final long guildId)
-    {
-        final var tmp = MySQL.getPrefix(guildId);
-        final var prefix = tmp == null ? "s!" : tmp;
-        PREFIXES.put(guildId, prefix);
-        return prefix;
-    }
-
-    public static String getPrefix(final long guildId)
-    {
-        return Objects.requireNonNullElseGet(PREFIXES.get(guildId), () -> getPrefixFromRequest(guildId));
-    }
-
     public static String getTime(final long millis)
     {
         CAL.setTimeInMillis(millis);
         return SDF.format(CAL.getTime());
-    }
-
-    public static Map<String, WrappedInvite> getInvites()
-    {
-        return INVITES;
-    }
-
-    public static TextChannel getLogChannel(final long guildId)
-    {
-        return Core.getJDA().getTextChannelById(MySQL.getChannel(guildId));
     }
 
     public static String format(final long input)

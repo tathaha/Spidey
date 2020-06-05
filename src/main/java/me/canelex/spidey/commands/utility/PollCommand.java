@@ -1,5 +1,6 @@
 package me.canelex.spidey.commands.utility;
 
+import me.canelex.spidey.objects.cache.Cache;
 import me.canelex.spidey.objects.command.Category;
 import me.canelex.spidey.objects.command.Command;
 import me.canelex.spidey.utils.Emojis;
@@ -26,26 +27,25 @@ public class PollCommand extends Command
 			return;
 		}
 		final var guild = message.getGuild();
-		final var log = Utils.getLogChannel(guild.getIdLong());
+		final var log = Cache.getLogAsChannel(guild.getIdLong());
 		final var author = message.getAuthor();
 		final var channel = message.getChannel();
 
-		if (log != null)
+		if (log == null)
+			return;
+		final var question = args[0];
+		Utils.deleteMessage(message);
+		channel.sendMessage("Poll: **" + question + "**").queue(m ->
 		{
-			final var question = args[0];
-			Utils.deleteMessage(message);
-			channel.sendMessage("Poll: **" + question + "**").queue(m ->
-			{
-				m.addReaction(Emojis.LIKE).queue();
-				m.addReaction(Emojis.SHRUG).queue();
-				m.addReaction(Emojis.DISLIKE).queue();
-				final var eb = Utils.createEmbedBuilder(author);
-				eb.setAuthor("NEW POLL");
-				eb.setColor(Color.ORANGE);
-				eb.addField("Question", "**" + question + "**", false);
-				eb.setFooter("Poll created by " + author.getAsTag(), author.getEffectiveAvatarUrl());
-				Utils.sendMessage(log, eb.build());
-			});
-		}
+			m.addReaction(Emojis.LIKE).queue();
+			m.addReaction(Emojis.SHRUG).queue();
+			m.addReaction(Emojis.DISLIKE).queue();
+			final var eb = Utils.createEmbedBuilder(author);
+			eb.setAuthor("NEW POLL");
+			eb.setColor(Color.ORANGE);
+			eb.addField("Question", "**" + question + "**", false);
+			eb.setFooter("Poll created by " + author.getAsTag(), author.getEffectiveAvatarUrl());
+			Utils.sendMessage(log, eb.build());
+		});
 	}
 }

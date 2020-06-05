@@ -1,6 +1,6 @@
 package me.canelex.spidey.commands.moderation;
 
-import me.canelex.spidey.MySQL;
+import me.canelex.spidey.objects.cache.Cache;
 import me.canelex.spidey.objects.command.Category;
 import me.canelex.spidey.objects.command.Command;
 import me.canelex.spidey.utils.Utils;
@@ -26,14 +26,14 @@ public class LogCommand extends Command
 			guild.getManager().setSystemChannel(null).queue();
 
 		final var channelId = channel.getIdLong();
-		if (MySQL.getChannel(guildId) == channelId)
+		if (Cache.getLogChannel(guildId) == channelId)
 		{
-			MySQL.setChannel(guildId, 0);
+			Cache.removeLogChannel(guildId);
 			Utils.sendMessage(channel, ":white_check_mark: The log channel has been reset!");
 		}
 		else
 		{
-			MySQL.setChannel(guildId, channelId);
+			Cache.setLogChannel(guildId, channelId);
 			Utils.sendMessage(channel, ":white_check_mark: The log channel has been set to <#" + channelId + ">!");
 		}
 	}

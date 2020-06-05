@@ -1,6 +1,6 @@
 package me.canelex.spidey.commands.utility;
 
-import me.canelex.spidey.MySQL;
+import me.canelex.spidey.objects.cache.Cache;
 import me.canelex.spidey.objects.command.Category;
 import me.canelex.spidey.objects.command.Command;
 import me.canelex.spidey.utils.Utils;
@@ -29,14 +29,14 @@ public class JoinRoleCommand extends Command
         final var channel = message.getChannel();
         final var member = message.getMember();
 
-        final var dbRole = MySQL.getRole(guildId);
+        final var dbRole = Cache.getJoinRole(guildId);
         if (args.length == 0)
         {
             if (dbRole == 0)
                 Utils.returnError("You don't have the join role set", message);
             else
             {
-                MySQL.removeRole(guildId);
+                Cache.removeJoinRole(guildId);
                 Utils.sendMessage(channel, ":white_check_mark: The join role has been removed.");
             }
             return;
@@ -95,7 +95,7 @@ public class JoinRoleCommand extends Command
             Utils.returnError("You can't set the join role to a role which you can't interact with", message);
         else
         {
-            MySQL.setRole(guildId, roleId);
+            Cache.setJoinRole(guildId, roleId);
             Utils.sendMessage(channel, ":white_check_mark: The join role has been set to role `" + role.getName() + "`.");
         }
     }
