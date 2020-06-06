@@ -131,7 +131,7 @@ public class Cache
         return vip;
     }
 
-    // DEV GUILDS CACHING
+    // SUPPORTER GUILDS CACHING
 
     public static boolean isSupporter(final long guildId)
     {
