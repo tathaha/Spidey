@@ -5,13 +5,11 @@ import com.google.common.collect.Multimap;
 import me.canelex.spidey.Core;
 import me.canelex.spidey.objects.cache.Cache;
 
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class Cooldowns
 {
-    private static final Multimap<Long, Command> COOLDOWNS = ArrayListMultimap.create();
-    private static final ScheduledExecutorService SES = Core.getExecutor();
+    private static final Multimap<Long, Command> COOLDOWN_MAP = ArrayListMultimap.create();
 
     private Cooldowns()
     {
@@ -23,12 +21,12 @@ public class Cooldowns
         final var cooldown = cmd.getCooldown();
         if (cooldown == 0 || Cache.isSupporter(guildId))
             return;
-        COOLDOWNS.put(guildId, cmd);
-        SES.schedule(() -> COOLDOWNS.remove(guildId, cmd), Cache.getCooldown(guildId, cmd), TimeUnit.SECONDS);
+        COOLDOWN_MAP.put(guildId, cmd);
+        Core.getExecutor().schedule(() -> COOLDOWN_MAP.remove(guildId, cmd), Cache.getCooldown(guildId, cmd), TimeUnit.SECONDS);
     }
 
     public static boolean isOnCooldown(final long guildId, final Command cmd)
     {
-        return COOLDOWNS.containsEntry(guildId, cmd);
+        return COOLDOWN_MAP.containsEntry(guildId, cmd);
     }
 }
