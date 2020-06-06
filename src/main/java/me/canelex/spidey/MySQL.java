@@ -14,7 +14,6 @@ import java.util.concurrent.ExecutorService;
 public class MySQL
 {
 	private static final Logger LOG = LoggerFactory.getLogger(MySQL.class);
-	private static final Connection DB = initializeConnection();
 	private static final ExecutorService EXECUTOR_SERVICE = Utils.createThread("Spidey MySQL");
 
 	private MySQL()
@@ -42,7 +41,7 @@ public class MySQL
 		final var isString = type.equals(String.class);
 		return CompletableFuture.supplyAsync(() ->
 		{
-			try (final var ps = DB.prepareStatement(query))
+			try (final var db = initializeConnection(); final var ps = db.prepareStatement(query))
 			{
 				ps.setLong(1, guildId);
 				try (final var rs = ps.executeQuery())
@@ -100,7 +99,7 @@ public class MySQL
 	{
 		CompletableFuture.runAsync(() ->
 		{
-			try (final var ps = DB.prepareStatement(query))
+			try (final var db = initializeConnection(); final var ps = db.prepareStatement(query))
 			{
 				ps.setLong(1, guildId);
 				if (value instanceof String)
@@ -154,7 +153,7 @@ public class MySQL
 	{
 		CompletableFuture.runAsync(() ->
 		{
-			try (final var ps = DB.prepareStatement("DELETE IGNORE FROM `guilds` WHERE `guild_id`=" + guildId))
+			try (final var db = initializeConnection(); final var ps = db.prepareStatement("DELETE IGNORE FROM `guilds` WHERE `guild_id`=" + guildId))
 			{
 				ps.executeUpdate();
 			}
