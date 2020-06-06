@@ -16,6 +16,10 @@ import java.util.function.Function;
 @SuppressWarnings("unused")
 public class HelpCommand extends Command
 {
+    private static final String COOLDOWN_REDUCE_HALF = "If you want to reduce the commands' cooldown by half, you can achieve so by "
+            + "donating at least 1€ or if you want to completely remove cooldowns, you *have* to donate at least 3€.";
+    private static final String COOLDOWN_REMOVE = "If you want to completely remove the commands' cooldown, you can achieve so by donating at least 3€.";
+
     public HelpCommand()
     {
         super("help", new String[]{}, "Shows the help message", "help (command)", Category.INFORMATIVE, Permission.UNKNOWN, 0, 0);
@@ -27,10 +31,11 @@ public class HelpCommand extends Command
         final var commandsMap = Core.getCommands();
         final var channel = message.getChannel();
         final var author = message.getAuthor();
+        final var guildId = message.getGuild().getIdLong();
+        final var prefix = Cache.getPrefix(guildId);
         final var eb = Utils.createEmbedBuilder(author)
-                            .setColor(Color.WHITE)
-                            .setAuthor("Spidey's Commands", "https://github.com/caneleex/Spidey", message.getJDA().getSelfUser().getEffectiveAvatarUrl());
-        final var prefix = Cache.getPrefix(message.getGuild().getIdLong());
+                .setColor(Color.WHITE)
+                .setAuthor("Spidey's Commands", "https://github.com/caneleex/Spidey", message.getJDA().getSelfUser().getEffectiveAvatarUrl());
 
         if (args.length == 0)
         {
@@ -75,7 +80,7 @@ public class HelpCommand extends Command
                 final var usage = command.getUsage();
                 final var requiredPermission = command.getRequiredPermission();
                 final var aliases = command.getAliases();
-                final var cooldown = command.getCooldown();
+                final var cooldown = Cache.getCooldown(guildId, command);
                 eb.setAuthor("Viewing command info - " + cmd);
                 eb.setColor(Color.WHITE);
                 eb.addField("Description", description == null ? "Unspecified" : description, false);
@@ -84,6 +89,21 @@ public class HelpCommand extends Command
                 eb.addField("Required permission", requiredPermission == Permission.UNKNOWN ? "None" : requiredPermission.getName(), false);
                 eb.addField("Aliases", aliases.length == 0 ? "None" : String.join(", ", aliases), false);
                 eb.addField("Cooldown", cooldown == 0 ? "None" : cooldown + " seconds", false);
+
+                final var isVip = Cache.isVip(guildId);
+                final var isSupporter = Cache.isSupporter(guildId);
+                var text = "";
+                if (!isVip && !isSupporter)
+                    text = COOLDOWN_REDUCE_HALF;
+                else if (isVip && !isSupporter)
+                    text = COOLDOWN_REMOVE;
+
+                if (!text.isEmpty())
+                {
+                    eb.addBlankField(false);
+                    eb.addField("Reducing/removing commands' cooldown", text + "\nBy donating, you also support the Developer and"
+                                + " help cover hosting fees. Type `" + prefix + "info` for the PayPal link. Thank you!", false);
+                }
                 Utils.sendMessage(channel, eb.build());
             }
         }

@@ -12,7 +12,7 @@ public class LogCommand extends Command
 {
 	public LogCommand()
 	{
-		super ("log", new String[]{}, "Sets log channel", "log", Category.MODERATION, Permission.ADMINISTRATOR, 0, 3);
+		super ("log", new String[]{}, "Sets log channel", "log", Category.MODERATION, Permission.ADMINISTRATOR, 0, 2);
 	}
 
 	@Override

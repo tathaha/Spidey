@@ -16,7 +16,7 @@ public class WarnCommand extends Command
 {
 	public WarnCommand()
 	{
-		super("warn", new String[]{}, "Warns a user", "warn <@someone> <reason>", Category.MODERATION, Permission.BAN_MEMBERS, 2, 3);
+		super("warn", new String[]{}, "Warns a user", "warn <@someone> <reason>", Category.MODERATION, Permission.BAN_MEMBERS, 2, 4);
 	}
 
 	@Override

@@ -15,7 +15,7 @@ public class BanCommand extends Command
 	public BanCommand()
 	{
 		super("ban", new String[]{}, "Bans the given user", "ban <@someone> <delDays> <reason>", Category.MODERATION,
-				Permission.BAN_MEMBERS, 3, 3);
+				Permission.BAN_MEMBERS, 3, 4);
 	}
 
 	@Override

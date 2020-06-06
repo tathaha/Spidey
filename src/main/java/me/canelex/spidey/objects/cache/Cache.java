@@ -2,6 +2,7 @@ package me.canelex.spidey.objects.cache;
 
 import me.canelex.spidey.Core;
 import me.canelex.spidey.MySQL;
+import me.canelex.spidey.objects.command.Command;
 import me.canelex.spidey.objects.invites.WrappedInvite;
 import net.dv8tion.jda.api.entities.TextChannel;
 
@@ -15,6 +16,8 @@ public class Cache
     private static final Map<String, WrappedInvite> INVITE_CACHE = new HashMap<>();
     private static final Map<Long, Long> LOG_CHANNEL_CACHE = new HashMap<>();
     private static final Map<Long, Long> JOIN_ROLE_CACHE = new HashMap<>();
+    private static final Map<Long, Boolean> VIP_GUILDS_CACHE = new HashMap<>();
+    private static final Map<Long, Boolean> SUPPORTER_GUILDS_CACHE = new HashMap<>();
 
     private Cache()
     {
@@ -114,13 +117,53 @@ public class Cache
         setJoinRole(guildId, 0);
     }
 
+    // VIP GUILDS CACHING
+
+    public static boolean isVip(final long guildId)
+    {
+        return Objects.requireNonNullElseGet(VIP_GUILDS_CACHE.get(guildId), () -> isVipByRequest(guildId));
+    }
+
+    private static boolean isVipByRequest(final long guildId)
+    {
+        final var vip = MySQL.isVip(guildId);
+        VIP_GUILDS_CACHE.put(guildId, vip);
+        return vip;
+    }
+
+    // DEV GUILDS CACHING
+
+    public static boolean isSupporter(final long guildId)
+    {
+        return Objects.requireNonNullElseGet(SUPPORTER_GUILDS_CACHE.get(guildId), () -> isSupporterByRequest(guildId));
+    }
+
+    private static boolean isSupporterByRequest(final long guildId)
+    {
+        final var supporter = MySQL.isSupporter(guildId);
+        SUPPORTER_GUILDS_CACHE.put(guildId, supporter);
+        return supporter;
+    }
+
     // MISC
 
     public static void removeEntry(final long guildId)
     {
+        if (isVip(guildId) || isSupporter(guildId))
+            return;
         LOG_CHANNEL_CACHE.remove(guildId);
         JOIN_ROLE_CACHE.remove(guildId);
         PREFIX_CACHE.remove(guildId);
         MySQL.removeEntry(guildId);
+    }
+
+    public static int getCooldown(final long guildId, final Command cmd)
+    {
+        if (isSupporter(guildId))
+            return 0;
+        final var cooldown = cmd.getCooldown();
+        if (isVip(guildId))
+            return cooldown / 2;
+        return cooldown;
     }
 }

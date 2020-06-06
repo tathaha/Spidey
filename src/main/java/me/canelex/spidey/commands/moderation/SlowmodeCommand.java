@@ -17,7 +17,7 @@ public class SlowmodeCommand extends Command
 
 	public SlowmodeCommand()
 	{
-		super("slowmode", new String[]{}, DESC, "slowmode <seconds/off>", Category.MODERATION, Permission.MANAGE_CHANNEL, 0, 5);
+		super("slowmode", new String[]{}, DESC, "slowmode <seconds/off>", Category.MODERATION, Permission.MANAGE_CHANNEL, 0, 4);
 	}
 
 	@Override

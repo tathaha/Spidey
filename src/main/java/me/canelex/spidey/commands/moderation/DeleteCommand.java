@@ -25,7 +25,7 @@ public class DeleteCommand extends Command
     public DeleteCommand()
     {
         super("delete", new String[]{"d"}, "Deletes messages (by mentioned user)", "delete <count> (user)", Category.MODERATION,
-                Permission.MESSAGE_MANAGE, 2, 7);
+                Permission.MESSAGE_MANAGE, 2, 6);
     }
 
     @Override

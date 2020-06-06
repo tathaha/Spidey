@@ -163,4 +163,16 @@ public class MySQL
 			}
 		}, EXECUTOR_SERVICE);
 	}
+
+	// MISC
+
+	public static boolean isVip(final long guildId)
+	{
+		return getLongProperty("vip", guildId) == 1;
+	}
+
+	public static boolean isSupporter(final long guildId)
+	{
+		return getLongProperty("supporter", guildId) == 1;
+	}
 }
