@@ -208,11 +208,9 @@ public class Events extends ListenerAdapter
 	@Override
 	public final void onGuildLeave(final GuildLeaveEvent e)
 	{
-		final var guild = e.getGuild();
-		final var guildId = guild.getIdLong();
+		final var guildId = e.getGuild().getIdLong();
 		Cache.getInviteCache().entrySet().removeIf(entry -> entry.getValue().getGuildId() == guildId);
-		Cache.removeLogChannel(guildId);
-		Cache.removeJoinRole(guildId);
+		Cache.removeEntry(guildId);
 	}
 
 	@Override

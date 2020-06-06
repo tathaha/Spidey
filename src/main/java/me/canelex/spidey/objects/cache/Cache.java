@@ -113,4 +113,14 @@ public class Cache
     {
         setJoinRole(guildId, 0);
     }
+
+    // MISC
+
+    public static void removeEntry(final long guildId)
+    {
+        LOG_CHANNEL_CACHE.remove(guildId);
+        JOIN_ROLE_CACHE.remove(guildId);
+        PREFIX_CACHE.remove(guildId);
+        MySQL.removeEntry(guildId);
+    }
 }

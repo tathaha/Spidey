@@ -47,6 +47,8 @@ public class MySQL
 				ps.setLong(1, guildId);
 				try (final var rs = ps.executeQuery())
 				{
+					if (!rs.isBeforeFirst())
+						return isString ? "" : "0";
 					rs.next();
 					return isString ? rs.getString(property) : String.valueOf(rs.getLong(property));
 				}
@@ -100,11 +102,11 @@ public class MySQL
 		{
 			try (final var ps = DB.prepareStatement(query))
 			{
+				ps.setLong(1, guildId);
 				if (value instanceof String)
-					ps.setString(1, (String) value);
+					ps.setString(2, (String) value);
 				else
-					ps.setLong(1, (Long) value);
-				ps.setLong(2, guildId);
+					ps.setLong(2, (long) value);
 				ps.executeUpdate();
 			}
 			catch (final SQLException ex)
@@ -114,24 +116,26 @@ public class MySQL
 		}, EXECUTOR_SERVICE);
 	}
 
-	private static <T> void setLongProperty(final String property, final long guildId, final T value)
+	private static <T> void setProperty(final String property, final long guildId, final T value)
 	{
-		executeSetQuery("UPDATE `guilds` SET `" + property + "`=? WHERE `guild_id`=?;", guildId, property, value);
+		final var query = String.format("INSERT INTO `guilds` (guild_id, %s) VALUES (?, ?) "
+											 + "ON DUPLICATE KEY UPDATE %s='%s'", property, property, value);
+		executeSetQuery(query, guildId, property, value);
 	}
 
 	public static void setChannel(final long guildId, final long value)
 	{
-		setLongProperty("channel_id", guildId, value);
+		setProperty("channel_id", guildId, value);
 	}
 
 	public static void setRole(final long guildId, final long value)
 	{
-		setLongProperty("role_id", guildId, value);
+		setProperty("role_id", guildId, value);
 	}
 
 	public static void setPrefix(final long guildId, final String value)
 	{
-		executeSetQuery("UPDATE `guilds` SET `prefix`=? WHERE `guild_id`=?;", guildId, "prefix", value);
+		setProperty("prefix", guildId, value);
 	}
 
 	// REMOVALS
@@ -144,5 +148,20 @@ public class MySQL
 	public static void removeRole(final long guildId)
 	{
 		setRole(guildId, 0);
+	}
+
+	public static void removeEntry(final long guildId)
+	{
+		CompletableFuture.runAsync(() ->
+		{
+			try (final var ps = DB.prepareStatement("DELETE IGNORE FROM `guilds` WHERE `guild_id`=" + guildId))
+			{
+				ps.executeUpdate();
+			}
+			catch (final SQLException ex)
+			{
+				LOG.error("There was an error while removing the entry for guild {}!", guildId, ex);
+			}
+		}, EXECUTOR_SERVICE);
 	}
 }
