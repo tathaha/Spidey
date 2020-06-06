@@ -42,11 +42,6 @@ public class PrefixCommand extends Command
             Utils.returnError("The prefix for this server is already set to `" + actualPrefix + "`", message);
             return;
         }
-        if (newPrefix.contains("`"))
-        {
-            Utils.returnError("The prefix can't contain **`** character", message);
-            return;
-        }
         if (newPrefix.length() > 10)
         {
             Utils.returnError("The prefix can't be longer than 10 characters", message);
