@@ -60,7 +60,7 @@ public class DeleteCommand extends Command
         final var finalAmount = amount;
 
         Utils.deleteMessage(message);
-        channel.getIterableHistory().takeAsync(100).thenAcceptAsync(messages ->
+        channel.getIterableHistory().cache(false).takeAsync(100).thenAcceptAsync(messages ->
         {
             final var msgs = user == null ? messages.subList(0, finalAmount) : messages.stream().filter(msg -> msg.getAuthor().equals(user)).limit(finalAmount).collect(Collectors.toList());
             if (msgs.isEmpty())
