@@ -1,9 +1,9 @@
 package me.canelex.spidey.objects.cache;
 
-import me.canelex.spidey.Core;
 import me.canelex.spidey.MySQL;
 import me.canelex.spidey.objects.command.Command;
 import me.canelex.spidey.objects.invites.WrappedInvite;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.util.HashMap;
@@ -57,9 +57,9 @@ public class Cache
         return Objects.requireNonNullElseGet(LOG_CHANNEL_CACHE.get(guildId), () -> getLogChannelByRequest(guildId));
     }
 
-    public static TextChannel getLogAsChannel(final long guildId)
+    public static TextChannel getLogAsChannel(final long guildId, final JDA jda)
     {
-        return Core.getJDA().getTextChannelById(getLogChannel(guildId));
+        return jda.getTextChannelById(getLogChannel(guildId));
     }
 
     private static long getLogChannelByRequest(final long guildId)

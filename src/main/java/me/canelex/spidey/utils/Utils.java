@@ -7,6 +7,7 @@ import me.canelex.spidey.objects.cache.Cache;
 import me.canelex.spidey.objects.command.Command;
 import me.canelex.spidey.objects.invites.WrappedInvite;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.exceptions.ErrorHandler;
@@ -113,9 +114,8 @@ public class Utils
         return ":white_check_mark: Successfully deleted **" + count + "** message" + (count > 1 ? "s" : "") + (u == null ? "." : String.format(" by user **%s**.", u.getAsTag()));
     }
 
-    public static void startup()
+    public static void startup(final JDA jda)
     {
-        final var jda = Core.getJDA();
         final var commandsMap = Core.getCommands();
         final ArrayList<Supplier<Activity>> activities = new ArrayList<>(asList(
                 () -> listening("your commands"),
