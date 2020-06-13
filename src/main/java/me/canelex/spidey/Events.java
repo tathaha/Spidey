@@ -91,7 +91,7 @@ public class Events extends ListenerAdapter
 
 			eb.setDescription(new StringBuilder().append(Emojis.CROSS).append(" **").append(MarkdownSanitizer.escape(user.getAsTag()))
 					.append("** (").append(user.getId()).append(") has been `banned` by ").append("**")
-					.append(banner.getAsTag()).append("** for **").append(reason).append("**.").toString());
+					.append(banner.getAsTag()).append("** for **").append(reason.trim()).append("**.").toString());
 			eb.setColor(14495300);
 			eb.setFooter("User ban", user.getEffectiveAvatarUrl());
 			eb.setTimestamp(Instant.now());
