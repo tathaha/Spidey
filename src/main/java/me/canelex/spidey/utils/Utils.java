@@ -105,11 +105,11 @@ public class Utils
         final var channel = origin.getTextChannel();
         if (channel.canTalk(channel.getGuild().getSelfMember()))
         {
-            origin.getTextChannel().sendMessage(String.format(":no_entry: %s.", errMsg))
-                    .delay(Duration.ofSeconds(5))
-                    .flatMap(Message::delete)
-                    .flatMap(ignored -> origin.delete())
-                    .queue(null, failure -> {});
+            channel.sendMessage(String.format(":no_entry: %s.", errMsg))
+                   .delay(Duration.ofSeconds(5))
+                   .flatMap(Message::delete)
+                   .flatMap(ignored -> origin.delete())
+                   .queue(null, failure -> {});
         }
     }
 
