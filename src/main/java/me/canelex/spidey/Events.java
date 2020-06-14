@@ -24,7 +24,6 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.time.Instant;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -267,8 +266,8 @@ public class Events extends ListenerAdapter
 	}
 
 	@Override
-	public void onReady(@Nonnull final ReadyEvent event)
+	public void onReady(@NotNull final ReadyEvent e)
 	{
-		Utils.startup(event.getJDA());
+		Utils.startup(e.getJDA());
 	}
 }
