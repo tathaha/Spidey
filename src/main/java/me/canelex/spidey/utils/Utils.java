@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.EnumSet;
 import java.util.concurrent.*;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
@@ -32,6 +33,8 @@ import java.util.regex.Pattern;
 import static java.util.Arrays.asList;
 import static net.dv8tion.jda.api.entities.Activity.listening;
 import static net.dv8tion.jda.api.entities.Activity.watching;
+import static net.dv8tion.jda.api.requests.ErrorResponse.MISSING_PERMISSIONS;
+import static net.dv8tion.jda.api.requests.ErrorResponse.UNKNOWN_MESSAGE;
 
 public class Utils
 {
@@ -106,7 +109,7 @@ public class Utils
                                .delay(Duration.ofSeconds(5))
                                .flatMap(Message::delete)
                                .flatMap(ignored -> origin.delete())
-                               .queue(null, failure -> {});
+                               .queue(null, new ErrorHandler().ignore(EnumSet.of(MISSING_PERMISSIONS, UNKNOWN_MESSAGE)));
     }
 
     public static String generateSuccess(final int count, final User u)
