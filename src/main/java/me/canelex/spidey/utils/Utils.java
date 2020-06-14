@@ -102,11 +102,15 @@ public class Utils
     public static void returnError(final String errMsg, final Message origin)
     {
         origin.addReaction(Emojis.CROSS).queue(null, failure -> {});
-        origin.getTextChannel().sendMessage(String.format(":no_entry: %s.", errMsg))
-                               .delay(Duration.ofSeconds(5))
-                               .flatMap(Message::delete)
-                               .flatMap(ignored -> origin.delete())
-                               .queue(null, new ErrorHandler().ignore(Exception.class));
+        final var channel = origin.getTextChannel();
+        if (channel.canTalk(channel.getGuild().getSelfMember()))
+        {
+            origin.getTextChannel().sendMessage(String.format(":no_entry: %s.", errMsg))
+                    .delay(Duration.ofSeconds(5))
+                    .flatMap(Message::delete)
+                    .flatMap(ignored -> origin.delete())
+                    .queue(null, failure -> {});
+        }
     }
 
     public static String generateSuccess(final int count, final User u)
