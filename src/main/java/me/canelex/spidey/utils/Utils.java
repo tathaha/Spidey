@@ -104,7 +104,7 @@ public class Utils
 
     public static void returnError(final String errMsg, final Message origin)
     {
-        origin.addReaction(Emojis.CROSS).queue();
+        origin.addReaction(Emojis.CROSS).queue(null, failure -> {});
         origin.getTextChannel().sendMessage(String.format(":no_entry: %s.", errMsg))
                                .delay(Duration.ofSeconds(5))
                                .flatMap(Message::delete)
