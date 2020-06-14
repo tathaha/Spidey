@@ -106,7 +106,7 @@ public class Utils
                                .delay(Duration.ofSeconds(5))
                                .flatMap(Message::delete)
                                .flatMap(ignored -> origin.delete())
-                               .queue(null, new ErrorHandler().ignore(ErrorResponse.UNKNOWN_MESSAGE));
+                               .queue(null, failure -> {});
     }
 
     public static String generateSuccess(final int count, final User u)
