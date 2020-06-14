@@ -25,7 +25,6 @@ import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.EnumSet;
 import java.util.concurrent.*;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
@@ -33,8 +32,6 @@ import java.util.regex.Pattern;
 import static java.util.Arrays.asList;
 import static net.dv8tion.jda.api.entities.Activity.listening;
 import static net.dv8tion.jda.api.entities.Activity.watching;
-import static net.dv8tion.jda.api.requests.ErrorResponse.MISSING_PERMISSIONS;
-import static net.dv8tion.jda.api.requests.ErrorResponse.UNKNOWN_MESSAGE;
 
 public class Utils
 {
@@ -43,7 +40,7 @@ public class Utils
     private static final ClassGraph graph = new ClassGraph().whitelistPackages("me.canelex.spidey.commands");
     private static final char[] SUFFIXES = {'k', 'M', 'B'};
     private static final ThreadLocalRandom random = ThreadLocalRandom.current();
-    private static final SimpleDateFormat SDF = new SimpleDateFormat("EE, d.LLL y | HH:mm:ss");
+    private static final SimpleDateFormat SDF = new SimpleDateFormat("EE, d.LLL y | HH:mm:ss");
     private static final Calendar CAL = Calendar.getInstance();
     private static final DecimalFormat FORMATTER = new DecimalFormat("#,###");
     private static final OkHttpClient HTTP_CLIENT = new OkHttpClient();
@@ -109,7 +106,7 @@ public class Utils
                                .delay(Duration.ofSeconds(5))
                                .flatMap(Message::delete)
                                .flatMap(ignored -> origin.delete())
-                               .queue(null, new ErrorHandler().ignore(EnumSet.of(MISSING_PERMISSIONS, UNKNOWN_MESSAGE)));
+                               .queue(null, new ErrorHandler().ignore(Exception.class));
     }
 
     public static String generateSuccess(final int count, final User u)
