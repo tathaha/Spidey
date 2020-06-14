@@ -22,8 +22,18 @@
     </encoder>
   </appender>
 
+  <appender name="Sentry" class="io.sentry.logback.SentryAppender">
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>WARN</level>
+    </filter>
+    <encoder>
+      <pattern>%d{HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
   <root level="INFO">
     <appender-ref ref="FILE" />
     <appender-ref ref="STDOUT" />
+    <appender-ref ref="Sentry" />
   </root>
 </configuration> 
