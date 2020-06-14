@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.audit.ActionType;
 import net.dv8tion.jda.api.entities.MessageType;
+import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.ShutdownEvent;
 import net.dv8tion.jda.api.events.channel.text.TextChannelDeleteEvent;
 import net.dv8tion.jda.api.events.guild.*;
@@ -23,6 +24,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
 import java.time.Instant;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -53,11 +55,12 @@ public class Events extends ListenerAdapter
 
 		if (message.getType() == MessageType.GUILD_MEMBER_BOOST)
 		{
-			final var channel = Cache.getLogAsChannel(guildId);
+			final var jda = e.getJDA();
+			final var channel = Cache.getLogAsChannel(guildId, jda);
 			if (channel == null)
 				return;
 			Utils.deleteMessage(message);
-			eb.setDescription(new StringBuilder().append(e.getJDA().getEmoteById(699731065052332123L).getAsMention())
+			eb.setDescription(new StringBuilder().append(jda.getEmoteById(699731065052332123L).getAsMention())
 					.append(" **").append(MarkdownSanitizer.escape(author.getAsTag())).append("** has `boosted` ")
 					.append("the server. The server currently has **").append(guild.getBoostCount()).append("** boosts.").toString());
 			eb.setAuthor("NEW BOOST");
@@ -73,8 +76,8 @@ public class Events extends ListenerAdapter
 	{
 		final var user = e.getUser();
 		final var guild = e.getGuild();
+		final var channel = Cache.getLogAsChannel(guild.getIdLong(), e.getJDA());
 
-		final var channel = Cache.getLogAsChannel(guild.getIdLong());
 		if (channel == null)
 			return;
 		guild.retrieveBan(user).queue(ban -> guild.retrieveAuditLogs().type(ActionType.BAN).queue(bans ->
@@ -91,7 +94,7 @@ public class Events extends ListenerAdapter
 
 			eb.setDescription(new StringBuilder().append(Emojis.CROSS).append(" **").append(MarkdownSanitizer.escape(user.getAsTag()))
 					.append("** (").append(user.getId()).append(") has been `banned` by ").append("**")
-					.append(banner.getAsTag()).append("** for **").append(reason).append("**.").toString());
+					.append(banner.getAsTag()).append("** for **").append(reason.trim()).append("**.").toString());
 			eb.setColor(14495300);
 			eb.setFooter("User ban", user.getEffectiveAvatarUrl());
 			eb.setTimestamp(Instant.now());
@@ -104,8 +107,8 @@ public class Events extends ListenerAdapter
 	{
 		final var user = e.getUser();
 		final var guild = e.getGuild();
+		final var channel = Cache.getLogAsChannel(guild.getIdLong(), e.getJDA());
 
-		final var channel = Cache.getLogAsChannel(guild.getIdLong());
 		if (channel == null)
 			return;
 		guild.retrieveAuditLogs().type(ActionType.UNBAN).queue(unbans ->
@@ -126,7 +129,7 @@ public class Events extends ListenerAdapter
 	{
 		final var user = e.getUser();
 		final var guild = e.getGuild();
-		final var channel = Cache.getLogAsChannel(guild.getIdLong());
+		final var channel = Cache.getLogAsChannel(guild.getIdLong(), e.getJDA());
 
 		if (channel == null)
 			return;
@@ -145,7 +148,7 @@ public class Events extends ListenerAdapter
 		final var user = e.getUser();
 		final var guild = e.getGuild();
 		final var guildId = guild.getIdLong();
-		final var channel = Cache.getLogAsChannel(guildId);
+		final var channel = Cache.getLogAsChannel(guildId, e.getJDA());
 		final var role = guild.getRoleById(Cache.getJoinRole(guildId));
 		final var userId = user.getId();
 
@@ -233,7 +236,7 @@ public class Events extends ListenerAdapter
 	public final void onGuildUpdateBoostTier(final GuildUpdateBoostTierEvent e)
 	{
 		final var guild = e.getGuild();
-		final var channel = Cache.getLogAsChannel(guild.getIdLong());
+		final var channel = Cache.getLogAsChannel(guild.getIdLong(), e.getJDA());
 		if (channel == null)
 			return;
 		final var eb = new EmbedBuilder();
@@ -261,5 +264,11 @@ public class Events extends ListenerAdapter
 	public final void onShutdown(@NotNull final ShutdownEvent e)
 	{
 		Cache.getInviteCache().clear();
+	}
+
+	@Override
+	public void onReady(@Nonnull final ReadyEvent event)
+	{
+		Utils.startup(event.getJDA());
 	}
 }

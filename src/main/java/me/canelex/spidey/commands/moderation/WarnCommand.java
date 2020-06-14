@@ -55,7 +55,7 @@ public class WarnCommand extends Command
 		final var eb = new EmbedBuilder();
 		final var guild = message.getGuild();
 
-		final var channel = Cache.getLogAsChannel(guild.getIdLong());
+		final var channel = Cache.getLogAsChannel(guild.getIdLong(), message.getJDA());
 		if (channel == null)
 			return;
 		final var user = mb.getUser();

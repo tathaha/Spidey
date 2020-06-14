@@ -27,7 +27,7 @@ public class PollCommand extends Command
 			return;
 		}
 		final var guild = message.getGuild();
-		final var log = Cache.getLogAsChannel(guild.getIdLong());
+		final var log = Cache.getLogAsChannel(guild.getIdLong(), message.getJDA());
 		final var author = message.getAuthor();
 		final var channel = message.getChannel();
 

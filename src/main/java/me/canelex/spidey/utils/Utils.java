@@ -7,6 +7,7 @@ import me.canelex.spidey.objects.cache.Cache;
 import me.canelex.spidey.objects.command.Command;
 import me.canelex.spidey.objects.invites.WrappedInvite;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.exceptions.ErrorHandler;
@@ -24,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.EnumSet;
 import java.util.concurrent.*;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
@@ -31,6 +33,8 @@ import java.util.regex.Pattern;
 import static java.util.Arrays.asList;
 import static net.dv8tion.jda.api.entities.Activity.listening;
 import static net.dv8tion.jda.api.entities.Activity.watching;
+import static net.dv8tion.jda.api.requests.ErrorResponse.MISSING_PERMISSIONS;
+import static net.dv8tion.jda.api.requests.ErrorResponse.UNKNOWN_MESSAGE;
 
 public class Utils
 {
@@ -100,12 +104,12 @@ public class Utils
 
     public static void returnError(final String errMsg, final Message origin)
     {
-        origin.addReaction(Emojis.CROSS).queue();
+        origin.addReaction(Emojis.CROSS).queue(null, failure -> {});
         origin.getTextChannel().sendMessage(String.format(":no_entry: %s.", errMsg))
                                .delay(Duration.ofSeconds(5))
                                .flatMap(Message::delete)
                                .flatMap(ignored -> origin.delete())
-                               .queue(null, new ErrorHandler().ignore(ErrorResponse.UNKNOWN_MESSAGE));
+                               .queue(null, new ErrorHandler().ignore(EnumSet.of(MISSING_PERMISSIONS, UNKNOWN_MESSAGE)));
     }
 
     public static String generateSuccess(final int count, final User u)
@@ -113,9 +117,8 @@ public class Utils
         return ":white_check_mark: Successfully deleted **" + count + "** message" + (count > 1 ? "s" : "") + (u == null ? "." : String.format(" by user **%s**.", u.getAsTag()));
     }
 
-    public static void startup()
+    public static void startup(final JDA jda)
     {
-        final var jda = Core.getJDA();
         final var commandsMap = Core.getCommands();
         final ArrayList<Supplier<Activity>> activities = new ArrayList<>(asList(
                 () -> listening("your commands"),
@@ -169,9 +172,8 @@ public class Utils
 
     public static void storeInvites(final Guild guild)
     {
-        guild.retrieveInvites()
-             .queue(invites -> invites.forEach(invite -> Cache.getInviteCache().put(invite.getCode(), new WrappedInvite(invite))),
-                    failure -> sendPrivateMessage(guild.getOwner().getUser(), "I'm not able to attach the invite a user joined with as i don't have permission to manage the server."));
+        if (hasPerm(guild.getSelfMember(), Permission.MANAGE_SERVER))
+            guild.retrieveInvites().queue(invites -> invites.forEach(invite -> Cache.getInviteCache().put(invite.getCode(), new WrappedInvite(invite))));
     }
 
     public static String cleanString(final String original)
