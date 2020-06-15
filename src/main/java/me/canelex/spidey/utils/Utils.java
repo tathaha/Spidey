@@ -55,14 +55,16 @@ public class Utils
         return toCheck.hasPermission(perm);
     }
 
-    public static void sendMessage(final MessageChannel ch, final String toSend)
+    public static void sendMessage(final TextChannel ch, final String toSend)
     {
-        ch.sendMessage(toSend).queue(null, failure -> {});
+        if (ch.canTalk(ch.getGuild().getSelfMember()))
+            ch.sendMessage(toSend).queue(null, failure -> {});
     }
 
-    public static void sendMessage(final MessageChannel ch, final MessageEmbed embed)
+    public static void sendMessage(final TextChannel ch, final MessageEmbed embed)
     {
-        ch.sendMessage(embed).queue(null, failure -> {});
+        if (ch.canTalk(ch.getGuild().getSelfMember()))
+            ch.sendMessage(embed).queue(null, failure -> {});
     }
 
     public static void sendPrivateMessage(final User user, final String toSend)

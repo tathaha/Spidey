@@ -25,7 +25,7 @@ public class UrbanDictionaryCommand extends Command
 			return;
 		}
 		final var term = args[0];
-		final var channel = message.getChannel();
+		final var channel = message.getTextChannel();
 		final var ud = new UrbanDictionary(term);
 		if (!ud.exists())
 		{

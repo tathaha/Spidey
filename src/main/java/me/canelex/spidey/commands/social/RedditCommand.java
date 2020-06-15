@@ -50,6 +50,6 @@ public class RedditCommand extends Command
 		eb.addField("Title", (title.length() == 0 ? "**None**" : title), false);
 		eb.addField("Description", (desc.length() == 0 ? "**None**" : desc), false);
 		eb.addField("NSFW", "**" + (reddit.isNsfw() ? "Yes" : "No") + "**", false);
-		Utils.sendMessage(message.getChannel(), eb.build());
+		Utils.sendMessage(message.getTextChannel(), eb.build());
 	}
 }

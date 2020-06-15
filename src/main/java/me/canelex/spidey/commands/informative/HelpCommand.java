@@ -29,7 +29,7 @@ public class HelpCommand extends Command
     public final void execute(final String[] args, final Message message)
     {
         final var commandsMap = Core.getCommands();
-        final var channel = message.getChannel();
+        final var channel = message.getTextChannel();
         final var author = message.getAuthor();
         final var guildId = message.getGuild().getIdLong();
         final var prefix = Cache.getPrefix(guildId);

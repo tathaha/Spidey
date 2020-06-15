@@ -24,6 +24,6 @@ public class SupportGuildsCommand extends Command
 		eb.setAuthor("Guilds of Spidey", "https://discord.gg/cnAgKrv", message.getJDA().getSelfUser().getEffectiveAvatarUrl());
 		eb.addField("Spidey's Guild", "[Click to join](https://discord.gg/cnAgKrv)", true);
 		eb.setColor(Color.BLACK);
-		Utils.sendMessage(message.getChannel(), eb.build());
+		Utils.sendMessage(message.getTextChannel(), eb.build());
 	}
 }

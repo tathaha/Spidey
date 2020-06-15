@@ -34,6 +34,6 @@ public class MembercountCommand extends Command
 		eb.addField("Total", "**" + total + "**", true);
 		eb.addField("Humans", "**" + (total - bots) + "**", true);
 		eb.addField("Bots", "**" + bots + "**", true);
-		Utils.sendMessage(message.getChannel(), eb.build());
+		Utils.sendMessage(message.getTextChannel(), eb.build());
 	}
 }

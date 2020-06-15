@@ -20,7 +20,7 @@ public class LogCommand extends Command
 	{
 		final var guild = message.getGuild();
 		final var guildId = guild.getIdLong();
-		final var channel = message.getChannel();
+		final var channel = message.getTextChannel();
 
 		if (guild.getSystemChannel() != null)
 			guild.getManager().setSystemChannel(null).queue();

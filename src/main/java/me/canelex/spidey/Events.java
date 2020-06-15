@@ -45,7 +45,7 @@ public class Events extends ListenerAdapter
 		{
 			if (Utils.hasPerm(guild.getSelfMember(), Permission.ADMINISTRATOR))
 			{
-				Utils.sendMessage(message.getChannel(), CommandHandler.ADMIN_WARNING);
+				Utils.sendMessage(message.getTextChannel(), CommandHandler.ADMIN_WARNING);
 				return;
 			}
 			CommandHandler.handle(message, prefix);
