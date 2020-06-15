@@ -41,7 +41,7 @@ public class HelpCommand extends Command
         {
             final var commandsCopy = new HashMap<>(commandsMap);
             final var entries = commandsCopy.entrySet();
-            entries.removeIf(entry -> !Utils.hasPerm(message.getMember(), entry.getValue().getRequiredPermission()));
+            entries.removeIf(entry -> !message.getMember().hasPermission(entry.getValue().getRequiredPermission()));
             final var hidden = commandsMap.size() - commandsCopy.size();
             final var iter = entries.iterator();
             final var valueSet = new HashSet<>();

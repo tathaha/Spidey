@@ -35,9 +35,9 @@ public class Utils
 {
     private static final String INVITE_LINK = "https://discord.com/oauth2/authorize?client_id=545938274368356352&scope=bot&permissions=1342188724";
     private static final Logger LOG = LoggerFactory.getLogger(Utils.class);
-    private static final ClassGraph graph = new ClassGraph().whitelistPackages("me.canelex.spidey.commands");
+    private static final ClassGraph CLASS_GRAPH = new ClassGraph().whitelistPackages("me.canelex.spidey.commands");
     private static final char[] SUFFIXES = {'k', 'M', 'B'};
-    private static final ThreadLocalRandom random = ThreadLocalRandom.current();
+    private static final ThreadLocalRandom RANDOM = ThreadLocalRandom.current();
     private static final SimpleDateFormat SDF = new SimpleDateFormat("EE, d.LLL y | HH:mm:ss");
     private static final Calendar CAL = Calendar.getInstance();
     private static final DecimalFormat FORMATTER = new DecimalFormat("#,###");
@@ -48,11 +48,6 @@ public class Utils
     private Utils()
     {
         super();
-    }
-
-    public static boolean hasPerm(final Member toCheck, final Permission perm)
-    {
-        return toCheck.hasPermission(perm);
     }
 
     public static void sendMessage(final TextChannel ch, final String toSend)
@@ -129,7 +124,7 @@ public class Utils
         ));
 
         commandsMap.clear(); //just to make sure that the commands map is empty
-        try (final var result = graph.scan())
+        try (final var result = CLASS_GRAPH.scan())
         {
             for (final var cls : result.getAllClasses())
             {
@@ -149,7 +144,7 @@ public class Utils
 
     private static Activity nextActivity(final ArrayList<Supplier<Activity>> activities)
     {
-        return activities.get(random.nextInt(activities.size())).get();
+        return activities.get(RANDOM.nextInt(activities.size())).get();
     }
 
     public static String getSiteContent(final String url)
@@ -173,7 +168,7 @@ public class Utils
 
     public static void storeInvites(final Guild guild)
     {
-        if (hasPerm(guild.getSelfMember(), Permission.MANAGE_SERVER))
+        if (guild.getSelfMember().hasPermission(Permission.MANAGE_SERVER))
             guild.retrieveInvites().queue(invites -> invites.forEach(invite -> Cache.getInviteCache().put(invite.getCode(), new WrappedInvite(invite))));
     }
 
