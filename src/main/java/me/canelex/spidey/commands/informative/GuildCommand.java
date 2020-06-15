@@ -71,10 +71,11 @@ public class GuildCommand extends Command
 
 		if (ec > 0)
 		{
-			if (st.length() > 1024)
+			final var length = st.length();
+			if (length > 1024)
 				eb.addField(String.format("Emotes (**%s** | **%s** animated)", ec, an), "Limit exceeded", false);
 			else
-				eb.addField(String.format("Emotes (**%s** | **%s** animated)", ec, an), (st.toString().length() == 0) ? "None" : st.toString(), false);
+				eb.addField(String.format("Emotes (**%s** | **%s** animated)", ec, an), (length == 0) ? "None" : st.toString(), false);
 		}
 
 		Utils.sendMessage(message.getTextChannel(), eb.build());
