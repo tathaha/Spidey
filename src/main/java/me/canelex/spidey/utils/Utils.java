@@ -10,8 +10,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.exceptions.ErrorHandler;
-import net.dv8tion.jda.api.requests.ErrorResponse;
 import net.dv8tion.jda.api.utils.data.DataObject;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -59,24 +57,24 @@ public class Utils
 
     public static void sendMessage(final MessageChannel ch, final String toSend)
     {
-        ch.sendMessage(toSend).queue();
+        ch.sendMessage(toSend).queue(null, failure -> {});
     }
 
     public static void sendMessage(final MessageChannel ch, final MessageEmbed embed)
     {
-        ch.sendMessage(embed).queue();
+        ch.sendMessage(embed).queue(null, failure -> {});
     }
 
     public static void sendPrivateMessage(final User user, final String toSend)
     {
         user.openPrivateChannel()
             .flatMap(channel -> channel.sendMessage(toSend))
-            .queue(null, new ErrorHandler().ignore(ErrorResponse.CANNOT_SEND_TO_USER));
+            .queue(null, failure -> {});
     }
 
     public static void deleteMessage(final Message msg)
     {
-        msg.delete().queue(null, new ErrorHandler().ignore(ErrorResponse.UNKNOWN_MESSAGE));
+        msg.delete().queue(null, failure -> {});
     }
 
     public static boolean canSetVanityUrl(final Guild g)
