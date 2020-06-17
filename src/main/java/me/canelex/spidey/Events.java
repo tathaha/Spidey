@@ -43,9 +43,9 @@ public class Events extends ListenerAdapter
 
 		if (message.getContentRaw().startsWith(prefix) && !author.isBot())
 		{
-			if (Utils.hasPerm(guild.getSelfMember(), Permission.ADMINISTRATOR))
+			if (guild.getSelfMember().hasPermission(Permission.ADMINISTRATOR))
 			{
-				Utils.sendMessage(message.getChannel(), CommandHandler.ADMIN_WARNING);
+				Utils.sendMessage(message.getTextChannel(), CommandHandler.ADMIN_WARNING);
 				return;
 			}
 			CommandHandler.handle(message, prefix);
@@ -156,7 +156,7 @@ public class Events extends ListenerAdapter
 		if (role != null)
 		{
 			final var selfMember = guild.getSelfMember();
-			if (!selfMember.canInteract(role) || !Utils.hasPerm(selfMember, Permission.MANAGE_ROLES))
+			if (!selfMember.canInteract(role) || !selfMember.hasPermission(Permission.MANAGE_ROLES))
 				Utils.sendMessage(channel, "I'm not able to add the joinrole to user **" + user.getAsTag() + "** as i don't have permissions to do so.");
 			else
 				guild.addRoleToMember(userId, role).queue();

@@ -26,7 +26,7 @@ public class JoinRoleCommand extends Command
     {
         final var guild = message.getGuild();
         final var guildId = guild.getIdLong();
-        final var channel = message.getChannel();
+        final var channel = message.getTextChannel();
         final var member = message.getMember();
 
         final var dbRole = Cache.getJoinRole(guildId);

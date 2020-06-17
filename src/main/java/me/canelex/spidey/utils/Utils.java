@@ -10,8 +10,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.exceptions.ErrorHandler;
-import net.dv8tion.jda.api.requests.ErrorResponse;
 import net.dv8tion.jda.api.utils.data.DataObject;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -25,7 +23,6 @@ import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.EnumSet;
 import java.util.concurrent.*;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
@@ -33,17 +30,15 @@ import java.util.regex.Pattern;
 import static java.util.Arrays.asList;
 import static net.dv8tion.jda.api.entities.Activity.listening;
 import static net.dv8tion.jda.api.entities.Activity.watching;
-import static net.dv8tion.jda.api.requests.ErrorResponse.MISSING_PERMISSIONS;
-import static net.dv8tion.jda.api.requests.ErrorResponse.UNKNOWN_MESSAGE;
 
 public class Utils
 {
     private static final String INVITE_LINK = "https://discord.com/oauth2/authorize?client_id=545938274368356352&scope=bot&permissions=1342188724";
     private static final Logger LOG = LoggerFactory.getLogger(Utils.class);
-    private static final ClassGraph graph = new ClassGraph().whitelistPackages("me.canelex.spidey.commands");
+    private static final ClassGraph CLASS_GRAPH = new ClassGraph().whitelistPackages("me.canelex.spidey.commands");
     private static final char[] SUFFIXES = {'k', 'M', 'B'};
-    private static final ThreadLocalRandom random = ThreadLocalRandom.current();
-    private static final SimpleDateFormat SDF = new SimpleDateFormat("EE, d.LLL y | HH:mm:ss");
+    private static final ThreadLocalRandom RANDOM = ThreadLocalRandom.current();
+    private static final SimpleDateFormat SDF = new SimpleDateFormat("EE, d.LLL y | HH:mm:ss");
     private static final Calendar CAL = Calendar.getInstance();
     private static final DecimalFormat FORMATTER = new DecimalFormat("#,###");
     private static final OkHttpClient HTTP_CLIENT = new OkHttpClient();
@@ -55,31 +50,28 @@ public class Utils
         super();
     }
 
-    public static boolean hasPerm(final Member toCheck, final Permission perm)
+    public static void sendMessage(final TextChannel ch, final String toSend)
     {
-        return toCheck.hasPermission(perm);
+        if (ch.canTalk(ch.getGuild().getSelfMember()))
+            ch.sendMessage(toSend).queue(null, failure -> {});
     }
 
-    public static void sendMessage(final MessageChannel ch, final String toSend)
+    public static void sendMessage(final TextChannel ch, final MessageEmbed embed)
     {
-        ch.sendMessage(toSend).queue();
-    }
-
-    public static void sendMessage(final MessageChannel ch, final MessageEmbed embed)
-    {
-        ch.sendMessage(embed).queue();
+        if (ch.canTalk(ch.getGuild().getSelfMember()))
+            ch.sendMessage(embed).queue(null, failure -> {});
     }
 
     public static void sendPrivateMessage(final User user, final String toSend)
     {
         user.openPrivateChannel()
             .flatMap(channel -> channel.sendMessage(toSend))
-            .queue(null, new ErrorHandler().ignore(ErrorResponse.CANNOT_SEND_TO_USER));
+            .queue(null, failure -> {});
     }
 
     public static void deleteMessage(final Message msg)
     {
-        msg.delete().queue(null, new ErrorHandler().ignore(ErrorResponse.UNKNOWN_MESSAGE));
+        msg.delete().queue(null, failure -> {});
     }
 
     public static boolean canSetVanityUrl(final Guild g)
@@ -105,11 +97,15 @@ public class Utils
     public static void returnError(final String errMsg, final Message origin)
     {
         origin.addReaction(Emojis.CROSS).queue(null, failure -> {});
-        origin.getTextChannel().sendMessage(String.format(":no_entry: %s.", errMsg))
-                               .delay(Duration.ofSeconds(5))
-                               .flatMap(Message::delete)
-                               .flatMap(ignored -> origin.delete())
-                               .queue(null, new ErrorHandler().ignore(EnumSet.of(MISSING_PERMISSIONS, UNKNOWN_MESSAGE)));
+        final var channel = origin.getTextChannel();
+        if (channel.canTalk(channel.getGuild().getSelfMember()))
+        {
+            channel.sendMessage(String.format(":no_entry: %s.", errMsg))
+                   .delay(Duration.ofSeconds(5))
+                   .flatMap(Message::delete)
+                   .flatMap(ignored -> origin.delete())
+                   .queue(null, failure -> {});
+        }
     }
 
     public static String generateSuccess(final int count, final User u)
@@ -128,7 +124,7 @@ public class Utils
         ));
 
         commandsMap.clear(); //just to make sure that the commands map is empty
-        try (final var result = graph.scan())
+        try (final var result = CLASS_GRAPH.scan())
         {
             for (final var cls : result.getAllClasses())
             {
@@ -148,7 +144,7 @@ public class Utils
 
     private static Activity nextActivity(final ArrayList<Supplier<Activity>> activities)
     {
-        return activities.get(random.nextInt(activities.size())).get();
+        return activities.get(RANDOM.nextInt(activities.size())).get();
     }
 
     public static String getSiteContent(final String url)
@@ -172,7 +168,7 @@ public class Utils
 
     public static void storeInvites(final Guild guild)
     {
-        if (hasPerm(guild.getSelfMember(), Permission.MANAGE_SERVER))
+        if (guild.getSelfMember().hasPermission(Permission.MANAGE_SERVER))
             guild.retrieveInvites().queue(invites -> invites.forEach(invite -> Cache.getInviteCache().put(invite.getCode(), new WrappedInvite(invite))));
     }
 

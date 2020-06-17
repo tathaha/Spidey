@@ -20,6 +20,6 @@ public class GoogleSearchCommand extends Command
 	public final void execute(final String[] args, final Message message)
 	{
 		final var result = new GoogleSearch().getResult(StringUtils.join(args, "+", 0, args.length));
-		Utils.sendMessage(message.getChannel(), result.getContent());
+		Utils.sendMessage(message.getTextChannel(), result.getContent());
 	}
 }

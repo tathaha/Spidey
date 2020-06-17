@@ -40,7 +40,7 @@ public class YouTubeChannelCommand extends Command
 			Utils.returnError("Please specify a YouTube channel", message);
 			return;
 		}
-		final var channel = message.getChannel();
+		final var channel = message.getTextChannel();
 		try
 		{
 			final var youtube = new YouTube.Builder(

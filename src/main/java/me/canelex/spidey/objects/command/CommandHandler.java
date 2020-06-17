@@ -44,7 +44,7 @@ public class CommandHandler
 			return;
 		}
 		final var requiredPermission = cmd.getRequiredPermission();
-		if (!Utils.hasPerm(msg.getMember(), requiredPermission))
+		if (!msg.getMember().hasPermission(requiredPermission))
 		{
 			Utils.returnError(String.format(NO_PERMS, requiredPermission.getName()), msg);
 			return;

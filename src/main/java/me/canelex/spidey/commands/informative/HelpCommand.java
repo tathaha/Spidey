@@ -29,7 +29,7 @@ public class HelpCommand extends Command
     public final void execute(final String[] args, final Message message)
     {
         final var commandsMap = Core.getCommands();
-        final var channel = message.getChannel();
+        final var channel = message.getTextChannel();
         final var author = message.getAuthor();
         final var guildId = message.getGuild().getIdLong();
         final var prefix = Cache.getPrefix(guildId);
@@ -41,7 +41,7 @@ public class HelpCommand extends Command
         {
             final var commandsCopy = new HashMap<>(commandsMap);
             final var entries = commandsCopy.entrySet();
-            entries.removeIf(entry -> !Utils.hasPerm(message.getMember(), entry.getValue().getRequiredPermission()));
+            entries.removeIf(entry -> !message.getMember().hasPermission(entry.getValue().getRequiredPermission()));
             final var hidden = commandsMap.size() - commandsCopy.size();
             final var iter = entries.iterator();
             final var valueSet = new HashSet<>();

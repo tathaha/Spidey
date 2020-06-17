@@ -23,7 +23,6 @@ public class SlowmodeCommand extends Command
 	@Override
 	public final void execute(final String[] args, final Message message)
 	{
-		final var channel = message.getChannel();
 		final var textChannel = message.getTextChannel();
 		final var manager = textChannel.getManager();
 
@@ -52,7 +51,7 @@ public class SlowmodeCommand extends Command
 				return;
 			}
 			manager.setSlowmode(parsed).queue();
-			Utils.sendMessage(channel, ":white_check_mark: The slowmode for this channel has been set to **" + parsed + "** seconds!");
+			Utils.sendMessage(textChannel, ":white_check_mark: The slowmode for this channel has been set to **" + parsed + "** seconds!");
 		}
 		catch (final NumberFormatException ex)
 		{

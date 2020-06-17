@@ -57,6 +57,6 @@ public class UserCommand extends Command
 			}
 			eb.addField("Roles [**" + i + "**]", s.toString(), false);
 		}
-		Utils.sendMessage(message.getChannel(), eb.build());
+		Utils.sendMessage(message.getTextChannel(), eb.build());
 	}
 }

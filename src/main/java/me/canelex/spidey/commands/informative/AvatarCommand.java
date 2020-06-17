@@ -30,6 +30,6 @@ public class AvatarCommand extends Command
 		eb.setDescription(String.format("[Avatar link](%s)", avatarUrl));
 		eb.setImage(avatarUrl);
 
-		Utils.sendMessage(message.getChannel(), eb.build());
+		Utils.sendMessage(message.getTextChannel(), eb.build());
 	}
 }

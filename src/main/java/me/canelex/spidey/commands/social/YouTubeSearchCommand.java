@@ -21,6 +21,6 @@ public class YouTubeSearchCommand extends Command
     public final void execute(final String[] args, final Message message)
     {
         final var result = new GoogleSearch().getResult(StringUtils.join(args, "+", 0, args.length) + "+site:youtube.com");
-        Utils.sendMessage(message.getChannel(), result.getContent());
+        Utils.sendMessage(message.getTextChannel(), result.getContent());
     }
 }
