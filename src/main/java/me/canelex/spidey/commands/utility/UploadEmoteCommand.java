@@ -7,8 +7,6 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Icon;
 import net.dv8tion.jda.api.entities.Message;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -20,8 +18,6 @@ import java.util.stream.Collectors;
 @SuppressWarnings("unused")
 public class UploadEmoteCommand extends Command
 {
-    private static final Logger LOG = LoggerFactory.getLogger(UploadEmoteCommand.class);
-
     public UploadEmoteCommand()
     {
         super("uploademote", new String[]{}, "Uploads the image from the provided url as an emote if possible",
@@ -99,13 +95,11 @@ public class UploadEmoteCommand extends Command
         }
         catch (final MalformedURLException ex)
         {
-            LOG.error("There was an error while parsing the URL. URL: {}", args[0], ex);
             Utils.returnError("Please provide a valid URL to retrieve the emote from", message);
             return;
         }
         catch (final IOException ex)
         {
-            LOG.error("There was an error!", ex);
             Utils.returnError("Unfortunately, we could not create the emote due to an internal error", message);
             return;
         }
