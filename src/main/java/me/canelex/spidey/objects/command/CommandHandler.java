@@ -38,7 +38,7 @@ public class CommandHandler
 		}
 		final var command = content.contains(" ") ? content.substring(0, content.indexOf(' ')) : content;
 		final var commands = Core.getCommands();
-		final var cmd = commands.get(command);
+		final var cmd = commands.get(command.toLowerCase());
 		if (cmd == null)
 		{
 			Utils.returnError("**" + command + "** isn't a valid command", msg);
