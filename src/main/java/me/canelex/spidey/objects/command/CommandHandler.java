@@ -45,7 +45,8 @@ public class CommandHandler
 			return;
 		}
 		final var requiredPermission = cmd.getRequiredPermission();
-		if (!msg.getMember().hasPermission(requiredPermission))
+		final var member = msg.getMember();
+		if (!member.hasPermission(requiredPermission))
 		{
 			Utils.returnError(String.format(NO_PERMS, requiredPermission.getName()), msg);
 			return;
@@ -62,13 +63,13 @@ public class CommandHandler
 			if (!channel.isNSFW())
 				Utils.returnError("You can only use nsfw commands in nsfw channels", msg);
 			else
-				Utils.sendMessage(channel, KSoftAPIHelper.getImage(cmd.getInvoke(), msg.getAuthor(), true));
+				Utils.sendMessage(channel, KSoftAPIHelper.getImage(cmd.getInvoke(), member, true));
 			cooldown(guildId, cmd);
 			return;
 		}
 		else if (cmd.getCategory() == Category.FUN)
 		{
-			Utils.sendMessage(channel, KSoftAPIHelper.getImage(cmd.getInvoke(), msg.getAuthor(), false));
+			Utils.sendMessage(channel, KSoftAPIHelper.getImage(cmd.getInvoke(), member, false));
 			cooldown(guildId, cmd);
 			return;
 		}

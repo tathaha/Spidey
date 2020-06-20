@@ -1,5 +1,7 @@
 package me.canelex.spidey.objects.cache;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import me.canelex.spidey.MySQL;
 import me.canelex.spidey.objects.command.Command;
 import me.canelex.spidey.objects.invites.WrappedInvite;
@@ -18,6 +20,7 @@ public class Cache
     private static final Map<Long, Long> JOIN_ROLE_CACHE = new HashMap<>();
     private static final Map<Long, Boolean> VIP_GUILDS_CACHE = new HashMap<>();
     private static final Map<Long, Boolean> SUPPORTER_GUILDS_CACHE = new HashMap<>();
+    private static final Multimap<Long, String> REDDIT_CACHE = ArrayListMultimap.create();
 
     private Cache()
     {
@@ -143,6 +146,18 @@ public class Cache
         final var supporter = MySQL.isSupporter(guildId);
         SUPPORTER_GUILDS_CACHE.put(guildId, supporter);
         return supporter;
+    }
+
+    // REDDIT POSTS CACHING
+
+    public static boolean isPostCached(final long guildId, final String json)
+    {
+        return REDDIT_CACHE.containsEntry(guildId, json);
+    }
+
+    public static void cachePost(final long guildId, final String json)
+    {
+        REDDIT_CACHE.put(guildId, json);
     }
 
     // MISC
