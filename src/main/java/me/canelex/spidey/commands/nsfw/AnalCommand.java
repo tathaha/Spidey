@@ -6,12 +6,11 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 
 @SuppressWarnings("unused")
-public class AssCommand extends Command
+public class AnalCommand extends Command
 {
-    public AssCommand()
+    public AnalCommand()
     {
-        super("ass", new String[]{"butt", "booty"}, "Sends a (NSFW) picture of ass", "ass", Category.NSFW, Permission.UNKNOWN,
-                0, 4);
+        super("anal", new String[]{}, "Sends a (NSFW) picture of an anal", "anal", Category.NSFW, Permission.UNKNOWN, 0, 4);
     }
 
     @Override

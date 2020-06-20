@@ -6,11 +6,11 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 
 @SuppressWarnings("unused")
-public class AssCommand extends Command
+public class LesbiansCommand extends Command
 {
-    public AssCommand()
+    public LesbiansCommand()
     {
-        super("ass", new String[]{"butt", "booty"}, "Sends a (NSFW) picture of ass", "ass", Category.NSFW, Permission.UNKNOWN,
+        super("lesbians", new String[]{"lesbian"}, "Sends a (NSFW) picture of lesbians", "lesbians", Category.NSFW, Permission.UNKNOWN,
                 0, 4);
     }
 
