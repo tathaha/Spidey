@@ -26,6 +26,6 @@ public class KSoftAPIHelper
 
     private static DataObject getImageJson(final String query)
     {
-        return DataObject.fromJson(Utils.getSiteContent("https://api.ksoft.si/images/rand-reddit/" + query, true));
+        return DataObject.fromJson(Utils.getSiteContent("https://api.ksoft.si/images/rand-reddit/" + query + "?span=all", true));
     }
 }
