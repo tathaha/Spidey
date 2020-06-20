@@ -147,10 +147,10 @@ public class Utils
         return activities.get(RANDOM.nextInt(activities.size())).get();
     }
 
-    public static String getSiteContent(final String url, final boolean nsfw)
+    public static String getSiteContent(final String url, final boolean requiresApi)
     {
         final var requestBuilder = new Request.Builder().url(url).header("user-agent", "me.canelex.spidey");
-        if (nsfw)
+        if (requiresApi)
             requestBuilder.header("Authorization", "Bearer " + System.getenv("ksoft"));
         try (final var body = HTTP_CLIENT.newCall(requestBuilder.build()).execute().body())
         {

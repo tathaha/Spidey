@@ -2,7 +2,7 @@ package me.canelex.spidey.objects.command;
 
 import me.canelex.spidey.Core;
 import me.canelex.spidey.commands.moderation.DeleteCommand;
-import me.canelex.spidey.utils.NSFWHelper;
+import me.canelex.spidey.utils.KSoftAPIHelper;
 import me.canelex.spidey.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
@@ -62,7 +62,13 @@ public class CommandHandler
 			if (!channel.isNSFW())
 				Utils.returnError("You can only use nsfw commands in nsfw channels", msg);
 			else
-				Utils.sendMessage(channel, NSFWHelper.getImage(cmd.getInvoke(), msg.getAuthor()));
+				Utils.sendMessage(channel, KSoftAPIHelper.getImage(cmd.getInvoke(), msg.getAuthor(), true));
+			cooldown(guildId, cmd);
+			return;
+		}
+		else if (cmd.getCategory() == Category.FUN)
+		{
+			Utils.sendMessage(channel, KSoftAPIHelper.getImage(cmd.getInvoke(), msg.getAuthor(), false));
 			cooldown(guildId, cmd);
 			return;
 		}
