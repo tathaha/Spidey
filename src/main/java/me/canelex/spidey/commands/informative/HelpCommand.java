@@ -63,7 +63,7 @@ public class HelpCommand extends Command
                 sb.append(" ").append("-").append(" ");
                 sb.append(listToString(commandz, Command::getInvoke));
             });
-            eb.setDescription("Prefix: **" + prefix + "**\n" + sb.toString());
+            eb.setDescription("Prefix: **" + prefix + "**\n" + sb.toString() + "\n\nTo see more info about a command, type `" + prefix + "help <command>`.");
             if (hidden > 0)
                 eb.appendDescription("\n\n **" + hidden + "** commands were hidden as you don't have permissions to use them.");
             Utils.sendMessage(channel, eb.build());
@@ -115,8 +115,7 @@ public class HelpCommand extends Command
         for (var i = 0; i < list.size(); i++)
         {
             final var cmd = list.get(i);
-            final var aliases = cmd.getAliases();
-            builder.append("`").append(transformer.apply(cmd)).append("`").append(aliases.length == 0 ? "" : " (`" + String.join(", ", aliases) + "`)");
+            builder.append("`").append(transformer.apply(cmd)).append("`");
             if (i != list.size() - 1)
                 builder.append(", ");
         }
