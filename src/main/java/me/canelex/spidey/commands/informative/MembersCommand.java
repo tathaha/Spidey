@@ -12,11 +12,11 @@ import java.awt.*;
 import java.time.Instant;
 
 @SuppressWarnings({"unused", "ConstantConditions"})
-public class MembercountCommand extends Command
+public class MembersCommand extends Command
 {
-	public MembercountCommand()
+	public MembersCommand()
 	{
-		super("membercount", new String[]{"members"}, "Shows you the membercount of the guild", "membercount",
+		super("members", new String[]{"membercount"}, "Shows you the membercount of the guild", "members",
 				Category.INFORMATIVE, Permission.UNKNOWN, 0, 0);
 	}
 
