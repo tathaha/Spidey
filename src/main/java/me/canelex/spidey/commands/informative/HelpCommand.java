@@ -65,7 +65,7 @@ public class HelpCommand extends Command
             });
             eb.setDescription("Prefix: **" + prefix + "**\n" + sb.toString() + "\n\nTo see more info about a command, type `" + prefix + "help <command>`.");
             if (hidden > 0)
-                eb.appendDescription("\n\n **" + hidden + "** commands were hidden as you don't have permissions to use them.");
+                eb.appendDescription("\n**" + hidden + "** commands were hidden as you don't have permissions to use them.");
             Utils.sendMessage(channel, eb.build());
         }
         else
