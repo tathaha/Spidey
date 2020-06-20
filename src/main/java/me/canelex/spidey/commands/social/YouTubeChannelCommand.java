@@ -79,7 +79,7 @@ public class YouTubeChannelCommand extends Command
 				eb.addField("Partner", (sb.isPartner() ? "**Yes**" : "**No**"), false);
 				eb.addField("Verified", (sb.isVerified() ? "**Yes**" : "**No**"), false);
 				eb.addField("Country", "**" + sb.getCountry() + "**", false);
-				final var latestVideo = Utils.getSiteContent("https://beta.decapi.me/youtube/latest_video/?id=" + channelId);
+				final var latestVideo = Utils.getSiteContent("https://beta.decapi.me/youtube/latest_video/?id=" + channelId, false);
 				eb.addField("Latest video", (latestVideo.equals("An error occurred retrieving videos for channel: " + channelId) ? "**This channel has no videos**" : latestVideo), false);
 
 				if (!sb.getBanner().equals("http://s.ytimg.com/yts/img/channels/c4/default_banner-vfl7DRgTn.png"))

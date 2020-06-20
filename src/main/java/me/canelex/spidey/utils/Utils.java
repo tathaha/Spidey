@@ -147,10 +147,12 @@ public class Utils
         return activities.get(RANDOM.nextInt(activities.size())).get();
     }
 
-    public static String getSiteContent(final String url)
+    public static String getSiteContent(final String url, final boolean nsfw)
     {
-        final var request = new Request.Builder().url(url).header("user-agent", "me.canelex.spidey").build();
-        try (final var body = HTTP_CLIENT.newCall(request).execute().body())
+        final var requestBuilder = new Request.Builder().url(url).header("user-agent", "me.canelex.spidey");
+        if (nsfw)
+            requestBuilder.header("Authorization", "Bearer " + System.getenv("ksoft"));
+        try (final var body = HTTP_CLIENT.newCall(requestBuilder.build()).execute().body())
         {
             return body != null ? body.string() : "";
         }
@@ -163,7 +165,7 @@ public class Utils
 
     public static DataObject getJson(final String url)
     {
-        return DataObject.fromJson(getSiteContent(url));
+        return DataObject.fromJson(getSiteContent(url, false));
     }
 
     public static void storeInvites(final Guild guild)
