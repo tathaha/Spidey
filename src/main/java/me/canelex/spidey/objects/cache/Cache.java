@@ -5,6 +5,8 @@ import com.google.common.collect.Multimap;
 import me.canelex.spidey.MySQL;
 import me.canelex.spidey.objects.command.Command;
 import me.canelex.spidey.objects.invites.WrappedInvite;
+import me.canelex.spidey.objects.messages.WrappedMessage;
+import me.canelex.spidey.utils.FixedSizeMap;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.TextChannel;
 
@@ -21,6 +23,8 @@ public class Cache
     private static final Map<Long, Boolean> VIP_GUILDS_CACHE = new HashMap<>();
     private static final Map<Long, Boolean> SUPPORTER_GUILDS_CACHE = new HashMap<>();
     private static final Multimap<Long, String> REDDIT_CACHE = ArrayListMultimap.create();
+    private static final FixedSizeMap<Long, WrappedMessage> MESSAGE_CACHE = new FixedSizeMap<>(50);
+    private static long lastMessageDeleted = 0;
 
     private Cache()
     {
@@ -158,6 +162,29 @@ public class Cache
     public static void cachePost(final long guildId, final String json)
     {
         REDDIT_CACHE.put(guildId, json);
+    }
+
+    // MESSAGE CACHING
+
+    public static WrappedMessage getLastMessageDeleted()
+    {
+        return MESSAGE_CACHE.get(lastMessageDeleted);
+    }
+
+    public static void setLastMessageDeleted(final long messageId)
+    {
+        lastMessageDeleted = messageId;
+    }
+
+    public static void cacheMessage(final long messageId, final WrappedMessage message)
+    {
+        MESSAGE_CACHE.put(messageId, message);
+    }
+
+    public static void uncacheMessage(final long messageId)
+    {
+        MESSAGE_CACHE.remove(messageId);
+        lastMessageDeleted = 0;
     }
 
     // MISC

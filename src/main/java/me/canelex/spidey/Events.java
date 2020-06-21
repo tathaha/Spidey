@@ -3,6 +3,7 @@ package me.canelex.spidey;
 import me.canelex.spidey.objects.cache.Cache;
 import me.canelex.spidey.objects.command.CommandHandler;
 import me.canelex.spidey.objects.invites.WrappedInvite;
+import me.canelex.spidey.objects.messages.WrappedMessage;
 import me.canelex.spidey.utils.Emojis;
 import me.canelex.spidey.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -18,6 +19,7 @@ import net.dv8tion.jda.api.events.guild.invite.GuildInviteDeleteEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateBoostTierEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.role.RoleDeleteEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -41,6 +43,7 @@ public class Events extends ListenerAdapter
 		final var eb = new EmbedBuilder();
 		final var prefix = Cache.getPrefix(guildId);
 
+		Cache.cacheMessage(message.getIdLong(), new WrappedMessage(message));
 		if (message.getContentRaw().startsWith(prefix) && !author.isBot())
 		{
 			if (guild.getSelfMember().hasPermission(Permission.ADMINISTRATOR))
@@ -269,5 +272,11 @@ public class Events extends ListenerAdapter
 	public void onReady(@NotNull final ReadyEvent e)
 	{
 		Utils.startup(e.getJDA());
+	}
+
+	@Override
+	public void onGuildMessageDelete(@NotNull final GuildMessageDeleteEvent e)
+	{
+		Cache.setLastMessageDeleted(e.getMessageIdLong());
 	}
 }
