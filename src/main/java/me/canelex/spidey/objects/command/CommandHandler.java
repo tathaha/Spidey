@@ -1,7 +1,6 @@
 package me.canelex.spidey.objects.command;
 
 import me.canelex.spidey.Core;
-import me.canelex.spidey.commands.moderation.DeleteCommand;
 import me.canelex.spidey.utils.KSoftAPIHelper;
 import me.canelex.spidey.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -76,10 +75,7 @@ public class CommandHandler
 		final var maxArgs = cmd.getMaxArgs();
 		final var tmp = content.split("\\s+", maxArgs > 0 ? maxArgs + 1 : maxArgs);
 		final var args = Arrays.copyOfRange(tmp, 1, tmp.length);
-		if (cmd.getClass() == DeleteCommand.class)
-			Core.getExecutor().execute(() -> cmd.execute(args, msg)); // as DeleteCommand would block the event thread, run it in a different thread
-		else
-			cmd.execute(args, msg);
+		cmd.execute(args, msg);
 		cooldown(guildId, cmd);
 	}
 }

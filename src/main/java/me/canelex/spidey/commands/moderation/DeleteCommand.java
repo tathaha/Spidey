@@ -59,8 +59,7 @@ public class DeleteCommand extends Command
         final var user = mentioned.isEmpty() ? null : mentioned.get(0);
         final var finalAmount = amount;
 
-        message.delete().complete(); // needs to be blocking as the retrieved messages will contain the command message
-        channel.getIterableHistory().cache(false).takeAsync(100).thenAcceptAsync(messages ->
+        message.delete().queue(ignored -> channel.getIterableHistory().cache(false).takeAsync(100).thenAcceptAsync(messages ->
         {
             final var msgs = user == null ? messages.subList(0, finalAmount) : messages.stream().filter(msg -> msg.getAuthor().equals(user)).limit(finalAmount).collect(Collectors.toList());
             if (msgs.isEmpty())
@@ -117,16 +116,15 @@ public class DeleteCommand extends Command
             }
             else
                 proceed(msgs, user, channel);
-        });
+        }), failure -> {});
     }
 
     private void proceed(final List<Message> toDelete, final User user, final MessageChannel channel)
     {
         final var future = CompletableFuture.allOf(channel.purgeMessages(toDelete).toArray(new CompletableFuture[0]));
-        future.thenRunAsync(() ->
-                channel.sendMessage(Utils.generateSuccess(toDelete.size(), user))
-                        .delay(Duration.ofSeconds(5))
-                        .flatMap(Message::delete)
-                        .queue(null, new ErrorHandler().ignore(ErrorResponse.UNKNOWN_MESSAGE)));
+        future.thenRunAsync(() -> channel.sendMessage(Utils.generateSuccess(toDelete.size(), user))
+                                         .delay(Duration.ofSeconds(5))
+                                         .flatMap(Message::delete)
+                                         .queue(null, new ErrorHandler().ignore(ErrorResponse.UNKNOWN_MESSAGE)));
     }
 }
