@@ -5,6 +5,7 @@ import me.canelex.spidey.utils.EventWaiter;
 import me.canelex.spidey.utils.Utils;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
+import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,7 @@ public class Core
 			JDABuilder.create(System.getenv("Spidey"), EnumSet.of(GUILD_BANS, GUILD_INVITES, GUILD_MEMBERS, GUILD_MESSAGES, GUILD_MESSAGE_REACTIONS, GUILD_EMOJIS))
 					.disableCache(CacheFlag.MEMBER_OVERRIDES)
 					.addEventListeners(new Events(), waiter)
+					.setActivity(Activity.watching("myself load.."))
 					.setStatus(OnlineStatus.DO_NOT_DISTURB)
 					.build()
 					.awaitReady();
