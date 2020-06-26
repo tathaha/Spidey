@@ -11,7 +11,6 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.audit.ActionType;
 import net.dv8tion.jda.api.entities.MessageType;
 import net.dv8tion.jda.api.events.ReadyEvent;
-import net.dv8tion.jda.api.events.ShutdownEvent;
 import net.dv8tion.jda.api.events.channel.text.TextChannelDeleteEvent;
 import net.dv8tion.jda.api.events.guild.*;
 import net.dv8tion.jda.api.events.guild.invite.GuildInviteCreateEvent;
@@ -178,7 +177,8 @@ public class Events extends ListenerAdapter
 		}
 		guild.retrieveInvites().queue(invites ->
 		{
-			final var guildInvites = Cache.getInviteCache().entrySet().stream().filter(entry -> entry.getValue().getGuildId() == guildId).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+			final var guildInvites = Cache.getInviteCache().entrySet().stream().filter(entry -> entry.getValue().getGuildId() == guildId)
+																										.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 			for (final var invite : invites)
 			{
 				final var wrappedInvite = guildInvites.get(invite.getCode());
@@ -260,12 +260,6 @@ public class Events extends ListenerAdapter
 	public final void onGuildInviteDelete(@NotNull final GuildInviteDeleteEvent e)
 	{
 		Cache.getInviteCache().remove(e.getCode());
-	}
-
-	@Override
-	public final void onShutdown(@NotNull final ShutdownEvent e)
-	{
-		Cache.getInviteCache().clear();
 	}
 
 	@Override
