@@ -1,16 +1,16 @@
 package me.canelex.spidey.objects.cache;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 import me.canelex.spidey.MySQL;
 import me.canelex.spidey.objects.command.Command;
 import me.canelex.spidey.objects.invites.WrappedInvite;
 import me.canelex.spidey.objects.messages.WrappedMessage;
-import me.canelex.spidey.utils.FixedSizeMap;
+import me.canelex.spidey.utils.collections.CollectionUtils;
+import me.canelex.spidey.utils.collections.FixedSizeMap;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -22,7 +22,7 @@ public class Cache
     private static final Map<Long, Long> JOIN_ROLE_CACHE = new HashMap<>();
     private static final Map<Long, Boolean> VIP_GUILDS_CACHE = new HashMap<>();
     private static final Map<Long, Boolean> SUPPORTER_GUILDS_CACHE = new HashMap<>();
-    private static final Multimap<Long, String> REDDIT_CACHE = ArrayListMultimap.create();
+    private static final Map<Long, List<String>> REDDIT_CACHE = new HashMap<>();
     private static final FixedSizeMap<Long, WrappedMessage> MESSAGE_CACHE = new FixedSizeMap<>(50);
     private static long lastMessageDeleted = 0;
 
@@ -156,12 +156,12 @@ public class Cache
 
     public static boolean isPostCached(final long guildId, final String json)
     {
-        return REDDIT_CACHE.containsEntry(guildId, json);
+        return CollectionUtils.contains(REDDIT_CACHE, guildId, json);
     }
 
     public static void cachePost(final long guildId, final String json)
     {
-        REDDIT_CACHE.put(guildId, json);
+        CollectionUtils.add(REDDIT_CACHE, guildId, json);
     }
 
     // MESSAGE CACHING

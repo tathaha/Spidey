@@ -1,15 +1,17 @@
 package me.canelex.spidey.objects.command;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 import me.canelex.spidey.Core;
 import me.canelex.spidey.objects.cache.Cache;
+import me.canelex.spidey.utils.collections.CollectionUtils;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class Cooldowns
 {
-    private static final Multimap<Long, Command> COOLDOWN_MAP = ArrayListMultimap.create();
+    private static final Map<Long, List<Command>> COOLDOWN_MAP = new HashMap<>();
 
     private Cooldowns()
     {
@@ -21,12 +23,12 @@ public class Cooldowns
         final var cooldown = cmd.getCooldown();
         if (cooldown == 0 || Cache.isSupporter(guildId))
             return;
-        COOLDOWN_MAP.put(guildId, cmd);
-        Core.getExecutor().schedule(() -> COOLDOWN_MAP.remove(guildId, cmd), Cache.getCooldown(guildId, cmd), TimeUnit.SECONDS);
+        CollectionUtils.add(COOLDOWN_MAP, guildId, cmd);
+        Core.getExecutor().schedule(() -> CollectionUtils.remove(COOLDOWN_MAP, guildId, cmd), Cache.getCooldown(guildId, cmd), TimeUnit.SECONDS);
     }
 
     public static boolean isOnCooldown(final long guildId, final Command cmd)
     {
-        return COOLDOWN_MAP.containsEntry(guildId, cmd);
+        return CollectionUtils.contains(COOLDOWN_MAP, guildId, cmd);
     }
 }

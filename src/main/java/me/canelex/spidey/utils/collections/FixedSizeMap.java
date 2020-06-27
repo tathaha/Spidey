@@ -1,4 +1,4 @@
-package me.canelex.spidey.utils;
+package me.canelex.spidey.utils.collections;
 
 import java.util.HashMap;
 import java.util.Map;

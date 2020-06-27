@@ -5,12 +5,15 @@ import me.canelex.spidey.objects.cache.Cache;
 import me.canelex.spidey.objects.command.Category;
 import me.canelex.spidey.objects.command.Command;
 import me.canelex.spidey.utils.Utils;
+import me.canelex.spidey.utils.collections.CollectionUtils;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 
 import java.awt.*;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.*;
 import java.util.function.Function;
 
 @SuppressWarnings("unused")
@@ -53,7 +56,7 @@ public class HelpCommand extends Command
             commandsCopy.remove("help");
 
             final EnumMap<Category, List<Command>> categories = new EnumMap<>(Category.class);
-            commandsCopy.values().forEach(cmd -> categories.computeIfAbsent(cmd.getCategory(), ignored -> new ArrayList<>()).add(cmd));
+            commandsCopy.values().forEach(cmd -> CollectionUtils.add(categories, cmd.getCategory(), cmd));
 
             final var sb = new StringBuilder();
             categories.forEach((category, commandz) ->

@@ -9,9 +9,6 @@ application {
 }
 
 repositories {
-    maven {
-        url 'https://maven.google.com'
-    }
     jcenter()
 }
 
@@ -19,7 +16,6 @@ dependencies {
     implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.20'
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.3.0-alpha5'
     implementation group: 'org.apache.commons', name: 'commons-text', version: '1.8'
-    implementation group: 'com.google.apis', name: 'google-api-services-youtube', version: 'v3-rev20200526-1.30.9'
     implementation group: 'io.github.classgraph', name: 'classgraph', version: '4.8.78'
     implementation group: 'io.sentry', name: 'sentry-logback', version: '1.7.30'
     implementation("net.dv8tion:JDA:4.1.1_166") {

@@ -1,6 +1,5 @@
 package me.canelex.spidey.utils;
 
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import io.github.classgraph.ClassGraph;
 import me.canelex.spidey.Core;
 import me.canelex.spidey.objects.cache.Cache;
@@ -216,11 +215,11 @@ public class Utils
 
     public static ScheduledExecutorService createScheduledThread(final String name)
     {
-        return Executors.newSingleThreadScheduledExecutor(THREAD_FACTORY.setNameFormat(name).build());
+        return Executors.newSingleThreadScheduledExecutor(THREAD_FACTORY.setName(name).build());
     }
 
     public static ExecutorService createThread(final String name)
     {
-        return Executors.newSingleThreadExecutor(THREAD_FACTORY.setNameFormat(name).build());
+        return Executors.newSingleThreadExecutor(THREAD_FACTORY.setName(name).build());
     }
 }
