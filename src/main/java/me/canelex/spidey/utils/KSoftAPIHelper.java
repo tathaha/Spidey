@@ -27,7 +27,7 @@ public class KSoftAPIHelper
 
     private static DataObject getImageJson(final long guildId, final String query)
     {
-        final var response = DataObject.fromJson(Utils.getSiteContent("https://api.ksoft.si/images/rand-reddit/" + query + "?span=all", true));
+        final var response = DataObject.fromJson(Utils.getSiteContent("https://api.ksoft.si/images/rand-reddit/" + query + "?span=month", true));
         final var source = response.getString("source");
         if (Cache.isPostCached(guildId, source))
             return getImageJson(guildId, query); // TODO fix ratelimit error

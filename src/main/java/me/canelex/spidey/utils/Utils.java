@@ -122,8 +122,6 @@ public class Utils
                 () -> watching(jda.getGuildCache().size() + " guilds"),
                 () -> watching(jda.getUserCache().size() + " users")
         ));
-
-        commandsMap.clear(); //just to make sure that the commands map is empty
         try (final var result = CLASS_GRAPH.scan())
         {
             for (final var cls : result.getAllClasses())
@@ -138,7 +136,6 @@ public class Utils
         {
             LOG.error("There was an error while registering the commands!", e);
         }
-
         Core.getExecutor().scheduleAtFixedRate(() -> jda.getPresence().setActivity(nextActivity(activities)), 0L, 30L, TimeUnit.SECONDS);
     }
 

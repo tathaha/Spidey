@@ -18,7 +18,7 @@ public class JoinRoleCommand extends Command
     public JoinRoleCommand()
     {
         super("joinrole", new String[]{}, "Sets/removes the role that is added to a member after joining",
-                "joinrole (id/name of the role, if not given, the role will be reset if set)", Category.UTILITY, Permission.ADMINISTRATOR, 0, 4);
+                "joinrole (id/name of the role, if not given, the role will be reset if set)", Category.UTILITY, Permission.ADMINISTRATOR, 1, 4);
     }
 
     @Override
