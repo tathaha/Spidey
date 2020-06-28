@@ -53,7 +53,7 @@ public class MySQL
 				}
 			}
 			catch (final SQLException ex)
-				{
+			{
 				LOG.error("There was an error while requesting the {} property for guild {}!", property, guildId, ex);
 			}
 			return isString ? null : "0";
