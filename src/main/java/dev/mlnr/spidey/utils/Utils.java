@@ -4,25 +4,25 @@ import dev.mlnr.spidey.Core;
 import dev.mlnr.spidey.objects.cache.Cache;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.invites.WrappedInvite;
+import dev.mlnr.spidey.utils.requests.API;
+import dev.mlnr.spidey.utils.requests.Requester;
 import io.github.classgraph.ClassGraph;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.utils.data.DataObject;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import org.apache.commons.text.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.concurrent.*;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
@@ -40,8 +40,6 @@ public class Utils
     private static final SimpleDateFormat SDF = new SimpleDateFormat("EE, d.LLL y | HH:mm:ss");
     private static final Calendar CAL = Calendar.getInstance();
     private static final DecimalFormat FORMATTER = new DecimalFormat("#,###");
-    private static final OkHttpClient HTTP_CLIENT = new OkHttpClient();
-    private static final ThreadFactoryBuilder THREAD_FACTORY = new ThreadFactoryBuilder().setUncaughtExceptionHandler((t, e) -> LOG.error("There was an exception in thread {}: {}", t.getName(), e.getMessage()));
     public static final Pattern TEXT_PATTERN = Pattern.compile("[a-zA-Z0-9-_]+");
 
     private Utils()
@@ -143,25 +141,9 @@ public class Utils
         return activities.get(RANDOM.nextInt(activities.size())).get();
     }
 
-    public static String getSiteContent(final String url, final boolean requiresApi)
+    public static DataObject getJson(final String url, final API api)
     {
-        final var requestBuilder = new Request.Builder().url(url).header("user-agent", "dev.mlnr.spidey");
-        if (requiresApi)
-            requestBuilder.header("Authorization", "Bearer " + System.getenv("ksoft"));
-        try (final var body = HTTP_CLIENT.newCall(requestBuilder.build()).execute().body())
-        {
-            return body != null ? body.string() : "";
-        }
-        catch (final IOException ex)
-        {
-            LOG.error("There was an error while executing a request for url {}", url);
-        }
-        return "";
-    }
-
-    public static DataObject getJson(final String url)
-    {
-        return DataObject.fromJson(getSiteContent(url, false));
+        return DataObject.fromJson(Requester.executeRequest(url, api));
     }
 
     public static void storeInvites(final Guild guild)
@@ -211,15 +193,5 @@ public class Utils
     public static String format(final long input)
     {
         return FORMATTER.format(input);
-    }
-
-    public static ScheduledExecutorService createScheduledThread(final String name)
-    {
-        return Executors.newSingleThreadScheduledExecutor(THREAD_FACTORY.setName(name).build());
-    }
-
-    public static ExecutorService createThread(final String name)
-    {
-        return Executors.newSingleThreadExecutor(THREAD_FACTORY.setName(name).build());
     }
 }

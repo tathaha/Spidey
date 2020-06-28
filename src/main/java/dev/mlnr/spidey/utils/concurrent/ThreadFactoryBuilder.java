@@ -1,4 +1,4 @@
-package dev.mlnr.spidey.utils;
+package dev.mlnr.spidey.utils.concurrent;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;

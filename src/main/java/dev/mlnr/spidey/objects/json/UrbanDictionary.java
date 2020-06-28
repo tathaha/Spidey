@@ -21,7 +21,7 @@ public class UrbanDictionary
 
     private void setData()
     {
-        final var json = Utils.getJson("http://api.urbandictionary.com/v0/define?term=" + term);
+        final var json = Utils.getJson("http://api.urbandictionary.com/v0/define?term=" + term, null);
         if (!json.getArray("list").isEmpty())
         {
             final var data = json.getArray("list").getObject(0);

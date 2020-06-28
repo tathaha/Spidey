@@ -89,7 +89,7 @@ public class Events extends ListenerAdapter
 			var reason = "";
 			final var providedReason = ban.getReason();
 			if (providedReason != null && banner.equals(e.getJDA().getSelfUser()))
-				reason = (providedReason.equals("[Banned by Spidey#2370]") ?  "Unknown" : providedReason.substring(24));
+				reason = (providedReason.equals("[Banned by Spidey#2370]") ? "Unknown" : providedReason.substring(24));
 			else
 				reason = (providedReason == null ? "Unknown" : providedReason);
 

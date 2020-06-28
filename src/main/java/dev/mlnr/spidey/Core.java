@@ -2,7 +2,7 @@ package dev.mlnr.spidey;
 
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.utils.EventWaiter;
-import dev.mlnr.spidey.utils.Utils;
+import dev.mlnr.spidey.utils.concurrent.ConcurrentUtils;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
@@ -21,7 +21,7 @@ public class Core
 {
 	protected static final Map<String, Command> commands = new HashMap<>();
 	private static final Logger LOG = LoggerFactory.getLogger(Core.class);
-	private static final ScheduledExecutorService EXECUTOR = Utils.createScheduledThread("Spidey Misc");
+	private static final ScheduledExecutorService EXECUTOR = ConcurrentUtils.createScheduledThread("Spidey Misc");
 	private static final EventWaiter waiter = new EventWaiter(EXECUTOR, true);
 
 	public static void main(final String[] args)

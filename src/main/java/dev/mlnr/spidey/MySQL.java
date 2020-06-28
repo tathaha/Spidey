@@ -1,6 +1,6 @@
 package dev.mlnr.spidey;
 
-import dev.mlnr.spidey.utils.Utils;
+import dev.mlnr.spidey.utils.concurrent.ConcurrentUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +14,7 @@ import java.util.concurrent.ExecutorService;
 public class MySQL
 {
 	private static final Logger LOG = LoggerFactory.getLogger(MySQL.class);
-	private static final ExecutorService EXECUTOR_SERVICE = Utils.createThread("Spidey MySQL");
+	private static final ExecutorService EXECUTOR_SERVICE = ConcurrentUtils.createThread("Spidey MySQL");
 
 	private MySQL()
 	{
@@ -25,7 +25,7 @@ public class MySQL
 	{
 		try
 		{
-			return DriverManager.getConnection("jdbc:mysql://localhost:3306/canelex", Secrets.USERNAME, Secrets.PASS);
+			return DriverManager.getConnection("jdbc:mysql://localhost:3306/canelex", "admin", System.getenv("mysql"));
 		}
 		catch (final Exception ex)
 		{
@@ -53,7 +53,7 @@ public class MySQL
 				}
 			}
 			catch (final SQLException ex)
-			{
+				{
 				LOG.error("There was an error while requesting the {} property for guild {}!", property, guildId, ex);
 			}
 			return isString ? null : "0";

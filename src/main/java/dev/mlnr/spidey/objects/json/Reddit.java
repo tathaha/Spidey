@@ -23,9 +23,9 @@ public class Reddit
 
     private void setData()
     {
-        if (Utils.getJson("https://reddit.com/subreddits/search.json?limit=1&q=" + subName).getObject("data").getInt("dist") == 1)
+        if (Utils.getJson("https://reddit.com/subreddits/search.json?limit=1&q=" + subName, null).getObject("data").getInt("dist") == 1)
         {
-            final var data = Utils.getJson("https://reddit.com/r/" + subName + "/about.json").getObject("data");
+            final var data = Utils.getJson("https://reddit.com/r/" + subName + "/about.json", null).getObject("data");
             this.subs = data.getInt("subscribers");
             this.displayName = data.getString("display_name");
             this.desc = Utils.cleanString(data.getString("public_description"));

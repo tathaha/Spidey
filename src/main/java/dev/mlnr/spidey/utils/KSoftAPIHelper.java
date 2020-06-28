@@ -1,6 +1,7 @@
 package dev.mlnr.spidey.utils;
 
 import dev.mlnr.spidey.objects.cache.Cache;
+import dev.mlnr.spidey.utils.requests.API;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.utils.data.DataObject;
@@ -27,7 +28,7 @@ public class KSoftAPIHelper
 
     private static DataObject getImageJson(final long guildId, final String query)
     {
-        final var response = DataObject.fromJson(Utils.getSiteContent("https://api.ksoft.si/images/rand-reddit/" + query + "?span=month", true));
+        final var response = Utils.getJson("https://api.ksoft.si/images/rand-reddit/" + query + "?span=month", API.KSOFT);
         final var source = response.getString("source");
         if (Cache.isPostCached(guildId, source))
             return getImageJson(guildId, query); // TODO fix ratelimit error
