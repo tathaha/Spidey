@@ -5,13 +5,10 @@ plugins {
 }
 
 application {
-    mainClassName = 'me.canelex.spidey.Core'
+    mainClassName = 'dev.mlnr.spidey.Core'
 }
 
 repositories {
-    maven {
-        url 'https://maven.google.com'
-    }
     jcenter()
 }
 
@@ -19,16 +16,15 @@ dependencies {
     implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.20'
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.3.0-alpha5'
     implementation group: 'org.apache.commons', name: 'commons-text', version: '1.8'
-    implementation group: 'com.google.apis', name: 'google-api-services-youtube', version: 'v3-rev20200526-1.30.9'
     implementation group: 'io.github.classgraph', name: 'classgraph', version: '4.8.78'
     implementation group: 'io.sentry', name: 'sentry-logback', version: '1.7.30'
-    implementation("net.dv8tion:JDA:4.1.1_166") {
+    implementation("net.dv8tion:JDA:4.1.1_167") {
         exclude group: 'club.minnced', module: 'opus-java'
     }
 }
 
-group = 'me.canelex'
-description = 'SpideyDev'
+group = 'dev.mlnr'
+description = 'Spidey'
 
-shadowJar.setProperty('archiveFileName', 'SpideyDev.jar')
+shadowJar.setProperty('archiveFileName', 'Spidey.jar')
 compileJava.options.encoding = 'UTF-8'
