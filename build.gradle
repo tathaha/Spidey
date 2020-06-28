@@ -5,7 +5,7 @@ plugins {
 }
 
 application {
-    mainClassName = 'me.canelex.spidey.Core'
+    mainClassName = 'dev.mlnr.spidey.Core'
 }
 
 repositories {
@@ -23,7 +23,7 @@ dependencies {
     }
 }
 
-group = 'me.canelex'
+group = 'dev.mlnr'
 description = 'Spidey'
 
 shadowJar.setProperty('archiveFileName', 'Spidey.jar')
