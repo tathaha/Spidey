@@ -5,7 +5,6 @@ import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.invites.WrappedInvite;
 import dev.mlnr.spidey.objects.messages.WrappedMessage;
 import dev.mlnr.spidey.utils.collections.CollectionUtils;
-import dev.mlnr.spidey.utils.collections.FixedSizeMap;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.TextChannel;
 
@@ -23,8 +22,8 @@ public class Cache
     private static final Map<Long, Boolean> VIP_GUILDS_CACHE = new HashMap<>();
     private static final Map<Long, Boolean> SUPPORTER_GUILDS_CACHE = new HashMap<>();
     private static final Map<Long, List<String>> REDDIT_CACHE = new HashMap<>();
-    private static final FixedSizeMap<Long, WrappedMessage> MESSAGE_CACHE = new FixedSizeMap<>(50); // K = messageId, V = WrappedMessage
-    private static final FixedSizeMap<Long, Long> LAST_MESSAGE_CACHE = new FixedSizeMap<>(50); // K = channelId, V = messageId
+    private static final Map<Long, WrappedMessage> MESSAGE_CACHE = new HashMap<>(); // K = messageId, V = WrappedMessage
+    private static final Map<Long, Long> LAST_MESSAGE_CACHE = new HashMap<>(); // K = channelId, V = messageId
 
     private Cache()
     {
