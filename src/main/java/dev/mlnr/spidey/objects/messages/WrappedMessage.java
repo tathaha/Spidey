@@ -10,6 +10,7 @@ public class WrappedMessage
     private final long authorId;
     private final Instant creation;
     private final String content;
+    private final long channelId;
 
     public WrappedMessage(final Message message)
     {
@@ -17,6 +18,7 @@ public class WrappedMessage
         this.authorId = message.getAuthor().getIdLong();
         this.creation = message.getTimeCreated().toInstant();
         this.content = message.getContentRaw();
+        this.channelId = message.getTextChannel().getIdLong();
     }
 
     public long getId()
@@ -37,5 +39,10 @@ public class WrappedMessage
     public String getContent()
     {
         return content;
+    }
+
+    public long getChannelId()
+    {
+        return channelId;
     }
 }

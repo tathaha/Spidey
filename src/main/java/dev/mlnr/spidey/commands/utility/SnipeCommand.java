@@ -22,7 +22,9 @@ public class SnipeCommand extends Command
     @Override
     public void execute(final String[] args, final Message msg)
     {
-        final var lastMessage = Cache.getLastMessageDeleted();
+        final var textChannel = msg.getTextChannel();
+        final var channelId = textChannel.getIdLong();
+        final var lastMessage = Cache.getLastMessageDeleted(channelId);
         if (lastMessage == null)
         {
             Utils.returnError("There's nothing to snipe", msg);
@@ -34,7 +36,7 @@ public class SnipeCommand extends Command
         eb.setColor(Color.GREEN);
         msg.getJDA().retrieveUserById(lastMessage.getAuthorId()).queue(user -> eb.setAuthor(user.getName(), null, user.getEffectiveAvatarUrl()));
 
-        Utils.sendMessage(msg.getTextChannel(), eb.build());
-        Core.getExecutor().schedule(() -> Cache.uncacheMessage(lastMessage.getId()), 2, TimeUnit.MINUTES);
+        Utils.sendMessage(textChannel, eb.build());
+        Core.getExecutor().schedule(() -> Cache.uncacheMessage(lastMessage.getChannelId(), lastMessage.getId()), 2, TimeUnit.MINUTES);
     }
 }

@@ -271,6 +271,6 @@ public class Events extends ListenerAdapter
 	@Override
 	public void onGuildMessageDelete(@NotNull final GuildMessageDeleteEvent e)
 	{
-		Cache.setLastMessageDeleted(e.getMessageIdLong());
+		Cache.setLastMessageDeleted(e.getChannel().getIdLong(), e.getMessageIdLong());
 	}
 }

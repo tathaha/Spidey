@@ -23,8 +23,8 @@ public class Cache
     private static final Map<Long, Boolean> VIP_GUILDS_CACHE = new HashMap<>();
     private static final Map<Long, Boolean> SUPPORTER_GUILDS_CACHE = new HashMap<>();
     private static final Map<Long, List<String>> REDDIT_CACHE = new HashMap<>();
-    private static final FixedSizeMap<Long, WrappedMessage> MESSAGE_CACHE = new FixedSizeMap<>(50);
-    private static long lastMessageDeleted = 0;
+    private static final FixedSizeMap<Long, WrappedMessage> MESSAGE_CACHE = new FixedSizeMap<>(50); // K = messageId, V = WrappedMessage
+    private static final FixedSizeMap<Long, Long> LAST_MESSAGE_CACHE = new FixedSizeMap<>(50); // K = channelId, V = messageId
 
     private Cache()
     {
@@ -166,14 +166,14 @@ public class Cache
 
     // MESSAGE CACHING
 
-    public static WrappedMessage getLastMessageDeleted()
+    public static WrappedMessage getLastMessageDeleted(final long channelId)
     {
-        return MESSAGE_CACHE.get(lastMessageDeleted);
+        return MESSAGE_CACHE.get(LAST_MESSAGE_CACHE.get(channelId));
     }
 
-    public static void setLastMessageDeleted(final long messageId)
+    public static void setLastMessageDeleted(final long channelId, final long messageId)
     {
-        lastMessageDeleted = messageId;
+        LAST_MESSAGE_CACHE.put(channelId, messageId);
     }
 
     public static void cacheMessage(final long messageId, final WrappedMessage message)
@@ -181,10 +181,10 @@ public class Cache
         MESSAGE_CACHE.put(messageId, message);
     }
 
-    public static void uncacheMessage(final long messageId)
+    public static void uncacheMessage(final long channelId, final long messageId)
     {
         MESSAGE_CACHE.remove(messageId);
-        lastMessageDeleted = 0;
+        LAST_MESSAGE_CACHE.remove(channelId);
     }
 
     // MISC
