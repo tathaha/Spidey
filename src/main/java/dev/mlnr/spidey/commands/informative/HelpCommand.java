@@ -56,7 +56,13 @@ public class HelpCommand extends Command
             commandsCopy.remove("help");
 
             final EnumMap<Category, List<Command>> categories = new EnumMap<>(Category.class);
+            var nsfwHidden = false;
             commandsCopy.values().forEach(cmd -> CollectionUtils.add(categories, cmd.getCategory(), cmd));
+            if (!channel.isNSFW())
+            {
+                categories.remove(Category.NSFW);
+                nsfwHidden = true;
+            }
 
             final var sb = new StringBuilder();
             categories.forEach((category, commandz) ->
@@ -69,6 +75,8 @@ public class HelpCommand extends Command
             eb.setDescription("Prefix: **" + prefix + "**\n" + sb.toString() + "\n\nTo see more info about a command, type `" + prefix + "help <command>`.");
             if (hidden > 0)
                 eb.appendDescription("\n**" + hidden + "** commands were hidden as you don't have permissions to use them.");
+            if (nsfwHidden)
+                eb.appendDescription("\nNSFW commands were hidden from the help message. If you want to see all NSFW commands, type the help command in a NSFW channel.");
             Utils.sendMessage(channel, eb.build());
         }
         else
