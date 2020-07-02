@@ -1,6 +1,7 @@
 package dev.mlnr.spidey.objects.command;
 
 import dev.mlnr.spidey.Core;
+import dev.mlnr.spidey.commands.fun.HowGay;
 import dev.mlnr.spidey.utils.KSoftAPIHelper;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -66,7 +67,7 @@ public class CommandHandler
 			cooldown(guildId, cmd);
 			return;
 		}
-		else if (cmd.getCategory() == Category.FUN)
+		else if (cmd.getCategory() == Category.FUN && !cmd.getClass().equals(HowGay.class)) // checking the class is a temp solution
 		{
 			Utils.sendMessage(channel, KSoftAPIHelper.getImage(cmd.getInvoke(), member, false));
 			cooldown(guildId, cmd);
