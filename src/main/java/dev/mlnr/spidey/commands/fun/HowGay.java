@@ -13,7 +13,7 @@ public class HowGay extends Command
 {
     public HowGay()
     {
-        super("howgay", new String[]{}, "Shows you what's your gay rate", "howgay (@someone)", Category.FUN, Permission.UNKNOWN, 0, 0);
+        super("howgay", new String[]{}, "Shows you what's your or mentioned user's gay rate", "howgay (@someone)", Category.FUN, Permission.UNKNOWN, 0, 0);
     }
 
     @Override
