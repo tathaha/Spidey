@@ -37,14 +37,14 @@ public class Cache
 
     // PREFIX CACHING
 
-    public static String getPrefix(final long guildId)
+    public static String retrievePrefix(final long guildId)
     {
-        return Objects.requireNonNullElseGet(PREFIX_CACHE.get(guildId), () -> getPrefixByRequest(guildId));
+        return Objects.requireNonNullElseGet(PREFIX_CACHE.get(guildId), () -> retrievePrefixByRequest(guildId));
     }
 
-    private static String getPrefixByRequest(final long guildId)
+    private static String retrievePrefixByRequest(final long guildId)
     {
-        final var tmp = MySQL.getPrefix(guildId);
+        final var tmp = MySQL.retrievePrefix(guildId);
         final var prefix = tmp.length() == 0 ? "s!" : tmp;
         PREFIX_CACHE.put(guildId, prefix);
         return prefix;
@@ -58,19 +58,19 @@ public class Cache
 
     // LOG CHANNEL CACHING
 
-    public static long getLogChannel(final long guildId)
+    public static long retrieveLogChannel(final long guildId)
     {
-        return Objects.requireNonNullElseGet(LOG_CHANNEL_CACHE.get(guildId), () -> getLogChannelByRequest(guildId));
+        return Objects.requireNonNullElseGet(LOG_CHANNEL_CACHE.get(guildId), () -> retrieveLogChannelByRequest(guildId));
     }
 
     public static TextChannel getLogAsChannel(final long guildId, final JDA jda)
     {
-        return jda.getTextChannelById(getLogChannel(guildId));
+        return jda.getTextChannelById(retrieveLogChannel(guildId));
     }
 
-    private static long getLogChannelByRequest(final long guildId)
+    private static long retrieveLogChannelByRequest(final long guildId)
     {
-        final var channel = MySQL.getChannel(guildId);
+        final var channel = MySQL.retrieveChannel(guildId);
         LOG_CHANNEL_CACHE.put(guildId, channel);
         return channel;
     }
@@ -94,14 +94,14 @@ public class Cache
 
     // JOIN ROLE CACHING
 
-    public static long getJoinRole(final long guildId)
+    public static long retrieveJoinRole(final long guildId)
     {
-        return Objects.requireNonNullElseGet(JOIN_ROLE_CACHE.get(guildId), () -> getJoinRoleByRequest(guildId));
+        return Objects.requireNonNullElseGet(JOIN_ROLE_CACHE.get(guildId), () -> retrieveJoinRoleByRequest(guildId));
     }
 
-    private static long getJoinRoleByRequest(final long guildId)
+    private static long retrieveJoinRoleByRequest(final long guildId)
     {
-        final var role = MySQL.getRole(guildId);
+        final var role = MySQL.retrieveRole(guildId);
         JOIN_ROLE_CACHE.put(guildId, role);
         return role;
     }

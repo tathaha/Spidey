@@ -26,7 +26,7 @@ public class LogCommand extends Command
 			guild.getManager().setSystemChannel(null).queue();
 
 		final var channelId = channel.getIdLong();
-		if (Cache.getLogChannel(guildId) == channelId)
+		if (Cache.retrieveLogChannel(guildId) == channelId)
 		{
 			Cache.removeLogChannel(guildId);
 			Utils.sendMessage(channel, ":white_check_mark: The log channel has been reset!");

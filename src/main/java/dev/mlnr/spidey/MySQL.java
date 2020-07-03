@@ -36,7 +36,7 @@ public class MySQL
 
 	// GETTERS
 
-	private static <T> CompletableFuture<String> getQueryFuture(final String query, final long guildId, final String property, final Class<T> type)
+	private static <T> CompletableFuture<String> retrieveQueryFuture(final String query, final long guildId, final String property, final Class<T> type)
 	{
 		final var isString = type.equals(String.class);
 		return CompletableFuture.supplyAsync(() ->
@@ -64,7 +64,7 @@ public class MySQL
 	{
 		try
 		{
-			return getQueryFuture(query, guildId, property, type).get();
+			return retrieveQueryFuture(query, guildId, property, type).get();
 		}
 		catch (final Exception ex)
 		{
@@ -73,22 +73,22 @@ public class MySQL
 		return type.equals(String.class) ? null : "0";
 	}
 
-	private static long getLongProperty(final String property, final long guildId)
+	private static long retrieveLongProperty(final String property, final long guildId)
 	{
 		return Long.parseLong(getQueryResult("SELECT `" + property + "` FROM `guilds` WHERE `guild_id`=?;", guildId, property, Long.class));
 	}
 
-	public static long getChannel(final long guildId)
+	public static long retrieveChannel(final long guildId)
 	{
-		return getLongProperty("channel_id", guildId);
+		return retrieveLongProperty("channel_id", guildId);
 	}
 
-	public static long getRole(final long guildId)
+	public static long retrieveRole(final long guildId)
 	{
-		return getLongProperty("role_id", guildId);
+		return retrieveLongProperty("role_id", guildId);
 	}
 
-	public static String getPrefix(final long guildId)
+	public static String retrievePrefix(final long guildId)
 	{
 		return getQueryResult("SELECT `prefix` FROM `guilds` WHERE `guild_id`=?;", guildId, "prefix", String.class);
 	}
@@ -168,11 +168,11 @@ public class MySQL
 
 	public static boolean isVip(final long guildId)
 	{
-		return getLongProperty("vip", guildId) == 1;
+		return retrieveLongProperty("vip", guildId) == 1;
 	}
 
 	public static boolean isSupporter(final long guildId)
 	{
-		return getLongProperty("supporter", guildId) == 1;
+		return retrieveLongProperty("supporter", guildId) == 1;
 	}
 }

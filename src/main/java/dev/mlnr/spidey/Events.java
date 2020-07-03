@@ -40,7 +40,7 @@ public class Events extends ListenerAdapter
 		final var author = e.getAuthor();
 		final var guildId = guild.getIdLong();
 		final var eb = new EmbedBuilder();
-		final var prefix = Cache.getPrefix(guildId);
+		final var prefix = Cache.retrievePrefix(guildId);
 
 		Cache.cacheMessage(message.getIdLong(), new WrappedMessage(message));
 		if (message.getContentRaw().startsWith(prefix) && !author.isBot())
@@ -150,7 +150,7 @@ public class Events extends ListenerAdapter
 		final var guild = e.getGuild();
 		final var guildId = guild.getIdLong();
 		final var channel = Cache.getLogAsChannel(guildId, e.getJDA());
-		final var role = guild.getRoleById(Cache.getJoinRole(guildId));
+		final var role = guild.getRoleById(Cache.retrieveJoinRole(guildId));
 		final var userId = user.getId();
 
 		if (channel == null)
@@ -222,7 +222,7 @@ public class Events extends ListenerAdapter
 	public final void onTextChannelDelete(final TextChannelDeleteEvent e)
 	{
 		final var guildId = e.getGuild().getIdLong();
-		if (e.getChannel().getIdLong() == Cache.getLogChannel(guildId))
+		if (e.getChannel().getIdLong() == Cache.retrieveLogChannel(guildId))
 			Cache.removeLogChannel(guildId);
 	}
 
@@ -230,7 +230,7 @@ public class Events extends ListenerAdapter
 	public final void onRoleDelete(final RoleDeleteEvent e)
 	{
 		final var guildId = e.getGuild().getIdLong();
-		if (e.getRole().getIdLong() == Cache.getJoinRole(guildId))
+		if (e.getRole().getIdLong() == Cache.retrieveJoinRole(guildId))
 			Cache.removeJoinRole(guildId);
 	}
 

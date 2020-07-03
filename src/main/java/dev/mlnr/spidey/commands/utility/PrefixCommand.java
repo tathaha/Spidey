@@ -22,7 +22,7 @@ public class PrefixCommand extends Command
         final var guild = message.getGuild();
         final var guildId = guild.getIdLong();
         final var channel = message.getTextChannel();
-        final var actualPrefix = Cache.getPrefix(guildId);
+        final var actualPrefix = Cache.retrievePrefix(guildId);
 
         if (args.length == 0)
         {

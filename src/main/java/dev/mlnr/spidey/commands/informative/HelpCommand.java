@@ -35,7 +35,7 @@ public class HelpCommand extends Command
         final var channel = message.getTextChannel();
         final var author = message.getAuthor();
         final var guildId = message.getGuild().getIdLong();
-        final var prefix = Cache.getPrefix(guildId);
+        final var prefix = Cache.retrievePrefix(guildId);
         final var eb = Utils.createEmbedBuilder(author)
                 .setColor(Color.WHITE)
                 .setAuthor("Spidey's commands", "https://github.com/caneleex/Spidey", message.getJDA().getSelfUser().getEffectiveAvatarUrl());
