@@ -6,8 +6,6 @@ import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 
-import java.awt.*;
-
 @SuppressWarnings("unused")
 public class UserCommand extends Command
 {
@@ -29,7 +27,7 @@ public class UserCommand extends Command
 		final var nick = m.getNickname();
 		
 		eb.setAuthor("USER INFO - " + u.getAsTag());
-		eb.setColor(Color.WHITE);
+		eb.setColor(0xFEFEFE);
 		eb.setThumbnail(u.getEffectiveAvatarUrl());
 		eb.addField("ID", u.getId(), false);
 

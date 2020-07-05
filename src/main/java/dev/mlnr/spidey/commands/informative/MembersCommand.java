@@ -8,7 +8,6 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 
-import java.awt.*;
 import java.time.Instant;
 
 @SuppressWarnings({"unused", "ConstantConditions"})
@@ -29,7 +28,7 @@ public class MembersCommand extends Command
 
 		final var eb = Utils.createEmbedBuilder(message.getAuthor());
 		eb.setAuthor("MEMBERCOUNT");
-		eb.setColor(Color.WHITE);
+		eb.setColor(0xFEFEFE);
 		eb.setTimestamp(Instant.now());
 		eb.addField("Total", "**" + total + "**", true);
 		eb.addField("Humans", "**" + (total - bots) + "**", true);
