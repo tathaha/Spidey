@@ -22,8 +22,8 @@ public class Cache
     private static final Map<Long, Boolean> VIP_GUILDS_CACHE = new HashMap<>();
     private static final Map<Long, Boolean> SUPPORTER_GUILDS_CACHE = new HashMap<>();
     private static final Map<Long, List<String>> REDDIT_CACHE = new HashMap<>();
-    private static final Map<Long, WrappedMessage> MESSAGE_CACHE = new HashMap<>(); // K = messageId, V = WrappedMessage
-    private static final Map<Long, Long> LAST_MESSAGE_CACHE = new HashMap<>(); // K = channelId, V = messageId
+    private static final Map<Long, WrappedMessage> MESSAGE_CACHE = new HashMap<>();
+    private static final Map<Long, Long> LAST_MESSAGE_CACHE = new HashMap<>();
 
     private Cache()
     {
