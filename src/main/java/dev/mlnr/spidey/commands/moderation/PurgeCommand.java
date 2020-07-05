@@ -20,11 +20,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @SuppressWarnings({"unused", "StringBufferReplaceableByString"})
-public class DeleteCommand extends Command
+public class PurgeCommand extends Command
 {
-    public DeleteCommand()
+    public PurgeCommand()
     {
-        super("delete", new String[]{"d"}, "Deletes messages (by mentioned user)", "delete <count> (user)", Category.MODERATION,
+        super("purge", new String[]{"d", "delete"}, "Purges messages (by mentioned user)", "purge <count> (user)", Category.MODERATION,
                 Permission.MESSAGE_MANAGE, 2, 6);
     }
 
