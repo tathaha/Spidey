@@ -20,11 +20,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @SuppressWarnings({"unused", "StringBufferReplaceableByString"})
-public class DeleteCommand extends Command
+public class PurgeCommand extends Command
 {
-    public DeleteCommand()
+    public PurgeCommand()
     {
-        super("delete", new String[]{"d"}, "Deletes messages (by mentioned user)", "delete <count> (user)", Category.MODERATION,
+        super("purge", new String[]{"d", "delete"}, "Purges messages (by mentioned user)", "purge <count> (user)", Category.MODERATION,
                 Permission.MESSAGE_MANAGE, 2, 6);
     }
 
@@ -49,7 +49,7 @@ public class DeleteCommand extends Command
             Utils.returnError("Entered value is either negative or not a number", message);
             return;
         }
-        if (amount > 100 || amount == 0)
+        if (amount > 100 || amount < 1)
         {
             Utils.returnError("Please enter a number from 1-100", message);
             return;
@@ -70,9 +70,10 @@ public class DeleteCommand extends Command
             final var pinned = msgs.stream().filter(Message::isPinned).collect(Collectors.toList());
             if (!pinned.isEmpty())
             {
-                final var equalsOne = pinned.size() == 1;
+                final var size = pinned.size();
+                final var equalsOne = size == 1;
                 final var builder = new StringBuilder("There ");
-                builder.append(equalsOne ? "is" : "are").append(" **").append(pinned)
+                builder.append(equalsOne ? "is" : "are").append(" **").append(size)
                        .append("** pinned message").append(equalsOne ? "" : "s").append(" selected for deletion. ")
                        .append("Are you sure you want to delete ").append(equalsOne ? "it" : "them").append("? ")
                        .append("Deleting a message will also unpin it.")

@@ -29,7 +29,7 @@ public class JoinRoleCommand extends Command
         final var channel = message.getTextChannel();
         final var member = message.getMember();
 
-        final var dbRole = Cache.getJoinRole(guildId);
+        final var dbRole = Cache.retrieveJoinRole(guildId);
         if (args.length == 0)
         {
             if (dbRole == 0)

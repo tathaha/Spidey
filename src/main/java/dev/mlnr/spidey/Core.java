@@ -3,6 +3,7 @@ package dev.mlnr.spidey;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.utils.EventWaiter;
 import dev.mlnr.spidey.utils.concurrent.ConcurrentUtils;
+import net.dv8tion.jda.api.GatewayEncoding;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
@@ -33,6 +34,7 @@ public class Core
 					.addEventListeners(new Events(), waiter)
 					.setActivity(Activity.watching("myself load.."))
 					.setStatus(OnlineStatus.DO_NOT_DISTURB)
+					.setGatewayEncoding(GatewayEncoding.ETF)
 					.build()
 					.awaitReady();
 		}

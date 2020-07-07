@@ -9,7 +9,6 @@ import dev.mlnr.spidey.utils.collections.CollectionUtils;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 
-import java.awt.*;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -35,9 +34,9 @@ public class HelpCommand extends Command
         final var channel = message.getTextChannel();
         final var author = message.getAuthor();
         final var guildId = message.getGuild().getIdLong();
-        final var prefix = Cache.getPrefix(guildId);
+        final var prefix = Cache.retrievePrefix(guildId);
         final var eb = Utils.createEmbedBuilder(author)
-                .setColor(Color.WHITE)
+                .setColor(0xFEFEFE)
                 .setAuthor("Spidey's commands", "https://github.com/caneleex/Spidey", message.getJDA().getSelfUser().getEffectiveAvatarUrl());
 
         if (args.length == 0)
@@ -56,7 +55,13 @@ public class HelpCommand extends Command
             commandsCopy.remove("help");
 
             final EnumMap<Category, List<Command>> categories = new EnumMap<>(Category.class);
+            var nsfwHidden = false;
             commandsCopy.values().forEach(cmd -> CollectionUtils.add(categories, cmd.getCategory(), cmd));
+            if (!channel.isNSFW())
+            {
+                categories.remove(Category.NSFW);
+                nsfwHidden = true;
+            }
 
             final var sb = new StringBuilder();
             categories.forEach((category, commandz) ->
@@ -69,6 +74,8 @@ public class HelpCommand extends Command
             eb.setDescription("Prefix: **" + prefix + "**\n" + sb.toString() + "\n\nTo see more info about a command, type `" + prefix + "help <command>`.");
             if (hidden > 0)
                 eb.appendDescription("\n**" + hidden + "** commands were hidden as you don't have permissions to use them.");
+            if (nsfwHidden)
+                eb.appendDescription("\nNSFW commands were hidden from the help message. If you want to see all NSFW commands, type the help command in a NSFW channel.");
             Utils.sendMessage(channel, eb.build());
         }
         else
@@ -85,7 +92,7 @@ public class HelpCommand extends Command
                 final var aliases = command.getAliases();
                 final var cooldown = Cache.getCooldown(guildId, command);
                 eb.setAuthor("Viewing command info - " + cmd);
-                eb.setColor(Color.WHITE);
+                eb.setColor(0xFEFEFE);
                 eb.addField("Description", description == null ? "Unspecified" : description, false);
                 eb.addField("Usage", usage == null ? "Unspecified" : "`" + prefix + usage + "` (<> = required, () = optional)", false);
                 eb.addField("Category",  command.getCategory().getFriendlyName(), false);

@@ -6,8 +6,6 @@ import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 
-import java.awt.*;
-
 @SuppressWarnings("unused")
 public class AvatarCommand extends Command
 {
@@ -21,7 +19,7 @@ public class AvatarCommand extends Command
 	public final void execute(final String[] args, final Message message)
 	{
 		final var author = message.getAuthor();
-		final var eb = Utils.createEmbedBuilder(author).setColor(Color.WHITE);
+		final var eb = Utils.createEmbedBuilder(author).setColor(0xFEFEFE);
 		final var users = message.getMentionedUsers();
 		final var u = users.isEmpty() ? author : users.get(0);
 		final var avatarUrl = u.getEffectiveAvatarUrl();
