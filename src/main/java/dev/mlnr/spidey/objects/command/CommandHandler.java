@@ -1,7 +1,6 @@
 package dev.mlnr.spidey.objects.command;
 
 import dev.mlnr.spidey.Core;
-import dev.mlnr.spidey.commands.fun.HowGay;
 import dev.mlnr.spidey.utils.KSoftAPIHelper;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -57,22 +56,24 @@ public class CommandHandler
 			Utils.returnError("The command is on cooldown", msg);
 			return;
 		}
+
+		// API DEPENDANT COMMANDS HANDLING
 		final var channel = msg.getTextChannel();
-		if (cmd.getCategory() == Category.NSFW)
+		final var category = cmd.getCategory();
+		final var nsfw = category == Category.NSFW;
+		if ((category == Category.FUN && cmd.getCooldown() > 0) || nsfw) // if a command has a cooldown, i can assume it requires an api
 		{
-			if (!channel.isNSFW())
-				Utils.returnError("You can only use nsfw commands in nsfw channels", msg);
-			else
-				Utils.sendMessage(channel, KSoftAPIHelper.getImage(cmd.getInvoke(), member, true));
+			if (nsfw && !channel.isNSFW())
+			{
+				Utils.returnError("You can use nsfw commands only in nsfw channels", msg);
+				return;
+			}
+			Utils.sendMessage(channel, KSoftAPIHelper.getImage(cmd.getInvoke(), member, nsfw));
 			cooldown(guildId, cmd);
 			return;
 		}
-		else if (cmd.getCategory() == Category.FUN && !cmd.getClass().equals(HowGay.class)) // checking the class is a temp solution
-		{
-			Utils.sendMessage(channel, KSoftAPIHelper.getImage(cmd.getInvoke(), member, false));
-			cooldown(guildId, cmd);
-			return;
-		}
+		//
+
 		final var maxArgs = cmd.getMaxArgs();
 		final var tmp = content.split("\\s+", maxArgs > 0 ? maxArgs + 1 : maxArgs);
 		final var args = Arrays.copyOfRange(tmp, 1, tmp.length);
