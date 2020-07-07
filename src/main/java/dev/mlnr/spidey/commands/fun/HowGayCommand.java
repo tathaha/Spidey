@@ -8,10 +8,12 @@ import net.dv8tion.jda.api.entities.Message;
 
 import java.util.concurrent.ThreadLocalRandom;
 
+import static dev.mlnr.spidey.utils.Utils.getColorHex;
+
 @SuppressWarnings("unused")
-public class HowGay extends Command
+public class HowGayCommand extends Command
 {
-    public HowGay()
+    public HowGayCommand()
     {
         super("howgay", new String[]{}, "Shows you what's your or mentioned user's gay rate", "howgay (@someone)", Category.FUN, Permission.UNKNOWN, 0, 0);
     }
@@ -22,15 +24,16 @@ public class HowGay extends Command
         final var prideFlag = "\uD83C\uDFF3\uFE0F\u200D\uD83C\uDF08";
         final var random = ThreadLocalRandom.current().nextInt(0, 100 + 1); // values from 0 to 100, 100 + 1 'cause 100 has to be inclusive
         final var eb = Utils.createEmbedBuilder(msg.getAuthor());
+        final var text = " **" + random + "**% gay " + prideFlag;
         eb.setAuthor("gay rate");
-        eb.setColor(getColorHex(random));
+        eb.setColor(getColorHex(random, 100));
 
         if (args.length == 0)
-            eb.setDescription("you are **" + random + "**% gay " + prideFlag);
+            eb.setDescription("you are" + text);
         else if (args.length == 1)
         {
             if (Message.MentionType.USER.getPattern().matcher(args[0]).matches())
-                eb.setDescription(msg.getMentionedUsers().get(0).getAsMention() + " is **" + random + "**% gay " + prideFlag);
+                eb.setDescription(msg.getMentionedUsers().get(0).getAsMention() + " is" + text);
             else
             {
                 Utils.returnError("Please mention a user", msg);
@@ -43,12 +46,5 @@ public class HowGay extends Command
             return;
         }
         Utils.sendMessage(msg.getTextChannel(), eb.build());
-    }
-
-    private int getColorHex(final int value)
-    {
-        final var r = ((255 * value) / 100);
-        final var g = (255 * (100 - value)) / 100;
-        return ((r & 0x0ff) << 16) | ((g & 0x0ff) << 8) | (0);
     }
 }
