@@ -7,7 +7,7 @@ import dev.mlnr.spidey.utils.Emojis;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.exceptions.ErrorHandler;
@@ -31,7 +31,7 @@ public class PurgeCommand extends Command
     @Override
     public final void execute(final String[] args, final Message message)
     {
-        final var channel = message.getChannel();
+        final var channel = message.getTextChannel();
 
         if (args.length == 0)
         {
@@ -120,9 +120,9 @@ public class PurgeCommand extends Command
         }), failure -> {});
     }
 
-    private void proceed(final List<Message> toDelete, final User user, final MessageChannel channel)
+    private void proceed(final List<Message> toDelete, final User user, final TextChannel channel)
     {
-        final var future = CompletableFuture.allOf(channel.purgeMessages(toDelete).toArray(new CompletableFuture[0]));
+        final var future = CompletableFuture.allOf(channel.purgeMessages(toDelete).toArray(new CompletableFuture[toDelete.size()]));
         future.thenRunAsync(() -> channel.sendMessage(Utils.generateSuccess(toDelete.size(), user))
                                          .delay(Duration.ofSeconds(5))
                                          .flatMap(Message::delete)
