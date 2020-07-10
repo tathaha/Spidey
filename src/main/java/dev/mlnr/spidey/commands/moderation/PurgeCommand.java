@@ -122,7 +122,7 @@ public class PurgeCommand extends Command
 
     private void proceed(final List<Message> toDelete, final User user, final TextChannel channel)
     {
-        final var future = CompletableFuture.allOf(channel.purgeMessages(toDelete).toArray(new CompletableFuture[toDelete.size()]));
+        final var future = CompletableFuture.allOf(channel.purgeMessages(toDelete).toArray(new CompletableFuture[0]));
         future.thenRunAsync(() -> channel.sendMessage(Utils.generateSuccess(toDelete.size(), user))
                                          .delay(Duration.ofSeconds(5))
                                          .flatMap(Message::delete)
