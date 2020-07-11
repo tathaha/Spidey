@@ -12,11 +12,9 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.utils.data.DataObject;
-import org.apache.commons.text.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -35,11 +33,9 @@ public class Utils
     private static final String INVITE_LINK = "https://discord.com/oauth2/authorize?client_id=468523263853592576&scope=bot&permissions=1342188724";
     private static final Logger LOG = LoggerFactory.getLogger(Utils.class);
     private static final ClassGraph CLASS_GRAPH = new ClassGraph().whitelistPackages("dev.mlnr.spidey.commands");
-    private static final char[] SUFFIXES = {'k', 'M', 'B'};
     private static final ThreadLocalRandom RANDOM = ThreadLocalRandom.current();
     private static final SimpleDateFormat SDF = new SimpleDateFormat("EE, d.LLL y | HH:mm:ss");
     private static final Calendar CAL = Calendar.getInstance();
-    private static final DecimalFormat FORMATTER = new DecimalFormat("#,###");
     public static final Pattern TEXT_PATTERN = Pattern.compile("[a-zA-Z0-9-_]+");
 
     private Utils()
@@ -152,47 +148,10 @@ public class Utils
             guild.retrieveInvites().queue(invites -> invites.forEach(invite -> Cache.getInviteCache().put(invite.getCode(), new WrappedInvite(invite))));
     }
 
-    public static String cleanString(final String original)
-    {
-        return StringEscapeUtils.unescapeJava(
-            StringEscapeUtils.unescapeHtml4(
-                original
-                    .replaceAll("<.*?>", "")
-                    .replaceAll("\"", "")));
-    }
-
-    public static String getCompactNumber(final long number)
-    {
-        final var sn = String.valueOf(number);
-        final var length = sn.length();
-        if (number < 1000)
-            return sn;
-        final var magnitude = (length - 1) / 3;
-        var digits = (length - 1) % 3 + 1;
-
-        var value = new char[4];
-        for (var i = 0; i < digits; i++)
-        {
-            value[i] = sn.charAt(i);
-        }
-        if (digits == 1 && sn.charAt(1) != '0')
-        {
-            value[digits++] = '.';
-            value[digits++] = sn.charAt(1);
-        }
-        value[digits++] = SUFFIXES[magnitude - 1];
-        return new String(value, 0, digits);
-    }
-
     public static String getTime(final long millis)
     {
         CAL.setTimeInMillis(millis);
         return SDF.format(CAL.getTime());
-    }
-
-    public static String format(final long input)
-    {
-        return FORMATTER.format(input);
     }
 
     public static int getColorHex(final int value, final int max)
