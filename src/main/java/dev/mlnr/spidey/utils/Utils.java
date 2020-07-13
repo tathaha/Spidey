@@ -30,7 +30,7 @@ import static net.dv8tion.jda.api.entities.Activity.watching;
 
 public class Utils
 {
-    private static final String INVITE_LINK = "https://discord.com/oauth2/authorize?client_id=468523263853592576&scope=bot&permissions=1342188724";
+    private static final String INVITE_LINK = "https://spidey.mlnr.dev";
     private static final Logger LOG = LoggerFactory.getLogger(Utils.class);
     private static final ClassGraph CLASS_GRAPH = new ClassGraph().whitelistPackages("dev.mlnr.spidey.commands");
     private static final ThreadLocalRandom RANDOM = ThreadLocalRandom.current();

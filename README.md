@@ -1,6 +1,6 @@
 # Spidey
 
-Click [here](https://discord.com/oauth2/authorize?client_id=468523263853592576&scope=bot&permissions=1342188724) to invite Spidey to your guild!
+Click [here](https://spidey.mlnr.dev) to invite Spidey to your guild!
 
 Powered by [JDA](https://github.com/DV8FromTheWorld/JDA)
 
