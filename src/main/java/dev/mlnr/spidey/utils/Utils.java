@@ -2,18 +2,15 @@ package dev.mlnr.spidey.utils;
 
 import dev.mlnr.spidey.Core;
 import dev.mlnr.spidey.objects.cache.Cache;
-import dev.mlnr.spidey.objects.command.Command;
+import dev.mlnr.spidey.objects.command.CommandHandler;
 import dev.mlnr.spidey.objects.invites.WrappedInvite;
 import dev.mlnr.spidey.utils.requests.API;
 import dev.mlnr.spidey.utils.requests.Requester;
-import io.github.classgraph.ClassGraph;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.utils.data.DataObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
 import java.time.Duration;
@@ -30,8 +27,6 @@ import static net.dv8tion.jda.api.entities.Activity.watching;
 
 public class Utils
 {
-    private static final Logger LOG = LoggerFactory.getLogger(Utils.class);
-    private static final ClassGraph CLASS_GRAPH = new ClassGraph().whitelistPackages("dev.mlnr.spidey.commands");
     private static final ThreadLocalRandom RANDOM = ThreadLocalRandom.current();
     private static final SimpleDateFormat SDF = new SimpleDateFormat("EE, d.LLL y | HH:mm:ss");
     private static final Calendar CAL = Calendar.getInstance();
@@ -102,27 +97,13 @@ public class Utils
 
     public static void startup(final JDA jda)
     {
-        final var commandsMap = Core.getCommands();
+        CommandHandler.registerCommands();
         final ArrayList<Supplier<Activity>> activities = new ArrayList<>(asList(
                 () -> listening("your commands"),
                 () -> watching("you"),
                 () -> watching(jda.getGuildCache().size() + " guilds"),
                 () -> watching(jda.getUserCache().size() + " users")
         ));
-        try (final var result = CLASS_GRAPH.scan())
-        {
-            for (final var cls : result.getAllClasses())
-            {
-                final var cmd = (Command) cls.loadClass().getDeclaredConstructor().newInstance();
-                commandsMap.put(cmd.getInvoke(), cmd);
-                for (final var alias : cmd.getAliases())
-                    commandsMap.put(alias, cmd);
-            }
-        }
-        catch (final Exception e)
-        {
-            LOG.error("There was an error while registering the commands!", e);
-        }
         Core.getExecutor().scheduleAtFixedRate(() -> jda.getPresence().setActivity(nextActivity(activities)), 0L, 30L, TimeUnit.SECONDS);
     }
 

@@ -1,20 +1,27 @@
 package dev.mlnr.spidey.objects.command;
 
-import dev.mlnr.spidey.Core;
 import dev.mlnr.spidey.utils.KSoftAPIHelper;
 import dev.mlnr.spidey.utils.Utils;
+import io.github.classgraph.ClassGraph;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import static dev.mlnr.spidey.objects.command.Cooldowns.cooldown;
 import static dev.mlnr.spidey.objects.command.Cooldowns.isOnCooldown;
 
 public class CommandHandler
 {
+	private static final Map<String, Command> COMMANDS = new HashMap<>();
+	private static final Logger LOG = LoggerFactory.getLogger(CommandHandler.class);
+	private static final ClassGraph CLASS_GRAPH = new ClassGraph().whitelistPackages("dev.mlnr.spidey.commands");
 	private static final String NO_PERMS = "Action can't be completed because you don't have **%s** permission";
 	public static final MessageEmbed ADMIN_WARNING = new EmbedBuilder().setAuthor("Potential security risk").setColor(Color.RED)
 												     .appendDescription("I have Administrator permission for this Discord server.")
@@ -36,8 +43,7 @@ public class CommandHandler
 			return;
 		}
 		final var command = content.contains(" ") ? content.substring(0, content.indexOf(' ')) : content;
-		final var commands = Core.getCommands();
-		final var cmd = commands.get(command.toLowerCase());
+		final var cmd = COMMANDS.get(command.toLowerCase());
 		if (cmd == null)
 		{
 			Utils.returnError("**" + command + "** isn't a valid command", msg);
@@ -79,5 +85,28 @@ public class CommandHandler
 		final var args = Arrays.copyOfRange(tmp, 1, tmp.length);
 		cmd.execute(args, msg);
 		cooldown(guildId, cmd);
+	}
+
+	public static void registerCommands()
+	{
+		try (final var result = CLASS_GRAPH.scan())
+		{
+			for (final var cls : result.getAllClasses())
+			{
+				final var cmd = (Command) cls.loadClass().getDeclaredConstructor().newInstance();
+				COMMANDS.put(cmd.getInvoke(), cmd);
+				for (final var alias : cmd.getAliases())
+					COMMANDS.put(alias, cmd);
+			}
+		}
+		catch (final Exception e)
+		{
+			LOG.error("There was an error while registering the commands!", e);
+		}
+	}
+	
+	public static Map<String, Command> getCommands()
+	{
+		return COMMANDS;
 	}
 }

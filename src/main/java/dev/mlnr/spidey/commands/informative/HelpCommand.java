@@ -1,9 +1,9 @@
 package dev.mlnr.spidey.commands.informative;
 
-import dev.mlnr.spidey.Core;
 import dev.mlnr.spidey.objects.cache.Cache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
+import dev.mlnr.spidey.objects.command.CommandHandler;
 import dev.mlnr.spidey.utils.Utils;
 import dev.mlnr.spidey.utils.collections.CollectionUtils;
 import net.dv8tion.jda.api.Permission;
@@ -30,7 +30,7 @@ public class HelpCommand extends Command
     @Override
     public final void execute(final String[] args, final Message message)
     {
-        final var commandsMap = Core.getCommands();
+        final var commandsMap = CommandHandler.getCommands();
         final var channel = message.getTextChannel();
         final var author = message.getAuthor();
         final var guildId = message.getGuild().getIdLong();
