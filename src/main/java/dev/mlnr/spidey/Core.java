@@ -30,7 +30,15 @@ public class Core
 	{
 		try
 		{
-			JDABuilder.create(System.getenv("Spidey"), EnumSet.of(GUILD_BANS, GUILD_INVITES, GUILD_MEMBERS, GUILD_MESSAGES, GUILD_MESSAGE_REACTIONS, GUILD_EMOJIS))
+			JDABuilder.create(System.getenv("Spidey"),
+					EnumSet.of(
+							GUILD_BANS,
+							GUILD_INVITES,
+							GUILD_MEMBERS,
+							GUILD_MESSAGES,
+							GUILD_MESSAGE_REACTIONS,
+							GUILD_EMOJIS
+					))
 					.disableCache(CacheFlag.MEMBER_OVERRIDES)
 					.setChunkingFilter(ChunkingFilter.exclude(264445053596991498L))
 					.addEventListeners(new Events(), waiter)
