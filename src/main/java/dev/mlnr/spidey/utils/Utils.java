@@ -30,7 +30,6 @@ import static net.dv8tion.jda.api.entities.Activity.watching;
 
 public class Utils
 {
-    private static final String INVITE_LINK = "https://spidey.mlnr.dev";
     private static final Logger LOG = LoggerFactory.getLogger(Utils.class);
     private static final ClassGraph CLASS_GRAPH = new ClassGraph().whitelistPackages("dev.mlnr.spidey.commands");
     private static final ThreadLocalRandom RANDOM = ThreadLocalRandom.current();
@@ -75,11 +74,6 @@ public class Utils
     public static EmbedBuilder createEmbedBuilder(final User u)
     {
         return new EmbedBuilder().setFooter("Command executed by " + u.getAsTag(), u.getEffectiveAvatarUrl());
-    }
-
-    public static String getInviteUrl()
-    {
-        return INVITE_LINK;
     }
 
     public static void sendPrivateMessageFormat(final User u, final String message, final Object... args)
