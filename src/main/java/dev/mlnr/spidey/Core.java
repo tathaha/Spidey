@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.GatewayEncoding;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,7 @@ public class Core
 		{
 			JDABuilder.create(System.getenv("Spidey"), EnumSet.of(GUILD_BANS, GUILD_INVITES, GUILD_MEMBERS, GUILD_MESSAGES, GUILD_MESSAGE_REACTIONS, GUILD_EMOJIS))
 					.disableCache(CacheFlag.MEMBER_OVERRIDES)
+					.setChunkingFilter(ChunkingFilter.exclude(264445053596991498L))
 					.addEventListeners(new Events(), waiter)
 					.setActivity(Activity.watching("myself load.."))
 					.setStatus(OnlineStatus.DO_NOT_DISTURB)
