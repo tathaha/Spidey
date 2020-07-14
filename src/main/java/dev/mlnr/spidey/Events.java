@@ -178,8 +178,8 @@ public class Events extends ListenerAdapter
 		guild.retrieveInvites().queue(invites ->
 		{
 			final var guildInvites = Cache.getInviteCache().entrySet().stream()
-																	  .filter(entry -> entry.getValue().getGuildId() == guildId)
-									                                  .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+										  .filter(entry -> entry.getValue().getGuildId() == guildId)
+										  .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 			for (final var invite : invites)
 			{
 				final var inviteData = guildInvites.get(invite.getCode());
