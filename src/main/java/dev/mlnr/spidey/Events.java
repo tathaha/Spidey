@@ -152,12 +152,12 @@ public class Events extends ListenerAdapter
 		final var channel = Cache.getLogAsChannel(guildId, e.getJDA());
 		final var role = guild.getRoleById(Cache.retrieveJoinRole(guildId));
 		final var userId = user.getId();
+		final var selfMember = guild.getSelfMember();
 
 		if (channel == null)
 			return;
 		if (role != null)
 		{
-			final var selfMember = guild.getSelfMember();
 			if (!selfMember.canInteract(role) || !selfMember.hasPermission(Permission.MANAGE_ROLES))
 				Utils.sendMessage(channel, "I'm not able to add the joinrole to user **" + user.getAsTag() + "** as i don't have permissions to do so.");
 			else
@@ -169,7 +169,7 @@ public class Events extends ListenerAdapter
 		eb.setColor(7844437);
 		eb.setFooter("User join", user.getEffectiveAvatarUrl());
 		eb.setTimestamp(Instant.now());
-		if (user.isBot())
+		if (!selfMember.hasPermission(Permission.MANAGE_SERVER) || user.isBot())
 		{
 			eb.appendDescription(".");
 			Utils.sendMessage(channel, eb.build());
@@ -177,8 +177,9 @@ public class Events extends ListenerAdapter
 		}
 		guild.retrieveInvites().queue(invites ->
 		{
-			final var guildInvites = Cache.getInviteCache().entrySet().stream().filter(entry -> entry.getValue().getGuildId() == guildId)
-									                   .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+			final var guildInvites = Cache.getInviteCache().entrySet().stream()
+																	  .filter(entry -> entry.getValue().getGuildId() == guildId)
+									                                  .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 			for (final var invite : invites)
 			{
 				final var inviteData = guildInvites.get(invite.getCode());
