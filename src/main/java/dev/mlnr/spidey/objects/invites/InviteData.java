@@ -2,12 +2,12 @@ package dev.mlnr.spidey.objects.invites;
 
 import net.dv8tion.jda.api.entities.Invite;
 
-public class WrappedInvite
+public class InviteData
 {
     private final long guildId;
     private int uses;
 
-    public WrappedInvite(final Invite invite)
+    public InviteData(final Invite invite)
     {
         this.guildId = invite.getGuild().getIdLong();
         this.uses = invite.getUses();

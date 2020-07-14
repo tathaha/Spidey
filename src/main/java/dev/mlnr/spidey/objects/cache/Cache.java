@@ -2,7 +2,7 @@ package dev.mlnr.spidey.objects.cache;
 
 import dev.mlnr.spidey.MySQL;
 import dev.mlnr.spidey.objects.command.Command;
-import dev.mlnr.spidey.objects.invites.WrappedInvite;
+import dev.mlnr.spidey.objects.invites.InviteData;
 import dev.mlnr.spidey.objects.messages.WrappedMessage;
 import dev.mlnr.spidey.utils.collections.CollectionUtils;
 import net.dv8tion.jda.api.JDA;
@@ -16,7 +16,7 @@ import java.util.Objects;
 public class Cache
 {
     private static final Map<Long, String> PREFIX_CACHE = new HashMap<>();
-    private static final Map<String, WrappedInvite> INVITE_CACHE = new HashMap<>();
+    private static final Map<String, InviteData> INVITE_CACHE = new HashMap<>();
     private static final Map<Long, Long> LOG_CHANNEL_CACHE = new HashMap<>();
     private static final Map<Long, Long> JOIN_ROLE_CACHE = new HashMap<>();
     private static final Map<Long, Boolean> VIP_GUILDS_CACHE = new HashMap<>();
@@ -30,7 +30,7 @@ public class Cache
         super();
     }
 
-    public static Map<String, WrappedInvite> getInviteCache()
+    public static Map<String, InviteData> getInviteCache()
     {
         return INVITE_CACHE;
     }

@@ -3,7 +3,7 @@ package dev.mlnr.spidey.utils;
 import dev.mlnr.spidey.Core;
 import dev.mlnr.spidey.objects.cache.Cache;
 import dev.mlnr.spidey.objects.command.CommandHandler;
-import dev.mlnr.spidey.objects.invites.WrappedInvite;
+import dev.mlnr.spidey.objects.invites.InviteData;
 import dev.mlnr.spidey.utils.requests.API;
 import dev.mlnr.spidey.utils.requests.Requester;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -120,7 +120,7 @@ public class Utils
     public static void storeInvites(final Guild guild)
     {
         if (guild.getSelfMember().hasPermission(Permission.MANAGE_SERVER))
-            guild.retrieveInvites().queue(invites -> invites.forEach(invite -> Cache.getInviteCache().put(invite.getCode(), new WrappedInvite(invite))));
+            guild.retrieveInvites().queue(invites -> invites.forEach(invite -> Cache.getInviteCache().put(invite.getCode(), new InviteData(invite))));
     }
 
     public static String getTime(final long millis)

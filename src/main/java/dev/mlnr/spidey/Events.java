@@ -2,7 +2,7 @@ package dev.mlnr.spidey;
 
 import dev.mlnr.spidey.objects.cache.Cache;
 import dev.mlnr.spidey.objects.command.CommandHandler;
-import dev.mlnr.spidey.objects.invites.WrappedInvite;
+import dev.mlnr.spidey.objects.invites.InviteData;
 import dev.mlnr.spidey.objects.messages.WrappedMessage;
 import dev.mlnr.spidey.utils.Emojis;
 import dev.mlnr.spidey.utils.Utils;
@@ -181,10 +181,10 @@ public class Events extends ListenerAdapter
 									                   .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 			for (final var invite : invites)
 			{
-				final var wrappedInvite = guildInvites.get(invite.getCode());
-				if (invite.getUses() > wrappedInvite.getUses())
+				final var inviteData = guildInvites.get(invite.getCode());
+				if (invite.getUses() > inviteData.getUses())
 				{
-					wrappedInvite.incrementUses();
+					inviteData.incrementUses();
 					eb.appendDescription(" with invite **" + invite.getUrl() + "** (**" + invite.getInviter().getAsTag() + "**).");
 					Utils.sendMessage(channel, eb.build());
 					break;
@@ -253,7 +253,7 @@ public class Events extends ListenerAdapter
 	@Override
 	public final void onGuildInviteCreate(@NotNull final GuildInviteCreateEvent e)
 	{
-		Cache.getInviteCache().put(e.getCode(), new WrappedInvite(e.getInvite()));
+		Cache.getInviteCache().put(e.getCode(), new InviteData(e.getInvite()));
 	}
 
 	@Override
