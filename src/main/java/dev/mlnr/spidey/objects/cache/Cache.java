@@ -3,7 +3,7 @@ package dev.mlnr.spidey.objects.cache;
 import dev.mlnr.spidey.MySQL;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.invites.InviteData;
-import dev.mlnr.spidey.objects.messages.WrappedMessage;
+import dev.mlnr.spidey.objects.messages.MessageData;
 import dev.mlnr.spidey.utils.collections.CollectionUtils;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -22,7 +22,7 @@ public class Cache
     private static final Map<Long, Boolean> VIP_GUILDS_CACHE = new HashMap<>();
     private static final Map<Long, Boolean> SUPPORTER_GUILDS_CACHE = new HashMap<>();
     private static final Map<Long, List<String>> REDDIT_CACHE = new HashMap<>();
-    private static final Map<Long, WrappedMessage> MESSAGE_CACHE = new HashMap<>();
+    private static final Map<Long, MessageData> MESSAGE_CACHE = new HashMap<>();
     private static final Map<Long, Long> LAST_MESSAGE_CACHE = new HashMap<>();
 
     private Cache()
@@ -165,7 +165,7 @@ public class Cache
 
     // MESSAGE CACHING
 
-    public static WrappedMessage getLastMessageDeleted(final long channelId)
+    public static MessageData getLastMessageDeleted(final long channelId)
     {
         return MESSAGE_CACHE.get(LAST_MESSAGE_CACHE.get(channelId));
     }
@@ -175,7 +175,7 @@ public class Cache
         LAST_MESSAGE_CACHE.put(channelId, messageId);
     }
 
-    public static void cacheMessage(final long messageId, final WrappedMessage message)
+    public static void cacheMessage(final long messageId, final MessageData message)
     {
         MESSAGE_CACHE.put(messageId, message);
     }

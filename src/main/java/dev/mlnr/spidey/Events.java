@@ -3,7 +3,7 @@ package dev.mlnr.spidey;
 import dev.mlnr.spidey.objects.cache.Cache;
 import dev.mlnr.spidey.objects.command.CommandHandler;
 import dev.mlnr.spidey.objects.invites.InviteData;
-import dev.mlnr.spidey.objects.messages.WrappedMessage;
+import dev.mlnr.spidey.objects.messages.MessageData;
 import dev.mlnr.spidey.utils.Emojis;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -42,7 +42,7 @@ public class Events extends ListenerAdapter
 		final var eb = new EmbedBuilder();
 		final var prefix = Cache.retrievePrefix(guildId);
 
-		Cache.cacheMessage(message.getIdLong(), new WrappedMessage(message));
+		Cache.cacheMessage(message.getIdLong(), new MessageData(message));
 		if (message.getContentRaw().startsWith(prefix) && !author.isBot())
 		{
 			if (guild.getSelfMember().hasPermission(Permission.ADMINISTRATOR))

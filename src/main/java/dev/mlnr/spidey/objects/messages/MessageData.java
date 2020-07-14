@@ -4,7 +4,7 @@ import net.dv8tion.jda.api.entities.Message;
 
 import java.time.Instant;
 
-public class WrappedMessage
+public class MessageData
 {
     private final long messageId;
     private final long authorId;
@@ -12,7 +12,7 @@ public class WrappedMessage
     private final String content;
     private final long channelId;
 
-    public WrappedMessage(final Message message)
+    public MessageData(final Message message)
     {
         this.messageId = message.getIdLong();
         this.authorId = message.getAuthor().getIdLong();
