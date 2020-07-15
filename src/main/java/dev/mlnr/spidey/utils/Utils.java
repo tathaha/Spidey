@@ -98,13 +98,15 @@ public class Utils
     public static void startup(final JDA jda)
     {
         CommandHandler.registerCommands();
+        final var executor = Core.getExecutor();
         final ArrayList<Supplier<Activity>> activities = new ArrayList<>(asList(
                 () -> listening("your commands"),
                 () -> watching("you"),
                 () -> watching(jda.getGuildCache().size() + " guilds"),
                 () -> watching(jda.getUserCache().size() + " users")
         ));
-        Core.getExecutor().scheduleAtFixedRate(() -> jda.getPresence().setActivity(nextActivity(activities)), 0L, 30L, TimeUnit.SECONDS);
+        executor.scheduleAtFixedRate(() -> jda.getPresence().setActivity(nextActivity(activities)), 0, 30, TimeUnit.SECONDS);
+        executor.scheduleAtFixedRate(() -> Cache.getMessageCache().clear(), 30, 30, TimeUnit.MINUTES);
     }
 
     private static Activity nextActivity(final ArrayList<Supplier<Activity>> activities)
