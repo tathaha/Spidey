@@ -177,6 +177,8 @@ public class Cache
 
     public static void cacheMessage(final long messageId, final MessageData message)
     {
+        if (MESSAGE_CACHE.size() == 50)
+            MESSAGE_CACHE.clear();
         MESSAGE_CACHE.put(messageId, message);
     }
 
