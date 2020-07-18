@@ -117,7 +117,7 @@ public class PurgeCommand extends Command
             }
             else
                 proceed(msgs, user, channel);
-        }), failure -> {});
+        }));
     }
 
     private void proceed(final List<Message> toDelete, final User user, final TextChannel channel)
@@ -126,6 +126,6 @@ public class PurgeCommand extends Command
         future.thenRunAsync(() -> channel.sendMessage(Utils.generateSuccess(toDelete.size(), user))
                                          .delay(Duration.ofSeconds(5))
                                          .flatMap(Message::delete)
-                                         .queue(null, failure -> {}));
+                                         .queue());
     }
 }

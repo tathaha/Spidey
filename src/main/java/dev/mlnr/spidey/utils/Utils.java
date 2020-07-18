@@ -40,25 +40,27 @@ public class Utils
     public static void sendMessage(final TextChannel ch, final String toSend)
     {
         if (ch.canTalk(ch.getGuild().getSelfMember()))
-            ch.sendMessage(toSend).queue(null, failure -> {});
+            ch.sendMessage(toSend).queue();
     }
 
     public static void sendMessage(final TextChannel ch, final MessageEmbed embed)
     {
         if (ch.canTalk(ch.getGuild().getSelfMember()))
-            ch.sendMessage(embed).queue(null, failure -> {});
+            ch.sendMessage(embed).queue();
     }
 
     public static void sendPrivateMessage(final User user, final String toSend)
     {
         user.openPrivateChannel()
             .flatMap(channel -> channel.sendMessage(toSend))
-            .queue(null, failure -> {});
+            .queue();
     }
 
     public static void deleteMessage(final Message msg)
     {
-        msg.delete().queue(null, failure -> {});
+        final var channel = msg.getTextChannel();
+        if (channel.getGuild().getSelfMember().hasPermission(channel, Permission.MESSAGE_MANAGE))
+            msg.delete().queue();
     }
 
     public static boolean canSetVanityUrl(final Guild g)
@@ -79,21 +81,19 @@ public class Utils
     public static void addReaction(final Message message, final String reaction)
     {
         if (message.getGuild().getSelfMember().hasPermission(message.getTextChannel(), Permission.MESSAGE_HISTORY, Permission.MESSAGE_ADD_REACTION))
-            message.addReaction(reaction).queue(null, failure -> {});
+            message.addReaction(reaction).queue();
     }
 
     public static void returnError(final String errMsg, final Message origin)
     {
         final var channel = origin.getTextChannel();
         addReaction(origin, Emojis.CROSS);
-        if (channel.canTalk())
-        {
-            channel.sendMessage(String.format(":no_entry: %s.", errMsg))
-                   .delay(Duration.ofSeconds(5))
-                   .flatMap(Message::delete)
-                   .flatMap(ignored -> origin.delete())
-                   .queue(null, failure -> {});
-        }
+        if (!channel.canTalk())
+            return;
+        channel.sendMessage(String.format(":no_entry: %s.", errMsg))
+                .delay(Duration.ofSeconds(5))
+                .flatMap(Message::delete)
+                .queue(success -> deleteMessage(origin));
     }
 
     public static String generateSuccess(final int count, final User u)
