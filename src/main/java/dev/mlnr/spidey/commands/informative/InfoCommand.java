@@ -27,7 +27,8 @@ public class InfoCommand extends Command
 		eb.addField("About me", "Hey, i'm Spidey. I was made by `/home/canelex_#6666`.", false);
 		eb.addField("Commands", "Type `" + Cache.retrievePrefix(message.getGuild().getIdLong()) + "help` for a list of commands.", false);
 		eb.addField("Bot info", "[Library](https://github.com/DV8FromTheWorld/JDA) version: `" + JDAInfo.VERSION + "`", false);
-		eb.addField("Links", "[`Discord`](https://discord.gg/cnAgKrv)\n[`GitHub`](https://github.com/caneleex/Spidey)", false);
+		eb.addField("Links", "[`Website`](https://spidey.mlnr.dev)\n[`Discord`](https://discord.gg/cnAgKrv)" +
+				"\n[`GitHub`](https://github.com/caneleex/Spidey)\n[`Twitter`](https://twitter.com/SpideyTheBot)", false);
 		eb.addField("Support", "If you want to support the development of Spidey, you can do so by donating using my [PayPal](https://paypal.me/caneleex). Thank you!", false);
 		Utils.sendMessage(message.getTextChannel(), eb.build());
 	}
