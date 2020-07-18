@@ -76,11 +76,17 @@ public class Utils
         sendPrivateMessage(u, String.format(message, args));
     }
 
+    public static void addReaction(final Message message, final String reaction)
+    {
+        if (message.getGuild().getSelfMember().hasPermission(message.getTextChannel(), Permission.MESSAGE_HISTORY, Permission.MESSAGE_ADD_REACTION))
+            message.addReaction(reaction).queue(null, failure -> {});
+    }
+
     public static void returnError(final String errMsg, final Message origin)
     {
-        origin.addReaction(Emojis.CROSS).queue(null, failure -> {});
         final var channel = origin.getTextChannel();
-        if (channel.canTalk(channel.getGuild().getSelfMember()))
+        addReaction(origin, Emojis.CROSS);
+        if (channel.canTalk())
         {
             channel.sendMessage(String.format(":no_entry: %s.", errMsg))
                    .delay(Duration.ofSeconds(5))

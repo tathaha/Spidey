@@ -10,6 +10,8 @@ import net.dv8tion.jda.api.entities.Message;
 
 import java.awt.*;
 
+import static dev.mlnr.spidey.utils.Utils.addReaction;
+
 @SuppressWarnings("unused")
 public class PollCommand extends Command
 {
@@ -37,9 +39,9 @@ public class PollCommand extends Command
 		Utils.deleteMessage(message);
 		channel.sendMessage("Poll: **" + question + "**").queue(m ->
 		{
-			m.addReaction(Emojis.LIKE).queue();
-			m.addReaction(Emojis.SHRUG).queue();
-			m.addReaction(Emojis.DISLIKE).queue();
+			addReaction(m, Emojis.LIKE);
+			addReaction(m, Emojis.SHRUG);
+			addReaction(m, Emojis.DISLIKE);
 			final var eb = Utils.createEmbedBuilder(author);
 			eb.setAuthor("NEW POLL");
 			eb.setColor(Color.ORANGE);

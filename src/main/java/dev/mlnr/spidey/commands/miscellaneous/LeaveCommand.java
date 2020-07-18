@@ -12,6 +12,8 @@ import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEve
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
+import static dev.mlnr.spidey.utils.Utils.addReaction;
+
 @SuppressWarnings("unused")
 public class LeaveCommand extends Command
 {
@@ -29,8 +31,8 @@ public class LeaveCommand extends Command
 		Utils.deleteMessage(message);
 		channel.sendMessage("Do you really want me to leave?").queue(msg ->
 		{
-			msg.addReaction(Emojis.CHECK).queue();
-			msg.addReaction(Emojis.CROSS).queue();
+			addReaction(msg, Emojis.CHECK);
+			addReaction(msg, Emojis.CROSS);
 			Core.getWaiter().waitForEvent(GuildMessageReactionAddEvent.class,
 					ev ->
 					{

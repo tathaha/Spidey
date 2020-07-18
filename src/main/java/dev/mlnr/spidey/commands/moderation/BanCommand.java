@@ -71,7 +71,7 @@ public class BanCommand extends Command
 		final var reasonMessage = reasonBuilder.toString();
 		final var banMessage = banMessageBuilder.toString();
 
-		message.addReaction(Emojis.CHECK).queue();
+		Utils.addReaction(message, Emojis.CHECK);
 		guild.ban(mb, delDays, reasonMessage).queue();
 
 		channel.sendMessage(banMessage)

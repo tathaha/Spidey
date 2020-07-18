@@ -10,14 +10,14 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
-import net.dv8tion.jda.api.exceptions.ErrorHandler;
-import net.dv8tion.jda.api.requests.ErrorResponse;
 
 import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+import static dev.mlnr.spidey.utils.Utils.addReaction;
 
 @SuppressWarnings({"unused", "StringBufferReplaceableByString"})
 public class PurgeCommand extends Command
@@ -84,9 +84,9 @@ public class PurgeCommand extends Command
                 channel.sendMessage(builder.toString()).queue(msg ->
                 {
                     final var wastebasket = "\uD83D\uDDD1";
-                    msg.addReaction(Emojis.CHECK).queue();
-                    msg.addReaction(wastebasket).queue();
-                    msg.addReaction(Emojis.CROSS).queue();
+                    addReaction(msg, Emojis.CHECK);
+                    addReaction(msg, wastebasket);
+                    addReaction(msg, Emojis.CROSS);
 
                     Core.getWaiter().waitForEvent(GuildMessageReactionAddEvent.class,
                         ev -> ev.getUser() == message.getAuthor() && ev.getMessageIdLong() == msg.getIdLong(),
@@ -126,6 +126,6 @@ public class PurgeCommand extends Command
         future.thenRunAsync(() -> channel.sendMessage(Utils.generateSuccess(toDelete.size(), user))
                                          .delay(Duration.ofSeconds(5))
                                          .flatMap(Message::delete)
-                                         .queue(null, new ErrorHandler().ignore(ErrorResponse.UNKNOWN_MESSAGE)));
+                                         .queue(null, failure -> {}));
     }
 }
