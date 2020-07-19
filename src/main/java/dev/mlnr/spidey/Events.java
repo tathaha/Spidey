@@ -206,7 +206,7 @@ public class Events extends ListenerAdapter
 	{
 		final var guild = e.getGuild();
 		final var defaultChannel = guild.getDefaultChannel();
-		if (defaultChannel != null && defaultChannel.canTalk(guild.getSelfMember()))
+		if (defaultChannel != null && defaultChannel.canTalk())
 			Utils.sendMessage(defaultChannel, "Hey! I'm **Spidey**. Thanks for inviting me. To start, check `s!info`.");
 		Utils.storeInvites(guild);
 	}

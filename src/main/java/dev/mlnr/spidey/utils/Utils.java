@@ -39,13 +39,13 @@ public class Utils
 
     public static void sendMessage(final TextChannel ch, final String toSend)
     {
-        if (ch.canTalk(ch.getGuild().getSelfMember()))
+        if (ch.canTalk())
             ch.sendMessage(toSend).queue();
     }
 
     public static void sendMessage(final TextChannel ch, final MessageEmbed embed)
     {
-        if (ch.canTalk(ch.getGuild().getSelfMember()))
+        if (ch.canTalk())
             ch.sendMessage(embed).queue();
     }
 
