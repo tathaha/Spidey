@@ -20,11 +20,13 @@ import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateBoostTierEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageUpdateEvent;
 import net.dv8tion.jda.api.events.role.RoleDeleteEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
 import java.time.Instant;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -272,6 +274,14 @@ public class Events extends ListenerAdapter
 	@Override
 	public void onGuildMessageDelete(@NotNull final GuildMessageDeleteEvent e)
 	{
-		Cache.setLastMessageDeleted(e.getChannel().getIdLong(), e.getMessageIdLong());
+		Cache.setLastDeletedMessage(e.getChannel().getIdLong(), e.getMessageIdLong());
+	}
+
+	@Override
+	public void onGuildMessageUpdate(@Nonnull final GuildMessageUpdateEvent event)
+	{
+		final var messageId = event.getMessageIdLong();
+		Cache.cacheMessage(messageId, new MessageData(event.getMessage()));
+		Cache.setLastEditedMessage(event.getChannel().getIdLong(), messageId);
 	}
 }

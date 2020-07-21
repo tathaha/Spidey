@@ -16,7 +16,7 @@ public class SnipeCommand extends Command
 {
     public SnipeCommand()
     {
-        super("snipe", new String[]{}, "Snipes a deleted message", "snipe", Category.UTILITY, Permission.UNKNOWN, 0, 6);
+        super("snipe", new String[]{"s", "dsnipe"}, "Snipes a deleted message", "snipe", Category.UTILITY, Permission.UNKNOWN, 0, 6);
     }
 
     @Override
@@ -24,19 +24,19 @@ public class SnipeCommand extends Command
     {
         final var textChannel = msg.getTextChannel();
         final var channelId = textChannel.getIdLong();
-        final var lastMessage = Cache.getLastMessageDeleted(channelId);
-        if (lastMessage == null)
+        final var lastDeletedMessage = Cache.getLastDeletedMessage(channelId);
+        if (lastDeletedMessage == null)
         {
-            Utils.returnError("There's nothing to snipe", msg);
+            Utils.returnError("There's no deleted message to snipe", msg);
             return;
         }
         final var eb = Utils.createEmbedBuilder(msg.getAuthor());
-        eb.setTimestamp(lastMessage.getCreation());
-        eb.setDescription(lastMessage.getContent());
+        eb.setTimestamp(lastDeletedMessage.getCreation());
+        eb.setDescription(lastDeletedMessage.getContent());
         eb.setColor(Color.GREEN);
-        msg.getJDA().retrieveUserById(lastMessage.getAuthorId()).queue(user -> eb.setAuthor(user.getName(), null, user.getEffectiveAvatarUrl()));
+        msg.getJDA().retrieveUserById(lastDeletedMessage.getAuthorId()).queue(user -> eb.setAuthor(user.getName(), null, user.getEffectiveAvatarUrl()));
 
         Utils.sendMessage(textChannel, eb.build());
-        Core.getExecutor().schedule(() -> Cache.uncacheMessage(lastMessage.getChannelId(), lastMessage.getId()), 2, TimeUnit.MINUTES);
+        Core.getExecutor().schedule(() -> Cache.uncacheMessage(lastDeletedMessage.getChannelId(), lastDeletedMessage.getId()), 2, TimeUnit.MINUTES);
     }
 }
