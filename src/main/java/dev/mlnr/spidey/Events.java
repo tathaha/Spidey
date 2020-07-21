@@ -43,9 +43,12 @@ public class Events extends ListenerAdapter
 		final var guildId = guild.getIdLong();
 		final var eb = new EmbedBuilder();
 		final var prefix = Cache.retrievePrefix(guildId);
+		final var content = message.getContentRaw().trim();
 
-		Cache.cacheMessage(message.getIdLong(), new MessageData(message));
-		if (message.getContentRaw().startsWith(prefix) && !author.isBot())
+		if (content.length() != 0)
+			Cache.cacheMessage(message.getIdLong(), new MessageData(message));
+
+		if (content.startsWith(prefix) && !author.isBot())
 		{
 			if (guild.getSelfMember().hasPermission(Permission.ADMINISTRATOR))
 			{
