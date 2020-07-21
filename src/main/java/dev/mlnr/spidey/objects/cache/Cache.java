@@ -27,8 +27,8 @@ public class Cache
     private static final Map<Long, MessageData> MESSAGE_CACHE = new ConcurrentHashMap<>();
     private static final Map<Long, Long> LAST_MESSAGE_DELETED_CACHE = new HashMap<>();
 
-    private static final Map<Long, Long> LAST_MESSAGE_EDITED_CACHE = new HashMap<>(); // channelId, messageId
-    private static final Map<Long, MessageData> LAST_MESSAGE_EDITED_DATA = new HashMap<>(); // messageId, old data
+    private static final Map<Long, Long> LAST_MESSAGE_EDITED_CACHE = new HashMap<>();
+    private static final Map<Long, MessageData> LAST_MESSAGE_EDITED_DATA = new HashMap<>();
 
     private Cache()
     {
