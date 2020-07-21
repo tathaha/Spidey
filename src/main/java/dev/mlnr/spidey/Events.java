@@ -81,7 +81,7 @@ public class Events extends ListenerAdapter
 		final var guild = e.getGuild();
 		final var channel = Cache.getLogAsChannel(guild.getIdLong(), e.getJDA());
 
-		if (channel == null)
+		if (channel == null || !guild.getSelfMember().hasPermission(Permission.BAN_MEMBERS, Permission.VIEW_AUDIT_LOGS))
 			return;
 		guild.retrieveBan(user).queue(ban -> guild.retrieveAuditLogs().type(ActionType.BAN).queue(bans ->
 		{
@@ -112,17 +112,25 @@ public class Events extends ListenerAdapter
 		final var guild = e.getGuild();
 		final var channel = Cache.getLogAsChannel(guild.getIdLong(), e.getJDA());
 
-		if (channel == null)
+		if (channel == null || !guild.getSelfMember().hasPermission(Permission.VIEW_AUDIT_LOGS))
 			return;
 		guild.retrieveAuditLogs().type(ActionType.UNBAN).queue(unbans ->
 		{
+			final var sb = new StringBuilder().append(Emojis.CHECK).append(" **")
+					.append(MarkdownSanitizer.escape(user.getAsTag())).append("** (").append(user.getId()).append(") has been `unbanned`");
 			final var eb = new EmbedBuilder();
-			eb.setDescription(new StringBuilder().append(Emojis.CHECK).append(" **")
-					.append(MarkdownSanitizer.escape(user.getAsTag())).append("** (").append(user.getId()).append(") has been `unbanned` ")
-					.append("by **").append(unbans.get(0).getUser().getAsTag()).append("**.").toString());
 			eb.setColor(7844437);
 			eb.setFooter("User unban", user.getEffectiveAvatarUrl());
 			eb.setTimestamp(Instant.now());
+
+			if (unbans.isEmpty())
+			{
+				sb.append(".");
+				eb.setDescription(sb.toString());
+				Utils.sendMessage(channel, eb.build());
+				return;
+			}
+			eb.setDescription(sb.append(" by **").append(unbans.get(0).getUser().getAsTag()).append("**.").toString());
 			Utils.sendMessage(channel, eb.build());
 		});
 	}
