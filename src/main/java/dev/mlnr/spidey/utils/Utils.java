@@ -14,6 +14,7 @@ import net.dv8tion.jda.api.utils.data.DataObject;
 
 import java.text.SimpleDateFormat;
 import java.time.Duration;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.concurrent.ThreadLocalRandom;
@@ -112,7 +113,9 @@ public class Utils
                 () -> watching(jda.getUserCache().size() + " users")
         ));
         executor.scheduleAtFixedRate(() -> jda.getPresence().setActivity(nextActivity(activities)), 0, 30, TimeUnit.SECONDS);
-        executor.scheduleAtFixedRate(() -> Cache.getMessageCache().clear(), 30, 30, TimeUnit.MINUTES);
+        executor.scheduleAtFixedRate(() ->
+                Cache.getMessageCache().entrySet().removeIf(entry -> entry.getValue().getCreation().isBefore(OffsetDateTime.now().minusMinutes(10).toInstant())),
+                1, 1, TimeUnit.HOURS);
     }
 
     private static Activity nextActivity(final ArrayList<Supplier<Activity>> activities)
