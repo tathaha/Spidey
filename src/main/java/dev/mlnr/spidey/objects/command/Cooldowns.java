@@ -21,7 +21,7 @@ public class Cooldowns
     public static void cooldown(final long guildId, final Command cmd)
     {
         final var cooldown = cmd.getCooldown();
-        if (cooldown == 0 || Cache.isSupporter(guildId))
+        if (cooldown == 0)
             return;
         CollectionUtils.add(COOLDOWN_MAP, guildId, cmd);
         Core.getExecutor().schedule(() -> CollectionUtils.remove(COOLDOWN_MAP, guildId, cmd), Cache.getCooldown(guildId, cmd), TimeUnit.SECONDS);

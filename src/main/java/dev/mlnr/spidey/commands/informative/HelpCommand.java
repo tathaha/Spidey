@@ -18,9 +18,7 @@ import java.util.function.Function;
 @SuppressWarnings("unused")
 public class HelpCommand extends Command
 {
-    private static final String COOLDOWN_REDUCE_HALF = "If you want to reduce the commands' cooldown by half, you can achieve so by "
-            + "donating at least 1€ or if you want to completely remove cooldowns, you *have* to donate at least 3€.";
-    private static final String COOLDOWN_REMOVE = "If you want to completely remove the commands' cooldown, you can achieve so by donating at least 3€.";
+    private static final String COOLDOWN_REDUCE_HALF = "If you want to reduce the commands' cooldown by half, you can achieve so by donating at least 2€.";
 
     public HelpCommand()
     {
@@ -100,19 +98,11 @@ public class HelpCommand extends Command
                 eb.addField("Aliases", aliases.length == 0 ? "None" : String.join(", ", aliases), false);
                 eb.addField("Cooldown", cooldown == 0 ? "None" : cooldown + " seconds", false);
 
-                final var isVip = Cache.isVip(guildId);
-                final var isSupporter = Cache.isSupporter(guildId);
-                var text = "";
-                if (!isVip && !isSupporter)
-                    text = COOLDOWN_REDUCE_HALF;
-                else if (isVip && !isSupporter)
-                    text = COOLDOWN_REMOVE;
-
-                if (!text.isEmpty())
+                if (!Cache.isVip(guildId))
                 {
                     eb.addBlankField(false);
-                    eb.addField("Reducing/removing commands' cooldown", text + "\nBy donating, you also support the Developer and"
-                                + " help cover hosting fees. Type `" + prefix + "info` for the PayPal link. Thank you!", false);
+                    eb.addField("Reducing commands' cooldown", COOLDOWN_REDUCE_HALF + "\nBy donating, you also support the Developer and"
+                            + " help cover hosting fees. Type `" + prefix + "info` for the PayPal link. Thank you!", false);
                 }
                 Utils.sendMessage(channel, eb.build());
             }

@@ -170,9 +170,4 @@ public class MySQL
 	{
 		return retrieveLongProperty("vip", guildId) == 1;
 	}
-
-	public static boolean isSupporter(final long guildId)
-	{
-		return retrieveLongProperty("supporter", guildId) == 1;
-	}
 }

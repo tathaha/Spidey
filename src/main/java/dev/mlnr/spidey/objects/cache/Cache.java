@@ -22,7 +22,6 @@ public class Cache
     private static final Map<Long, Long> LOG_CHANNEL_CACHE = new HashMap<>();
     private static final Map<Long, Long> JOIN_ROLE_CACHE = new HashMap<>();
     private static final Map<Long, Boolean> VIP_GUILDS_CACHE = new HashMap<>();
-    private static final Map<Long, Boolean> SUPPORTER_GUILDS_CACHE = new HashMap<>();
     private static final Map<Long, List<String>> REDDIT_CACHE = new HashMap<>();
 
     private static final Map<Long, MessageData> MESSAGE_CACHE = new ConcurrentHashMap<>();
@@ -148,20 +147,6 @@ public class Cache
         return vip;
     }
 
-    // SUPPORTER GUILDS CACHING
-
-    public static boolean isSupporter(final long guildId)
-    {
-        return Objects.requireNonNullElseGet(SUPPORTER_GUILDS_CACHE.get(guildId), () -> isSupporterByRequest(guildId));
-    }
-
-    private static boolean isSupporterByRequest(final long guildId)
-    {
-        final var supporter = MySQL.isSupporter(guildId);
-        SUPPORTER_GUILDS_CACHE.put(guildId, supporter);
-        return supporter;
-    }
-
     // REDDIT POSTS CACHING
 
     public static boolean isPostCached(final long guildId, final String json)
@@ -228,7 +213,7 @@ public class Cache
 
     public static void removeEntry(final long guildId)
     {
-        if (isVip(guildId) || isSupporter(guildId))
+        if (isVip(guildId))
             return;
         LOG_CHANNEL_CACHE.remove(guildId);
         JOIN_ROLE_CACHE.remove(guildId);
@@ -238,8 +223,6 @@ public class Cache
 
     public static int getCooldown(final long guildId, final Command cmd)
     {
-        if (isSupporter(guildId))
-            return 0;
         final var cooldown = cmd.getCooldown();
         if (isVip(guildId))
             return cooldown / 2;
