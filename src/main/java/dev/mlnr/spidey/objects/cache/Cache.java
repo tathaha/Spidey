@@ -6,6 +6,7 @@ import dev.mlnr.spidey.objects.invites.InviteData;
 import dev.mlnr.spidey.objects.messages.MessageData;
 import dev.mlnr.spidey.utils.collections.CollectionUtils;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.util.HashMap;
@@ -102,6 +103,11 @@ public class Cache
     public static long retrieveJoinRole(final long guildId)
     {
         return Objects.requireNonNullElseGet(JOIN_ROLE_CACHE.get(guildId), () -> retrieveJoinRoleByRequest(guildId));
+    }
+
+    public static Role getJoinRole(final long guildId, final JDA jda)
+    {
+        return jda.getRoleById(retrieveJoinRole(guildId));
     }
 
     private static long retrieveJoinRoleByRequest(final long guildId)
