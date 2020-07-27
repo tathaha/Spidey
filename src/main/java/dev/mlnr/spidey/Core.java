@@ -26,7 +26,7 @@ public class Core
 	{
 		try
 		{
-			JDABuilder.create(System.getenv("SpideyDev"),
+			JDABuilder.create(System.getenv("Spidey"),
 					EnumSet.of(
 							GUILD_BANS,
 							GUILD_INVITES,
