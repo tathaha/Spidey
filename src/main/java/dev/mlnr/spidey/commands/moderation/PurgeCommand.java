@@ -57,66 +57,70 @@ public class PurgeCommand extends Command
 
         final var mentioned = message.getMentionedUsers();
         final var user = mentioned.isEmpty() ? null : mentioned.get(0);
-        final var finalAmount = amount;
+        final var limit = amount;
 
         message.delete().queue(ignored -> channel.getIterableHistory().cache(false).takeAsync(100).thenAcceptAsync(messages ->
         {
-            final var msgs = user == null ? messages.subList(0, finalAmount) : messages.stream().filter(msg -> msg.getAuthor().equals(user)).limit(finalAmount).collect(Collectors.toList());
+            final var msgs = user == null ? messages.subList(0, Math.min(messages.size(), limit)) : messages.stream().filter(msg -> msg.getAuthor().equals(user)).limit(limit).collect(Collectors.toList());
             if (msgs.isEmpty())
             {
                 Utils.returnError("There are no messages to be deleted", message);
                 return;
             }
             final var pinned = msgs.stream().filter(Message::isPinned).collect(Collectors.toList());
-            if (!pinned.isEmpty())
+            if (pinned.isEmpty())
             {
-                final var size = pinned.size();
-                final var equalsOne = size == 1;
-                final var builder = new StringBuilder("There ");
-                builder.append(equalsOne ? "is" : "are").append(" **").append(size)
-                       .append("** pinned message").append(equalsOne ? "" : "s").append(" selected for deletion. ")
-                       .append("Are you sure you want to delete ").append(equalsOne ? "it" : "them").append("? ")
-                       .append("Deleting a message will also unpin it.")
-                       .append("\n\nReacting with :white_check_mark: will delete ").append(equalsOne ? "this message" : "these messages").append(".")
-                       .append("\nReacting with :wastebasket: will delete each unpinned message.")
-                       .append("\nReacting with :x: will cancel the deletion.")
-                       .append("\n\nThe deletion will be cancelled automatically in **1 minute** if a decision isn't made.");
-                channel.sendMessage(builder.toString()).queue(msg ->
-                {
-                    final var wastebasket = "\uD83D\uDDD1";
-                    addReaction(msg, Emojis.CHECK);
-                    addReaction(msg, wastebasket);
-                    addReaction(msg, Emojis.CROSS);
-
-                    Core.getWaiter().waitForEvent(GuildMessageReactionAddEvent.class,
-                        ev -> ev.getUser() == message.getAuthor() && ev.getMessageIdLong() == msg.getIdLong(),
-                        ev ->
-                        {
-                            switch (ev.getReactionEmote().getName())
-                            {
-                                case Emojis.CHECK:
-                                    Utils.deleteMessage(msg);
-                                    break;
-                                case Emojis.CROSS:
-                                    Utils.deleteMessage(msg);
-                                    return;
-                                case wastebasket:
-                                    msgs.removeAll(pinned);
-                                    if (msgs.isEmpty())
-                                    {
-                                        Utils.returnError("There are no messages to be deleted", msg);
-                                        return;
-                                    }
-                                    Utils.deleteMessage(msg);
-                                    break;
-                                default:
-                            }
-                            proceed(msgs, user, channel);
-                        }, 1, TimeUnit.MINUTES, () -> Utils.returnError("Sorry, you took too long", msg));
-                });
-            }
-            else
                 proceed(msgs, user, channel);
+                return;
+            }
+            final var size = pinned.size();
+            final var equalsOne = size == 1;
+            final var builder = new StringBuilder("There ");
+            builder.append(equalsOne ? "is" : "are").append(" **").append(size)
+                    .append("** pinned message").append(equalsOne ? "" : "s").append(" selected for deletion. ")
+                    .append("Are you sure you want to delete ").append(equalsOne ? "it" : "them").append("? ")
+                    .append("Deleting a message will also unpin it.")
+                    .append("\n\nReacting with :white_check_mark: will delete ").append(equalsOne ? "this message" : "these messages").append(".")
+                    .append("\nReacting with :wastebasket: will delete each unpinned message.")
+                    .append("\nReacting with :x: will cancel the deletion.")
+                    .append("\n\nThe deletion will be cancelled automatically in **1 minute** if a decision isn't made.");
+            channel.sendMessage(builder.toString()).queue(msg ->
+            {
+                final var wastebasket = "\uD83D\uDDD1";
+                addReaction(msg, Emojis.CHECK);
+                addReaction(msg, wastebasket);
+                addReaction(msg, Emojis.CROSS);
+
+                Core.getWaiter().waitForEvent(GuildMessageReactionAddEvent.class,
+                    ev -> ev.getUser() == message.getAuthor() && ev.getMessageIdLong() == msg.getIdLong(),
+                    ev ->
+                    {
+                        switch (ev.getReactionEmote().getName())
+                        {
+                            case Emojis.CHECK:
+                                Utils.deleteMessage(msg);
+                                break;
+                            case Emojis.CROSS:
+                                Utils.deleteMessage(msg);
+                                return;
+                            case wastebasket:
+                                msgs.removeAll(pinned);
+                                if (msgs.isEmpty())
+                                {
+                                    Utils.returnError("There are no messages to be deleted", msg);
+                                    return;
+                                }
+                                Utils.deleteMessage(msg);
+                                break;
+                            default:
+                        }
+                        proceed(msgs, user, channel);
+                    }, 1, TimeUnit.MINUTES, () -> Utils.returnError("Sorry, you took too long", msg));
+                });
+        }).exceptionally(throwable ->
+        {
+            Utils.returnError("Unfortunately, i couldn't purge messages due to an internal error: **" + throwable.getMessage() + "**. Please report this message to the Developer", message);
+            return null;
         }));
     }
 
