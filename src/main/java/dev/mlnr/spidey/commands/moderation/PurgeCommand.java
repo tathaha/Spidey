@@ -33,6 +33,12 @@ public class PurgeCommand extends Command
     {
         final var channel = message.getTextChannel();
 
+        if (!channel.getGuild().getSelfMember().hasPermission(channel, getRequiredPermission(), Permission.MESSAGE_HISTORY))
+        {
+            Utils.returnError("I don't have permission to purge messages or see the message history in this channel", message);
+            return;
+        }
+
         if (args.length == 0)
         {
             Utils.returnError("Wrong syntax", message);
