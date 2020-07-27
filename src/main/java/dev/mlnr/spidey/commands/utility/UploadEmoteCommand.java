@@ -126,6 +126,6 @@ public class UploadEmoteCommand extends Command
         {
             final var left = maxEmotes - used - 1;
             Utils.sendMessage(channel, "Emote " + emote.getAsMention() + " has been successfully uploaded! Emote slots left: **" + (left == 0 ? "None" : left) + "**");
-        }, failure -> Utils.returnError("Unfortunately, we could not create the emote due to an internal error: **" + failure.getMessage() + "**. Please report this message to the Developer", message));
+        }, failure -> Utils.returnError("Unfortunately, i couldn't create the emote due to an internal error: **" + failure.getMessage() + "**. Please report this message to the Developer", message));
     }
 }
