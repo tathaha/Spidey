@@ -75,38 +75,36 @@ public class HelpCommand extends Command
             if (nsfwHidden)
                 eb.appendDescription("\nNSFW commands were hidden from the help message. If you want to see all NSFW commands, type the help command in a NSFW channel.");
             Utils.sendMessage(channel, eb.build());
+            return;
         }
-        else
+        final var cmd = args[0].toLowerCase();
+        if (!commandsMap.containsKey(cmd))
         {
-            final var cmd = args[0].toLowerCase();
-            if (!commandsMap.containsKey(cmd))
-                Utils.returnError("**" + cmd + "** isn't a valid command", message);
-            else
-            {
-                final var command = commandsMap.get(cmd);
-                final var description = command.getDescription();
-                final var usage = command.getUsage();
-                final var requiredPermission = command.getRequiredPermission();
-                final var aliases = command.getAliases();
-                final var cooldown = Cache.getCooldown(guildId, command);
-                eb.setAuthor("Viewing command info - " + cmd);
-                eb.setColor(0xFEFEFE);
-                eb.addField("Description", description == null ? "Unspecified" : description, false);
-                eb.addField("Usage", usage == null ? "Unspecified" : "`" + prefix + usage + "` (<> = required, () = optional)", false);
-                eb.addField("Category",  command.getCategory().getFriendlyName(), false);
-                eb.addField("Required permission", requiredPermission == Permission.UNKNOWN ? "None" : requiredPermission.getName(), false);
-                eb.addField("Aliases", aliases.length == 0 ? "None" : String.join(", ", aliases), false);
-                eb.addField("Cooldown", cooldown == 0 ? "None" : cooldown + " seconds", false);
-
-                if (!Cache.isVip(guildId))
-                {
-                    eb.addBlankField(false);
-                    eb.addField("Reducing commands' cooldown", COOLDOWN_REDUCE_HALF + "\nBy donating, you also support the Developer and"
-                            + " help cover hosting fees. Type `" + prefix + "info` for the PayPal link. Thank you!", false);
-                }
-                Utils.sendMessage(channel, eb.build());
-            }
+            Utils.returnError("**" + cmd + "** isn't a valid command", message);
+            return;
         }
+        final var command = commandsMap.get(cmd);
+        final var description = command.getDescription();
+        final var usage = command.getUsage();
+        final var requiredPermission = command.getRequiredPermission();
+        final var aliases = command.getAliases();
+        final var cooldown = Cache.getCooldown(guildId, command);
+        eb.setAuthor("Viewing command info - " + cmd);
+        eb.setColor(0xFEFEFE);
+        eb.addField("Description", description == null ? "Unspecified" : description, false);
+        eb.addField("Usage", usage == null ? "Unspecified" : "`" + prefix + usage + "` (<> = required, () = optional)", false);
+        eb.addField("Category",  command.getCategory().getFriendlyName(), false);
+        eb.addField("Required permission", requiredPermission == Permission.UNKNOWN ? "None" : requiredPermission.getName(), false);
+        eb.addField("Aliases", aliases.length == 0 ? "None" : String.join(", ", aliases), false);
+        eb.addField("Cooldown", cooldown == 0 ? "None" : cooldown + " seconds", false);
+
+        if (!Cache.isVip(guildId))
+        {
+            eb.addBlankField(false);
+            eb.addField("Reducing commands' cooldown", COOLDOWN_REDUCE_HALF + "\nBy donating, you also support the Developer and"
+                    + " help cover hosting fees. Type `" + prefix + "info` for the PayPal link. Thank you!", false);
+        }
+        Utils.sendMessage(channel, eb.build());
     }
 
     private String listToString(final List<Command> list, final Function<Command, String> transformer)
