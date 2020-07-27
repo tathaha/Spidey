@@ -46,7 +46,7 @@ public class Utils
 
     public static void sendMessage(final TextChannel ch, final MessageEmbed embed)
     {
-        if (ch.canTalk())
+        if (ch.canTalk() && ch.getGuild().getSelfMember().hasPermission(ch, Permission.MESSAGE_EMBED_LINKS))
             ch.sendMessage(embed).queue();
     }
 
