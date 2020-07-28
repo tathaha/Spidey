@@ -23,11 +23,12 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageUpdateEvent;
 import net.dv8tion.jda.api.events.role.RoleDeleteEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import java.time.Instant;
+
+import static net.dv8tion.jda.api.utils.MarkdownSanitizer.escape;
 
 @SuppressWarnings({"ConstantConditions", "StringBufferReplaceableByString"})
 public class Events extends ListenerAdapter
@@ -65,7 +66,7 @@ public class Events extends ListenerAdapter
 				return;
 			Utils.deleteMessage(message);
 			eb.setDescription(new StringBuilder().append(jda.getEmoteById(699731065052332123L).getAsMention())
-					.append(" **").append(MarkdownSanitizer.escape(author.getAsTag())).append("** has `boosted` ")
+					.append(" **").append(escape(author.getAsTag())).append("** has `boosted` ")
 					.append("the server. The server currently has **").append(guild.getBoostCount()).append("** boosts.").toString());
 			eb.setAuthor("NEW BOOST");
 			eb.setColor(16023551);
@@ -96,7 +97,7 @@ public class Events extends ListenerAdapter
 			else
 				reason = (providedReason == null ? "Unknown" : providedReason);
 
-			eb.setDescription(new StringBuilder().append(Emojis.CROSS).append(" **").append(MarkdownSanitizer.escape(user.getAsTag()))
+			eb.setDescription(new StringBuilder().append(Emojis.CROSS).append(" **").append(escape(user.getAsTag()))
 					.append("** (").append(user.getId()).append(") has been `banned` by ").append("**")
 					.append(banner.getAsTag()).append("** for **").append(reason.trim()).append("**.").toString());
 			eb.setColor(14495300);
@@ -118,7 +119,7 @@ public class Events extends ListenerAdapter
 		guild.retrieveAuditLogs().type(ActionType.UNBAN).queue(unbans ->
 		{
 			final var sb = new StringBuilder().append(Emojis.CHECK).append(" **")
-					.append(MarkdownSanitizer.escape(user.getAsTag())).append("** (").append(user.getId()).append(") has been `unbanned`");
+					.append(escape(user.getAsTag())).append("** (").append(user.getId()).append(") has been `unbanned`");
 			final var eb = new EmbedBuilder();
 			eb.setColor(7844437);
 			eb.setFooter("User unban", user.getEffectiveAvatarUrl());
@@ -145,12 +146,21 @@ public class Events extends ListenerAdapter
 
 		if (channel == null)
 			return;
+		final var escapedTag = escape(user.getAsTag());
+		final var avatarUrl = user.getEffectiveAvatarUrl();
+		final var userId = user.getIdLong();
 		final var eb = new EmbedBuilder();
-		eb.setDescription(new StringBuilder().append("\uD83D\uDCE4 **").append(MarkdownSanitizer.escape(user.getAsTag()))
-				.append("** (").append(user.getId()).append(") has `left` the server.").toString());
 		eb.setColor(14495300);
-		eb.setFooter("User leave", user.getEffectiveAvatarUrl());
 		eb.setTimestamp(Instant.now());
+		if (user.isBot())
+		{
+			eb.setDescription("\uD83E\uDD16 Bot **" + escapedTag + "** (" + userId + ") has been removed from this server.");
+			eb.setFooter("Bot remove", avatarUrl);
+			Utils.sendMessage(channel, eb.build());
+			return;
+		}
+		eb.setDescription("\uD83D\uDCE4 **" + escapedTag + "** (" + userId + ") has `left` the server.");
+		eb.setFooter("User leave", avatarUrl);
 		Utils.sendMessage(channel, eb.build());
 	}
 
@@ -160,27 +170,42 @@ public class Events extends ListenerAdapter
 		final var user = e.getUser();
 		final var guild = e.getGuild();
 		final var guildId = guild.getIdLong();
-		final var channel = Cache.getLogAsChannel(guildId, e.getJDA());
-		final var role = guild.getRoleById(Cache.retrieveJoinRole(guildId));
+		final var jda = e.getJDA();
+		final var channel = Cache.getLogAsChannel(guildId, jda);
+		final var joinRole = Cache.getJoinRole(guildId, jda);
 		final var userId = user.getId();
 		final var selfMember = guild.getSelfMember();
 
 		if (channel == null)
 			return;
-		if (role != null)
-		{
-			if (!selfMember.canInteract(role) || !selfMember.hasPermission(Permission.MANAGE_ROLES))
-				Utils.sendMessage(channel, "I'm not able to add the joinrole to user **" + user.getAsTag() + "** as i don't have permissions to do so.");
-			else
-				guild.addRoleToMember(userId, role).queue();
-		}
+		if (joinRole != null && selfMember.canInteract(joinRole))
+			guild.addRoleToMember(userId, joinRole).queue();
 
+		final var escapedTag = escape(user.getAsTag());
+		final var avatarUrl = user.getEffectiveAvatarUrl();
 		final var eb = new EmbedBuilder();
-		eb.setDescription("\uD83D\uDCE5 **" + MarkdownSanitizer.escape(user.getAsTag()) + "** (" + userId + ") has `joined` the server");
 		eb.setColor(7844437);
-		eb.setFooter("User join", user.getEffectiveAvatarUrl());
 		eb.setTimestamp(Instant.now());
-		if (!selfMember.hasPermission(Permission.MANAGE_SERVER) || user.isBot())
+		if (user.isBot())
+		{
+			eb.setFooter("Bot add", avatarUrl);
+			if (!selfMember.hasPermission(Permission.VIEW_AUDIT_LOGS))
+			{
+				eb.setDescription("\uD83E\uDD16 Bot **" + escapedTag + "** (" + userId + ") has been added to this server.");
+				Utils.sendMessage(channel, eb.build());
+				return;
+			}
+			guild.retrieveAuditLogs().type(ActionType.BOT_ADD).queue(botsAdded ->
+			{
+				final var last = botsAdded.get(0);
+				eb.setDescription("\uD83E\uDD16 **" + escape(last.getUser().getAsTag()) + "** has added bot **" + escapedTag + "** (" + userId + ") to this server.");
+				Utils.sendMessage(channel, eb.build());
+			});
+			return;
+		}
+		eb.setFooter("User join", avatarUrl);
+		eb.setDescription("\uD83D\uDCE5 **" + escapedTag + "** (" + userId + ") has `joined` the server");
+		if (!selfMember.hasPermission(Permission.MANAGE_SERVER))
 		{
 			eb.appendDescription(".");
 			Utils.sendMessage(channel, eb.build());
@@ -194,7 +219,7 @@ public class Events extends ListenerAdapter
 				if (invite.getUses() > inviteData.getUses())
 				{
 					inviteData.incrementUses();
-					eb.appendDescription(" with invite **" + invite.getUrl() + "** (**" + invite.getInviter().getAsTag() + "**).");
+					eb.appendDescription(" with invite **" + invite.getUrl() + "** (**" + escape(invite.getInviter().getAsTag()) + "**).");
 					Utils.sendMessage(channel, eb.build());
 					break;
 				}
