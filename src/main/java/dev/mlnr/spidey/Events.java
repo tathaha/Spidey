@@ -154,7 +154,7 @@ public class Events extends ListenerAdapter
 		eb.setTimestamp(Instant.now());
 		if (user.isBot())
 		{
-			eb.setDescription("\uD83E\uDD16 Bot **" + escapedTag + "** (" + userId + ") has been removed from this server.");
+			eb.setDescription("\uD83E\uDD16 Bot **" + escapedTag + "** (" + userId + ") has been `removed` from this server.");
 			eb.setFooter("Bot remove", avatarUrl);
 			Utils.sendMessage(channel, eb.build());
 			return;
@@ -191,14 +191,14 @@ public class Events extends ListenerAdapter
 			eb.setFooter("Bot add", avatarUrl);
 			if (!selfMember.hasPermission(Permission.VIEW_AUDIT_LOGS))
 			{
-				eb.setDescription("\uD83E\uDD16 Bot **" + escapedTag + "** (" + userId + ") has been added to this server.");
+				eb.setDescription("\uD83E\uDD16 Bot **" + escapedTag + "** (" + userId + ") has been `added` to this server.");
 				Utils.sendMessage(channel, eb.build());
 				return;
 			}
 			guild.retrieveAuditLogs().type(ActionType.BOT_ADD).queue(botsAdded ->
 			{
 				final var last = botsAdded.get(0);
-				eb.setDescription("\uD83E\uDD16 **" + escape(last.getUser().getAsTag()) + "** has added bot **" + escapedTag + "** (" + userId + ") to this server.");
+				eb.setDescription("\uD83E\uDD16 **" + escape(last.getUser().getAsTag()) + "** has `added` bot **" + escapedTag + "** (" + userId + ") to this server.");
 				Utils.sendMessage(channel, eb.build());
 			});
 			return;
