@@ -43,7 +43,7 @@ public class Events extends ListenerAdapter
 		final var prefix = Cache.retrievePrefix(guildId);
 		final var content = message.getContentRaw().trim();
 
-		if (content.length() != 0)
+		if (!content.isEmpty())
 			Cache.cacheMessage(message.getIdLong(), new MessageData(message));
 
 		if (content.startsWith(prefix) && !author.isBot())
