@@ -184,11 +184,11 @@ public class Events extends ListenerAdapter
 		final var escapedTag = escape(user.getAsTag());
 		final var avatarUrl = user.getEffectiveAvatarUrl();
 		final var eb = new EmbedBuilder();
-		eb.setColor(7844437);
 		eb.setTimestamp(Instant.now());
 		if (user.isBot())
 		{
 			eb.setFooter("Bot add", avatarUrl);
+			eb.setColor(5614830);
 			if (!selfMember.hasPermission(Permission.VIEW_AUDIT_LOGS))
 			{
 				eb.setDescription("\uD83E\uDD16 Bot **" + escapedTag + "** (" + userId + ") has been `added` to this server.");
@@ -203,6 +203,7 @@ public class Events extends ListenerAdapter
 			});
 			return;
 		}
+		eb.setColor(7844437);
 		eb.setFooter("User join", avatarUrl);
 		eb.setDescription("\uD83D\uDCE5 **" + escapedTag + "** (" + userId + ") has `joined` the server");
 		if (!selfMember.hasPermission(Permission.MANAGE_SERVER))
