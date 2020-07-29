@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.objects.cache;
 
-import dev.mlnr.spidey.MySQL;
+import dev.mlnr.spidey.DatabaseManager;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.invites.InviteData;
 import dev.mlnr.spidey.objects.messages.MessageData;
@@ -49,7 +49,7 @@ public class Cache
 
     private static String retrievePrefixByRequest(final long guildId)
     {
-        final var tmp = MySQL.retrievePrefix(guildId);
+        final var tmp = DatabaseManager.retrievePrefix(guildId);
         final var prefix = tmp.length() == 0 ? "s!" : tmp;
         PREFIX_CACHE.put(guildId, prefix);
         return prefix;
@@ -57,7 +57,7 @@ public class Cache
 
     public static void setPrefix(final long guildId, final String prefix)
     {
-        MySQL.setPrefix(guildId, prefix);
+        DatabaseManager.setPrefix(guildId, prefix);
         PREFIX_CACHE.put(guildId, prefix);
     }
 
@@ -75,7 +75,7 @@ public class Cache
 
     private static long retrieveLogChannelByRequest(final long guildId)
     {
-        final var channel = MySQL.retrieveChannel(guildId);
+        final var channel = DatabaseManager.retrieveChannel(guildId);
         LOG_CHANNEL_CACHE.put(guildId, channel);
         return channel;
     }
@@ -84,11 +84,11 @@ public class Cache
     {
         if (channelId == 0)
         {
-            MySQL.removeChannel(guildId);
+            DatabaseManager.removeChannel(guildId);
             LOG_CHANNEL_CACHE.put(guildId, 0L); // IJ is forcing me to type "L" after "0" although it's not necessary
             return;
         }
-        MySQL.setChannel(guildId, channelId);
+        DatabaseManager.setChannel(guildId, channelId);
         LOG_CHANNEL_CACHE.put(guildId, channelId);
     }
 
@@ -111,7 +111,7 @@ public class Cache
 
     private static long retrieveJoinRoleByRequest(final long guildId)
     {
-        final var role = MySQL.retrieveRole(guildId);
+        final var role = DatabaseManager.retrieveRole(guildId);
         JOIN_ROLE_CACHE.put(guildId, role);
         return role;
     }
@@ -120,11 +120,11 @@ public class Cache
     {
         if (roleId == 0)
         {
-            MySQL.removeRole(guildId);
+            DatabaseManager.removeRole(guildId);
             JOIN_ROLE_CACHE.put(guildId, 0L);
             return;
         }
-        MySQL.setRole(guildId, roleId);
+        DatabaseManager.setRole(guildId, roleId);
         JOIN_ROLE_CACHE.put(guildId, roleId);
     }
 
@@ -142,7 +142,7 @@ public class Cache
 
     private static boolean isVipByRequest(final long guildId)
     {
-        final var vip = MySQL.isVip(guildId);
+        final var vip = DatabaseManager.isVip(guildId);
         VIP_GUILDS_CACHE.put(guildId, vip);
         return vip;
     }
@@ -218,7 +218,7 @@ public class Cache
         LOG_CHANNEL_CACHE.remove(guildId);
         JOIN_ROLE_CACHE.remove(guildId);
         PREFIX_CACHE.remove(guildId);
-        MySQL.removeEntry(guildId);
+        DatabaseManager.removeEntry(guildId);
     }
 
     public static int getCooldown(final long guildId, final Command cmd)

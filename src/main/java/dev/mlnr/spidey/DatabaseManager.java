@@ -11,12 +11,12 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 
 @SuppressWarnings("ConstantConditions")
-public class MySQL
+public class DatabaseManager
 {
-	private static final Logger LOG = LoggerFactory.getLogger(MySQL.class);
+	private static final Logger LOG = LoggerFactory.getLogger(DatabaseManager.class);
 	private static final ExecutorService EXECUTOR_SERVICE = ConcurrentUtils.createThread("Spidey MySQL");
 
-	private MySQL()
+	private DatabaseManager()
 	{
 		super();
 	}
