@@ -40,18 +40,27 @@ public class Events extends ListenerAdapter
 		final var message = e.getMessage();
 		final var author = e.getAuthor();
 		final var guildId = guild.getIdLong();
-		final var eb = new EmbedBuilder();
 		final var prefix = Cache.retrievePrefix(guildId);
 		final var content = message.getContentRaw().trim();
+		final var channel = e.getChannel();
 
 		if (!content.isEmpty())
 			Cache.cacheMessage(message.getIdLong(), new MessageData(message));
+
+		if (content.equals("<@545938274368356352>") || content.equals("<@!545938274368356352>"))
+		{
+			final var eb = new EmbedBuilder();
+			eb.setColor(16763981);
+			eb.setDescription("Looks like you forgot my prefix, no worries though!\n\nPrefix for this server is `" + prefix + "`.");
+			Utils.sendMessage(channel, eb.build());
+			return;
+		}
 
 		if (content.startsWith(prefix) && !author.isBot())
 		{
 			if (guild.getSelfMember().hasPermission(Permission.ADMINISTRATOR))
 			{
-				Utils.sendMessage(message.getTextChannel(), CommandHandler.ADMIN_WARNING);
+				Utils.sendMessage(channel, CommandHandler.ADMIN_WARNING);
 				return;
 			}
 			CommandHandler.handle(message, prefix);
@@ -60,8 +69,9 @@ public class Events extends ListenerAdapter
 
 		if (message.getType() == MessageType.GUILD_MEMBER_BOOST)
 		{
-			final var channel = Cache.getLogAsChannel(guildId, e.getJDA());
-			if (channel == null)
+			final var eb = new EmbedBuilder();
+			final var log = Cache.getLogAsChannel(guildId, e.getJDA());
+			if (log == null)
 				return;
 			Utils.deleteMessage(message);
 			eb.setDescription(new StringBuilder().append("<:boosting:699731065052332123>")
@@ -71,7 +81,7 @@ public class Events extends ListenerAdapter
 			eb.setColor(16023551);
 			eb.setFooter("User boost", author.getEffectiveAvatarUrl());
 			eb.setTimestamp(Instant.now());
-			Utils.sendMessage(channel, eb.build());
+			Utils.sendMessage(log, eb.build());
 		}
 	}
 

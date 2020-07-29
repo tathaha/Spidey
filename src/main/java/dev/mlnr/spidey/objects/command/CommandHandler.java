@@ -37,7 +37,7 @@ public class CommandHandler
 	public static void handle(final Message msg, final String prefix)
 	{
 		final var content = msg.getContentRaw().substring(prefix.length());
-		if (content.length() == 0)
+		if (content.isEmpty())
 		{
 			Utils.returnError("Please specify a command", msg);
 			return;
