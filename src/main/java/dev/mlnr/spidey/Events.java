@@ -181,7 +181,7 @@ public class Events extends ListenerAdapter
 
 		if (channel == null)
 			return;
-		if (joinRole != null && selfMember.canInteract(joinRole))
+		if (joinRole != null && (selfMember.canInteract(joinRole) && selfMember.hasPermission(Permission.MANAGE_ROLES)))
 			guild.addRoleToMember(userId, joinRole).queue();
 
 		final var escapedTag = escape(user.getAsTag());
