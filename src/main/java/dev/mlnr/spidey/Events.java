@@ -27,16 +27,12 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import java.time.Instant;
-import java.util.regex.Pattern;
 
-import static dev.mlnr.spidey.objects.command.CommandHandler.checkAdminPerms;
 import static net.dv8tion.jda.api.utils.MarkdownSanitizer.escape;
 
 @SuppressWarnings({"ConstantConditions", "StringBufferReplaceableByString"})
 public class Events extends ListenerAdapter
 {
-	private final Pattern mentionPatten = Pattern.compile("^<@!?468523263853592576>");
-
 	@Override
 	public final void onGuildMessageReceived(final GuildMessageReceivedEvent e)
 	{
@@ -51,29 +47,22 @@ public class Events extends ListenerAdapter
 		if (!content.isEmpty())
 			Cache.cacheMessage(message.getIdLong(), new MessageData(message));
 
-		final var matcher = mentionPatten.matcher(content);
-		if (matcher.find())
+		if (content.equals("<@545938274368356352>") || content.equals("<@!545938274368356352>"))
 		{
-			final var mention = matcher.group(0);
-			if (mention.equals(content))
-			{
-				final var eb = new EmbedBuilder();
-				eb.setColor(16763981);
-				eb.setDescription("Looks like you forgot my prefix, no worries though!\n\nPrefix for this server is `" + prefix + "`, " +
-						"but you can also control me using mentions, as like `@Spidey help`.");
-				Utils.sendMessage(channel, eb.build());
-				return;
-			}
-			if (checkAdminPerms(guild, channel))
-				return;
-			CommandHandler.handle(message, mention + " ");
+			final var eb = new EmbedBuilder();
+			eb.setColor(16763981);
+			eb.setDescription("Looks like you forgot my prefix, no worries though!\n\nPrefix for this server is `" + prefix + "`.");
+			Utils.sendMessage(channel, eb.build());
 			return;
 		}
 
 		if (content.startsWith(prefix) && !author.isBot())
 		{
-			if (checkAdminPerms(guild, channel))
+			if (guild.getSelfMember().hasPermission(Permission.ADMINISTRATOR))
+			{
+				Utils.sendMessage(channel, CommandHandler.ADMIN_WARNING);
 				return;
+			}
 			CommandHandler.handle(message, prefix);
 			return;
 		}
