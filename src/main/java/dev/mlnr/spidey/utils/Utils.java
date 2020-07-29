@@ -50,13 +50,6 @@ public class Utils
             ch.sendMessage(embed).queue();
     }
 
-    public static void sendPrivateMessage(final User user, final String toSend)
-    {
-        user.openPrivateChannel()
-            .flatMap(channel -> channel.sendMessage(toSend))
-            .queue();
-    }
-
     public static void deleteMessage(final Message msg)
     {
         final var channel = msg.getTextChannel();
@@ -72,11 +65,6 @@ public class Utils
     public static EmbedBuilder createEmbedBuilder(final User u)
     {
         return new EmbedBuilder().setFooter("Command executed by " + u.getAsTag(), u.getEffectiveAvatarUrl());
-    }
-
-    public static void sendPrivateMessageFormat(final User u, final String message, final Object... args)
-    {
-        sendPrivateMessage(u, String.format(message, args));
     }
 
     public static void addReaction(final Message message, final String reaction)
