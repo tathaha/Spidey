@@ -60,12 +60,11 @@ public class Events extends ListenerAdapter
 
 		if (message.getType() == MessageType.GUILD_MEMBER_BOOST)
 		{
-			final var jda = e.getJDA();
-			final var channel = Cache.getLogAsChannel(guildId, jda);
+			final var channel = Cache.getLogAsChannel(guildId, e.getJDA());
 			if (channel == null)
 				return;
 			Utils.deleteMessage(message);
-			eb.setDescription(new StringBuilder().append(jda.getEmoteById(699731065052332123L).getAsMention())
+			eb.setDescription(new StringBuilder().append("<:boosting:699731065052332123>")
 					.append(" **").append(escape(author.getAsTag())).append("** has `boosted` ")
 					.append("the server. The server currently has **").append(guild.getBoostCount()).append("** boosts.").toString());
 			eb.setAuthor("NEW BOOST");
@@ -83,28 +82,32 @@ public class Events extends ListenerAdapter
 		final var guild = e.getGuild();
 		final var channel = Cache.getLogAsChannel(guild.getIdLong(), e.getJDA());
 
-		if (channel == null || !guild.getSelfMember().hasPermission(Permission.BAN_MEMBERS, Permission.VIEW_AUDIT_LOGS))
+		if (channel == null)
 			return;
-		guild.retrieveBan(user).queue(ban -> guild.retrieveAuditLogs().type(ActionType.BAN).queue(bans ->
+		final var escapedTag = escape(user.getAsTag());
+		final var eb = new EmbedBuilder();
+		eb.setDescription(Emojis.CROSS + " **" + escapedTag + "** has been `banned`");
+		eb.setColor(14495300);
+		eb.setFooter("User ban", user.getEffectiveAvatarUrl());
+		eb.setTimestamp(Instant.now());
+		if (!guild.getSelfMember().hasPermission(Permission.VIEW_AUDIT_LOGS))
 		{
-			final var banner = bans.get(0).getUser();
-			final var eb = new EmbedBuilder();
-
-			var reason = "";
-			final var providedReason = ban.getReason();
-			if (providedReason != null && banner.equals(e.getJDA().getSelfUser()))
-				reason = (providedReason.equals("[Banned by Spidey#2370]") ? "Unknown" : providedReason.substring(24));
-			else
-				reason = (providedReason == null ? "Unknown" : providedReason);
-
-			eb.setDescription(new StringBuilder().append(Emojis.CROSS).append(" **").append(escape(user.getAsTag()))
-					.append("** (").append(user.getId()).append(") has been `banned` by ").append("**")
-					.append(banner.getAsTag()).append("** for **").append(reason.trim()).append("**.").toString());
-			eb.setColor(14495300);
-			eb.setFooter("User ban", user.getEffectiveAvatarUrl());
-			eb.setTimestamp(Instant.now());
+			eb.appendDescription(".");
 			Utils.sendMessage(channel, eb.build());
-		}));
+			return;
+		}
+		guild.retrieveAuditLogs().type(ActionType.BAN).queue(bans ->
+		{
+			final var last = bans.get(0);
+			final var bannerTag = escape(last.getUser().getAsTag());
+			var reason = last.getReason();
+			if (reason != null)
+				reason = reason.trim();
+			if (reason == null || reason.isEmpty())
+				reason = "unknown reason";
+			eb.appendDescription(" by **" + bannerTag + "** for **" + reason + "**.");
+			Utils.sendMessage(channel, eb.build());
+		});
 	}
 
 	@Override
@@ -114,25 +117,25 @@ public class Events extends ListenerAdapter
 		final var guild = e.getGuild();
 		final var channel = Cache.getLogAsChannel(guild.getIdLong(), e.getJDA());
 
-		if (channel == null || !guild.getSelfMember().hasPermission(Permission.VIEW_AUDIT_LOGS))
+		if (channel == null)
 			return;
+		final var escapedTag = escape(user.getAsTag());
+		final var eb = new EmbedBuilder();
+		eb.setDescription(Emojis.CHECK + " **" + escapedTag + "** has been `unbanned`");
+		eb.setColor(7844437);
+		eb.setFooter("User unban", user.getEffectiveAvatarUrl());
+		eb.setTimestamp(Instant.now());
+		if (!guild.getSelfMember().hasPermission(Permission.VIEW_AUDIT_LOGS))
+		{
+			eb.appendDescription(".");
+			Utils.sendMessage(channel, eb.build());
+			return;
+		}
 		guild.retrieveAuditLogs().type(ActionType.UNBAN).queue(unbans ->
 		{
-			final var sb = new StringBuilder().append(Emojis.CHECK).append(" **")
-					.append(escape(user.getAsTag())).append("** (").append(user.getId()).append(") has been `unbanned`");
-			final var eb = new EmbedBuilder();
-			eb.setColor(7844437);
-			eb.setFooter("User unban", user.getEffectiveAvatarUrl());
-			eb.setTimestamp(Instant.now());
-
-			if (unbans.isEmpty())
-			{
-				sb.append(".");
-				eb.setDescription(sb.toString());
-				Utils.sendMessage(channel, eb.build());
-				return;
-			}
-			eb.setDescription(sb.append(" by **").append(unbans.get(0).getUser().getAsTag()).append("**.").toString());
+			final var last = unbans.get(0);
+			final var unbannerTag = escape(last.getUser().getAsTag());
+			eb.appendDescription(" by **" + unbannerTag + "**.");
 			Utils.sendMessage(channel, eb.build());
 		});
 	}
