@@ -4,8 +4,11 @@ import dev.mlnr.spidey.utils.KSoftAPIHelper;
 import dev.mlnr.spidey.utils.Utils;
 import io.github.classgraph.ClassGraph;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.TextChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +26,7 @@ public class CommandHandler
 	private static final Logger LOG = LoggerFactory.getLogger(CommandHandler.class);
 	private static final ClassGraph CLASS_GRAPH = new ClassGraph().whitelistPackages("dev.mlnr.spidey.commands");
 	private static final String NO_PERMS = "Action can't be completed because you don't have **%s** permission";
-	public static final MessageEmbed ADMIN_WARNING = new EmbedBuilder().setAuthor("Potential security risk").setColor(Color.RED)
+	private static final MessageEmbed ADMIN_WARNING = new EmbedBuilder().setAuthor("Potential security risk").setColor(Color.RED)
 												     .appendDescription("I have Administrator permission for this Discord server.")
 												     .appendDescription("\nAs this is a huge security risk, __i'll refuse to handle any command__.")
 												     .appendDescription("\n\nBots shouldn't have Administrator permission unless you *need* it for **your** bot.")
@@ -37,7 +40,7 @@ public class CommandHandler
 	public static void handle(final Message msg, final String prefix)
 	{
 		final var content = msg.getContentRaw().substring(prefix.length());
-		if (content.length() == 0)
+		if (content.isEmpty())
 		{
 			Utils.returnError("Please specify a command", msg);
 			return;
@@ -108,5 +111,13 @@ public class CommandHandler
 	public static Map<String, Command> getCommands()
 	{
 		return COMMANDS;
+	}
+
+	public static boolean checkAdminPerms(final Guild guild, final TextChannel channel)
+	{
+		final var hasAdmin = guild.getSelfMember().hasPermission(Permission.ADMINISTRATOR);
+		if (hasAdmin)
+			Utils.sendMessage(channel, ADMIN_WARNING);
+		return hasAdmin;
 	}
 }

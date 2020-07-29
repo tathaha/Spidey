@@ -27,12 +27,16 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import java.time.Instant;
+import java.util.regex.Pattern;
 
+import static dev.mlnr.spidey.objects.command.CommandHandler.checkAdminPerms;
 import static net.dv8tion.jda.api.utils.MarkdownSanitizer.escape;
 
 @SuppressWarnings({"ConstantConditions", "StringBufferReplaceableByString"})
 public class Events extends ListenerAdapter
 {
+	private final Pattern mentionPatten = Pattern.compile("^<@!?468523263853592576>");
+
 	@Override
 	public final void onGuildMessageReceived(final GuildMessageReceivedEvent e)
 	{
@@ -40,28 +44,45 @@ public class Events extends ListenerAdapter
 		final var message = e.getMessage();
 		final var author = e.getAuthor();
 		final var guildId = guild.getIdLong();
-		final var eb = new EmbedBuilder();
 		final var prefix = Cache.retrievePrefix(guildId);
 		final var content = message.getContentRaw().trim();
+		final var channel = e.getChannel();
 
 		if (!content.isEmpty())
 			Cache.cacheMessage(message.getIdLong(), new MessageData(message));
 
-		if (content.startsWith(prefix) && !author.isBot())
+		final var matcher = mentionPatten.matcher(content);
+		if (matcher.find())
 		{
-			if (guild.getSelfMember().hasPermission(Permission.ADMINISTRATOR))
+			final var mention = matcher.group(0);
+			if (mention.equals(content))
 			{
-				Utils.sendMessage(message.getTextChannel(), CommandHandler.ADMIN_WARNING);
+				final var eb = new EmbedBuilder();
+				eb.setColor(16763981);
+				eb.setDescription("Looks like you forgot my prefix, no worries though!\n\nPrefix for this server is `" + prefix + "`, " +
+						"but you can also control me using mentions, as like `@Spidey help`.");
+				Utils.sendMessage(channel, eb.build());
 				return;
 			}
+			if (checkAdminPerms(guild, channel))
+				return;
+			CommandHandler.handle(message, mention + " ");
+			return;
+		}
+
+		if (content.startsWith(prefix) && !author.isBot())
+		{
+			if (checkAdminPerms(guild, channel))
+				return;
 			CommandHandler.handle(message, prefix);
 			return;
 		}
 
 		if (message.getType() == MessageType.GUILD_MEMBER_BOOST)
 		{
-			final var channel = Cache.getLogAsChannel(guildId, e.getJDA());
-			if (channel == null)
+			final var eb = new EmbedBuilder();
+			final var log = Cache.getLogAsChannel(guildId, e.getJDA());
+			if (log == null)
 				return;
 			Utils.deleteMessage(message);
 			eb.setDescription(new StringBuilder().append("<:boosting:699731065052332123>")
@@ -71,7 +92,7 @@ public class Events extends ListenerAdapter
 			eb.setColor(16023551);
 			eb.setFooter("User boost", author.getEffectiveAvatarUrl());
 			eb.setTimestamp(Instant.now());
-			Utils.sendMessage(channel, eb.build());
+			Utils.sendMessage(log, eb.build());
 		}
 	}
 
