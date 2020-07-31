@@ -3,7 +3,6 @@ package dev.mlnr.spidey.utils.concurrent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -20,10 +19,5 @@ public class ConcurrentUtils
     public static ScheduledExecutorService createScheduledThread(final String name)
     {
         return Executors.newSingleThreadScheduledExecutor(THREAD_FACTORY.setName(name).build());
-    }
-
-    public static ExecutorService createThread(final String name)
-    {
-        return Executors.newSingleThreadExecutor(THREAD_FACTORY.setName(name).build());
     }
 }

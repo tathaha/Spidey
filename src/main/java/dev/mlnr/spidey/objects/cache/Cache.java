@@ -44,15 +44,13 @@ public class Cache
 
     public static String retrievePrefix(final long guildId)
     {
-        return Objects.requireNonNullElseGet(PREFIX_CACHE.get(guildId), () -> retrievePrefixByRequest(guildId));
-    }
-
-    private static String retrievePrefixByRequest(final long guildId)
-    {
-        final var tmp = DatabaseManager.retrievePrefix(guildId);
-        final var prefix = tmp.length() == 0 ? "s!" : tmp;
-        PREFIX_CACHE.put(guildId, prefix);
-        return prefix;
+        return Objects.requireNonNullElseGet(PREFIX_CACHE.get(guildId), () ->
+        {
+            final var retrieved = DatabaseManager.retrievePrefix(guildId);
+            final var prefix = retrieved == null ? "s!" : retrieved;
+            PREFIX_CACHE.put(guildId, prefix);
+            return prefix;
+        });
     }
 
     public static void setPrefix(final long guildId, final String prefix)
@@ -65,7 +63,12 @@ public class Cache
 
     public static long retrieveLogChannel(final long guildId)
     {
-        return Objects.requireNonNullElseGet(LOG_CHANNEL_CACHE.get(guildId), () -> retrieveLogChannelByRequest(guildId));
+        return Objects.requireNonNullElseGet(LOG_CHANNEL_CACHE.get(guildId), () ->
+        {
+            final var channel = DatabaseManager.retrieveChannel(guildId);
+            LOG_CHANNEL_CACHE.put(guildId, channel);
+            return channel;
+        });
     }
 
     public static TextChannel getLogAsChannel(final long guildId, final JDA jda)
@@ -73,23 +76,10 @@ public class Cache
         return jda.getTextChannelById(retrieveLogChannel(guildId));
     }
 
-    private static long retrieveLogChannelByRequest(final long guildId)
-    {
-        final var channel = DatabaseManager.retrieveChannel(guildId);
-        LOG_CHANNEL_CACHE.put(guildId, channel);
-        return channel;
-    }
-
     public static void setLogChannel(final long guildId, final long channelId)
     {
-        if (channelId == 0)
-        {
-            DatabaseManager.removeChannel(guildId);
-            LOG_CHANNEL_CACHE.put(guildId, 0L); // IJ is forcing me to type "L" after "0" although it's not necessary
-            return;
-        }
-        DatabaseManager.setChannel(guildId, channelId);
         LOG_CHANNEL_CACHE.put(guildId, channelId);
+        DatabaseManager.setChannel(guildId, channelId);
     }
 
     public static void removeLogChannel(final long guildId)
@@ -101,7 +91,12 @@ public class Cache
 
     public static long retrieveJoinRole(final long guildId)
     {
-        return Objects.requireNonNullElseGet(JOIN_ROLE_CACHE.get(guildId), () -> retrieveJoinRoleByRequest(guildId));
+        return Objects.requireNonNullElseGet(JOIN_ROLE_CACHE.get(guildId), () ->
+        {
+            final var role = DatabaseManager.retrieveRole(guildId);
+            JOIN_ROLE_CACHE.put(guildId, role);
+            return role;
+        });
     }
 
     public static Role getJoinRole(final long guildId, final JDA jda)
@@ -109,23 +104,10 @@ public class Cache
         return jda.getRoleById(retrieveJoinRole(guildId));
     }
 
-    private static long retrieveJoinRoleByRequest(final long guildId)
-    {
-        final var role = DatabaseManager.retrieveRole(guildId);
-        JOIN_ROLE_CACHE.put(guildId, role);
-        return role;
-    }
-
     public static void setJoinRole(final long guildId, final long roleId)
     {
-        if (roleId == 0)
-        {
-            DatabaseManager.removeRole(guildId);
-            JOIN_ROLE_CACHE.put(guildId, 0L);
-            return;
-        }
-        DatabaseManager.setRole(guildId, roleId);
         JOIN_ROLE_CACHE.put(guildId, roleId);
+        DatabaseManager.setRole(guildId, roleId);
     }
 
     public static void removeJoinRole(final long guildId)
@@ -137,14 +119,12 @@ public class Cache
 
     public static boolean isVip(final long guildId)
     {
-        return Objects.requireNonNullElseGet(VIP_GUILDS_CACHE.get(guildId), () -> isVipByRequest(guildId));
-    }
-
-    private static boolean isVipByRequest(final long guildId)
-    {
-        final var vip = DatabaseManager.isVip(guildId);
-        VIP_GUILDS_CACHE.put(guildId, vip);
-        return vip;
+        return Objects.requireNonNullElseGet(VIP_GUILDS_CACHE.get(guildId), () ->
+        {
+            final var vip = DatabaseManager.isVip(guildId);
+            VIP_GUILDS_CACHE.put(guildId, vip);
+            return vip;
+        });
     }
 
     // REDDIT POSTS CACHING
