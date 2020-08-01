@@ -1,7 +1,7 @@
 package dev.mlnr.spidey.commands.utility;
 
 import dev.mlnr.spidey.Core;
-import dev.mlnr.spidey.objects.cache.Cache;
+import dev.mlnr.spidey.objects.cache.MessageCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.utils.Utils;
@@ -24,7 +24,7 @@ public class EditSnipeCommand extends Command
     {
         final var textChannel = msg.getTextChannel();
         final var channelId = textChannel.getIdLong();
-        final var lastEditedMessage = Cache.getLastEditedMessage(channelId);
+        final var lastEditedMessage = MessageCache.getLastEditedMessage(channelId);
         if (lastEditedMessage == null)
         {
             Utils.returnError("There's no edited message to snipe", msg);
@@ -37,6 +37,6 @@ public class EditSnipeCommand extends Command
         msg.getJDA().retrieveUserById(lastEditedMessage.getAuthorId()).queue(user -> eb.setAuthor(user.getName(), null, user.getEffectiveAvatarUrl()));
 
         Utils.sendMessage(textChannel, eb.build());
-        Core.getExecutor().schedule(() -> Cache.uncacheEditedMessage(lastEditedMessage.getChannelId(), lastEditedMessage.getId()), 2, TimeUnit.MINUTES);
+        Core.getExecutor().schedule(() -> MessageCache.uncacheEditedMessage(lastEditedMessage.getChannelId(), lastEditedMessage.getId()), 2, TimeUnit.MINUTES);
     }
 }

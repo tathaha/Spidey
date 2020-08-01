@@ -2,6 +2,7 @@ package dev.mlnr.spidey.utils;
 
 import dev.mlnr.spidey.Core;
 import dev.mlnr.spidey.objects.cache.Cache;
+import dev.mlnr.spidey.objects.cache.MessageCache;
 import dev.mlnr.spidey.objects.command.CommandHandler;
 import dev.mlnr.spidey.objects.invites.InviteData;
 import dev.mlnr.spidey.utils.requests.API;
@@ -102,7 +103,7 @@ public class Utils
         ));
         executor.scheduleAtFixedRate(() -> jda.getPresence().setActivity(nextActivity(activities)), 0, 30, TimeUnit.SECONDS);
         executor.scheduleAtFixedRate(() ->
-                Cache.getMessageCache().entrySet().removeIf(entry -> entry.getValue().getCreation().isBefore(OffsetDateTime.now().minusMinutes(10).toInstant())),
+                MessageCache.getCache().entrySet().removeIf(entry -> entry.getValue().getCreation().isBefore(OffsetDateTime.now().minusMinutes(10).toInstant())),
                 1, 1, TimeUnit.HOURS);
     }
 

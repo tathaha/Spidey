@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.commands.informative;
 
-import dev.mlnr.spidey.objects.cache.Cache;
+import dev.mlnr.spidey.objects.cache.PrefixCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.utils.Utils;
@@ -21,7 +21,7 @@ public class StatsCommand extends Command
 	public final void execute(final String[] args, final Message message)
 	{
 		final var eb = Utils.createEmbedBuilder(message.getAuthor());
-		final var prefix = Cache.retrievePrefix(message.getGuild().getIdLong());
+		final var prefix = PrefixCache.retrievePrefix(message.getGuild().getIdLong());
 		final var jda = message.getJDA();
 		final var runtime = Runtime.getRuntime();
 		final var total = runtime.totalMemory();

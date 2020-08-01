@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.commands.utility;
 
-import dev.mlnr.spidey.objects.cache.Cache;
+import dev.mlnr.spidey.objects.cache.JoinRoleCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.utils.Utils;
@@ -29,16 +29,16 @@ public class JoinRoleCommand extends Command
         final var channel = message.getTextChannel();
         final var member = message.getMember();
 
-        final var dbRole = Cache.retrieveJoinRole(guildId);
+        final var dbRole = JoinRoleCache.retrieveJoinRole(guildId);
         if (args.length == 0)
         {
             if (dbRole == 0)
-                Utils.returnError("You don't have the join role set", message);
-            else
             {
-                Cache.removeJoinRole(guildId);
-                Utils.sendMessage(channel, ":white_check_mark: The join role has been removed.");
+                Utils.returnError("You don't have the join role set", message);
+                return;
             }
+            JoinRoleCache.removeJoinRole(guildId);
+            Utils.sendMessage(channel, ":white_check_mark: The join role has been removed.");
             return;
         }
         long roleId;
@@ -92,11 +92,11 @@ public class JoinRoleCommand extends Command
             }
         }
         if (!member.canInteract(role))
-            Utils.returnError("You can't set the join role to a role which you can't interact with", message);
-        else
         {
-            Cache.setJoinRole(guildId, roleId);
-            Utils.sendMessage(channel, ":white_check_mark: The join role has been set to role `" + role.getName() + "`.");
+            Utils.returnError("You can't set the join role to a role which you can't interact with", message);
+            return;
         }
+        JoinRoleCache.setJoinRole(guildId, roleId);
+        Utils.sendMessage(channel, ":white_check_mark: The join role has been set to role `" + role.getName() + "`.");
     }
 }

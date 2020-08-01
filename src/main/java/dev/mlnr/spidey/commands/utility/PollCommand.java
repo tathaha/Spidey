@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.commands.utility;
 
-import dev.mlnr.spidey.objects.cache.Cache;
+import dev.mlnr.spidey.objects.cache.LogChannelCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.utils.Emojis;
@@ -29,7 +29,7 @@ public class PollCommand extends Command
 			return;
 		}
 		final var guild = message.getGuild();
-		final var log = Cache.getLogAsChannel(guild.getIdLong(), message.getJDA());
+		final var log = LogChannelCache.getLogAsChannel(guild.getIdLong(), message.getJDA());
 		final var author = message.getAuthor();
 		final var channel = message.getChannel();
 

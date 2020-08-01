@@ -1,9 +1,11 @@
 package dev.mlnr.spidey.commands.informative;
 
 import dev.mlnr.spidey.objects.cache.Cache;
+import dev.mlnr.spidey.objects.cache.PrefixCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandHandler;
+import dev.mlnr.spidey.objects.command.Cooldowns;
 import dev.mlnr.spidey.utils.Utils;
 import dev.mlnr.spidey.utils.collections.CollectionUtils;
 import net.dv8tion.jda.api.Permission;
@@ -32,7 +34,7 @@ public class HelpCommand extends Command
         final var channel = message.getTextChannel();
         final var author = message.getAuthor();
         final var guildId = message.getGuild().getIdLong();
-        final var prefix = Cache.retrievePrefix(guildId);
+        final var prefix = PrefixCache.retrievePrefix(guildId);
         final var eb = Utils.createEmbedBuilder(author)
                 .setColor(0xFEFEFE)
                 .setAuthor("Spidey's commands", "https://github.com/caneleex/Spidey", message.getJDA().getSelfUser().getEffectiveAvatarUrl());
@@ -88,7 +90,7 @@ public class HelpCommand extends Command
         final var usage = command.getUsage();
         final var requiredPermission = command.getRequiredPermission();
         final var aliases = command.getAliases();
-        final var cooldown = Cache.getCooldown(guildId, command);
+        final var cooldown = Cooldowns.getCooldown(guildId, command);
         eb.setAuthor("Viewing command info - " + cmd);
         eb.setColor(0xFEFEFE);
         eb.addField("Description", description == null ? "Unspecified" : description, false);

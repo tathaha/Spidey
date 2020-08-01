@@ -1,7 +1,7 @@
 package dev.mlnr.spidey.commands.utility;
 
 import dev.mlnr.spidey.Core;
-import dev.mlnr.spidey.objects.cache.Cache;
+import dev.mlnr.spidey.objects.cache.MessageCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.utils.Utils;
@@ -24,7 +24,7 @@ public class SnipeCommand extends Command
     {
         final var textChannel = msg.getTextChannel();
         final var channelId = textChannel.getIdLong();
-        final var lastDeletedMessage = Cache.getLastDeletedMessage(channelId);
+        final var lastDeletedMessage = MessageCache.getLastDeletedMessage(channelId);
         if (lastDeletedMessage == null)
         {
             Utils.returnError("There's no deleted message to snipe", msg);
@@ -37,6 +37,6 @@ public class SnipeCommand extends Command
         msg.getJDA().retrieveUserById(lastDeletedMessage.getAuthorId()).queue(user -> eb.setAuthor(user.getName(), null, user.getEffectiveAvatarUrl()));
 
         Utils.sendMessage(textChannel, eb.build());
-        Core.getExecutor().schedule(() -> Cache.uncacheMessage(lastDeletedMessage.getChannelId(), lastDeletedMessage.getId()), 2, TimeUnit.MINUTES);
+        Core.getExecutor().schedule(() -> MessageCache.uncacheMessage(lastDeletedMessage.getChannelId(), lastDeletedMessage.getId()), 2, TimeUnit.MINUTES);
     }
 }
