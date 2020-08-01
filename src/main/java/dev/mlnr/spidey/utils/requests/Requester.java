@@ -12,6 +12,7 @@ public class Requester
 {
     private static final Logger LOG = LoggerFactory.getLogger(Requester.class);
     private static final OkHttpClient HTTP_CLIENT = new OkHttpClient();
+    private static final Request.Builder REQUEST_BUILDER = new Request.Builder().header("user-agent", "dev.mlnr.spidey");
 
     private Requester()
     {
@@ -20,10 +21,10 @@ public class Requester
 
     public static DataObject executeRequest(final String url, final API api)
     {
-        final var requestBuilder = new Request.Builder().url(url).header("user-agent", "dev.mlnr.spidey");
+        REQUEST_BUILDER.url(url);
         if (api != null)
-            requestBuilder.header("Authorization", api.getKey());
-        try (final var body = HTTP_CLIENT.newCall(requestBuilder.build()).execute().body())
+            REQUEST_BUILDER.header("Authorization", api.getKey());
+        try (final var body = HTTP_CLIENT.newCall(REQUEST_BUILDER.build()).execute().body())
         {
             return DataObject.fromJson(body.string());
         }
