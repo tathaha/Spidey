@@ -230,6 +230,8 @@ public class Events extends ListenerAdapter
 			for (final var invite : invites)
 			{
 				final var inviteData = Cache.getInviteCache().get(invite.getCode());
+				if (inviteData == null)
+					return;
 				if (invite.getUses() > inviteData.getUses())
 				{
 					inviteData.incrementUses();
