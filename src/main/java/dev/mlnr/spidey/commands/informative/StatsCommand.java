@@ -46,7 +46,7 @@ public class StatsCommand extends Command
 			requested = "[" + "This month: **" + dbl.getInt("monthlyPoints") + "** | Total: **" + dbl.getInt("points") + "**](https://top.gg/bot/468523263853592576)";
 			Core.getExecutor().schedule(() -> requested = null, 20, TimeUnit.SECONDS);
 		}
-		eb.addField("top.gg / DBL votes", requested,true);
+		eb.addField("top.gg / DBL votes", requested, true);
 		eb.setFooter("spidey.mlnr.dev");
 		Utils.sendMessage(message.getTextChannel(), eb.build());
 	}
