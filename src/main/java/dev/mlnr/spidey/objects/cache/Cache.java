@@ -47,7 +47,7 @@ public class Cache
         return Objects.requireNonNullElseGet(PREFIX_CACHE.get(guildId), () ->
         {
             final var retrieved = DatabaseManager.retrievePrefix(guildId);
-            final var prefix = retrieved == null ? "s!" : retrieved;
+            final var prefix = retrieved.isEmpty() ? "s!" : retrieved;
             PREFIX_CACHE.put(guildId, prefix);
             return prefix;
         });
