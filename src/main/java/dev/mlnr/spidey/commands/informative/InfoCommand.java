@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.commands.informative;
 
-import dev.mlnr.spidey.objects.cache.Cache;
+import dev.mlnr.spidey.objects.cache.PrefixCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.utils.Utils;
@@ -25,7 +25,7 @@ public class InfoCommand extends Command
 		eb.setColor(0xFEFEFE);
 		eb.setThumbnail(avatar);
 		eb.addField("About me", "Hey, i'm Spidey. I was made by `cane#6666`.", false);
-		eb.addField("Commands", "Type `" + Cache.retrievePrefix(message.getGuild().getIdLong()) + "help` for a list of commands.", false);
+		eb.addField("Commands", "Type `" + PrefixCache.retrievePrefix(message.getGuild().getIdLong()) + "help` for a list of commands.", false);
 		eb.addField("Bot info", "[Library](https://github.com/DV8FromTheWorld/JDA) version: `" + JDAInfo.VERSION + "`", false);
 		eb.addField("Links", "[`Website`](https://spidey.mlnr.dev)\n[`Discord`](https://discord.gg/cnAgKrv)" +
 				"\n[`GitHub`](https://github.com/caneleex/Spidey)\n[`Twitter`](https://twitter.com/SpideyTheBot)", false);

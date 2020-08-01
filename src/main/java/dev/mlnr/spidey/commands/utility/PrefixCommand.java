@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.commands.utility;
 
-import dev.mlnr.spidey.objects.cache.Cache;
+import dev.mlnr.spidey.objects.cache.PrefixCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.utils.Utils;
@@ -22,7 +22,7 @@ public class PrefixCommand extends Command
         final var guild = message.getGuild();
         final var guildId = guild.getIdLong();
         final var channel = message.getTextChannel();
-        final var actualPrefix = Cache.retrievePrefix(guildId);
+        final var actualPrefix = PrefixCache.retrievePrefix(guildId);
 
         if (args.length == 0)
         {
@@ -30,7 +30,7 @@ public class PrefixCommand extends Command
                 Utils.returnError("The prefix for this server is already set to the default one", message);
             else
             {
-                Cache.setPrefix(guildId, "s!");
+                PrefixCache.setPrefix(guildId, "s!");
                 Utils.sendMessage(channel, ":white_check_mark: The prefix for this server has been reset to `s!`!");
             }
             return;
@@ -48,7 +48,7 @@ public class PrefixCommand extends Command
             return;
         }
 
-        Cache.setPrefix(guildId, newPrefix);
+        PrefixCache.setPrefix(guildId, newPrefix);
         Utils.sendMessage(channel, ":white_check_mark: The prefix has been successfully changed to `" + newPrefix + "`!");
     }
 }

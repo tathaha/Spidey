@@ -1,6 +1,6 @@
 package dev.mlnr.spidey;
 
-import dev.mlnr.spidey.objects.cache.Cache;
+import dev.mlnr.spidey.objects.cache.*;
 import dev.mlnr.spidey.objects.command.CommandHandler;
 import dev.mlnr.spidey.objects.invites.InviteData;
 import dev.mlnr.spidey.objects.messages.MessageData;
@@ -40,12 +40,12 @@ public class Events extends ListenerAdapter
 		final var message = e.getMessage();
 		final var author = e.getAuthor();
 		final var guildId = guild.getIdLong();
-		final var prefix = Cache.retrievePrefix(guildId);
+		final var prefix = PrefixCache.retrievePrefix(guildId);
 		final var content = message.getContentRaw().trim();
 		final var channel = e.getChannel();
 
 		if (!content.isEmpty())
-			Cache.cacheMessage(message.getIdLong(), new MessageData(message));
+			MessageCache.cacheMessage(message.getIdLong(), new MessageData(message));
 
 		if (content.equals("<@468523263853592576>") || content.equals("<@!468523263853592576>"))
 		{
@@ -70,7 +70,7 @@ public class Events extends ListenerAdapter
 		if (message.getType() == MessageType.GUILD_MEMBER_BOOST)
 		{
 			final var eb = new EmbedBuilder();
-			final var log = Cache.getLogAsChannel(guildId, e.getJDA());
+			final var log = LogChannelCache.getLogAsChannel(guildId, e.getJDA());
 			if (log == null)
 				return;
 			Utils.deleteMessage(message);
@@ -90,7 +90,7 @@ public class Events extends ListenerAdapter
 	{
 		final var user = e.getUser();
 		final var guild = e.getGuild();
-		final var channel = Cache.getLogAsChannel(guild.getIdLong(), e.getJDA());
+		final var channel = LogChannelCache.getLogAsChannel(guild.getIdLong(), e.getJDA());
 
 		if (channel == null)
 			return;
@@ -125,7 +125,7 @@ public class Events extends ListenerAdapter
 	{
 		final var user = e.getUser();
 		final var guild = e.getGuild();
-		final var channel = Cache.getLogAsChannel(guild.getIdLong(), e.getJDA());
+		final var channel = LogChannelCache.getLogAsChannel(guild.getIdLong(), e.getJDA());
 
 		if (channel == null)
 			return;
@@ -155,7 +155,7 @@ public class Events extends ListenerAdapter
 	{
 		final var user = e.getUser();
 		final var guild = e.getGuild();
-		final var channel = Cache.getLogAsChannel(guild.getIdLong(), e.getJDA());
+		final var channel = LogChannelCache.getLogAsChannel(guild.getIdLong(), e.getJDA());
 
 		if (channel == null)
 			return;
@@ -184,8 +184,8 @@ public class Events extends ListenerAdapter
 		final var guild = e.getGuild();
 		final var guildId = guild.getIdLong();
 		final var jda = e.getJDA();
-		final var channel = Cache.getLogAsChannel(guildId, jda);
-		final var joinRole = Cache.getJoinRole(guildId, jda);
+		final var channel = LogChannelCache.getLogAsChannel(guildId, jda);
+		final var joinRole = JoinRoleCache.getJoinRole(guildId, jda);
 		final var userId = user.getId();
 		final var selfMember = guild.getSelfMember();
 
@@ -230,6 +230,8 @@ public class Events extends ListenerAdapter
 			for (final var invite : invites)
 			{
 				final var inviteData = Cache.getInviteCache().get(invite.getCode());
+				if (inviteData == null)
+					return;
 				if (invite.getUses() > inviteData.getUses())
 				{
 					inviteData.incrementUses();
@@ -270,23 +272,23 @@ public class Events extends ListenerAdapter
 	public final void onTextChannelDelete(final TextChannelDeleteEvent e)
 	{
 		final var guildId = e.getGuild().getIdLong();
-		if (e.getChannel().getIdLong() == Cache.retrieveLogChannel(guildId))
-			Cache.removeLogChannel(guildId);
+		if (e.getChannel().getIdLong() == LogChannelCache.retrieveLogChannel(guildId))
+			LogChannelCache.removeLogChannel(guildId);
 	}
 
 	@Override
 	public final void onRoleDelete(final RoleDeleteEvent e)
 	{
 		final var guildId = e.getGuild().getIdLong();
-		if (e.getRole().getIdLong() == Cache.retrieveJoinRole(guildId))
-			Cache.removeJoinRole(guildId);
+		if (e.getRole().getIdLong() == JoinRoleCache.retrieveJoinRole(guildId))
+			JoinRoleCache.removeJoinRole(guildId);
 	}
 
 	@Override
 	public final void onGuildUpdateBoostTier(final GuildUpdateBoostTierEvent e)
 	{
 		final var guild = e.getGuild();
-		final var channel = Cache.getLogAsChannel(guild.getIdLong(), e.getJDA());
+		final var channel = LogChannelCache.getLogAsChannel(guild.getIdLong(), e.getJDA());
 		if (channel == null)
 			return;
 		final var eb = new EmbedBuilder();
@@ -319,14 +321,14 @@ public class Events extends ListenerAdapter
 	@Override
 	public void onGuildMessageDelete(@NotNull final GuildMessageDeleteEvent e)
 	{
-		Cache.setLastDeletedMessage(e.getChannel().getIdLong(), e.getMessageIdLong());
+		MessageCache.setLastDeletedMessage(e.getChannel().getIdLong(), e.getMessageIdLong());
 	}
 
 	@Override
 	public void onGuildMessageUpdate(@Nonnull final GuildMessageUpdateEvent event)
 	{
 		final var messageId = event.getMessageIdLong();
-		Cache.cacheMessage(messageId, new MessageData(event.getMessage()));
-		Cache.setLastEditedMessage(event.getChannel().getIdLong(), messageId);
+		MessageCache.cacheMessage(messageId, new MessageData(event.getMessage()));
+		MessageCache.setLastEditedMessage(event.getChannel().getIdLong(), messageId);
 	}
 }

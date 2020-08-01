@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.commands.moderation;
 
-import dev.mlnr.spidey.objects.cache.Cache;
+import dev.mlnr.spidey.objects.cache.LogChannelCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.utils.Utils;
@@ -26,15 +26,13 @@ public class LogCommand extends Command
 			guild.getManager().setSystemChannel(null).queue();
 
 		final var channelId = channel.getIdLong();
-		if (Cache.retrieveLogChannel(guildId) == channelId)
+		if (LogChannelCache.retrieveLogChannel(guildId) == channelId)
 		{
-			Cache.removeLogChannel(guildId);
+			LogChannelCache.removeLogChannel(guildId);
 			Utils.sendMessage(channel, ":white_check_mark: The log channel has been reset!");
+			return;
 		}
-		else
-		{
-			Cache.setLogChannel(guildId, channelId);
-			Utils.sendMessage(channel, ":white_check_mark: The log channel has been set to <#" + channelId + ">!");
-		}
+		LogChannelCache.setLogChannel(guildId, channelId);
+		Utils.sendMessage(channel, ":white_check_mark: The log channel has been set to <#" + channelId + ">!");
 	}
 }

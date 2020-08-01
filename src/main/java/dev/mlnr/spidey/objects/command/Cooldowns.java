@@ -24,11 +24,19 @@ public class Cooldowns
         if (cooldown == 0)
             return;
         CollectionUtils.add(COOLDOWN_MAP, guildId, cmd);
-        Core.getExecutor().schedule(() -> CollectionUtils.remove(COOLDOWN_MAP, guildId, cmd), Cache.getCooldown(guildId, cmd), TimeUnit.SECONDS);
+        Core.getExecutor().schedule(() -> CollectionUtils.remove(COOLDOWN_MAP, guildId, cmd), getCooldown(guildId, cmd), TimeUnit.SECONDS);
     }
 
     public static boolean isOnCooldown(final long guildId, final Command cmd)
     {
         return CollectionUtils.contains(COOLDOWN_MAP, guildId, cmd);
+    }
+
+    public static int getCooldown(final long guildId, final Command cmd)
+    {
+        final var cooldown = cmd.getCooldown();
+        if (Cache.isVip(guildId))
+            return cooldown / 2;
+        return cooldown;
     }
 }
