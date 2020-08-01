@@ -30,17 +30,16 @@ public class DatabaseManager
 		return null;
 	}
 
-	private static <T> T executeGetQuery(final String property, final long guildId, final Class<T> resultType)
+	private static <T> String executeGetQuery(final String property, final long guildId, final Class<T> resultType)
 	{
 		try (final var db = initializeConnection(); final var ps = db.prepareStatement("SELECT `" + property + "` FROM `guilds` WHERE `guild_id`=?"))
 		{
 			ps.setLong(1, guildId);
 			try (final var rs = ps.executeQuery())
 			{
-				if (!rs.isBeforeFirst())
-					return null;
-				rs.next();
-				return rs.getObject(property, resultType);
+				if (!rs.next())
+					return resultType.equals(String.class) ? "" : "0";
+				return rs.getString(property);
 			}
 		}
 		catch (final SQLException ex)
@@ -74,7 +73,7 @@ public class DatabaseManager
 
 	private static long getPropertyAsLong(final String property, final long guildId)
 	{
-		return executeGetQuery(property, guildId, long.class);
+		return Long.parseLong(executeGetQuery(property, guildId, long.class));
 	}
 
 	// GETTERS
