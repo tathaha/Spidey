@@ -1,5 +1,6 @@
 package dev.mlnr.spidey.utils.requests;
 
+import net.dv8tion.jda.api.utils.data.DataObject;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import org.slf4j.Logger;
@@ -17,19 +18,19 @@ public class Requester
         super();
     }
 
-    public static String executeRequest(final String url, final API api)
+    public static DataObject executeRequest(final String url, final API api)
     {
         final var requestBuilder = new Request.Builder().url(url).header("user-agent", "dev.mlnr.spidey");
         if (api != null)
             requestBuilder.header("Authorization", api.getKey());
         try (final var body = HTTP_CLIENT.newCall(requestBuilder.build()).execute().body())
         {
-            return body != null ? body.string() : "";
+            return DataObject.fromJson(body.string());
         }
         catch (final IOException ex)
         {
             LOG.error("There was an error while executing a request for url {}:", url, ex);
         }
-        return "";
+        return DataObject.empty();
     }
 }

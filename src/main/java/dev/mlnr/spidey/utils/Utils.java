@@ -5,13 +5,10 @@ import dev.mlnr.spidey.objects.cache.Cache;
 import dev.mlnr.spidey.objects.cache.MessageCache;
 import dev.mlnr.spidey.objects.command.CommandHandler;
 import dev.mlnr.spidey.objects.invites.InviteData;
-import dev.mlnr.spidey.utils.requests.API;
-import dev.mlnr.spidey.utils.requests.Requester;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.utils.data.DataObject;
 
 import java.text.SimpleDateFormat;
 import java.time.Duration;
@@ -110,11 +107,6 @@ public class Utils
     private static Activity nextActivity(final ArrayList<Supplier<Activity>> activities)
     {
         return activities.get(RANDOM.nextInt(activities.size())).get();
-    }
-
-    public static DataObject getJson(final String url, final API api)
-    {
-        return DataObject.fromJson(Requester.executeRequest(url, api));
     }
 
     public static void storeInvites(final Guild guild)

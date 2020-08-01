@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.objects.json;
 
-import dev.mlnr.spidey.utils.Utils;
+import dev.mlnr.spidey.utils.requests.Requester;
 
 public class UrbanDictionary
 {
@@ -21,18 +21,18 @@ public class UrbanDictionary
 
     private void setData()
     {
-        final var json = Utils.getJson("http://api.urbandictionary.com/v0/define?term=" + term, null);
-        if (!json.getArray("list").isEmpty())
-        {
-            final var data = json.getArray("list").getObject(0);
-            this.author = data.getString("author");
-            this.definition = data.getString("definition");
-            this.example = data.getString("example");
-            this.word = data.getString("word");
-            this.likes = data.getInt("thumbs_up");
-            this.dislikes = data.getInt("thumbs_down");
-            this.exists = true;
-        }
+        final var json = Requester.executeRequest("http://api.urbandictionary.com/v0/define?term="+term, null);
+        final var list = json.getArray("list");
+        if (list.isEmpty())
+            return;
+        final var data = list.getObject(0);
+        this.author = data.getString("author");
+        this.definition = data.getString("definition");
+        this.example = data.getString("example");
+        this.word = data.getString("word");
+        this.likes = data.getInt("thumbs_up");
+        this.dislikes = data.getInt("thumbs_down");
+        this.exists = true;
     }
 
     public final String getAuthor() { return author; }
