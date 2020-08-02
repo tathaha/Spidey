@@ -21,7 +21,7 @@ public class UrbanDictionary
 
     private void setData()
     {
-        final var json = Requester.executeRequest("http://api.urbandictionary.com/v0/define?term="+term, null);
+        final var json = Requester.executeRequest("http://api.urbandictionary.com/v0/define?term=" + term, null);
         final var list = json.getArray("list");
         if (list.isEmpty())
             return;

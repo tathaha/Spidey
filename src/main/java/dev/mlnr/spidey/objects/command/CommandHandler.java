@@ -24,10 +24,10 @@ public class CommandHandler
 	private static final ClassGraph CLASS_GRAPH = new ClassGraph().whitelistPackages("dev.mlnr.spidey.commands");
 	private static final String NO_PERMS = "Action can't be completed because you don't have **%s** permission";
 	public static final MessageEmbed ADMIN_WARNING = new EmbedBuilder().setAuthor("Potential security risk").setColor(Color.RED)
-												     .appendDescription("I have Administrator permission for this Discord server.")
-												     .appendDescription("\nAs this is a huge security risk, __i'll refuse to handle any command__.")
-												     .appendDescription("\n\nBots shouldn't have Administrator permission unless you *need* it for **your** bot.")
-												     .appendDescription("\nPlease __remove this permission and i'll work properly again__.").build();
+									   .appendDescription("I have Administrator permission for this Discord server.")
+									   .appendDescription("\nAs this is a huge security risk, __i'll refuse to handle any command__.")
+									   .appendDescription("\n\nBots shouldn't have Administrator permission unless you *need* it for **your** bot.")
+									   .appendDescription("\nPlease __remove this permission and i'll work properly again__.").build();
 
 	private CommandHandler()
 	{
