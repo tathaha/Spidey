@@ -21,6 +21,8 @@ public class MessageCache
 
     public static MessageData getLastDeletedMessage(final long channelId)
     {
+        if (!LAST_MESSAGE_DELETED_CACHE.containsKey(channelId))
+            return null;
         return MESSAGE_CACHE.get(LAST_MESSAGE_DELETED_CACHE.get(channelId));
     }
 
@@ -53,6 +55,8 @@ public class MessageCache
 
     public static MessageData getLastEditedMessage(final long channelId)
     {
+        if (!LAST_MESSAGE_EDITED_CACHE.containsKey(channelId))
+            return null;
         return LAST_MESSAGE_EDITED_DATA.get(LAST_MESSAGE_EDITED_CACHE.get(channelId));
     }
 
