@@ -83,7 +83,7 @@ public class HelpCommand extends Command
         final var command = commandsMap.get(invoke);
         if (command == null)
         {
-            Utils.returnError("**" + invoke + "** isn't a valid command. Check `" + prefix + "help` for a list of commands.", message);
+            Utils.returnError("**" + invoke + "** isn't a valid command. Check `" + prefix + "help` for a list of commands", message);
             return;
         }
         final var description = command.getDescription();
