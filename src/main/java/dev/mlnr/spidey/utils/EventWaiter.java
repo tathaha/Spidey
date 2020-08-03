@@ -69,12 +69,9 @@ public class EventWaiter implements EventListener
 
         while (c != null)
         {
-            if (waitingEvents.containsKey(c))
-            {
-                final var set = waitingEvents.get(c);
-                final var toRemove = set.toArray(new WaitingEvent[0]);
-                set.removeAll(Stream.of(toRemove).filter(i -> i.attempt(event)).collect(Collectors.toSet()));
-            }
+            final var set = waitingEvents.get(c);
+            if (set != null)
+                set.removeAll(Stream.of(set.toArray(new WaitingEvent[0])).filter(i -> i.attempt(event)).collect(Collectors.toSet()));
             if (event instanceof ShutdownEvent && shutdownAutomatically)
                 threadpool.shutdown();
             c = c.getSuperclass();

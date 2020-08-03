@@ -79,19 +79,19 @@ public class HelpCommand extends Command
             Utils.sendMessage(channel, eb.build());
             return;
         }
-        final var cmd = args[0].toLowerCase();
-        if (!commandsMap.containsKey(cmd))
+        final var invoke = args[0].toLowerCase();
+        final var command = commandsMap.get(invoke);
+        if (command == null)
         {
-            Utils.returnError("**" + cmd + "** isn't a valid command", message);
+            Utils.returnError("**" + invoke + "** isn't a valid command. Check `" + prefix + "help` for a list of commands.", message);
             return;
         }
-        final var command = commandsMap.get(cmd);
         final var description = command.getDescription();
         final var usage = command.getUsage();
         final var requiredPermission = command.getRequiredPermission();
         final var aliases = command.getAliases();
         final var cooldown = Cooldowns.getCooldown(guildId, command);
-        eb.setAuthor("Viewing command info - " + cmd);
+        eb.setAuthor("Viewing command info - " + invoke);
         eb.setColor(0xFEFEFE);
         eb.addField("Description", description == null ? "Unspecified" : description, false);
         eb.addField("Usage", usage == null ? "Unspecified" : "`" + prefix + usage + "` (<> = required, () = optional)", false);
