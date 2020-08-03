@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 @SuppressWarnings("unused")
 public class RemindCommand extends Command
 {
-    private static final Pattern TIME_REGEX = Pattern.compile("(\\d+)((?:w(?:eek(?:s)?)?)|(?:d(?:ay(?:s)?)?)|(?:h(?:our(?:s)?)?)|(?:m(?:in(?:ute(?:s)?)?)?)|(?:s(?:ec(?:ond(?:s)?)?)?))", Pattern.CASE_INSENSITIVE);
+    private static final Pattern TIME_REGEX = Pattern.compile("(\\d+)((?:w(?:eek(?:s)?)?)|(?:d(?:ay(?:s)?)?)|(?:h(?:our(?:s)?)?)|(?:m(?:in(?:ute(?:s)?)?)?))", Pattern.CASE_INSENSITIVE);
 
     public RemindCommand()
     {
