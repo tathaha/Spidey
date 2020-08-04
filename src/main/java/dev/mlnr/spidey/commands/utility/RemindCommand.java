@@ -20,7 +20,7 @@ public class RemindCommand extends Command
 
     public RemindCommand()
     {
-        super("remind", new String[]{"reminder", "remindme"}, "Reminds you after a specified time interval (max 1 week)", "remind m/h/d/w (something)", Category.UTILITY, Permission.UNKNOWN, 2, 10);
+        super("remind", new String[]{"reminder", "remindme"}, "Reminds you after a specified time interval (max 1 week)", "remind s/m/h/d/w (something)", Category.UTILITY, Permission.UNKNOWN, 2, 10);
     }
 
     @Override
