@@ -53,7 +53,7 @@ public class HelpCommand extends Command
                     iter.remove();
             }
             commandsCopy.remove("help");
-
+            commandsCopy.remove("eval");
             final EnumMap<Category, List<Command>> categories = new EnumMap<>(Category.class);
             var nsfwHidden = false;
             commandsCopy.values().forEach(cmd -> CollectionUtils.add(categories, cmd.getCategory(), cmd));
