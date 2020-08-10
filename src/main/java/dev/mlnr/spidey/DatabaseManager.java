@@ -21,7 +21,7 @@ public class DatabaseManager
 	{
 		try
 		{
-			return DriverManager.getConnection("jdbc:mysql://localhost:3306/canelex", "admin", System.getenv("mysql"));
+			return DriverManager.getConnection("jdbc:postgresql:spidey", "cane", System.getenv("db"));
 		}
 		catch (final Exception ex)
 		{
@@ -32,7 +32,7 @@ public class DatabaseManager
 
 	private static <T> String executeGetQuery(final String property, final long guildId, final Class<T> resultType)
 	{
-		try (final var db = initializeConnection(); final var ps = db.prepareStatement("SELECT `" + property + "` FROM `guilds` WHERE `guild_id`=?"))
+		try (final var db = initializeConnection(); final var ps = db.prepareStatement("SELECT " + property + " FROM guilds WHERE guild_id=?"))
 		{
 			ps.setLong(1, guildId);
 			try (final var rs = ps.executeQuery())
@@ -49,9 +49,9 @@ public class DatabaseManager
 		return null;
 	}
 
-	private static void executeSetQuery(final String property, final long guildId, final Object value)
+	private static <T> void executeSetQuery(final String property, final long guildId, final T value)
 	{
-		final var query = "INSERT INTO `guilds` (guild_id, " + property + ") VALUES (?, ?) ON DUPLICATE KEY UPDATE " + property + "='" + value + "'";
+		final var query = "INSERT INTO guilds (guild_id, " + property + ") VALUES (?, ?) ON CONFLICT (guild_id) DO UPDATE SET " + property + "='" + value + "'";
 		try (final var db = initializeConnection(); final var ps = db.prepareStatement(query))
 		{
 			ps.setLong(1, guildId);
@@ -114,7 +114,7 @@ public class DatabaseManager
 
 	public static void removeEntry(final long guildId)
 	{
-		try (final var db = initializeConnection(); final var ps = db.prepareStatement("DELETE IGNORE FROM `guilds` WHERE `guild_id`=" + guildId))
+		try (final var db = initializeConnection(); final var ps = db.prepareStatement("DELETE FROM guilds WHERE guild_id=" + guildId))
 		{
 			ps.executeUpdate();
 		}
@@ -128,6 +128,6 @@ public class DatabaseManager
 
 	public static boolean isVip(final long guildId)
 	{
-		return getPropertyAsLong("vip", guildId) == 1;
+		return getPropertyAsString("vip", guildId).equals("t");
 	}
 }
