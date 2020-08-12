@@ -11,7 +11,7 @@ public class UserCommand extends Command
 {
 	public UserCommand()
 	{
-		super("user", new String[]{}, "Shows info about you or entered user", "user (User#Discriminator, @user, user id or username/nickname)", Category.INFORMATIVE, Permission.UNKNOWN, 1, 0);
+		super("user", new String[]{}, "Shows info about you or entered user", "user (User#Discriminator, @user or username/nickname)", Category.INFORMATIVE, Permission.UNKNOWN, 1, 0);
 	}
 
 	@Override

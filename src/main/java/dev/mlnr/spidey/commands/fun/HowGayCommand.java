@@ -15,7 +15,7 @@ public class HowGayCommand extends Command
 {
     public HowGayCommand()
     {
-        super("howgay", new String[]{"gay"}, "Shows you what's your or mentioned user's gay rate", "howgay (User#Discriminator, @user, user id or username/nickname)", Category.FUN, Permission.UNKNOWN, 1, 0);
+        super("howgay", new String[]{"gay"}, "Shows you what's your or mentioned user's gay rate", "howgay (User#Discriminator, @user or username/nickname)", Category.FUN, Permission.UNKNOWN, 1, 0);
     }
 
     @Override
