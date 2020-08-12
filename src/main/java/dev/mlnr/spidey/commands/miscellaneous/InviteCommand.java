@@ -14,11 +14,11 @@ public class InviteCommand extends Command
     }
 
     @Override
-    public final void execute(final String[] args, final Message message)
+    public final void execute(final String[] args, final Message msg)
     {
-        message.getAuthor().openPrivateChannel()
-               .flatMap(channel -> channel.sendMessage("Link for inviting me: https://spidey.mlnr.dev"))
-               .onErrorFlatMap(ignored -> message.getTextChannel().sendMessage("I couldn't send you a PM, here's the link: https://spidey.mlnr.dev"))
-               .queue();
+        msg.getAuthor().openPrivateChannel()
+           .flatMap(channel -> channel.sendMessage("Link for inviting me: https://spidey.mlnr.dev"))
+           .onErrorFlatMap(ignored -> msg.getTextChannel().sendMessage("I couldn't send you a PM, here's the link: https://spidey.mlnr.dev"))
+           .queue();
     }
 }

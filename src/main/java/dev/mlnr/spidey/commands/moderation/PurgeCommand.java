@@ -24,24 +24,23 @@ public class PurgeCommand extends Command
 {
     public PurgeCommand()
     {
-        super("purge", new String[]{"d", "delete"}, "Purges messages (by mentioned user)", "purge <count> (user)", Category.MODERATION,
-                Permission.MESSAGE_MANAGE, 2, 6);
+        super("purge", new String[]{"d", "delete"}, "Purges messages (by entered user)", "purge <count> (User#Discriminator, @user, user id or username/nickname)", Category.MODERATION, Permission.MESSAGE_MANAGE, 2, 6);
     }
 
     @Override
-    public final void execute(final String[] args, final Message message)
+    public final void execute(final String[] args, final Message msg)
     {
-        final var channel = message.getTextChannel();
+        final var channel = msg.getTextChannel();
 
         if (!channel.getGuild().getSelfMember().hasPermission(channel, getRequiredPermission(), Permission.MESSAGE_HISTORY))
         {
-            returnError("I don't have permission to purge messages or see the message history in this channel", message);
+            returnError("I don't have permission to purge messages or see the message history in this channel", msg);
             return;
         }
 
         if (args.length == 0)
         {
-            returnError("Wrong syntax", message);
+            returnError("Wrong syntax", msg);
             return;
         }
 
@@ -52,36 +51,46 @@ public class PurgeCommand extends Command
         }
         catch (final NumberFormatException ex)
         {
-            returnError("Entered value is either negative or not a number", message);
+            returnError("Entered value is either negative or not a number", msg);
             return;
         }
         if (amount > 100 || amount < 1)
         {
-            returnError("Please enter a number from 1-100", message);
+            returnError("Please enter a number from 1-100", msg);
             return;
         }
 
-        final var mentioned = message.getMentionedUsers();
-        final var user = mentioned.isEmpty() ? null : mentioned.get(0);
+        User user = null;
+        if (args.length == 2)
+        {
+            final var fromArg = Utils.getUserFromArgument(args[1], channel, msg);
+            if (fromArg == null)
+            {
+                returnError("User not found", msg);
+                return;
+            }
+            user = fromArg;
+        }
         final var limit = amount;
+        final var target = user;
 
-        message.delete().queue(ignored -> channel.getIterableHistory().cache(false).limit(user == null ? limit : 100).queue(messages ->
+        msg.delete().queue(ignored -> channel.getIterableHistory().cache(false).limit(target == null ? limit : 100).queue(messages ->
         {
             if (messages.isEmpty())
             {
-                returnError("There are no messages to be deleted", message);
+                returnError("There are no messages to be deleted", msg);
                 return;
             }
-            final var msgs = user == null ? messages : messages.stream().filter(msg -> msg.getAuthor().equals(user)).limit(limit).collect(Collectors.toList());
+            final var msgs = target == null ? messages : messages.stream().filter(message -> message.getAuthor().equals(target)).limit(limit).collect(Collectors.toList());
             if (msgs.isEmpty())
             {
-                returnError("There are no messages by user **" + user.getAsTag() + "** to be deleted", message);
+                returnError("There are no messages by user **" + target.getAsTag() + "** to be deleted", msg);
                 return;
             }
             final var pinned = msgs.stream().filter(Message::isPinned).collect(Collectors.toList());
             if (pinned.isEmpty())
             {
-                proceed(msgs, user, channel);
+                proceed(msgs, target, channel);
                 return;
             }
             final var size = pinned.size();
@@ -94,28 +103,28 @@ public class PurgeCommand extends Command
                     .append("\nReacting with :wastebasket: will delete each unpinned message.")
                     .append("\nReacting with :x: will cancel the deletion.")
                     .append("\n\nThe deletion will be cancelled automatically in **1 minute** if a decision isn't made.");
-            channel.sendMessage(builder.toString()).queue(msg ->
+            channel.sendMessage(builder.toString()).queue(message ->
             {
                 final var wastebasket = "\uD83D\uDDD1";
-                addReaction(msg, Emojis.CHECK);
-                addReaction(msg, wastebasket);
-                addReaction(msg, Emojis.CROSS);
+                addReaction(message, Emojis.CHECK);
+                addReaction(message, wastebasket);
+                addReaction(message, Emojis.CROSS);
 
                 Core.getWaiter().waitForEvent(GuildMessageReactionAddEvent.class,
-                        ev -> ev.getUser() == message.getAuthor() && ev.getMessageIdLong() == msg.getIdLong(),
+                        ev -> ev.getUser() == msg.getAuthor() && ev.getMessageIdLong() == message.getIdLong(),
                         ev ->
                         {
                             switch (ev.getReactionEmote().getName())
                             {
                                 case Emojis.CHECK:
-                                    deleteMessage(msg);
+                                    deleteMessage(message);
                                     break;
                                 case Emojis.CROSS:
-                                    deleteMessage(msg);
+                                    deleteMessage(message);
                                     return;
                                 case wastebasket:
                                     msgs.removeAll(pinned);
-                                    deleteMessage(msg);
+                                    deleteMessage(message);
                                     if (msgs.isEmpty())
                                     {
                                         returnError("There are no unpinned messages to be deleted", msg);
@@ -124,18 +133,18 @@ public class PurgeCommand extends Command
                                     break;
                                 default:
                             }
-                            proceed(msgs, user, channel);
+                            proceed(msgs, target, channel);
                         }, 1, TimeUnit.MINUTES, () -> returnError("Sorry, you took too long", msg));
             });
-        }, throwable -> returnError("Unfortunately, i couldn't purge messages due to an internal error: **" + throwable.getMessage() + "**. Please report this message to the Developer", message)));
+        }, throwable -> returnError("Unfortunately, i couldn't purge messages due to an internal error: **" + throwable.getMessage() + "**. Please report this message to the Developer", msg)));
     }
 
     private void proceed(final List<Message> toDelete, final User user, final TextChannel channel)
     {
         final var future = CompletableFuture.allOf(channel.purgeMessages(toDelete).toArray(new CompletableFuture[0]));
         future.thenRunAsync(() -> channel.sendMessage(Utils.generateSuccess(toDelete.size(), user))
-                .delay(Duration.ofSeconds(5))
-                .flatMap(Message::delete)
-                .queue());
+                                         .delay(Duration.ofSeconds(5))
+                                         .flatMap(Message::delete)
+                                         .queue());
     }
 }

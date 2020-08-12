@@ -15,7 +15,7 @@ public class HowGayCommand extends Command
 {
     public HowGayCommand()
     {
-        super("howgay", new String[]{"gay"}, "Shows you what's your or mentioned user's gay rate", "howgay (@someone)", Category.FUN, Permission.UNKNOWN, 0, 0);
+        super("howgay", new String[]{"gay"}, "Shows you what's your or mentioned user's gay rate", "howgay (User#Discriminator, @user, user id or username/nickname)", Category.FUN, Permission.UNKNOWN, 1, 0);
     }
 
     @Override
@@ -23,28 +23,19 @@ public class HowGayCommand extends Command
     {
         final var prideFlag = "\uD83C\uDFF3\uFE0F\u200D\uD83C\uDF08";
         final var random = ThreadLocalRandom.current().nextInt(0, 100 + 1); // values from 0 to 100, 100 + 1 'cause 100 has to be inclusive
-        final var eb = Utils.createEmbedBuilder(msg.getAuthor());
         final var text = " **" + random + "**% gay " + prideFlag;
-        eb.setAuthor("gay rate");
-        eb.setColor(getColorHex(random, 100));
-
-        if (args.length == 0)
-            eb.setDescription("you are" + text);
-        else if (args.length == 1)
+        final var channel = msg.getTextChannel();
+        final var author = msg.getAuthor();
+        final var user = args.length == 0 ? author : Utils.getUserFromArgument(args[0], channel, msg);
+        if (user == null)
         {
-            if (Message.MentionType.USER.getPattern().matcher(args[0]).matches())
-                eb.setDescription(msg.getMentionedUsers().get(0).getAsMention() + " is" + text);
-            else
-            {
-                Utils.returnError("Please mention a user", msg);
-                return;
-            }
-        }
-        else
-        {
-            Utils.returnError("Please mention a user", msg);
+            Utils.returnError("User not found", msg);
             return;
         }
-        Utils.sendMessage(msg.getTextChannel(), eb.build());
+        final var eb = Utils.createEmbedBuilder(author);
+        eb.setAuthor("gay rate");
+        eb.setColor(getColorHex(random, 100));
+        eb.setDescription((user == author ? "you are" : user.getAsMention() + " is") + text);
+        Utils.sendMessage(channel, eb.build());
     }
 }

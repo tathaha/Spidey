@@ -23,43 +23,40 @@ public class LeaveCommand extends Command
 	}
 
 	@Override
-	public final void execute(final String[] args, final Message message)
+	public final void execute(final String[] args, final Message msg)
 	{
-		final var guild = message.getGuild();
-		final var channel = message.getChannel();
+		final var guild = msg.getGuild();
+		final var channel = msg.getChannel();
 
-		Utils.deleteMessage(message);
-		channel.sendMessage("Do you really want me to leave?").queue(msg ->
+		Utils.deleteMessage(msg);
+		channel.sendMessage("Do you really want me to leave?").queue(prompt ->
 		{
-			addReaction(msg, Emojis.CHECK);
-			addReaction(msg, Emojis.CROSS);
+			addReaction(prompt, Emojis.CHECK);
+			addReaction(prompt, Emojis.CROSS);
 			Core.getWaiter().waitForEvent(GuildMessageReactionAddEvent.class,
 					ev ->
 					{
 						final var name = ev.getReactionEmote().getName();
-						return ev.getUser() == message.getAuthor() && ev.getMessageIdLong() == msg.getIdLong() && (name.equals(Emojis.CHECK) || name.equals(Emojis.CROSS));
+						return ev.getUser() == msg.getAuthor() && ev.getMessageIdLong() == prompt.getIdLong() && (name.equals(Emojis.CHECK) || name.equals(Emojis.CROSS));
 					},
 					ev ->
 					{
 						if (ev.getReactionEmote().getName().equals(Emojis.CHECK))
 						{
-							Utils.deleteMessage(msg);
-							channel.sendMessage("I'm sad that i have to leave.. **Thanks for using me tho**!")
+							Utils.deleteMessage(prompt);
+							channel.sendMessage("I'm sad that i have to leave.. **Thanks for using me though**!")
 									.delay(Duration.ofSeconds(5))
 									.flatMap(Message::delete)
 									.flatMap(ignored -> guild.leave())
 									.queue();
+							return;
 						}
-						else
-						{
-							Utils.deleteMessage(msg);
-							channel.sendMessage("I'm not leaving this time, yay. :tada:")
-									.delay(Duration.ofSeconds(5))
-									.flatMap(Message::delete)
-									.queue();
-						}
-
-					}, 1, TimeUnit.MINUTES, () -> Utils.returnError("Sorry, but you took too long. I'm not leaving this time", msg));
+						Utils.deleteMessage(prompt);
+						channel.sendMessage("I'm not leaving this time, yay. :tada:")
+							   .delay(Duration.ofSeconds(5))
+							   .flatMap(Message::delete)
+							   .queue();
+					}, 1, TimeUnit.MINUTES, () -> Utils.returnError("Sorry, but you took too long. I'm not leaving this time", prompt));
 			});
 	}
 }

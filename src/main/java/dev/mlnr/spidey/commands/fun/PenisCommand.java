@@ -15,35 +15,26 @@ public class PenisCommand extends Command
 {
     public PenisCommand()
     {
-        super("penis", new String[]{}, "Shows you what's your or mentioned user's penis", "penis (@someone)", Category.FUN, Permission.UNKNOWN, 0, 0);
+        super("penis", new String[]{}, "Shows you what's your or entered user's penis", "penis (User#Discriminator, @user, user id or username/nickname)", Category.FUN, Permission.UNKNOWN, 1, 0);
     }
 
     @Override
     public void execute(final String[] args, final Message msg)
     {
         final var random = ThreadLocalRandom.current().nextInt(0, 25 + 1); // values from 0 to 25, 25 + 1 'cause 25 has to be inclusive
-        final var eb = Utils.createEmbedBuilder(msg.getAuthor());
         final var text = " penis:\n8" + "=".repeat(random) + "D (**" + random + "** cm)";
-        eb.setAuthor("penis size machine");
-        eb.setColor(getColorHex(random, 25));
-
-        if (args.length == 0)
-            eb.setDescription("your" + text);
-        else if (args.length == 1)
+        final var channel = msg.getTextChannel();
+        final var author = msg.getAuthor();
+        final var user = args.length == 0 ? author : Utils.getUserFromArgument(args[0], channel, msg);
+        if (user == null)
         {
-            if (Message.MentionType.USER.getPattern().matcher(args[0]).matches())
-                eb.setDescription(msg.getMentionedUsers().get(0).getAsMention() + "'s" + text);
-            else
-            {
-                Utils.returnError("Please mention a user", msg);
-                return;
-            }
-        }
-        else
-        {
-            Utils.returnError("Please mention a user", msg);
+            Utils.returnError("User not found", msg);
             return;
         }
+        final var eb = Utils.createEmbedBuilder(author);
+        eb.setAuthor("penis size machine");
+        eb.setColor(getColorHex(random, 25));
+        eb.setDescription((user == author ? "your" : user.getAsMention() + "'s") + text);
         Utils.sendMessage(msg.getTextChannel(), eb.build());
     }
 }

@@ -15,24 +15,23 @@ public class MembersCommand extends Command
 {
 	public MembersCommand()
 	{
-		super("members", new String[]{"membercount"}, "Shows you the membercount of the guild", "members",
-				Category.INFORMATIVE, Permission.UNKNOWN, 0, 0);
+		super("members", new String[]{"membercount"}, "Shows you the membercount of the guild", "members", Category.INFORMATIVE, Permission.UNKNOWN, 0, 0);
 	}
 
 	@Override
-	public final void execute(final String[] args, final Message message)
+	public final void execute(final String[] args, final Message msg)
 	{
-		final var memberCache = message.getGuild().getMemberCache();
+		final var memberCache = msg.getGuild().getMemberCache();
 		final var bots = memberCache.applyStream(stream -> stream.map(Member::getUser).filter(User::isBot).count());
 		final var total = memberCache.size();
 
-		final var eb = Utils.createEmbedBuilder(message.getAuthor());
+		final var eb = Utils.createEmbedBuilder(msg.getAuthor());
 		eb.setAuthor("MEMBERCOUNT");
 		eb.setColor(0xFEFEFE);
 		eb.setTimestamp(Instant.now());
 		eb.addField("Total", "**" + total + "**", true);
 		eb.addField("Humans", "**" + (total - bots) + "**", true);
 		eb.addField("Bots", "**" + bots + "**", true);
-		Utils.sendMessage(message.getTextChannel(), eb.build());
+		Utils.sendMessage(msg.getTextChannel(), eb.build());
 	}
 }

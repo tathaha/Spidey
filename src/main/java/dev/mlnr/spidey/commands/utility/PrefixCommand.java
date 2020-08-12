@@ -12,22 +12,21 @@ public class PrefixCommand extends Command
 {
     public PrefixCommand()
     {
-        super("prefix", new String[]{}, "Sets/removes the prefix for this server",
-                "prefix (new prefix, if not given, the prefix will be reset if set)", Category.UTILITY, Permission.ADMINISTRATOR, 0, 4);
+        super("prefix", new String[]{}, "Sets/removes the prefix for this server", "prefix (new prefix, if not given, the prefix will be reset if set)", Category.UTILITY, Permission.ADMINISTRATOR, 0, 4);
     }
 
     @Override
-    public final void execute(final String[] args, final Message message)
+    public final void execute(final String[] args, final Message msg)
     {
-        final var guild = message.getGuild();
+        final var guild = msg.getGuild();
         final var guildId = guild.getIdLong();
-        final var channel = message.getTextChannel();
+        final var channel = msg.getTextChannel();
         final var actualPrefix = PrefixCache.retrievePrefix(guildId);
 
         if (args.length == 0)
         {
             if (actualPrefix.equals("s!"))
-                Utils.returnError("The prefix for this server is already set to the default one", message);
+                Utils.returnError("The prefix for this server is already set to the default one", msg);
             else
             {
                 PrefixCache.setPrefix(guildId, "s!");
@@ -39,12 +38,12 @@ public class PrefixCommand extends Command
         final var newPrefix = args[0];
         if (actualPrefix.equals(newPrefix))
         {
-            Utils.returnError("The prefix for this server is already set to `" + actualPrefix + "`", message);
+            Utils.returnError("The prefix for this server is already set to `" + actualPrefix + "`", msg);
             return;
         }
         if (newPrefix.length() > 10)
         {
-            Utils.returnError("The prefix can't be longer than 10 characters", message);
+            Utils.returnError("The prefix can't be longer than 10 characters", msg);
             return;
         }
 

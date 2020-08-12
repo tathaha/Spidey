@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
@@ -29,6 +30,8 @@ public class Utils
     private static final ThreadLocalRandom RANDOM = ThreadLocalRandom.current();
     private static final SimpleDateFormat SDF = new SimpleDateFormat("EE, d.LLL y | HH:mm:ss");
     private static final Calendar CAL = Calendar.getInstance();
+    private static final Pattern ID_REGEX = Pattern.compile("(\\d{17,20})");
+    private static final Pattern TAG_REGEX = Pattern.compile("\\S{2,32}#\\d{4}");
     public static final Pattern TEXT_PATTERN = Pattern.compile("[a-zA-Z0-9-_]+");
 
     private Utils()
@@ -53,11 +56,6 @@ public class Utils
         final var channel = msg.getTextChannel();
         if (channel.getGuild().getSelfMember().hasPermission(channel, Permission.MESSAGE_MANAGE))
             msg.delete().queue();
-    }
-
-    public static boolean canSetVanityUrl(final Guild g)
-    {
-        return g.getFeatures().contains("VANITY_URL");
     }
 
     public static EmbedBuilder createEmbedBuilder(final User u)
@@ -126,5 +124,34 @@ public class Utils
         final var r = ((255 * value) / max);
         final var g = (255 * (max - value)) / max;
         return ((r & 0x0ff) << 16) | ((g & 0x0ff) << 8) | (0);
+    }
+
+    public static User getUserFromArgument(final String argument, final TextChannel channel, final Message msg)
+    {
+        final var jda = channel.getJDA();
+
+        final var tagMatcher = TAG_REGEX.matcher(argument);                                              // User#Discriminator
+        if (tagMatcher.matches())
+            return jda.getUserByTag(tagMatcher.group());
+
+        if (Message.MentionType.USER.getPattern().matcher(argument).matches())                                   // @user
+            return msg.getMentionedUsers().get(0);
+
+        final var idMatcher = ID_REGEX.matcher(argument);                                               // 12345678901234567890
+        if (idMatcher.matches())
+        {
+            final var reference = new AtomicReference<User>();
+            jda.retrieveUserById(idMatcher.group()).queue(reference::set);
+            return reference.get();
+        }
+
+        if (argument.length() >= 2 && argument.length() <= 32)
+        {
+            final var results = msg.getGuild().getMembersByEffectiveName(argument, true); // username/nickname
+            if (results.isEmpty())
+                return null;
+            return results.get(0).getUser();
+        }
+        return null;
     }
 }
