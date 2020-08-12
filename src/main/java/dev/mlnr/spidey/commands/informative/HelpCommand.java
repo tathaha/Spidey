@@ -28,22 +28,22 @@ public class HelpCommand extends Command
     }
 
     @Override
-    public final void execute(final String[] args, final Message message)
+    public final void execute(final String[] args, final Message msg)
     {
         final var commandsMap = CommandHandler.getCommands();
-        final var channel = message.getTextChannel();
-        final var author = message.getAuthor();
-        final var guildId = message.getGuild().getIdLong();
+        final var channel = msg.getTextChannel();
+        final var author = msg.getAuthor();
+        final var guildId = msg.getGuild().getIdLong();
         final var prefix = PrefixCache.retrievePrefix(guildId);
         final var eb = Utils.createEmbedBuilder(author)
                 .setColor(0xFEFEFE)
-                .setAuthor("Spidey's commands", "https://github.com/caneleex/Spidey", message.getJDA().getSelfUser().getEffectiveAvatarUrl());
+                .setAuthor("Spidey's commands", "https://github.com/caneleex/Spidey", msg.getJDA().getSelfUser().getEffectiveAvatarUrl());
 
         if (args.length == 0)
         {
             final var commandsCopy = new HashMap<>(commandsMap);
             final var entries = commandsCopy.entrySet();
-            entries.removeIf(entry -> !message.getMember().hasPermission(entry.getValue().getRequiredPermission()));
+            entries.removeIf(entry -> !msg.getMember().hasPermission(entry.getValue().getRequiredPermission()));
             final var hidden = commandsMap.size() - commandsCopy.size();
             final var iter = entries.iterator();
             final var valueSet = new HashSet<>();
@@ -75,7 +75,7 @@ public class HelpCommand extends Command
             if (hidden > 0)
                 eb.appendDescription("\n**" + hidden + "** commands were hidden as you don't have permissions to use them.");
             if (nsfwHidden)
-                eb.appendDescription("\nNSFW commands were hidden from the help message. If you want to see all NSFW commands, type the help command in a NSFW channel.");
+                eb.appendDescription("\nNSFW commands were hidden from the help msg. If you want to see all NSFW commands, type the help command in a NSFW channel.");
             Utils.sendMessage(channel, eb.build());
             return;
         }
@@ -83,7 +83,7 @@ public class HelpCommand extends Command
         final var command = commandsMap.get(invoke);
         if (command == null)
         {
-            Utils.returnError("**" + invoke + "** isn't a valid command. Check `" + prefix + "help` for a list of commands", message);
+            Utils.returnError("**" + invoke + "** isn't a valid command. Check `" + prefix + "help` for a list of commands", msg);
             return;
         }
         final var description = command.getDescription();

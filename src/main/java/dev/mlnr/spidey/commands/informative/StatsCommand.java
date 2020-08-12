@@ -24,15 +24,15 @@ public class StatsCommand extends Command
 	}
 
 	@Override
-	public final void execute(final String[] args, final Message message)
+	public final void execute(final String[] args, final Message msg)
 	{
-		final var eb = Utils.createEmbedBuilder(message.getAuthor());
-		final var prefix = PrefixCache.retrievePrefix(message.getGuild().getIdLong());
-		final var jda = message.getJDA();
+		final var eb = Utils.createEmbedBuilder(msg.getAuthor());
+		final var prefix = PrefixCache.retrievePrefix(msg.getGuild().getIdLong());
+		final var jda = msg.getJDA();
 		final var runtime = Runtime.getRuntime();
 		final var total = runtime.totalMemory();
 		final var memory = (total - runtime.freeMemory()) / 1000000;
-		eb.setColor(9590015);
+		eb.setColor(3288807);
 		eb.setAuthor("Spidey's stats", "https://spidey.mlnr.dev", jda.getSelfUser().getEffectiveAvatarUrl());
 		eb.setDescription("For more info about Spidey, type " + prefix + "info");
 		eb.addField("Total servers", "" + jda.getGuildCache().size(), true);
@@ -48,6 +48,6 @@ public class StatsCommand extends Command
 		}
 		eb.addField("top.gg / DBL votes", requested, true);
 		eb.setFooter("spidey.mlnr.dev");
-		Utils.sendMessage(message.getTextChannel(), eb.build());
+		Utils.sendMessage(msg.getTextChannel(), eb.build());
 	}
 }

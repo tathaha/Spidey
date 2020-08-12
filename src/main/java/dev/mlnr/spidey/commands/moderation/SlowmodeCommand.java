@@ -21,19 +21,19 @@ public class SlowmodeCommand extends Command
 	}
 
 	@Override
-	public final void execute(final String[] args, final Message message)
+	public final void execute(final String[] args, final Message msg)
 	{
-		final var textChannel = message.getTextChannel();
+		final var textChannel = msg.getTextChannel();
 		final var manager = textChannel.getManager();
 
 		if (args.length == 0)
 		{
-			checkSlowmode(textChannel, message);
+			checkSlowmode(textChannel, msg);
 			return;
 		}
 		if (args[0].equalsIgnoreCase("off"))
 		{
-			checkSlowmode(textChannel, message);
+			checkSlowmode(textChannel, msg);
 			return;
 		}
 
@@ -42,12 +42,12 @@ public class SlowmodeCommand extends Command
 			var parsed = Math.max(0, Math.min(Integer.parseInt(args[0]), MAX_SLOWMODE));
 			if (parsed == 0)
 			{
-				checkSlowmode(textChannel, message);
+				checkSlowmode(textChannel, msg);
 				return;
 			}
 			else if (textChannel.getSlowmode() == parsed)
 			{
-				Utils.returnError("The slowmode for this channel is already set to **" + parsed + "** seconds", message);
+				Utils.returnError("The slowmode for this channel is already set to **" + parsed + "** seconds", msg);
 				return;
 			}
 			manager.setSlowmode(parsed).queue();
@@ -55,7 +55,7 @@ public class SlowmodeCommand extends Command
 		}
 		catch (final NumberFormatException ex)
 		{
-			Utils.returnError("Couldn't parse argument", message);
+			Utils.returnError("Couldn't parse argument", msg);
 		}
 	}
 

@@ -19,15 +19,15 @@ public class GuildCommand extends Command
 	}
 
 	@Override
-	public final void execute(final String[] args, final Message message)
+	public final void execute(final String[] args, final Message msg)
 	{
-		final var eb = Utils.createEmbedBuilder(message.getAuthor());
-		final var guild = message.getGuild();
+		final var eb = Utils.createEmbedBuilder(msg.getAuthor());
+		final var guild = msg.getGuild();
 		eb.setColor(Color.ORANGE);
 		eb.setThumbnail(guild.getIconUrl());
 
 		eb.addField("Server Name", guild.getName(), true);
-		eb.addField("Server ID", guild.getId(), true);
+		eb.addField("Server ID", "" + guild.getIdLong(), true);
 
 		eb.addField("Owner", guild.getOwner().getUser().getAsTag(), true);
 		eb.addField("Owner ID", guild.getOwnerId(), true);
@@ -36,7 +36,9 @@ public class GuildCommand extends Command
 		eb.addField("Voice Channels", "" + guild.getVoiceChannelCache().size(), true);
 
 		eb.addField("Members", "" + guild.getMemberCache().size(), true);
-		eb.addField("Verification Level", guild.getVerificationLevel().name(), true);
+
+		final var verificationLevel = guild.getVerificationLevel().name().toLowerCase();
+		eb.addField("Verification Level", verificationLevel.substring(0, 1).toUpperCase() + verificationLevel.substring(1), true);
 
 		eb.addField("Boost tier", "" + guild.getBoostTier().getKey(), true);
 		eb.addField("Boosts", "" + guild.getBoostCount(), true);
@@ -45,36 +47,20 @@ public class GuildCommand extends Command
 		eb.addField("Creation", Utils.getTime(guild.getTimeCreated().toInstant().toEpochMilli()), true);
 
 		final var vanityUrl = guild.getVanityUrl();
-		if (!Utils.canSetVanityUrl(guild)) //could use ternary here too, but i don't use it because of readability
-			eb.addField("Custom invite/Vanity url", "Guild isn't eligible to set vanity url", true);
-        else
-			eb.addField("Custom invite/Vanity url", vanityUrl == null ? "Guild has no vanity url set" : vanityUrl, true);
+		eb.addField("Custom invite/Vanity url", !guild.getFeatures().contains("VANITY_URL") ? "Guild isn't eligible to set vanity url" : (vanityUrl == null ? "Guild has no vanity url set" : vanityUrl), true);
 
         eb.addField("Roles", "" + (guild.getRoleCache().size() - 1), true);
 
-		final var st = new StringBuilder();
-
-		var ec = 0;
-		final var tmp = guild.getEmoteCache();
-		final var emotes = tmp.applyStream(stream -> stream.filter(emote -> !emote.isManaged()).collect(Collectors.toList()));
-		final var an = tmp.applyStream(stream -> stream.filter(Emote::isAnimated).count());
-
-		for (final var emote : emotes)
+		final var emoteCache = guild.getEmoteCache();
+		final var emotes = emoteCache.applyStream(stream -> stream.filter(emote -> !emote.isManaged()).collect(Collectors.toList()));
+		if (!emotes.isEmpty())
 		{
-			ec++;
-			final var mention = emote.getAsMention();
-			if (ec == emotes.size())
-				st.append(mention);
-			else
-				st.append(mention).append(" ");
+			final var sb = new StringBuilder();
+			var ec = 0;
+			for (final var emote : emotes)
+				sb.append(emote.getAsMention()).append(++ec != emotes.size() ? " " : "");
+			eb.addField(String.format("Emotes (**%s** | **%d** animated)", ec, emoteCache.applyStream(stream -> stream.filter(Emote::isAnimated).count())), sb.length() > 1024 ? "Limit exceeded" : sb.toString(), false);
 		}
-
-		if (ec > 0)
-		{
-			final var length = st.length();
-			eb.addField(String.format("Emotes (**%s** | **%s** animated)", ec, an), (length == 0) ? "None" : (length > 1024 ? "Limit exceeded" : st.toString()), false);
-		}
-
-		Utils.sendMessage(message.getTextChannel(), eb.build());
+		Utils.sendMessage(msg.getTextChannel(), eb.build());
 	}
 }

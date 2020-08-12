@@ -21,22 +21,22 @@ public class PollCommand extends Command
 	}
 
 	@Override
-	public final void execute(final String[] args, final Message message)
+	public final void execute(final String[] args, final Message msg)
 	{
 		if (args.length == 0)
 		{
-			Utils.returnError("Please enter a question", message);
+			Utils.returnError("Please enter a question", msg);
 			return;
 		}
-		final var guild = message.getGuild();
-		final var log = LogChannelCache.getLogAsChannel(guild.getIdLong(), message.getJDA());
-		final var author = message.getAuthor();
-		final var channel = message.getChannel();
+		final var guild = msg.getGuild();
+		final var log = LogChannelCache.getLogAsChannel(guild.getIdLong(), msg.getJDA());
+		final var author = msg.getAuthor();
+		final var channel = msg.getChannel();
 
 		if (log == null)
 			return;
 		final var question = args[0];
-		Utils.deleteMessage(message);
+		Utils.deleteMessage(msg);
 		channel.sendMessage("Poll: **" + question + "**").queue(m ->
 		{
 			addReaction(m, Emojis.LIKE);

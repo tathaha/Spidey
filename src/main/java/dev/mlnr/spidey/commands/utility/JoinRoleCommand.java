@@ -17,24 +17,23 @@ public class JoinRoleCommand extends Command
 
     public JoinRoleCommand()
     {
-        super("joinrole", new String[]{}, "Sets/removes the role that is added to a member after joining",
-                "joinrole (id/name of the role, if not given, the role will be reset if set)", Category.UTILITY, Permission.ADMINISTRATOR, 1, 4);
+        super("joinrole", new String[]{}, "Sets/removes the role that is added to a member after joining", "joinrole (id/name of the role or blank to reset)", Category.UTILITY, Permission.ADMINISTRATOR, 1, 4);
     }
 
     @Override
-    public final void execute(final String[] args, final Message message)
+    public final void execute(final String[] args, final Message msg)
     {
-        final var guild = message.getGuild();
+        final var guild = msg.getGuild();
         final var guildId = guild.getIdLong();
-        final var channel = message.getTextChannel();
-        final var member = message.getMember();
+        final var channel = msg.getTextChannel();
+        final var member = msg.getMember();
 
         final var dbRole = JoinRoleCache.retrieveJoinRole(guildId);
         if (args.length == 0)
         {
             if (dbRole == 0)
             {
-                Utils.returnError("You don't have the join role set", message);
+                Utils.returnError("You don't have the join role set", msg);
                 return;
             }
             JoinRoleCache.removeJoinRole(guildId);
@@ -48,13 +47,13 @@ public class JoinRoleCommand extends Command
             final var parsed = Long.parseUnsignedLong(args[0]);
             if (dbRole == parsed)
             {
-                Utils.returnError("The join role is already set to this role", message);
+                Utils.returnError("The join role is already set to this role", msg);
                 return;
             }
             final var tmp = guild.getRoleById(parsed);
             if (tmp == null)
             {
-                Utils.returnError("There is no such role with given ID", message);
+                Utils.returnError("There is no such role with given ID", msg);
                 return;
             }
             role = tmp;
@@ -66,20 +65,20 @@ public class JoinRoleCommand extends Command
             {
                 if (args[0].length() > 100)
                 {
-                    Utils.returnError("The name of the role has to be 100 characters long at max", message);
+                    Utils.returnError("The name of the role has to be 100 characters long at max", msg);
                     return;
                 }
                 final var roles = guild.getRolesByName(args[0], false);
                 if (roles.isEmpty())
                 {
-                    Utils.returnError("There is no such role with given name", message);
+                    Utils.returnError("There is no such role with given name", msg);
                     return;
                 }
                 final var fromName = roles.get(0);
                 final var id = fromName.getIdLong();
                 if (dbRole == id)
                 {
-                    Utils.returnError("The join role is already set to this role", message);
+                    Utils.returnError("The join role is already set to this role", msg);
                     return;
                 }
                 role = fromName;
@@ -87,13 +86,13 @@ public class JoinRoleCommand extends Command
             }
             else
             {
-                Utils.returnError("Please enter a valid ID/role name", message);
+                Utils.returnError("Please enter a valid ID/role name", msg);
                 return;
             }
         }
         if (!member.canInteract(role))
         {
-            Utils.returnError("You can't set the join role to a role which you can't interact with", message);
+            Utils.returnError("You can't set the join role to a role which you can't interact with", msg);
             return;
         }
         JoinRoleCache.setJoinRole(guildId, roleId);

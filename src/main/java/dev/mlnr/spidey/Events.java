@@ -186,7 +186,7 @@ public class Events extends ListenerAdapter
 		final var jda = e.getJDA();
 		final var channel = LogChannelCache.getLogAsChannel(guildId, jda);
 		final var joinRole = JoinRoleCache.getJoinRole(guildId, jda);
-		final var userId = user.getId();
+		final var userId = user.getIdLong();
 		final var selfMember = guild.getSelfMember();
 
 		if (channel == null)

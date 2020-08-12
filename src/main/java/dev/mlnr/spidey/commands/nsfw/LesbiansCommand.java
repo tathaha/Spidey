@@ -10,8 +10,7 @@ public class LesbiansCommand extends Command
 {
     public LesbiansCommand()
     {
-        super("lesbians", new String[]{"lesbian"}, "Sends a (NSFW) picture of lesbians", "lesbians", Category.NSFW, Permission.UNKNOWN,
-                0, 4);
+        super("lesbians", new String[]{"lesbian"}, "Sends a (NSFW) picture of lesbians", "lesbians", Category.NSFW, Permission.UNKNOWN, 0, 4);
     }
 
     @Override

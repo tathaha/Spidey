@@ -10,8 +10,7 @@ public class DankMemesCommand extends Command
 {
     public DankMemesCommand()
     {
-        super("dankmemes", new String[]{"dankmeme", "dank"}, "Sends a random dank meme", "dankmemes", Category.FUN, Permission.UNKNOWN,
-                0, 4);
+        super("dankmemes", new String[]{"dankmeme", "dank"}, "Sends a random dank meme", "dankmemes", Category.FUN, Permission.UNKNOWN, 0, 4);
     }
 
     @Override

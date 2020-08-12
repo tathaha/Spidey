@@ -15,8 +15,8 @@ public class LegalCommand extends Command
 	}
 
 	@Override
-	public final void execute(final String[] args, final Message message)
+	public final void execute(final String[] args, final Message msg)
 	{
-		Utils.sendMessage(message.getTextChannel(), "To see the Terms of Service and Privacy Policy, please visit the support guild: discord.gg/cnAgKrv");
+		Utils.sendMessage(msg.getTextChannel(), "To see the Terms of Service and Privacy Policy, please visit the support guild: discord.gg/cnAgKrv");
 	}
 }
