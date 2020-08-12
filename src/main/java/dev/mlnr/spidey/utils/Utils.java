@@ -130,14 +130,14 @@ public class Utils
     {
         final var jda = channel.getJDA();
 
-        final var tagMatcher = TAG_REGEX.matcher(argument);                                              // User#Discriminator
+        final var tagMatcher = TAG_REGEX.matcher(argument);                                         // User#Discriminator
         if (tagMatcher.matches())
             return jda.getUserByTag(tagMatcher.group());
 
-        if (Message.MentionType.USER.getPattern().matcher(argument).matches())                                   // @user
+        if (Message.MentionType.USER.getPattern().matcher(argument).matches())                      // @user
             return msg.getMentionedUsers().get(0);
 
-        final var idMatcher = ID_REGEX.matcher(argument);                                               // 12345678901234567890
+        final var idMatcher = ID_REGEX.matcher(argument);                                           // 12345678901234567890
         if (idMatcher.matches())
         {
             final var reference = new AtomicReference<User>();
