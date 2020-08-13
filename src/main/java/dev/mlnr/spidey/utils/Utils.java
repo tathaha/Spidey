@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 
 import java.text.SimpleDateFormat;
 import java.time.Duration;
@@ -17,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
@@ -140,9 +140,14 @@ public class Utils
         final var idMatcher = ID_REGEX.matcher(argument);                                 // 12345678901234567890
         if (idMatcher.matches())
         {
-            final var reference = new AtomicReference<User>();
-            jda.retrieveUserById(idMatcher.group()).queue(reference::set);
-            return reference.get();
+            try
+            {
+                return jda.retrieveUserById(idMatcher.group()).complete();
+            }
+            catch (final ErrorResponseException ex)
+            {
+                return null;
+            }
         }
 
         if (argument.length() >= 2 && argument.length() <= 32)
