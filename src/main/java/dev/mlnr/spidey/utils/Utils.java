@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
@@ -29,6 +30,7 @@ public class Utils
     private static final ThreadLocalRandom RANDOM = ThreadLocalRandom.current();
     private static final SimpleDateFormat SDF = new SimpleDateFormat("EE, d.LLL y | HH:mm:ss");
     private static final Calendar CAL = Calendar.getInstance();
+    private static final Pattern ID_REGEX = Pattern.compile("(\\d{17,20})");
     private static final Pattern TAG_REGEX = Pattern.compile("\\S{2,32}#\\d{4}");
     public static final Pattern TEXT_PATTERN = Pattern.compile("[a-zA-Z0-9-_]+");
 
@@ -134,6 +136,14 @@ public class Utils
 
         if (Message.MentionType.USER.getPattern().matcher(argument).matches())            // @user
             return msg.getMentionedUsers().get(0);
+
+        final var idMatcher = ID_REGEX.matcher(argument);                                 // 12345678901234567890
+        if (idMatcher.matches())
+        {
+            final var reference = new AtomicReference<User>();
+            jda.retrieveUserById(idMatcher.group()).queue(reference::set);
+            return reference.get();
+        }
 
         if (argument.length() >= 2 && argument.length() <= 32)
         {

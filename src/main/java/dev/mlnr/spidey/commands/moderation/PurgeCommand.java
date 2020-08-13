@@ -24,7 +24,7 @@ public class PurgeCommand extends Command
 {
     public PurgeCommand()
     {
-        super("purge", new String[]{"d", "delete"}, "Purges messages (by entered user)", "purge <count> (User#Discriminator, @user or username/nickname)", Category.MODERATION, Permission.MESSAGE_MANAGE, 2, 6);
+        super("purge", new String[]{"d", "delete"}, "Purges messages (by entered user)", "purge <count> (User#Discriminator, @user, user id or username/nickname)", Category.MODERATION, Permission.MESSAGE_MANAGE, 2, 6);
     }
 
     @Override
