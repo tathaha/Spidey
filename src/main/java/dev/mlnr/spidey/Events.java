@@ -47,7 +47,7 @@ public class Events extends ListenerAdapter
 		if (!content.isEmpty())
 			MessageCache.cacheMessage(message.getIdLong(), new MessageData(message));
 
-		if (content.equals("<@468523263853592576>") || content.equals("<@!468523263853592576>"))
+		if ((content.equals("<@468523263853592576>") || content.equals("<@!468523263853592576>")) && !author.isBot())
 		{
 			final var eb = new EmbedBuilder();
 			eb.setColor(16763981);
