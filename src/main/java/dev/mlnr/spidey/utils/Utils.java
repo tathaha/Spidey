@@ -98,8 +98,7 @@ public class Utils
         ));
         executor.scheduleAtFixedRate(() -> jda.getPresence().setActivity(nextActivity(activities)), 0, 30, TimeUnit.SECONDS);
         executor.scheduleAtFixedRate(() ->
-                MessageCache.getCache().entrySet().removeIf(entry -> entry.getValue().getCreation().isBefore(OffsetDateTime.now().minusMinutes(10).toInstant())),
-                1, 1, TimeUnit.HOURS);
+                MessageCache.getCache().entrySet().removeIf(entry -> entry.getValue().getCreation().isBefore(OffsetDateTime.now().minusMinutes(10).toInstant())), 1, 1, TimeUnit.HOURS);
     }
 
     private static Activity nextActivity(final ArrayList<Supplier<Activity>> activities)
