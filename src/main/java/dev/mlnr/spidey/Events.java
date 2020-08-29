@@ -231,14 +231,13 @@ public class Events extends ListenerAdapter
 			{
 				final var inviteData = Cache.getInviteCache().get(invite.getCode());
 				if (inviteData == null)
-					return;
-				if (invite.getUses() > inviteData.getUses())
-				{
-					inviteData.incrementUses();
-					eb.appendDescription(" with invite **" + invite.getUrl() + "** (**" + escape(invite.getInviter().getAsTag()) + "**).");
-					Utils.sendMessage(channel, eb.build());
-					break;
-				}
+					continue;
+				if (invite.getUses() == inviteData.getUses())
+					continue;
+				inviteData.incrementUses();
+				eb.appendDescription(" with invite **" + invite.getUrl() + "** (**" + escape(invite.getInviter().getAsTag()) + "**).");
+				Utils.sendMessage(channel, eb.build());
+				break;
 			}
 		});
 	}
@@ -265,6 +264,7 @@ public class Events extends ListenerAdapter
 	{
 		final var guildId = e.getGuild().getIdLong();
 		Cache.getInviteCache().entrySet().removeIf(entry -> entry.getValue().getGuildId() == guildId);
+		MessageCache.getCache().entrySet().removeIf(entry -> entry.getValue().getGuildId() == guildId);
 		Cache.removeEntry(guildId);
 	}
 
