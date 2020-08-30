@@ -2,8 +2,8 @@ package dev.mlnr.spidey.objects.command;
 
 import dev.mlnr.spidey.Core;
 import dev.mlnr.spidey.objects.cache.Cache;
-import dev.mlnr.spidey.utils.collections.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,13 +23,14 @@ public class Cooldowns
         final var cooldown = cmd.getCooldown();
         if (cooldown == 0)
             return;
-        CollectionUtils.add(COOLDOWN_MAP, guildId, cmd);
-        Core.getExecutor().schedule(() -> CollectionUtils.remove(COOLDOWN_MAP, guildId, cmd), getCooldown(guildId, cmd), TimeUnit.SECONDS);
+        COOLDOWN_MAP.computeIfAbsent(guildId, k -> new ArrayList<>()).add(cmd);
+        Core.getExecutor().schedule(() -> COOLDOWN_MAP.get(guildId).remove(cmd), getCooldown(guildId, cmd), TimeUnit.SECONDS);
     }
 
     public static boolean isOnCooldown(final long guildId, final Command cmd)
     {
-        return CollectionUtils.contains(COOLDOWN_MAP, guildId, cmd);
+        final var entry = COOLDOWN_MAP.get(guildId);
+        return entry != null && entry.contains(cmd);
     }
 
     public static int getCooldown(final long guildId, final Command cmd)
