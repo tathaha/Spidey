@@ -12,6 +12,7 @@ public class MessageData
     private final String content;
     private final long channelId;
     private final long guildId;
+    private final String jumpUrl;
 
     public MessageData(final Message message)
     {
@@ -21,6 +22,7 @@ public class MessageData
         this.content = message.getContentRaw();
         this.channelId = message.getTextChannel().getIdLong();
         this.guildId = message.getGuild().getIdLong();
+        this.jumpUrl = message.getJumpUrl();
     }
 
     public long getId()
@@ -51,5 +53,10 @@ public class MessageData
     public long getGuildId()
     {
         return guildId;
+    }
+
+    public String getJumpUrl()
+    {
+        return jumpUrl;
     }
 }
