@@ -97,7 +97,7 @@ public class Utils
                 () -> watching(jda.getUserCache().size() + " users")
         ));
         executor.scheduleAtFixedRate(() -> jda.getPresence().setActivity(nextActivity(activities)), 0, 30, TimeUnit.SECONDS);
-        executor.scheduleAtFixedRate(() ->
+        executor.scheduleAtFixedRate(() -> // TODO maybe clear all caches here too?
                 MessageCache.getCache().entrySet().removeIf(entry -> entry.getValue().getCreation().isBefore(OffsetDateTime.now().minusMinutes(10).toInstant())), 1, 1, TimeUnit.HOURS);
     }
 

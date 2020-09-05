@@ -264,7 +264,7 @@ public class Events extends ListenerAdapter
 	{
 		final var guildId = e.getGuild().getIdLong();
 		Cache.getInviteCache().entrySet().removeIf(entry -> entry.getValue().getGuildId() == guildId);
-		MessageCache.getCache().entrySet().removeIf(entry -> entry.getValue().getGuildId() == guildId);
+		MessageCache.pruneCache(guildId);
 		Cache.removeEntry(guildId);
 	}
 
