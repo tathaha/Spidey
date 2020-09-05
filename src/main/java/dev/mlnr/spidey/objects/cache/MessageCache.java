@@ -78,7 +78,7 @@ public class MessageCache
             if (dataGuildId != guildId)
                 continue;
             final var messageId = entry.getKey();
-            entries.removeIf(record -> record.getValue().getGuildId() == guildId);
+            MESSAGE_CACHE.remove(messageId);
             LAST_MESSAGE_DELETED_CACHE.entrySet().removeIf(record -> record.getValue() == messageId);
             LAST_MESSAGE_EDITED_CACHE.entrySet().removeIf(record -> record.getValue() == messageId);
             LAST_MESSAGE_EDITED_DATA.entrySet().removeIf(record -> record.getValue().getGuildId() == guildId);
