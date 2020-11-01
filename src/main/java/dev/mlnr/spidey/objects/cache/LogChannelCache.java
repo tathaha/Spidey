@@ -12,10 +12,7 @@ public class LogChannelCache
 {
     private static final Map<Long, Long> LOG_CHANNEL_CACHE = new HashMap<>();
 
-    private LogChannelCache()
-    {
-        super();
-    }
+    private LogChannelCache() {}
 
     public static long retrieveLogChannel(final long guildId)
     {

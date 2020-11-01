@@ -1,21 +1,20 @@
 package dev.mlnr.spidey.utils;
 
 import dev.mlnr.spidey.Core;
+import dev.mlnr.spidey.handlers.CommandHandler;
 import dev.mlnr.spidey.objects.cache.Cache;
 import dev.mlnr.spidey.objects.cache.MessageCache;
-import dev.mlnr.spidey.objects.command.CommandHandler;
 import dev.mlnr.spidey.objects.invites.InviteData;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 
-import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
@@ -27,17 +26,12 @@ import static net.dv8tion.jda.api.entities.Activity.watching;
 
 public class Utils
 {
-    private static final ThreadLocalRandom RANDOM = ThreadLocalRandom.current();
-    private static final SimpleDateFormat SDF = new SimpleDateFormat("EE, d.LLL y | HH:mm:ss");
-    private static final Calendar CAL = Calendar.getInstance();
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("EE, d.LLL y | HH:mm:ss");
     private static final Pattern ID_REGEX = Pattern.compile("(\\d{17,20})");
     private static final Pattern TAG_REGEX = Pattern.compile("\\S{2,32}#\\d{4}");
     public static final Pattern TEXT_PATTERN = Pattern.compile("[a-zA-Z0-9-_]+");
 
-    private Utils()
-    {
-        super();
-    }
+    private Utils() {}
 
     public static void sendMessage(final TextChannel ch, final String toSend)
     {
@@ -71,8 +65,8 @@ public class Utils
 
     public static void returnError(final String errMsg, final Message origin)
     {
-        final var channel = origin.getTextChannel();
         addReaction(origin, Emojis.CROSS);
+        final var channel = origin.getTextChannel();
         if (!channel.canTalk())
             return;
         channel.sendMessage(String.format(":no_entry: %s.", errMsg))
@@ -90,7 +84,7 @@ public class Utils
     {
         CommandHandler.registerCommands();
         final var executor = Core.getExecutor();
-        final ArrayList<Supplier<Activity>> activities = new ArrayList<>(asList(
+        final List<Supplier<Activity>> activities = new ArrayList<>(asList(
                 () -> listening("your commands"),
                 () -> watching("you"),
                 () -> watching(jda.getGuildCache().size() + " guilds"),
@@ -101,9 +95,9 @@ public class Utils
                 MessageCache.getCache().entrySet().removeIf(entry -> entry.getValue().getCreation().isBefore(OffsetDateTime.now().minusMinutes(10).toInstant())), 1, 1, TimeUnit.HOURS);
     }
 
-    private static Activity nextActivity(final ArrayList<Supplier<Activity>> activities)
+    private static Activity nextActivity(final List<Supplier<Activity>> activities)
     {
-        return activities.get(RANDOM.nextInt(activities.size())).get();
+        return activities.get(ThreadLocalRandom.current().nextInt(activities.size())).get();
     }
 
     public static void storeInvites(final Guild guild)
@@ -112,10 +106,9 @@ public class Utils
             guild.retrieveInvites().queue(invites -> invites.forEach(invite -> Cache.getInviteCache().put(invite.getCode(), new InviteData(invite))));
     }
 
-    public static String getTime(final long millis)
+    public static String formatDate(final OffsetDateTime date)
     {
-        CAL.setTimeInMillis(millis);
-        return SDF.format(CAL.getTime());
+        return DATE_FORMATTER.format(date);
     }
 
     public static int getColorHex(final int value, final int max)
@@ -139,14 +132,7 @@ public class Utils
         final var idMatcher = ID_REGEX.matcher(argument);                                 // 12345678901234567890
         if (idMatcher.matches())
         {
-            try
-            {
-                return jda.retrieveUserById(idMatcher.group()).complete();
-            }
-            catch (final ErrorResponseException ex)
-            {
-                return null;
-            }
+            return jda.retrieveUserById(idMatcher.group()).complete();
         }
 
         if (argument.length() >= 2 && argument.length() <= 32)

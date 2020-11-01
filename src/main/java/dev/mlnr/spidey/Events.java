@@ -1,7 +1,7 @@
 package dev.mlnr.spidey;
 
+import dev.mlnr.spidey.handlers.CommandHandler;
 import dev.mlnr.spidey.objects.cache.*;
-import dev.mlnr.spidey.objects.command.CommandHandler;
 import dev.mlnr.spidey.objects.invites.InviteData;
 import dev.mlnr.spidey.objects.messages.MessageData;
 import dev.mlnr.spidey.utils.Emojis;
@@ -30,11 +30,11 @@ import java.time.Instant;
 
 import static net.dv8tion.jda.api.utils.MarkdownSanitizer.escape;
 
-@SuppressWarnings({"ConstantConditions", "StringBufferReplaceableByString"})
+@SuppressWarnings("StringBufferReplaceableByString")
 public class Events extends ListenerAdapter
 {
 	@Override
-	public final void onGuildMessageReceived(final GuildMessageReceivedEvent e)
+	public void onGuildMessageReceived(final GuildMessageReceivedEvent e)
 	{
 		final var guild = e.getGuild();
 		final var message = e.getMessage();
@@ -86,7 +86,7 @@ public class Events extends ListenerAdapter
 	}
 
 	@Override
-	public final void onGuildBan(final GuildBanEvent e)
+	public void onGuildBan(final GuildBanEvent e)
 	{
 		final var user = e.getUser();
 		final var guild = e.getGuild();
@@ -121,7 +121,7 @@ public class Events extends ListenerAdapter
 	}
 
 	@Override
-	public final void onGuildUnban(final GuildUnbanEvent e)
+	public void onGuildUnban(final GuildUnbanEvent e)
 	{
 		final var user = e.getUser();
 		final var guild = e.getGuild();
@@ -151,7 +151,7 @@ public class Events extends ListenerAdapter
 	}
 
 	@Override
-	public final void onGuildMemberRemove(final GuildMemberRemoveEvent e)
+	public void onGuildMemberRemove(final GuildMemberRemoveEvent e)
 	{
 		final var user = e.getUser();
 		final var guild = e.getGuild();
@@ -178,7 +178,7 @@ public class Events extends ListenerAdapter
 	}
 
 	@Override
-	public final void onGuildMemberJoin(@NotNull final GuildMemberJoinEvent e)
+	public void onGuildMemberJoin(@NotNull final GuildMemberJoinEvent e)
 	{
 		final var user = e.getUser();
 		final var guild = e.getGuild();
@@ -243,14 +243,14 @@ public class Events extends ListenerAdapter
 	}
 
 	@Override
-	public final void onGuildReady(@NotNull final GuildReadyEvent e)
+	public void onGuildReady(@NotNull final GuildReadyEvent e)
 	{
 		final var guild = e.getGuild();
 		Utils.storeInvites(guild);
 	}
 
 	@Override
-	public final void onGuildJoin(final GuildJoinEvent e)
+	public void onGuildJoin(final GuildJoinEvent e)
 	{
 		final var guild = e.getGuild();
 		final var defaultChannel = guild.getDefaultChannel();
@@ -260,7 +260,7 @@ public class Events extends ListenerAdapter
 	}
 
 	@Override
-	public final void onGuildLeave(final GuildLeaveEvent e)
+	public void onGuildLeave(final GuildLeaveEvent e)
 	{
 		final var guildId = e.getGuild().getIdLong();
 		Cache.getInviteCache().entrySet().removeIf(entry -> entry.getValue().getGuildId() == guildId);
@@ -269,7 +269,7 @@ public class Events extends ListenerAdapter
 	}
 
 	@Override
-	public final void onTextChannelDelete(final TextChannelDeleteEvent e)
+	public void onTextChannelDelete(final TextChannelDeleteEvent e)
 	{
 		final var guildId = e.getGuild().getIdLong();
 		if (e.getChannel().getIdLong() == LogChannelCache.retrieveLogChannel(guildId))
@@ -277,7 +277,7 @@ public class Events extends ListenerAdapter
 	}
 
 	@Override
-	public final void onRoleDelete(final RoleDeleteEvent e)
+	public void onRoleDelete(final RoleDeleteEvent e)
 	{
 		final var guildId = e.getGuild().getIdLong();
 		if (e.getRole().getIdLong() == JoinRoleCache.retrieveJoinRole(guildId))
@@ -285,7 +285,7 @@ public class Events extends ListenerAdapter
 	}
 
 	@Override
-	public final void onGuildUpdateBoostTier(final GuildUpdateBoostTierEvent e)
+	public void onGuildUpdateBoostTier(final GuildUpdateBoostTierEvent e)
 	{
 		final var guild = e.getGuild();
 		final var channel = LogChannelCache.getLogAsChannel(guild.getIdLong(), e.getJDA());
@@ -301,13 +301,13 @@ public class Events extends ListenerAdapter
 	}
 
 	@Override
-	public final void onGuildInviteCreate(@NotNull final GuildInviteCreateEvent e)
+	public void onGuildInviteCreate(@NotNull final GuildInviteCreateEvent e)
 	{
 		Cache.getInviteCache().put(e.getCode(), new InviteData(e.getInvite()));
 	}
 
 	@Override
-	public final void onGuildInviteDelete(@NotNull final GuildInviteDeleteEvent e)
+	public void onGuildInviteDelete(@NotNull final GuildInviteDeleteEvent e)
 	{
 		Cache.getInviteCache().remove(e.getCode());
 	}

@@ -4,7 +4,6 @@ import dev.mlnr.spidey.Core;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.utils.Emojis;
-import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -28,7 +27,7 @@ public class PurgeCommand extends Command
     }
 
     @Override
-    public final void execute(final String[] args, final Message msg)
+    public void execute(final String[] args, final Message msg)
     {
         final var channel = msg.getTextChannel();
 
@@ -63,7 +62,7 @@ public class PurgeCommand extends Command
         User user = null;
         if (args.length == 2)
         {
-            final var fromArg = Utils.getUserFromArgument(args[1], channel, msg);
+            final var fromArg = getUserFromArgument(args[1], channel, msg);
             if (fromArg == null)
             {
                 returnError("User not found", msg);
@@ -142,7 +141,7 @@ public class PurgeCommand extends Command
     private void proceed(final List<Message> toDelete, final User user, final TextChannel channel)
     {
         final var future = CompletableFuture.allOf(channel.purgeMessages(toDelete).toArray(new CompletableFuture[0]));
-        future.thenRunAsync(() -> channel.sendMessage(Utils.generateSuccess(toDelete.size(), user))
+        future.thenRunAsync(() -> channel.sendMessage(generateSuccess(toDelete.size(), user))
                                          .delay(Duration.ofSeconds(5))
                                          .flatMap(Message::delete)
                                          .queue());

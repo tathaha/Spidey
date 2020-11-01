@@ -3,18 +3,16 @@ package dev.mlnr.spidey.objects.cache;
 import dev.mlnr.spidey.DatabaseManager;
 import dev.mlnr.spidey.objects.invites.InviteData;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public class Cache
 {
     private static final Map<String, InviteData> INVITE_CACHE = new HashMap<>();
     private static final Map<Long, Boolean> VIP_GUILDS_CACHE = new HashMap<>();
-    private static final Map<Long, List<String>> REDDIT_CACHE = new HashMap<>();
 
-    private Cache()
-    {
-        super();
-    }
+    private Cache() {}
 
     public static Map<String, InviteData> getInviteCache()
     {
@@ -31,19 +29,6 @@ public class Cache
             VIP_GUILDS_CACHE.put(guildId, vip);
             return vip;
         });
-    }
-
-    // REDDIT POSTS CACHING
-
-    public static boolean isPostCached(final long guildId, final String json)
-    {
-        final var entry = REDDIT_CACHE.get(guildId);
-        return entry != null && entry.contains(json);
-    }
-
-    public static void cachePost(final long guildId, final String json)
-    {
-        REDDIT_CACHE.computeIfAbsent(guildId, k -> new ArrayList<>()).add(json);
     }
 
     // MISC

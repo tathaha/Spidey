@@ -15,7 +15,7 @@ public class UserCommand extends Command
 	}
 
 	@Override
-	public final void execute(final String[] args, final Message msg)
+	public void execute(final String[] args, final Message msg)
 	{
 		final var author = msg.getAuthor();
 		final var channel =  msg.getTextChannel();
@@ -33,16 +33,16 @@ public class UserCommand extends Command
 		eb.setAuthor("USER INFO - " + user.getAsTag());
 		eb.setColor(0xFEFEFE);
 		eb.setThumbnail(user.getEffectiveAvatarUrl());
-		eb.addField("ID", "" + user.getIdLong(), false);
+		eb.addField("ID", String.valueOf(user.getIdLong()), false);
 
 		if (nick != null)
 			eb.addField("Nickname for this guild", nick, false);
 
-		eb.addField("Account created", Utils.getTime(user.getTimeCreated().toInstant().toEpochMilli()), true);
-		eb.addField("User joined", Utils.getTime(member.getTimeJoined().toInstant().toEpochMilli()), false);
+		eb.addField("Account created", Utils.formatDate(user.getTimeCreated()), true);
+		eb.addField("User joined", Utils.formatDate(member.getTimeJoined()), false);
 
 		if (guild.getBoosters().contains(member))
-			eb.addField("Boosting since", Utils.getTime(member.getTimeBoosted().toInstant().toEpochMilli()), false);
+			eb.addField("Boosting since", Utils.formatDate(member.getTimeBoosted()), false);
 
 		final var roles = member.getRoles();
 		if (!roles.isEmpty())
@@ -50,7 +50,10 @@ public class UserCommand extends Command
 			final var sb = new StringBuilder();
 			var rc = 0;
 			for (final var role : roles)
-				sb.append(role.getName()).append(++rc != roles.size() ? ", " : "");
+			{
+				++rc;
+				sb.append(role.getName()).append(rc == roles.size() ? "" : ", ");
+			}
 			eb.addField("Roles [**" + rc + "**]", sb.length() > 1024 ? "Limit exceeded" : sb.toString(), false);
 		}
 		Utils.sendMessage(channel, eb.build());

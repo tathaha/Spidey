@@ -15,12 +15,12 @@ public class InviteData
 
     public long getGuildId()
     {
-        return guildId;
+        return this.guildId;
     }
 
     public int getUses()
     {
-        return uses;
+        return this.uses;
     }
 
     public void incrementUses()

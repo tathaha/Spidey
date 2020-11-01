@@ -14,7 +14,7 @@ public class InviteCommand extends Command
     }
 
     @Override
-    public final void execute(final String[] args, final Message msg)
+    public void execute(final String[] args, final Message msg)
     {
         msg.getAuthor().openPrivateChannel()
            .flatMap(channel -> channel.sendMessage("Link for inviting me: https://spidey.mlnr.dev"))

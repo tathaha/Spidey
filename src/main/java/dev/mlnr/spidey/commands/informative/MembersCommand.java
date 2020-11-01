@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.entities.User;
 
 import java.time.Instant;
 
-@SuppressWarnings({"unused", "ConstantConditions"})
+@SuppressWarnings("unused")
 public class MembersCommand extends Command
 {
 	public MembersCommand()
@@ -19,7 +19,7 @@ public class MembersCommand extends Command
 	}
 
 	@Override
-	public final void execute(final String[] args, final Message msg)
+	public void execute(final String[] args, final Message msg)
 	{
 		final var memberCache = msg.getGuild().getMemberCache();
 		final var bots = memberCache.applyStream(stream -> stream.map(Member::getUser).filter(User::isBot).count());

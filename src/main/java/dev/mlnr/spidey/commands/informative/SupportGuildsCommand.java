@@ -17,11 +17,11 @@ public class SupportGuildsCommand extends Command
 	}
 
 	@Override
-	public final void execute(final String[] args, final Message msg)
+	public void execute(final String[] args, final Message msg)
 	{
 		final var eb = Utils.createEmbedBuilder(msg.getAuthor());
-		eb.setAuthor("Guilds of Spidey", "https://discord.gg/cnAgKrv", msg.getJDA().getSelfUser().getEffectiveAvatarUrl());
-		eb.addField("Spidey's Guild", "[Click to join](https://discord.gg/cnAgKrv)", true);
+		eb.setAuthor("Guilds of Spidey", "https://discord.gg/VQk2BUCSqM", msg.getJDA().getSelfUser().getEffectiveAvatarUrl());
+		eb.addField("Spidey's Guild", "[Click to join](https://discord.gg/VQk2BUCSqM)", true);
 		eb.setColor(Color.BLACK);
 		Utils.sendMessage(msg.getTextChannel(), eb.build());
 	}

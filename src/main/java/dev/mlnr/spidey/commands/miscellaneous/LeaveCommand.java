@@ -23,7 +23,7 @@ public class LeaveCommand extends Command
 	}
 
 	@Override
-	public final void execute(final String[] args, final Message msg)
+	public void execute(final String[] args, final Message msg)
 	{
 		final var guild = msg.getGuild();
 		final var channel = msg.getChannel();

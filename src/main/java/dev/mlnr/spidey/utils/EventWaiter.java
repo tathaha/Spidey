@@ -9,6 +9,7 @@ import net.dv8tion.jda.internal.utils.Checks;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -19,7 +20,7 @@ import java.util.stream.Stream;
 
 public class EventWaiter implements EventListener
 {
-    private final HashMap<Class<?>, Set<WaitingEvent<?>>> waitingEvents;
+    private final Map<Class<?>, Set<WaitingEvent<?>>> waitingEvents;
     private final ScheduledExecutorService threadpool;
     private final boolean shutdownAutomatically;
 
@@ -63,7 +64,7 @@ public class EventWaiter implements EventListener
     @Override
     @SubscribeEvent
     @SuppressWarnings("unchecked")
-    public final void onEvent(GenericEvent event)
+    public void onEvent(GenericEvent event)
     {
         Class<?> c = event.getClass();
 

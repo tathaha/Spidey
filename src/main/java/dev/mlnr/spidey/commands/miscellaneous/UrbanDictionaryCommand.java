@@ -17,7 +17,7 @@ public class UrbanDictionaryCommand extends Command
 	}
 
 	@Override
-	public final void execute(final String[] args, final Message msg)
+	public void execute(final String[] args, final Message msg)
 	{
 		if (args.length == 0)
 		{

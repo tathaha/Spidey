@@ -14,17 +14,14 @@ public class Requester
     private static final OkHttpClient HTTP_CLIENT = new OkHttpClient();
     private static final Request.Builder REQUEST_BUILDER = new Request.Builder().header("user-agent", "dev.mlnr.spidey");
 
-    private Requester()
-    {
-        super();
-    }
+    private Requester() {}
 
     public static DataObject executeRequest(final String url, final API api)
     {
         REQUEST_BUILDER.url(url);
         if (api != null)
             REQUEST_BUILDER.header("Authorization", api.getKey());
-        try (final var body = HTTP_CLIENT.newCall(REQUEST_BUILDER.build()).execute().body())
+        try (final var response = HTTP_CLIENT.newCall(REQUEST_BUILDER.build()).execute(); final var body = response.body())
         {
             return DataObject.fromJson(body.string());
         }

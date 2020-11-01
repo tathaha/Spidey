@@ -46,13 +46,13 @@ public class RemindCommand extends Command
             Utils.returnError("Duration can't be 0", msg);
             return;
         }
-        if (unit.startsWith("m") && duration < 5)
+        if (unit.charAt(0) == 'm' && duration < 5)
         {
             Utils.returnError("Duration can't be less than 5 minutes", msg);
             return;
         }
         final var timeUnit = getUnit(unit);
-        final var actualDuration = unit.startsWith("w") ? duration * 7 : duration;
+        final var actualDuration = unit.charAt(0) == 'w' ? duration * 7 : duration;
         if (timeUnit.toSeconds(actualDuration) > 604800)
         {
             Utils.returnError("Duration can't be more than 1 week", msg);
@@ -71,7 +71,7 @@ public class RemindCommand extends Command
 
         Utils.deleteMessage(msg);
         final var unitName = timeUnit.name().toLowerCase();
-        final var interval = unit.startsWith("w") ? "week" : (duration == 1 ? unitName.substring(0, unitName.length() - 1) : unitName);
+        final var interval = unit.charAt(0) == 'w' ? "week" : (duration == 1 ? unitName.substring(0, unitName.length() - 1) : unitName);
         channel.sendMessage("Okay " + mention + ", i'll remind you in **" + duration + " " + interval + "**" + end)
                .delay(Duration.ofSeconds(5))
                .flatMap(Message::delete)

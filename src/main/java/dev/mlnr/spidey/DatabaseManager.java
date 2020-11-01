@@ -12,10 +12,7 @@ public class DatabaseManager
 {
 	private static final Logger LOG = LoggerFactory.getLogger(DatabaseManager.class);
 
-	private DatabaseManager()
-	{
-		super();
-	}
+	private DatabaseManager() {}
 
 	private static Connection initializeConnection()
 	{

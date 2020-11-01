@@ -1,11 +1,8 @@
 package dev.mlnr.spidey.utils;
 
-public final class Emojis
+public class Emojis
 {
-	private Emojis()
-	{
-		super();
-	}
+	private Emojis() {}
 
 	public static final String LIKE = "\uD83D\uDC4D";
 	public static final String DISLIKE = "\uD83D\uDC4E";

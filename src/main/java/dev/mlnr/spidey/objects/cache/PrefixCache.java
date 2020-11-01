@@ -10,10 +10,7 @@ public class PrefixCache
 {
     private static final Map<Long, String> PREFIX_CACHE = new HashMap<>();
 
-    private PrefixCache()
-    {
-        super();
-    }
+    private PrefixCache() {}
 
     public static String retrievePrefix(final long guildId)
     {

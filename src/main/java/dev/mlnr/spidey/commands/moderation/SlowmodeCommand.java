@@ -21,7 +21,7 @@ public class SlowmodeCommand extends Command
 	}
 
 	@Override
-	public final void execute(final String[] args, final Message msg)
+	public void execute(final String[] args, final Message msg)
 	{
 		final var textChannel = msg.getTextChannel();
 		final var manager = textChannel.getManager();

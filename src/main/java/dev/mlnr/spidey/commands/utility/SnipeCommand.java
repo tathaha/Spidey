@@ -34,9 +34,12 @@ public class SnipeCommand extends Command
         eb.setTimestamp(lastDeletedMessage.getCreation());
         eb.setDescription(lastDeletedMessage.getContent());
         eb.setColor(Color.GREEN);
-        msg.getJDA().retrieveUserById(lastDeletedMessage.getAuthorId()).queue(user -> eb.setAuthor(user.getName(), null, user.getEffectiveAvatarUrl()));
 
-        Utils.sendMessage(textChannel, eb.build());
-        Core.getExecutor().schedule(() -> MessageCache.uncacheMessage(lastDeletedMessage.getChannelId(), lastDeletedMessage.getId()), 2, TimeUnit.MINUTES);
+        msg.getJDA().retrieveUserById(lastDeletedMessage.getAuthorId()).queue(user ->
+        {
+            eb.setAuthor(user.getName(), null, user.getEffectiveAvatarUrl());
+            Utils.sendMessage(textChannel, eb.build());
+            Core.getExecutor().schedule(() -> MessageCache.uncacheMessage(lastDeletedMessage.getChannelId(), lastDeletedMessage.getId()), 2, TimeUnit.MINUTES);
+        });
     }
 }

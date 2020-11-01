@@ -12,10 +12,7 @@ public class JoinRoleCache
 {
     private static final Map<Long, Long> JOIN_ROLE_CACHE = new HashMap<>();
 
-    private JoinRoleCache()
-    {
-        super();
-    }
+    private JoinRoleCache() {}
 
     public static long retrieveJoinRole(final long guildId)
     {

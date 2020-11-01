@@ -1,11 +1,11 @@
 package dev.mlnr.spidey.commands.informative;
 
+import dev.mlnr.spidey.handlers.CommandHandler;
+import dev.mlnr.spidey.handlers.CooldownHandler;
 import dev.mlnr.spidey.objects.cache.Cache;
 import dev.mlnr.spidey.objects.cache.PrefixCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
-import dev.mlnr.spidey.objects.command.CommandHandler;
-import dev.mlnr.spidey.objects.command.Cooldowns;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
@@ -24,7 +24,7 @@ public class HelpCommand extends Command
     }
 
     @Override
-    public final void execute(final String[] args, final Message msg)
+    public void execute(final String[] args, final Message msg)
     {
         final var commandsMap = CommandHandler.getCommands();
         final var channel = msg.getTextChannel();
@@ -67,7 +67,7 @@ public class HelpCommand extends Command
                 sb.append(" ").append("-").append(" ");
                 sb.append(listToString(commandz, Command::getInvoke));
             });
-            eb.setDescription("Prefix: **" + prefix + "**\n" + sb.toString() + "\n\nTo see more info about a command, type `" + prefix + "help <command>`.");
+            eb.setDescription("Prefix: **" + prefix + "**\n" + sb + "\n\nTo see more info about a command, type `" + prefix + "help <command>`.");
             if (hidden > 0)
                 eb.appendDescription("\n**" + hidden + "** commands were hidden as you don't have permissions to use them.");
             if (nsfwHidden)
@@ -86,7 +86,7 @@ public class HelpCommand extends Command
         final var usage = command.getUsage();
         final var requiredPermission = command.getRequiredPermission();
         final var aliases = command.getAliases();
-        final var cooldown = Cooldowns.getCooldown(guildId, command);
+        final var cooldown = CooldownHandler.getCooldown(guildId, command);
         eb.setAuthor("Viewing command info - " + invoke);
         eb.setColor(0xFEFEFE);
         eb.addField("Description", description == null ? "Unspecified" : description, false);

@@ -1,5 +1,7 @@
-package dev.mlnr.spidey.objects.command;
+package dev.mlnr.spidey.handlers;
 
+import dev.mlnr.spidey.objects.command.Category;
+import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.utils.KSoftAPIHelper;
 import dev.mlnr.spidey.utils.Utils;
 import io.github.classgraph.ClassGraph;
@@ -14,8 +16,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import static dev.mlnr.spidey.objects.command.Cooldowns.cooldown;
-import static dev.mlnr.spidey.objects.command.Cooldowns.isOnCooldown;
+import static dev.mlnr.spidey.handlers.CooldownHandler.cooldown;
+import static dev.mlnr.spidey.handlers.CooldownHandler.isOnCooldown;
 
 public class CommandHandler
 {
@@ -29,10 +31,7 @@ public class CommandHandler
 									   .appendDescription("\n\nBots shouldn't have Administrator permission unless you *need* it for **your** bot.")
 									   .appendDescription("\nPlease __remove this permission and i'll work properly again__.").build();
 
-	private CommandHandler()
-	{
-		super();
-	}
+	private CommandHandler() {}
 
 	public static void handle(final Message msg, final String prefix)
 	{
@@ -51,13 +50,14 @@ public class CommandHandler
 		}
 		final var requiredPermission = cmd.getRequiredPermission();
 		final var member = msg.getMember();
+		final var userId = member.getIdLong();
 		if (!member.hasPermission(requiredPermission))
 		{
 			Utils.returnError(String.format(NO_PERMS, requiredPermission.getName()), msg);
 			return;
 		}
 		final var guildId = msg.getGuild().getIdLong();
-		if (isOnCooldown(guildId, cmd))
+		if (isOnCooldown(userId, cmd))
 		{
 			Utils.returnError("The command is on cooldown", msg);
 			return;
@@ -75,7 +75,7 @@ public class CommandHandler
 				return;
 			}
 			Utils.sendMessage(channel, KSoftAPIHelper.getImage(cmd.getInvoke(), member, nsfw));
-			cooldown(guildId, cmd);
+			cooldown(guildId, userId, cmd);
 			return;
 		}
 		//
@@ -84,7 +84,7 @@ public class CommandHandler
 		final var tmp = content.split("\\s+", maxArgs > 0 ? maxArgs + 1 : maxArgs);
 		final var args = Arrays.copyOfRange(tmp, 1, tmp.length);
 		cmd.execute(args, msg);
-		cooldown(guildId, cmd);
+		cooldown(guildId, userId, cmd);
 	}
 
 	public static void registerCommands()

@@ -27,36 +27,36 @@ public class MessageData
 
     public long getId()
     {
-        return messageId;
+        return this.messageId;
     }
 
     public long getAuthorId()
     {
-        return authorId;
+        return this.authorId;
     }
 
     public Instant getCreation()
     {
-        return creation;
+        return this.creation;
     }
 
     public String getContent()
     {
-        return content;
+        return this.content;
     }
 
     public long getChannelId()
     {
-        return channelId;
+        return this.channelId;
     }
 
     public long getGuildId()
     {
-        return guildId;
+        return this.guildId;
     }
 
     public String getJumpUrl()
     {
-        return jumpUrl;
+        return this.jumpUrl;
     }
 }

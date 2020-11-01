@@ -10,7 +10,7 @@ public class UrbanDictionary
     private String word;
     private int likes;
     private int dislikes;
-    private boolean exists = false;
+    private boolean exists;
     private final String term;
 
     public UrbanDictionary(final String term)
@@ -35,11 +35,34 @@ public class UrbanDictionary
         this.exists = true;
     }
 
-    public final String getAuthor() { return author; }
-    public final String getDefinition() { return definition; }
-    public final String getExample() { return example; }
-    public final String getWord() { return word; }
-    public final int getLikes() { return likes; }
-    public final int getDislikes() { return dislikes; }
-    public final boolean exists() { return exists; }
+    public String getAuthor()
+    {
+        return this.author;
+    }
+
+    public String getDefinition()
+    {
+        return this.definition;
+    }
+
+    public String getExample()
+    {
+        return this.example;
+    }
+    public String getWord()
+    {
+        return this.word;
+    }
+    public int getLikes()
+    {
+        return this.likes;
+    }
+    public int getDislikes()
+    {
+        return this.dislikes;
+    }
+    public boolean exists()
+    {
+        return this.exists;
+    }
 }

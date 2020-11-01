@@ -14,10 +14,7 @@ public class MessageCache
     private static final Map<Long, Long> LAST_MESSAGE_EDITED_CACHE = new HashMap<>();
     private static final Map<Long, MessageData> LAST_MESSAGE_EDITED_DATA = new HashMap<>();
 
-    private MessageCache()
-    {
-        super();
-    }
+    private MessageCache() {}
 
     public static MessageData getLastDeletedMessage(final long channelId)
     {

@@ -61,7 +61,7 @@ public class EvalCommand extends Command
             eb.setAuthor("SUCCESSFULLY EVALUATED");
             eb.setColor(Color.GREEN);
             if (evaluated != null)
-                eb.addField("Output", "```" + evaluated.toString() + "```", false);
+                eb.addField("Output", "```" + evaluated + "```", false);
         }
         catch (final ScriptException ex)
         {

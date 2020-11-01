@@ -24,7 +24,7 @@ public class UploadEmoteCommand extends Command
     }
 
     @Override
-    public final void execute(final String[] args, final Message msg)
+    public void execute(final String[] args, final Message msg)
     {
         final var channel = msg.getTextChannel();
         final var guild = msg.getGuild();

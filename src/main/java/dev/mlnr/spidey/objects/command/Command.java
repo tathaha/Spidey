@@ -14,8 +14,7 @@ public abstract class Command
     private final int maxArgs;
     private final int cooldown;
 
-    public Command(final String invoke, final String[] aliases, final String description, final String usage, final Category category, final Permission requiredPermission,
-                   final int maxArgs, final int cooldown)
+    protected Command(final String invoke, final String[] aliases, final String description, final String usage, final Category category, final Permission requiredPermission, final int maxArgs, final int cooldown)
     {
         this.invoke = invoke;
         this.aliases = aliases;
