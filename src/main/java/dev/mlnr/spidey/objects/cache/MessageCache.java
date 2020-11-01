@@ -19,9 +19,7 @@ public class MessageCache
     public static MessageData getLastDeletedMessage(final long channelId)
     {
         final var latest = LAST_MESSAGE_DELETED_CACHE.get(channelId);
-        if (latest == null)
-            return null;
-        return MESSAGE_CACHE.get(latest);
+        return latest == null ? null : MESSAGE_CACHE.get(latest);
     }
 
     public static void setLastDeletedMessage(final long channelId, final long messageId)
@@ -45,6 +43,10 @@ public class MessageCache
         LAST_MESSAGE_EDITED_CACHE.remove(channelId, messageId);
     }
 
+    public static boolean isCached(final long messageId){
+        return MESSAGE_CACHE.containsKey(messageId);
+    }
+
     // MESSAGE EDITING CACHING
 
     public static void setLastEditedMessage(final long channelId, final long messageId)
@@ -55,9 +57,7 @@ public class MessageCache
     public static MessageData getLastEditedMessage(final long channelId)
     {
         final var latest = LAST_MESSAGE_EDITED_CACHE.get(channelId);
-        if (latest == null)
-            return null;
-        return LAST_MESSAGE_EDITED_DATA.get(latest);
+        return latest == null ? null : LAST_MESSAGE_EDITED_DATA.get(latest);
     }
 
     public static void uncacheEditedMessage(final long channelId, final long messageId)

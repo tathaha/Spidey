@@ -230,9 +230,7 @@ public class Events extends ListenerAdapter
 			for (final var invite : invites)
 			{
 				final var inviteData = Cache.getInviteCache().get(invite.getCode());
-				if (inviteData == null)
-					continue;
-				if (invite.getUses() == inviteData.getUses())
+				if (inviteData == null || invite.getUses() == inviteData.getUses())
 					continue;
 				inviteData.incrementUses();
 				eb.appendDescription(" with invite **" + invite.getUrl() + "** (**" + escape(invite.getInviter().getAsTag()) + "**).");
@@ -321,13 +319,18 @@ public class Events extends ListenerAdapter
 	@Override
 	public void onGuildMessageDelete(@NotNull final GuildMessageDeleteEvent e)
 	{
-		MessageCache.setLastDeletedMessage(e.getChannel().getIdLong(), e.getMessageIdLong());
+		final var messageId = e.getMessageIdLong();
+		if(!MessageCache.isCached(messageId))
+			return;
+		MessageCache.setLastDeletedMessage(e.getChannel().getIdLong(), messageId);
 	}
 
 	@Override
 	public void onGuildMessageUpdate(@Nonnull final GuildMessageUpdateEvent event)
 	{
 		final var messageId = event.getMessageIdLong();
+		if(!MessageCache.isCached(messageId))
+			return;
 		MessageCache.cacheMessage(messageId, new MessageData(event.getMessage()));
 		MessageCache.setLastEditedMessage(event.getChannel().getIdLong(), messageId);
 	}
