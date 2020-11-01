@@ -34,15 +34,15 @@ import static net.dv8tion.jda.api.utils.MarkdownSanitizer.escape;
 public class Events extends ListenerAdapter
 {
 	@Override
-	public void onGuildMessageReceived(final GuildMessageReceivedEvent e)
+	public void onGuildMessageReceived(final GuildMessageReceivedEvent event)
 	{
-		final var guild = e.getGuild();
-		final var message = e.getMessage();
-		final var author = e.getAuthor();
+		final var guild = event.getGuild();
+		final var message = event.getMessage();
+		final var author = event.getAuthor();
 		final var guildId = guild.getIdLong();
 		final var prefix = PrefixCache.retrievePrefix(guildId);
 		final var content = message.getContentRaw().trim();
-		final var channel = e.getChannel();
+		final var channel = event.getChannel();
 
 		if (!content.isEmpty())
 			MessageCache.cacheMessage(message.getIdLong(), new MessageData(message));
@@ -63,14 +63,14 @@ public class Events extends ListenerAdapter
 				Utils.sendMessage(channel, CommandHandler.ADMIN_WARNING);
 				return;
 			}
-			CommandHandler.handle(e, prefix);
+			CommandHandler.handle(event, prefix);
 			return;
 		}
 
 		if (message.getType() == MessageType.GUILD_MEMBER_BOOST)
 		{
 			final var eb = new EmbedBuilder();
-			final var log = LogChannelCache.getLogAsChannel(guildId, e.getJDA());
+			final var log = LogChannelCache.getLogAsChannel(guildId, event.getJDA());
 			if (log == null)
 				return;
 			Utils.deleteMessage(message);
@@ -86,11 +86,11 @@ public class Events extends ListenerAdapter
 	}
 
 	@Override
-	public void onGuildBan(final GuildBanEvent e)
+	public void onGuildBan(final GuildBanEvent event)
 	{
-		final var user = e.getUser();
-		final var guild = e.getGuild();
-		final var channel = LogChannelCache.getLogAsChannel(guild.getIdLong(), e.getJDA());
+		final var user = event.getUser();
+		final var guild = event.getGuild();
+		final var channel = LogChannelCache.getLogAsChannel(guild.getIdLong(), event.getJDA());
 
 		if (channel == null)
 			return;
@@ -118,11 +118,11 @@ public class Events extends ListenerAdapter
 	}
 
 	@Override
-	public void onGuildUnban(final GuildUnbanEvent e)
+	public void onGuildUnban(final GuildUnbanEvent event)
 	{
-		final var user = e.getUser();
-		final var guild = e.getGuild();
-		final var channel = LogChannelCache.getLogAsChannel(guild.getIdLong(), e.getJDA());
+		final var user = event.getUser();
+		final var guild = event.getGuild();
+		final var channel = LogChannelCache.getLogAsChannel(guild.getIdLong(), event.getJDA());
 
 		if (channel == null)
 			return;
@@ -148,11 +148,11 @@ public class Events extends ListenerAdapter
 	}
 
 	@Override
-	public void onGuildMemberRemove(final GuildMemberRemoveEvent e)
+	public void onGuildMemberRemove(final GuildMemberRemoveEvent event)
 	{
-		final var user = e.getUser();
-		final var guild = e.getGuild();
-		final var channel = LogChannelCache.getLogAsChannel(guild.getIdLong(), e.getJDA());
+		final var user = event.getUser();
+		final var guild = event.getGuild();
+		final var channel = LogChannelCache.getLogAsChannel(guild.getIdLong(), event.getJDA());
 
 		if (channel == null)
 			return;
@@ -175,12 +175,12 @@ public class Events extends ListenerAdapter
 	}
 
 	@Override
-	public void onGuildMemberJoin(@NotNull final GuildMemberJoinEvent e)
+	public void onGuildMemberJoin(@NotNull final GuildMemberJoinEvent event)
 	{
-		final var user = e.getUser();
-		final var guild = e.getGuild();
+		final var user = event.getUser();
+		final var guild = event.getGuild();
 		final var guildId = guild.getIdLong();
-		final var jda = e.getJDA();
+		final var jda = event.getJDA();
 		final var channel = LogChannelCache.getLogAsChannel(guildId, jda);
 		final var joinRole = JoinRoleCache.getJoinRole(guildId, jda);
 		final var userId = user.getIdLong();
@@ -238,16 +238,16 @@ public class Events extends ListenerAdapter
 	}
 
 	@Override
-	public void onGuildReady(@NotNull final GuildReadyEvent e)
+	public void onGuildReady(@NotNull final GuildReadyEvent event)
 	{
-		final var guild = e.getGuild();
+		final var guild = event.getGuild();
 		Utils.storeInvites(guild);
 	}
 
 	@Override
-	public void onGuildJoin(final GuildJoinEvent e)
+	public void onGuildJoin(final GuildJoinEvent event)
 	{
-		final var guild = e.getGuild();
+		final var guild = event.getGuild();
 		final var defaultChannel = guild.getDefaultChannel();
 		if (defaultChannel != null)
 			Utils.sendMessage(defaultChannel, "Hey! I'm **Spidey**. Thanks for inviting me. To start, check `s!info`.");
@@ -255,71 +255,71 @@ public class Events extends ListenerAdapter
 	}
 
 	@Override
-	public void onGuildLeave(final GuildLeaveEvent e)
+	public void onGuildLeave(final GuildLeaveEvent event)
 	{
-		final var guildId = e.getGuild().getIdLong();
+		final var guildId = event.getGuild().getIdLong();
 		Cache.getInviteCache().entrySet().removeIf(entry -> entry.getValue().getGuildId() == guildId);
 		MessageCache.pruneCache(guildId);
 		Cache.removeEntry(guildId);
 	}
 
 	@Override
-	public void onTextChannelDelete(final TextChannelDeleteEvent e)
+	public void onTextChannelDelete(final TextChannelDeleteEvent event)
 	{
-		final var guildId = e.getGuild().getIdLong();
-		if (e.getChannel().getIdLong() == LogChannelCache.retrieveLogChannel(guildId))
+		final var guildId = event.getGuild().getIdLong();
+		if (event.getChannel().getIdLong() == LogChannelCache.retrieveLogChannel(guildId))
 			LogChannelCache.removeLogChannel(guildId);
 	}
 
 	@Override
-	public void onRoleDelete(final RoleDeleteEvent e)
+	public void onRoleDelete(final RoleDeleteEvent event)
 	{
-		final var guildId = e.getGuild().getIdLong();
-		if (e.getRole().getIdLong() == JoinRoleCache.retrieveJoinRole(guildId))
+		final var guildId = event.getGuild().getIdLong();
+		if (event.getRole().getIdLong() == JoinRoleCache.retrieveJoinRole(guildId))
 			JoinRoleCache.removeJoinRole(guildId);
 	}
 
 	@Override
-	public void onGuildUpdateBoostTier(final GuildUpdateBoostTierEvent e)
+	public void onGuildUpdateBoostTier(final GuildUpdateBoostTierEvent event)
 	{
-		final var guild = e.getGuild();
-		final var channel = LogChannelCache.getLogAsChannel(guild.getIdLong(), e.getJDA());
+		final var guild = event.getGuild();
+		final var channel = LogChannelCache.getLogAsChannel(guild.getIdLong(), event.getJDA());
 		if (channel == null)
 			return;
 		final var eb = new EmbedBuilder();
 		eb.setAuthor("GUILD BOOST TIER HAS CHANGED");
 		eb.setColor(16023551);
 		eb.setTimestamp(Instant.now());
-		eb.addField("Boost tier", "**" + e.getNewBoostTier().getKey() + "**", true);
+		eb.addField("Boost tier", "**" + event.getNewBoostTier().getKey() + "**", true);
 		eb.addField("Boosts", "**" + guild.getBoostCount() + "**", true);
 		Utils.sendMessage(channel, eb.build());
 	}
 
 	@Override
-	public void onGuildInviteCreate(@NotNull final GuildInviteCreateEvent e)
+	public void onGuildInviteCreate(@NotNull final GuildInviteCreateEvent event)
 	{
-		Cache.getInviteCache().put(e.getCode(), new InviteData(e.getInvite()));
+		Cache.getInviteCache().put(event.getCode(), new InviteData(event.getInvite()));
 	}
 
 	@Override
-	public void onGuildInviteDelete(@NotNull final GuildInviteDeleteEvent e)
+	public void onGuildInviteDelete(@NotNull final GuildInviteDeleteEvent event)
 	{
-		Cache.getInviteCache().remove(e.getCode());
+		Cache.getInviteCache().remove(event.getCode());
 	}
 
 	@Override
-	public void onReady(@NotNull final ReadyEvent e)
+	public void onReady(@NotNull final ReadyEvent event)
 	{
-		Utils.startup(e.getJDA());
+		Utils.startup(event.getJDA());
 	}
 
 	@Override
-	public void onGuildMessageDelete(@NotNull final GuildMessageDeleteEvent e)
+	public void onGuildMessageDelete(@NotNull final GuildMessageDeleteEvent event)
 	{
-		final var messageId = e.getMessageIdLong();
+		final var messageId = event.getMessageIdLong();
 		if(!MessageCache.isCached(messageId))
 			return;
-		MessageCache.setLastDeletedMessage(e.getChannel().getIdLong(), messageId);
+		MessageCache.setLastDeletedMessage(event.getChannel().getIdLong(), messageId);
 	}
 
 	@Override

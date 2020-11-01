@@ -16,7 +16,7 @@ public class StatsCommand extends Command
 
 	public StatsCommand()
 	{
-		super("stats", new String[]{}, "Shows you Spidey's stats", "stats", Category.INFORMATIVE, Permission.UNKNOWN, 0, 3);
+		super("stats", new String[]{}, "Shows you Spidey's stats", "stats", Category.INFORMATIVE, Permission.UNKNOWN, 0, 0);
 	}
 
 	@Override
@@ -32,7 +32,7 @@ public class StatsCommand extends Command
 		eb.setAuthor("Spidey's stats", null, jda.getSelfUser().getEffectiveAvatarUrl());
 		eb.setDescription("For more info about Spidey, type " + prefix + "info");
 		eb.addField("Total servers", String.valueOf(jda.getGuildCache().size()), true);
-		eb.addField("Total members", String.valueOf(jda.getUserCache().size()), true);
+		eb.addField("Total users", String.valueOf(jda.getUserCache().size()), true);
 		eb.addField("Memory usage", memory + "MB / " + (total / 100000) + "MB", true);
 		eb.addField("Thread count", String.valueOf(ManagementFactory.getThreadMXBean().getThreadCount()), true);
 
