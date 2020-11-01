@@ -2,12 +2,13 @@ package dev.mlnr.spidey.handlers;
 
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
+import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.utils.KSoftAPIHelper;
 import dev.mlnr.spidey.utils.Utils;
 import io.github.classgraph.ClassGraph;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,45 +34,46 @@ public class CommandHandler
 
 	private CommandHandler() {}
 
-	public static void handle(final Message msg, final String prefix)
+	public static void handle(final GuildMessageReceivedEvent event, final String prefix)
 	{
-		final var content = msg.getContentRaw().substring(prefix.length());
+		final var message = event.getMessage();
+		final var content = message.getContentRaw().substring(prefix.length());
 		if (content.isEmpty())
 		{
-			Utils.returnError("Please specify a command", msg);
+			Utils.returnError("Please specify a command", message);
 			return;
 		}
 		final var command = content.contains(" ") ? content.substring(0, content.indexOf(' ')) : content;
 		final var cmd = COMMANDS.get(command.toLowerCase());
 		if (cmd == null)
 		{
-			Utils.returnError("**" + command + "** isn't a valid command", msg);
+			Utils.returnError("**" + command + "** isn't a valid command", message);
 			return;
 		}
 		final var requiredPermission = cmd.getRequiredPermission();
-		final var member = msg.getMember();
+		final var member = message.getMember();
 		final var userId = member.getIdLong();
 		if (!member.hasPermission(requiredPermission))
 		{
-			Utils.returnError(String.format(NO_PERMS, requiredPermission.getName()), msg);
+			Utils.returnError(String.format(NO_PERMS, requiredPermission.getName()), message);
 			return;
 		}
-		final var guildId = msg.getGuild().getIdLong();
+		final var guildId = message.getGuild().getIdLong();
 		if (isOnCooldown(userId, cmd))
 		{
-			Utils.returnError("The command is on cooldown", msg);
+			Utils.returnError("The command is on cooldown", message);
 			return;
 		}
 
 		// API DEPENDANT COMMANDS HANDLING
-		final var channel = msg.getTextChannel();
+		final var channel = message.getTextChannel();
 		final var category = cmd.getCategory();
 		final var nsfw = category == Category.NSFW;
 		if ((category == Category.FUN && cmd.getCooldown() > 0) || nsfw) // if a command has a cooldown, i can assume it requires an api
 		{
 			if (nsfw && !channel.isNSFW())
 			{
-				Utils.returnError("You can use nsfw commands only in nsfw channels", msg);
+				Utils.returnError("You can use nsfw commands only in nsfw channels", message);
 				return;
 			}
 			Utils.sendMessage(channel, KSoftAPIHelper.getImage(cmd.getInvoke(), member, nsfw));
@@ -83,7 +85,7 @@ public class CommandHandler
 		final var maxArgs = cmd.getMaxArgs();
 		final var tmp = content.split("\\s+", maxArgs > 0 ? maxArgs + 1 : maxArgs);
 		final var args = Arrays.copyOfRange(tmp, 1, tmp.length);
-		cmd.execute(args, msg);
+		cmd.execute(args, new CommandContext(event));
 		cooldown(guildId, userId, cmd);
 	}
 

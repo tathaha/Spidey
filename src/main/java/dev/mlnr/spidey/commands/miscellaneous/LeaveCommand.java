@@ -3,6 +3,7 @@ package dev.mlnr.spidey.commands.miscellaneous;
 import dev.mlnr.spidey.Core;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
+import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.utils.Emojis;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
@@ -23,12 +24,12 @@ public class LeaveCommand extends Command
 	}
 
 	@Override
-	public void execute(final String[] args, final Message msg)
+	public void execute(final String[] args, final CommandContext ctx)
 	{
-		final var guild = msg.getGuild();
-		final var channel = msg.getChannel();
+		final var guild = ctx.getGuild();
+		final var channel = ctx.getTextChannel();
 
-		Utils.deleteMessage(msg);
+		Utils.deleteMessage(ctx.getMessage());
 		channel.sendMessage("Do you really want me to leave?").queue(prompt ->
 		{
 			addReaction(prompt, Emojis.CHECK);
@@ -37,7 +38,7 @@ public class LeaveCommand extends Command
 					ev ->
 					{
 						final var name = ev.getReactionEmote().getName();
-						return ev.getUser() == msg.getAuthor() && ev.getMessageIdLong() == prompt.getIdLong() && (name.equals(Emojis.CHECK) || name.equals(Emojis.CROSS));
+						return ev.getUser() == ctx.getAuthor() && ev.getMessageIdLong() == prompt.getIdLong() && (name.equals(Emojis.CHECK) || name.equals(Emojis.CROSS));
 					},
 					ev ->
 					{
@@ -56,7 +57,7 @@ public class LeaveCommand extends Command
 							   .delay(Duration.ofSeconds(5))
 							   .flatMap(Message::delete)
 							   .queue();
-					}, 1, TimeUnit.MINUTES, () -> Utils.returnError("Sorry, but you took too long. I'm not leaving this time", prompt));
+					}, 1, TimeUnit.MINUTES, () -> ctx.replyError("Sorry, but you took too long. I'm not leaving this time"));
 			});
 	}
 }

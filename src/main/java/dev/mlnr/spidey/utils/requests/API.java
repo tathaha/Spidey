@@ -2,8 +2,8 @@ package dev.mlnr.spidey.utils.requests;
 
 public enum API
 {
-    KSOFT("Bearer " + System.getenv("ksoft")),
-    DBL(System.getenv("dbl"));
+    KSOFT(""),
+    DBL("");
 
     private final String key;
 

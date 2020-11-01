@@ -3,9 +3,8 @@ package dev.mlnr.spidey.commands.moderation;
 import dev.mlnr.spidey.objects.cache.LogChannelCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
-import dev.mlnr.spidey.utils.Utils;
+import dev.mlnr.spidey.objects.command.CommandContext;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Message;
 
 @SuppressWarnings("unused")
 public class LogCommand extends Command
@@ -16,20 +15,20 @@ public class LogCommand extends Command
 	}
 
 	@Override
-	public void execute(final String[] args, final Message msg)
+	public void execute(final String[] args, final CommandContext ctx)
 	{
-		final var guild = msg.getGuild();
+		final var guild = ctx.getGuild();
 		final var guildId = guild.getIdLong();
-		final var channel = msg.getTextChannel();
+		final var channel = ctx.getTextChannel();
 
 		final var channelId = channel.getIdLong();
 		if (LogChannelCache.retrieveLogChannel(guildId) == channelId)
 		{
 			LogChannelCache.removeLogChannel(guildId);
-			Utils.sendMessage(channel, ":white_check_mark: The log channel has been reset!");
+			ctx.reply(":white_check_mark: The log channel has been reset!");
 			return;
 		}
 		LogChannelCache.setLogChannel(guildId, channelId);
-		Utils.sendMessage(channel, ":white_check_mark: The log channel has been set to <#" + channelId + ">!");
+		ctx.reply(":white_check_mark: The log channel has been set to <#" + channelId + ">!");
 	}
 }

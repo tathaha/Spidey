@@ -4,9 +4,9 @@ import dev.mlnr.spidey.Core;
 import dev.mlnr.spidey.objects.cache.MessageCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
+import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Message;
 
 import java.awt.*;
 import java.util.concurrent.TimeUnit;
@@ -20,25 +20,25 @@ public class SnipeCommand extends Command
     }
 
     @Override
-    public void execute(final String[] args, final Message msg)
+    public void execute(final String[] args, final CommandContext ctx)
     {
-        final var textChannel = msg.getTextChannel();
+        final var textChannel = ctx.getTextChannel();
         final var channelId = textChannel.getIdLong();
         final var lastDeletedMessage = MessageCache.getLastDeletedMessage(channelId);
         if (lastDeletedMessage == null)
         {
-            Utils.returnError("There's no deleted message to snipe", msg);
+            ctx.replyError("There's no deleted message to snipe");
             return;
         }
-        final var eb = Utils.createEmbedBuilder(msg.getAuthor());
+        final var eb = Utils.createEmbedBuilder(ctx.getAuthor());
         eb.setTimestamp(lastDeletedMessage.getCreation());
         eb.setDescription(lastDeletedMessage.getContent());
         eb.setColor(Color.GREEN);
 
-        msg.getJDA().retrieveUserById(lastDeletedMessage.getAuthorId()).queue(user ->
+        ctx.getJDA().retrieveUserById(lastDeletedMessage.getAuthorId()).queue(user ->
         {
             eb.setAuthor(user.getName(), null, user.getEffectiveAvatarUrl());
-            Utils.sendMessage(textChannel, eb.build());
+            ctx.reply(eb);
             Core.getExecutor().schedule(() -> MessageCache.uncacheMessage(lastDeletedMessage.getChannelId(), lastDeletedMessage.getId()), 2, TimeUnit.MINUTES);
         });
     }

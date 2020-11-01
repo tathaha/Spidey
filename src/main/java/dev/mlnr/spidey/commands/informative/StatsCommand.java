@@ -3,9 +3,9 @@ package dev.mlnr.spidey.commands.informative;
 import dev.mlnr.spidey.objects.cache.PrefixCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
+import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Message;
 
 import java.lang.management.ManagementFactory;
 
@@ -20,11 +20,11 @@ public class StatsCommand extends Command
 	}
 
 	@Override
-	public void execute(final String[] args, final Message msg)
+	public void execute(final String[] args, final CommandContext ctx)
 	{
-		final var eb = Utils.createEmbedBuilder(msg.getAuthor());
-		final var prefix = PrefixCache.retrievePrefix(msg.getGuild().getIdLong());
-		final var jda = msg.getJDA();
+		final var eb = Utils.createEmbedBuilder(ctx.getAuthor());
+		final var prefix = PrefixCache.retrievePrefix(ctx.getGuild().getIdLong());
+		final var jda = ctx.getJDA();
 		final var runtime = Runtime.getRuntime();
 		final var total = runtime.totalMemory();
 		final var memory = (total - runtime.freeMemory()) / 1000000;
@@ -43,6 +43,6 @@ public class StatsCommand extends Command
 			Core.getExecutor().schedule(() -> requested = null, 20, TimeUnit.SECONDS);
 		}
 		eb.addField("top.gg / DBL votes", requested, true);*/
-		Utils.sendMessage(msg.getTextChannel(), eb.build());
+		ctx.reply(eb);
 	}
 }

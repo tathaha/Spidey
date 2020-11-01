@@ -4,6 +4,7 @@ import dev.mlnr.spidey.Core;
 import dev.mlnr.spidey.objects.cache.PrefixCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
+import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
@@ -24,41 +25,42 @@ public class RemindCommand extends Command
     }
 
     @Override
-    public void execute(final String[] args, final Message msg) // TODO database saving
+    public void execute(final String[] args, final CommandContext ctx) // TODO database saving
     {
-        final var prefix = PrefixCache.retrievePrefix(msg.getGuild().getIdLong());
-        final var channel = msg.getTextChannel();
+        final var prefix = PrefixCache.retrievePrefix(ctx.getGuild().getIdLong());
+        final var channel = ctx.getTextChannel();
+        final var message = ctx.getMessage();
         if (args.length == 0)
         {
-            Utils.returnError("Please enter a valid time interval, for example `" + prefix + "remind 2h(our(s)) do the homework`", msg);
+            ctx.replyError("Please enter a valid time interval, for example `" + prefix + "remind 2h(our(s)) do the homework`");
             return;
         }
         final var matcher = TIME_REGEX.matcher(args[0]);
         if (!matcher.matches())
         {
-            Utils.returnError("Please enter a valid time interval, for example `" + prefix + "remind 2h(our(s)) do the homework`", msg);
+            ctx.replyError("Please enter a valid time interval, for example `" + prefix + "remind 2h(our(s)) do the homework`");
             return;
         }
         final var duration = Integer.parseInt(matcher.group(1));
         final var unit = matcher.group(2).toLowerCase();
         if (duration == 0)
         {
-            Utils.returnError("Duration can't be 0", msg);
+            ctx.replyError("Duration can't be 0");
             return;
         }
         if (unit.charAt(0) == 'm' && duration < 5)
         {
-            Utils.returnError("Duration can't be less than 5 minutes", msg);
+            ctx.replyError("Duration can't be less than 5 minutes");
             return;
         }
         final var timeUnit = getUnit(unit);
         final var actualDuration = unit.charAt(0) == 'w' ? duration * 7 : duration;
         if (timeUnit.toSeconds(actualDuration) > 604800)
         {
-            Utils.returnError("Duration can't be more than 1 week", msg);
+            ctx.replyError("Duration can't be more than 1 week");
             return;
         }
-        final var author = msg.getAuthor();
+        final var author = ctx.getAuthor();
         final var mention = author.getAsMention();
         final var eb = new EmbedBuilder();
         final var end = args.length == 1 ? "!" : " to **" + args[1] + "**!";
@@ -67,9 +69,9 @@ public class RemindCommand extends Command
         eb.setDescription(reminder);
         eb.setColor(0xFEFEFE);
         eb.setFooter("Reminder created");
-        eb.setTimestamp(msg.getTimeCreated());
+        eb.setTimestamp(message.getTimeCreated());
 
-        Utils.deleteMessage(msg);
+        Utils.deleteMessage(message);
         final var unitName = timeUnit.name().toLowerCase();
         final var interval = unit.charAt(0) == 'w' ? "week" : (duration == 1 ? unitName.substring(0, unitName.length() - 1) : unitName);
         channel.sendMessage("Okay " + mention + ", i'll remind you in **" + duration + " " + interval + "**" + end)

@@ -3,9 +3,8 @@ package dev.mlnr.spidey.commands.utility;
 import dev.mlnr.spidey.objects.cache.PrefixCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
-import dev.mlnr.spidey.utils.Utils;
+import dev.mlnr.spidey.objects.command.CommandContext;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Message;
 
 @SuppressWarnings("unused")
 public class PrefixCommand extends Command
@@ -16,21 +15,19 @@ public class PrefixCommand extends Command
     }
 
     @Override
-    public void execute(final String[] args, final Message msg)
+    public void execute(final String[] args, final CommandContext ctx)
     {
-        final var guild = msg.getGuild();
+        final var guild = ctx.getGuild();
         final var guildId = guild.getIdLong();
-        final var channel = msg.getTextChannel();
         final var actualPrefix = PrefixCache.retrievePrefix(guildId);
-
         if (args.length == 0)
         {
             if (actualPrefix.equals("s!"))
-                Utils.returnError("The prefix for this server is already set to the default one", msg);
+                ctx.replyError("The prefix for this server is already set to the default one");
             else
             {
                 PrefixCache.setPrefix(guildId, "s!");
-                Utils.sendMessage(channel, ":white_check_mark: The prefix for this server has been reset to `s!`!");
+                ctx.reply(":white_check_mark: The prefix for this server has been reset to `s!`!");
             }
             return;
         }
@@ -38,16 +35,16 @@ public class PrefixCommand extends Command
         final var newPrefix = args[0];
         if (actualPrefix.equals(newPrefix))
         {
-            Utils.returnError("The prefix for this server is already set to `" + actualPrefix + "`", msg);
+            ctx.replyError("The prefix for this server is already set to `" + actualPrefix + "`");
             return;
         }
         if (newPrefix.length() > 10)
         {
-            Utils.returnError("The prefix can't be longer than 10 characters", msg);
+            ctx.replyError("The prefix can't be longer than 10 characters");
             return;
         }
 
         PrefixCache.setPrefix(guildId, newPrefix);
-        Utils.sendMessage(channel, ":white_check_mark: The prefix has been successfully changed to `" + newPrefix + "`!");
+        ctx.reply(":white_check_mark: The prefix has been successfully changed to `" + newPrefix + "`!");
     }
 }

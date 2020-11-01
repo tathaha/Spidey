@@ -2,9 +2,9 @@ package dev.mlnr.spidey.commands.informative;
 
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
+import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 
 @SuppressWarnings("unused")
@@ -16,14 +16,13 @@ public class AvatarCommand extends Command
 	}
 
 	@Override
-	public void execute(final String[] args, final Message msg)
+	public void execute(final String[] args, final CommandContext ctx)
 	{
-		final var channel = msg.getTextChannel();
-		final var author = msg.getAuthor();
-		final var user = args.length == 0 ? author : Utils.getUserFromArgument(args[0], channel, msg);
+		final var author = ctx.getAuthor();
+		final var user = args.length == 0 ? author : Utils.getUserFromArgument(args[0], ctx.getTextChannel(), ctx.getMessage());
 		if (user == null)
 		{
-			Utils.returnError("User not found", msg);
+			ctx.replyError("User not found");
 			return;
 		}
 		final var avatarUrl = user.getEffectiveAvatarUrl();
@@ -31,6 +30,6 @@ public class AvatarCommand extends Command
 		eb.setAuthor("Avatar of user " + MarkdownSanitizer.escape(user.getAsTag()));
 		eb.setDescription("[Avatar link](" + avatarUrl + ")");
 		eb.setImage(avatarUrl);
-		Utils.sendMessage(channel, eb.build());
+		ctx.reply(eb);
 	}
 }

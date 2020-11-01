@@ -5,9 +5,9 @@ import dev.mlnr.spidey.objects.cache.LogChannelCache;
 import dev.mlnr.spidey.objects.cache.PrefixCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
+import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Message;
 
 import static java.lang.String.format;
 
@@ -20,12 +20,12 @@ public class SettingsCommand extends Command
     }
 
     @Override
-    public void execute(final String[] args, final Message msg)
+    public void execute(final String[] args, final CommandContext ctx)
     {
-        final var guildId = msg.getGuild().getIdLong();
-        final var jda = msg.getJDA();
+        final var guildId = ctx.getGuild().getIdLong();
+        final var jda = ctx.getJDA();
         final var prefix = PrefixCache.retrievePrefix(guildId);
-        final var eb = Utils.createEmbedBuilder(msg.getAuthor()).setColor(0xFEFEFE);
+        final var eb = Utils.createEmbedBuilder(ctx.getAuthor()).setColor(0xFEFEFE);
         eb.setAuthor("Current settings for this guild");
 
         final var set = " (set one with " + prefix + "%s)";
@@ -39,6 +39,6 @@ public class SettingsCommand extends Command
 
         eb.addField("Prefix", prefix + (prefix.equals("s!") ? " (set a custom prefix with s!prefix)" : ""), false);
 
-        Utils.sendMessage(msg.getTextChannel(), eb.build());
+        ctx.reply(eb);
     }
 }

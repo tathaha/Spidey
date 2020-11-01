@@ -3,6 +3,7 @@ package dev.mlnr.spidey.commands.moderation;
 import dev.mlnr.spidey.Core;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
+import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.utils.Emojis;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
@@ -27,19 +28,20 @@ public class PurgeCommand extends Command
     }
 
     @Override
-    public void execute(final String[] args, final Message msg)
+    public void execute(final String[] args, final CommandContext ctx)
     {
-        final var channel = msg.getTextChannel();
+        final var channel = ctx.getTextChannel();
+        final var msg = ctx.getMessage();
 
-        if (!channel.getGuild().getSelfMember().hasPermission(channel, getRequiredPermission(), Permission.MESSAGE_HISTORY))
+        if (!ctx.getGuild().getSelfMember().hasPermission(channel, getRequiredPermission(), Permission.MESSAGE_HISTORY))
         {
-            returnError("I don't have permission to purge messages or see the message history in this channel", msg);
+            ctx.replyError("I don't have permission to purge messages or see the message history in this channel");
             return;
         }
 
         if (args.length == 0)
         {
-            returnError("Wrong syntax", msg);
+            ctx.replyError("Wrong syntax");
             return;
         }
 
@@ -50,12 +52,12 @@ public class PurgeCommand extends Command
         }
         catch (final NumberFormatException ex)
         {
-            returnError("Entered value is either negative or not a number", msg);
+            ctx.replyError("Entered value is either negative or not a number");
             return;
         }
         if (amount > 100 || amount < 1)
         {
-            returnError("Please enter a number from 1-100", msg);
+            ctx.replyError("Please enter a number from 1-100");
             return;
         }
 
@@ -65,7 +67,7 @@ public class PurgeCommand extends Command
             final var fromArg = getUserFromArgument(args[1], channel, msg);
             if (fromArg == null)
             {
-                returnError("User not found", msg);
+                ctx.replyError("User not found");
                 return;
             }
             user = fromArg;
@@ -77,13 +79,13 @@ public class PurgeCommand extends Command
         {
             if (messages.isEmpty())
             {
-                returnError("There are no messages to be deleted", msg);
+                ctx.replyError("There are no messages to be deleted");
                 return;
             }
             final var msgs = target == null ? messages : messages.stream().filter(message -> message.getAuthor().equals(target)).limit(limit).collect(Collectors.toList());
             if (msgs.isEmpty())
             {
-                returnError("There are no messages by user **" + target.getAsTag() + "** to be deleted", msg);
+                ctx.replyError("There are no messages by user **" + target.getAsTag() + "** to be deleted");
                 return;
             }
             final var pinned = msgs.stream().filter(Message::isPinned).collect(Collectors.toList());
@@ -110,7 +112,7 @@ public class PurgeCommand extends Command
                 addReaction(message, Emojis.CROSS);
 
                 Core.getWaiter().waitForEvent(GuildMessageReactionAddEvent.class,
-                        ev -> ev.getUser() == msg.getAuthor() && ev.getMessageIdLong() == message.getIdLong(),
+                        ev -> ev.getUser() == ctx.getAuthor() && ev.getMessageIdLong() == message.getIdLong(),
                         ev ->
                         {
                             switch (ev.getReactionEmote().getName())
@@ -126,16 +128,16 @@ public class PurgeCommand extends Command
                                     deleteMessage(message);
                                     if (msgs.isEmpty())
                                     {
-                                        returnError("There are no unpinned messages to be deleted", msg);
+                                        ctx.replyError("There are no unpinned messages to be deleted");
                                         return;
                                     }
                                     break;
                                 default:
                             }
                             proceed(msgs, target, channel);
-                        }, 1, TimeUnit.MINUTES, () -> returnError("Sorry, you took too long", msg));
+                        }, 1, TimeUnit.MINUTES, () -> ctx.replyError("Sorry, you took too long"));
             });
-        }, throwable -> returnError("Unfortunately, i couldn't purge messages due to an internal error: **" + throwable.getMessage() + "**. Please report this message to the Developer", msg)));
+        }, throwable -> ctx.replyError("Unfortunately, i couldn't purge messages due to an internal error: **" + throwable.getMessage() + "**. Please report this message to the Developer")));
     }
 
     private void proceed(final List<Message> toDelete, final User user, final TextChannel channel)

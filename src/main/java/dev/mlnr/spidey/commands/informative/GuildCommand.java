@@ -2,10 +2,10 @@ package dev.mlnr.spidey.commands.informative;
 
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
+import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Emote;
-import net.dv8tion.jda.api.entities.Message;
 
 import java.awt.*;
 import java.util.stream.Collectors;
@@ -19,10 +19,10 @@ public class GuildCommand extends Command
 	}
 
 	@Override
-	public void execute(final String[] args, final Message msg)
+	public void execute(final String[] args, final CommandContext ctx)
 	{
-		final var eb = Utils.createEmbedBuilder(msg.getAuthor());
-		final var guild = msg.getGuild();
+		final var eb = Utils.createEmbedBuilder(ctx.getAuthor());
+		final var guild = ctx.getGuild();
 		eb.setColor(Color.ORANGE);
 		eb.setThumbnail(guild.getIconUrl());
 
@@ -59,11 +59,11 @@ public class GuildCommand extends Command
 			var ec = 0;
 			for (final var emote : emotes)
 			{
-				++ec;
+				ec++;
 				sb.append(emote.getAsMention()).append(ec == emotes.size() ? "" : " ");
 			}
 			eb.addField(String.format("Emotes (**%s** | **%d** animated)", ec, emoteCache.applyStream(stream -> stream.filter(Emote::isAnimated).count())), sb.length() > 1024 ? "Limit exceeded" : sb.toString(), false);
 		}
-		Utils.sendMessage(msg.getTextChannel(), eb.build());
+		ctx.reply(eb);
 	}
 }

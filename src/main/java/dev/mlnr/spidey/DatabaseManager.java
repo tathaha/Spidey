@@ -18,7 +18,7 @@ public class DatabaseManager
 	{
 		try
 		{
-			return DriverManager.getConnection("jdbc:postgresql:spidey", "cane", System.getenv("db"));
+			return DriverManager.getConnection("jdbc:postgresql:spidey", "postgres", System.getenv("spidey_db_password"));
 		}
 		catch (final Exception ex)
 		{

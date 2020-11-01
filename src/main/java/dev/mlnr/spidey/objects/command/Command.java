@@ -1,7 +1,6 @@
 package dev.mlnr.spidey.objects.command;
 
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Message;
 
 public abstract class Command
 {
@@ -26,7 +25,7 @@ public abstract class Command
         this.cooldown = cooldown;
     }
 
-    public abstract void execute(final String[] args, final Message msg);
+    public abstract void execute(final String[] args, final CommandContext context);
 
     public String getInvoke()
     {

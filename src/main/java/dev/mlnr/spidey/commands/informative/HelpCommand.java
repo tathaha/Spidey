@@ -6,9 +6,9 @@ import dev.mlnr.spidey.objects.cache.Cache;
 import dev.mlnr.spidey.objects.cache.PrefixCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
+import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Message;
 
 import java.util.*;
 import java.util.function.Function;
@@ -24,22 +24,21 @@ public class HelpCommand extends Command
     }
 
     @Override
-    public void execute(final String[] args, final Message msg)
+    public void execute(final String[] args, final CommandContext ctx)
     {
         final var commandsMap = CommandHandler.getCommands();
-        final var channel = msg.getTextChannel();
-        final var author = msg.getAuthor();
-        final var guildId = msg.getGuild().getIdLong();
+        final var author = ctx.getAuthor();
+        final var guildId = ctx.getGuild().getIdLong();
         final var prefix = PrefixCache.retrievePrefix(guildId);
         final var eb = Utils.createEmbedBuilder(author)
                 .setColor(0xFEFEFE)
-                .setAuthor("Spidey's commands", "https://github.com/caneleex/Spidey", msg.getJDA().getSelfUser().getEffectiveAvatarUrl());
+                .setAuthor("Spidey's commands", "https://github.com/caneleex/Spidey", ctx.getJDA().getSelfUser().getEffectiveAvatarUrl());
 
         if (args.length == 0)
         {
             final var commandsCopy = new HashMap<>(commandsMap);
             final var entries = commandsCopy.entrySet();
-            entries.removeIf(entry -> !msg.getMember().hasPermission(entry.getValue().getRequiredPermission()));
+            entries.removeIf(entry -> !ctx.getMember().hasPermission(entry.getValue().getRequiredPermission()));
             final var hidden = commandsMap.size() - commandsCopy.size();
             final var iter = entries.iterator();
             final var valueSet = new HashSet<>();
@@ -53,7 +52,7 @@ public class HelpCommand extends Command
             final EnumMap<Category, List<Command>> categories = new EnumMap<>(Category.class);
             var nsfwHidden = false;
             commandsCopy.values().forEach(cmd -> categories.computeIfAbsent(cmd.getCategory(), k -> new ArrayList<>()).add(cmd));
-            if (!channel.isNSFW())
+            if (!ctx.getTextChannel().isNSFW())
             {
                 categories.remove(Category.NSFW);
                 nsfwHidden = true;
@@ -72,14 +71,14 @@ public class HelpCommand extends Command
                 eb.appendDescription("\n**" + hidden + "** commands were hidden as you don't have permissions to use them.");
             if (nsfwHidden)
                 eb.appendDescription("\nNSFW commands were hidden from the help msg. If you want to see all NSFW commands, type the help command in a NSFW channel.");
-            Utils.sendMessage(channel, eb.build());
+            ctx.reply(eb);
             return;
         }
         final var invoke = args[0].toLowerCase();
         final var command = commandsMap.get(invoke);
         if (command == null)
         {
-            Utils.returnError("**" + invoke + "** isn't a valid command. Check `" + prefix + "help` for a list of commands", msg);
+            ctx.replyError("**" + invoke + "** isn't a valid command. Check `" + prefix + "help` for a list of commands");
             return;
         }
         final var description = command.getDescription();
@@ -102,7 +101,7 @@ public class HelpCommand extends Command
             eb.addField("Reducing commands' cooldown", COOLDOWN_REDUCE_HALF + "\nBy donating, you also support the Developer and"
                     + " help cover hosting fees. Type `" + prefix + "info` for the PayPal link. Thank you!", false);
         }
-        Utils.sendMessage(channel, eb.build());
+        ctx.reply(eb);
     }
 
     private String listToString(final List<Command> list, final Function<Command, String> transformer)

@@ -2,10 +2,10 @@ package dev.mlnr.spidey.commands.utility;
 
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
+import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.utils.Emojis;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Message;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -29,23 +29,24 @@ public class EvalCommand extends Command
     }
 
     @Override
-    public void execute(final String[] args, final Message msg)
+    public void execute(final String[] args, final CommandContext ctx)
     {
-        final var author = msg.getAuthor();
-        final var jda = msg.getJDA();
-        final var channel = msg.getTextChannel();
+        final var author = ctx.getAuthor();
+        final var jda = ctx.getJDA();
+        final var channel = ctx.getTextChannel();
+        final var message = ctx.getMessage();
         if (author.getIdLong() != 394607709741252621L)
         {
-            Utils.returnError("This command can only be executed by the Developer", msg);
+            ctx.replyError("This command can only be executed by the Developer");
             return;
         }
         var input = args[0];
         if (input.startsWith("```") && input.endsWith("```"))
             input = input.substring(3, input.length() - 3);
-        SCRIPT_ENGINE.put("guild", msg.getGuild());
+        SCRIPT_ENGINE.put("guild", channel.getGuild());
         SCRIPT_ENGINE.put("author", author);
-        SCRIPT_ENGINE.put("msg", msg);
-        SCRIPT_ENGINE.put("message", msg);
+        SCRIPT_ENGINE.put("msg", message);
+        SCRIPT_ENGINE.put("message", message);
         SCRIPT_ENGINE.put("channel", channel);
         SCRIPT_ENGINE.put("jda", jda);
         SCRIPT_ENGINE.put("api", jda);
@@ -57,7 +58,7 @@ public class EvalCommand extends Command
         try
         {
             final var evaluated = SCRIPT_ENGINE.eval(toEval.toString());
-            addReaction(msg, Emojis.CHECK);
+            addReaction(message, Emojis.CHECK);
             eb.setAuthor("SUCCESSFULLY EVALUATED");
             eb.setColor(Color.GREEN);
             if (evaluated != null)
@@ -65,11 +66,11 @@ public class EvalCommand extends Command
         }
         catch (final ScriptException ex)
         {
-            addReaction(msg, Emojis.CROSS);
+            addReaction(message, Emojis.CROSS);
             eb.setAuthor("EVALUATING FAILED");
             eb.setColor(Color.RED);
             eb.addField("Error", "```" + ex.getMessage() + "```", false);
         }
-        Utils.sendMessage(channel, eb.build());
+        ctx.reply(eb);
     }
 }

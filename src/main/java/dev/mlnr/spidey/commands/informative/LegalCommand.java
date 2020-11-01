@@ -2,9 +2,8 @@ package dev.mlnr.spidey.commands.informative;
 
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
-import dev.mlnr.spidey.utils.Utils;
+import dev.mlnr.spidey.objects.command.CommandContext;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Message;
 
 @SuppressWarnings("unused")
 public class LegalCommand extends Command
@@ -15,8 +14,8 @@ public class LegalCommand extends Command
 	}
 
 	@Override
-	public void execute(final String[] args, final Message msg)
+	public void execute(final String[] args, final CommandContext ctx)
 	{
-		Utils.sendMessage(msg.getTextChannel(), "To see the Terms of Service and Privacy Policy, please visit the support guild: discord.gg/VQk2BUCSqM");
+		ctx.reply("To see the Terms of Service and Privacy Policy, please visit the support guild: discord.gg/VQk2BUCSqM");
 	}
 }

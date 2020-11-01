@@ -2,9 +2,9 @@ package dev.mlnr.spidey.commands.informative;
 
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
+import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Message;
 
 @SuppressWarnings("unused")
 public class UserCommand extends Command
@@ -15,17 +15,16 @@ public class UserCommand extends Command
 	}
 
 	@Override
-	public void execute(final String[] args, final Message msg)
+	public void execute(final String[] args, final CommandContext ctx)
 	{
-		final var author = msg.getAuthor();
-		final var channel =  msg.getTextChannel();
-		final var user = args.length == 0 ? author : Utils.getUserFromArgument(args[0], channel, msg);
+		final var author = ctx.getAuthor();
+		final var user = args.length == 0 ? author : Utils.getUserFromArgument(args[0], ctx.getTextChannel(), ctx.getMessage());
 		if (user == null)
 		{
-			Utils.returnError("User not found", msg);
+			ctx.replyError("User not found");
 			return;
 		}
-		final var guild = msg.getGuild();
+		final var guild = ctx.getGuild();
 		final var member = guild.getMember(user);
 		final var nick = member.getNickname();
 		final var eb = Utils.createEmbedBuilder(author);
@@ -56,6 +55,6 @@ public class UserCommand extends Command
 			}
 			eb.addField("Roles [**" + rc + "**]", sb.length() > 1024 ? "Limit exceeded" : sb.toString(), false);
 		}
-		Utils.sendMessage(channel, eb.build());
+		ctx.reply(eb);
 	}
 }

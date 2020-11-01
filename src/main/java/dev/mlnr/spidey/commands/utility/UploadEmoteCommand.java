@@ -2,11 +2,11 @@ package dev.mlnr.spidey.commands.utility;
 
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
+import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Icon;
-import net.dv8tion.jda.api.entities.Message;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -24,19 +24,17 @@ public class UploadEmoteCommand extends Command
     }
 
     @Override
-    public void execute(final String[] args, final Message msg)
+    public void execute(final String[] args, final CommandContext ctx)
     {
-        final var channel = msg.getTextChannel();
-        final var guild = msg.getGuild();
-
+        final var guild = ctx.getGuild();
         if (!guild.getSelfMember().hasPermission(getRequiredPermission()))
         {
-            Utils.returnError("Spidey does not have the permission to upload emotes", msg);
+            ctx.replyError("Spidey does not have the permission to upload emotes");
             return;
         }
         if (args.length == 0)
         {
-            Utils.returnError("Please provide a URL to retrieve the emote from", msg);
+            ctx.replyError("Please provide a URL to retrieve the emote from");
             return;
         }
         var name = "";
@@ -52,7 +50,7 @@ public class UploadEmoteCommand extends Command
                 final var ext = args[0].substring(index + 1);
                 if (Icon.IconType.fromExtension(ext) == Icon.IconType.UNKNOWN)
                 {
-                    Utils.returnError("Please provide a URL with a valid format - JP(E)G, PNG, WEBP or GIF", msg);
+                    ctx.replyError("Please provide a URL with a valid format - JP(E)G, PNG, WEBP or GIF");
                     return;
                 }
                 name = tmp;
@@ -64,12 +62,12 @@ public class UploadEmoteCommand extends Command
         }
         if (!(name.length() >= 2 && name.length() <= 32))
         {
-            Utils.returnError("The name of the emote has to be between 2 and 32 in length", msg);
+            ctx.replyError("The name of the emote has to be between 2 and 32 in length");
             return;
         }
         else if (!Utils.TEXT_PATTERN.matcher(name).matches())
         {
-            Utils.returnError("The name of the emote has to be in a valid format", msg);
+            ctx.replyError("The name of the emote has to be in a valid format");
             return;
         }
         final var image = new ByteArrayOutputStream();
@@ -93,18 +91,18 @@ public class UploadEmoteCommand extends Command
         }
         catch (final MalformedURLException ex)
         {
-            Utils.returnError("Please provide a valid URL to retrieve the emote from", msg);
+            ctx.replyError("Please provide a valid URL to retrieve the emote from");
             return;
         }
         catch (final IOException ex)
         {
-            Utils.returnError("Unfortunately, i couldn't create the emote due to an internal error", msg);
+            ctx.replyError("Unfortunately, i couldn't create the emote due to an internal error");
             return;
         }
         final var byteArray = image.toByteArray();
         if (byteArray.length > 256000)
         {
-            Utils.returnError("The emote size has to be less than **256KB**", msg);
+            ctx.replyError("The emote size has to be less than **256KB**");
             return;
         }
         final var maxEmotes = guild.getMaxEmotes();
@@ -114,13 +112,13 @@ public class UploadEmoteCommand extends Command
                                                                            .get(animated).size());
         if (maxEmotes == used)
         {
-            Utils.returnError("Guild has the maximum amount of emotes", msg);
+            ctx.replyError("Guild has the maximum amount of emotes");
             return;
         }
         guild.createEmote(name, Icon.from(byteArray)).queue(emote ->
         {
             final var left = maxEmotes - used - 1;
-            Utils.sendMessage(channel, "Emote " + emote.getAsMention() + " has been successfully uploaded! " + (animated ? "Animated e" : "E") + "mote slots left: **" + (left == 0 ? "None" : left) + "**");
-        }, failure -> Utils.returnError("Unfortunately, i couldn't create the emote due to an internal error: **" + failure.getMessage() + "**. Please report this message to the Developer", msg));
+            ctx.reply("Emote " + emote.getAsMention() + " has been successfully uploaded! " + (animated ? "Animated e" : "E") + "mote slots left: **" + (left == 0 ? "None" : left) + "**");
+        }, failure -> ctx.replyError("Unfortunately, i couldn't create the emote due to an internal error: **" + failure.getMessage() + "**. Please report this message to the Developer"));
     }
 }

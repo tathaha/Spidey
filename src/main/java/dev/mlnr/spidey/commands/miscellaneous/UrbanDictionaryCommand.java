@@ -2,11 +2,10 @@ package dev.mlnr.spidey.commands.miscellaneous;
 
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
+import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.json.UrbanDictionary;
 import dev.mlnr.spidey.utils.Emojis;
-import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Message;
 
 @SuppressWarnings("unused")
 public class UrbanDictionaryCommand extends Command
@@ -17,19 +16,18 @@ public class UrbanDictionaryCommand extends Command
 	}
 
 	@Override
-	public void execute(final String[] args, final Message msg)
+	public void execute(final String[] args, final CommandContext ctx)
 	{
 		if (args.length == 0)
 		{
-			Utils.returnError("Please specify a term", msg);
+			ctx.replyError("Please specify a term");
 			return;
 		}
 		final var term = args[0];
-		final var channel = msg.getTextChannel();
 		final var ud = new UrbanDictionary(term);
 		if (!ud.exists())
 		{
-			Utils.sendMessage(channel, ":no_entry: Query not found.");
+			ctx.reply(":no_entry: Query not found.");
 			return;
 		}
 		final var result = String.format("Urban Dictionary \n\n"
@@ -42,6 +40,6 @@ public class UrbanDictionaryCommand extends Command
 						+ "_by %s (" + Emojis.LIKE + "%s  " + Emojis.DISLIKE + "%s)_"
 				, ud.getWord(), ud.getDefinition(), ud.getExample(),
 				ud.getAuthor(), ud.getLikes(), ud.getDislikes());
-		Utils.sendMessage(channel, result);
+		ctx.reply(result);
 	}
 }

@@ -63,7 +63,7 @@ public class Events extends ListenerAdapter
 				Utils.sendMessage(channel, CommandHandler.ADMIN_WARNING);
 				return;
 			}
-			CommandHandler.handle(message, prefix);
+			CommandHandler.handle(e, prefix);
 			return;
 		}
 

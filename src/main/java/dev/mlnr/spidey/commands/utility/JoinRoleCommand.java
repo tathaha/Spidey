@@ -3,9 +3,9 @@ package dev.mlnr.spidey.commands.utility;
 import dev.mlnr.spidey.objects.cache.JoinRoleCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
+import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
 
 import java.util.regex.Pattern;
@@ -21,23 +21,21 @@ public class JoinRoleCommand extends Command
     }
 
     @Override
-    public void execute(final String[] args, final Message msg)
+    public void execute(final String[] args, final CommandContext ctx)
     {
-        final var guild = msg.getGuild();
+        final var guild = ctx.getGuild();
         final var guildId = guild.getIdLong();
-        final var channel = msg.getTextChannel();
-        final var member = msg.getMember();
-
+        final var member = ctx.getMember();
         final var dbRole = JoinRoleCache.retrieveJoinRole(guildId);
         if (args.length == 0)
         {
             if (dbRole == 0)
             {
-                Utils.returnError("You don't have the join role set", msg);
+                ctx.replyError("You don't have the join role set");
                 return;
             }
             JoinRoleCache.removeJoinRole(guildId);
-            Utils.sendMessage(channel, ":white_check_mark: The join role has been removed.");
+            ctx.reply(":white_check_mark: The join role has been removed.");
             return;
         }
         long roleId;
@@ -47,13 +45,13 @@ public class JoinRoleCommand extends Command
             final var parsed = Long.parseUnsignedLong(args[0]);
             if (dbRole == parsed)
             {
-                Utils.returnError("The join role is already set to this role", msg);
+                ctx.replyError("The join role is already set to this role");
                 return;
             }
             final var tmp = guild.getRoleById(parsed);
             if (tmp == null)
             {
-                Utils.returnError("There is no such role with given ID", msg);
+                ctx.replyError("There is no such role with given ID");
                 return;
             }
             role = tmp;
@@ -65,20 +63,20 @@ public class JoinRoleCommand extends Command
             {
                 if (args[0].length() > 100)
                 {
-                    Utils.returnError("The name of the role has to be 100 characters long at max", msg);
+                    ctx.replyError("The name of the role has to be 100 characters long at max");
                     return;
                 }
                 final var roles = guild.getRolesByName(args[0], false);
                 if (roles.isEmpty())
                 {
-                    Utils.returnError("There is no such role with given name", msg);
+                    ctx.replyError("There is no such role with given name");
                     return;
                 }
                 final var fromName = roles.get(0);
                 final var id = fromName.getIdLong();
                 if (dbRole == id)
                 {
-                    Utils.returnError("The join role is already set to this role", msg);
+                    ctx.replyError("The join role is already set to this role");
                     return;
                 }
                 role = fromName;
@@ -86,16 +84,16 @@ public class JoinRoleCommand extends Command
             }
             else
             {
-                Utils.returnError("Please enter a valid ID/role name", msg);
+                ctx.replyError("Please enter a valid ID/role name");
                 return;
             }
         }
         if (!member.canInteract(role))
         {
-            Utils.returnError("You can't set the join role to a role which you can't interact with", msg);
+            ctx.replyError("You can't set the join role to a role which you can't interact with");
             return;
         }
         JoinRoleCache.setJoinRole(guildId, roleId);
-        Utils.sendMessage(channel, ":white_check_mark: The join role has been set to role `" + role.getName() + "`.");
+        ctx.reply(":white_check_mark: The join role has been set to role `" + role.getName() + "`.");
     }
 }
