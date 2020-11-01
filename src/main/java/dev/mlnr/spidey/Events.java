@@ -111,10 +111,7 @@ public class Events extends ListenerAdapter
 			final var last = bans.get(0);
 			final var bannerTag = escape(last.getUser().getAsTag());
 			var reason = last.getReason();
-			if (reason != null)
-				reason = reason.trim();
-			if (reason == null || reason.isEmpty())
-				reason = "unknown reason";
+			reason = reason == null || reason.isEmpty() ? "unknown reason" : reason.trim();
 			eb.appendDescription(" by **" + bannerTag + "** for **" + reason + "**.");
 			Utils.sendMessage(channel, eb.build());
 		});
