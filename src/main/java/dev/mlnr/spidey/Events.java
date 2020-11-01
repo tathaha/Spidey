@@ -23,9 +23,7 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageUpdateEvent;
 import net.dv8tion.jda.api.events.role.RoleDeleteEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.time.Instant;
 
 import static net.dv8tion.jda.api.utils.MarkdownSanitizer.escape;
@@ -175,7 +173,7 @@ public class Events extends ListenerAdapter
 	}
 
 	@Override
-	public void onGuildMemberJoin(@NotNull final GuildMemberJoinEvent event)
+	public void onGuildMemberJoin(final GuildMemberJoinEvent event)
 	{
 		final var user = event.getUser();
 		final var guild = event.getGuild();
@@ -238,7 +236,7 @@ public class Events extends ListenerAdapter
 	}
 
 	@Override
-	public void onGuildReady(@NotNull final GuildReadyEvent event)
+	public void onGuildReady(final GuildReadyEvent event)
 	{
 		final var guild = event.getGuild();
 		Utils.storeInvites(guild);
@@ -296,25 +294,25 @@ public class Events extends ListenerAdapter
 	}
 
 	@Override
-	public void onGuildInviteCreate(@NotNull final GuildInviteCreateEvent event)
+	public void onGuildInviteCreate(final GuildInviteCreateEvent event)
 	{
 		Cache.getInviteCache().put(event.getCode(), new InviteData(event.getInvite()));
 	}
 
 	@Override
-	public void onGuildInviteDelete(@NotNull final GuildInviteDeleteEvent event)
+	public void onGuildInviteDelete(final GuildInviteDeleteEvent event)
 	{
 		Cache.getInviteCache().remove(event.getCode());
 	}
 
 	@Override
-	public void onReady(@NotNull final ReadyEvent event)
+	public void onReady(final ReadyEvent event)
 	{
 		Utils.startup(event.getJDA());
 	}
 
 	@Override
-	public void onGuildMessageDelete(@NotNull final GuildMessageDeleteEvent event)
+	public void onGuildMessageDelete(final GuildMessageDeleteEvent event)
 	{
 		final var messageId = event.getMessageIdLong();
 		if(!MessageCache.isCached(messageId))
@@ -323,7 +321,7 @@ public class Events extends ListenerAdapter
 	}
 
 	@Override
-	public void onGuildMessageUpdate(@Nonnull final GuildMessageUpdateEvent event)
+	public void onGuildMessageUpdate(final GuildMessageUpdateEvent event)
 	{
 		final var messageId = event.getMessageIdLong();
 		if(!MessageCache.isCached(messageId))
