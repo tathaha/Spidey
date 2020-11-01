@@ -77,7 +77,7 @@ public class DatabaseManager
 
 	public static long retrieveChannel(final long guildId)
 	{
-		return getPropertyAsLong("channel_id", guildId);
+		return getPropertyAsLong("log_channel_id", guildId);
 	}
 
 	public static long retrieveJoinRole(final long guildId)
@@ -99,7 +99,7 @@ public class DatabaseManager
 
 	public static void setChannel(final long guildId, final long channelId)
 	{
-		executeSetQuery("channel_id", guildId, channelId);
+		executeSetQuery("log_channel_id", guildId, channelId);
 	}
 
 	public static void setJoinRole(final long guildId, final long roleId)
