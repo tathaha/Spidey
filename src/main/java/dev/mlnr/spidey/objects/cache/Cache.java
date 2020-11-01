@@ -2,12 +2,8 @@ package dev.mlnr.spidey.objects.cache;
 
 import dev.mlnr.spidey.DatabaseManager;
 import dev.mlnr.spidey.objects.invites.InviteData;
-import dev.mlnr.spidey.utils.collections.CollectionUtils;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class Cache
 {
@@ -41,12 +37,13 @@ public class Cache
 
     public static boolean isPostCached(final long guildId, final String json)
     {
-        return CollectionUtils.contains(REDDIT_CACHE, guildId, json);
+        final var entry = REDDIT_CACHE.get(guildId);
+        return entry != null && entry.contains(json);
     }
 
     public static void cachePost(final long guildId, final String json)
     {
-        CollectionUtils.add(REDDIT_CACHE, guildId, json);
+        REDDIT_CACHE.computeIfAbsent(guildId, k -> new ArrayList<>()).add(json);
     }
 
     // MISC

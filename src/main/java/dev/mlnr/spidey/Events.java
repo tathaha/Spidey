@@ -47,7 +47,7 @@ public class Events extends ListenerAdapter
 		if (!content.isEmpty())
 			MessageCache.cacheMessage(message.getIdLong(), new MessageData(message));
 
-		if (content.equals("<@468523263853592576>") || content.equals("<@!468523263853592576>"))
+		if ((content.equals("<@468523263853592576>") || content.equals("<@!468523263853592576>")) && !author.isBot())
 		{
 			final var eb = new EmbedBuilder();
 			eb.setColor(16763981);
@@ -231,14 +231,13 @@ public class Events extends ListenerAdapter
 			{
 				final var inviteData = Cache.getInviteCache().get(invite.getCode());
 				if (inviteData == null)
-					return;
-				if (invite.getUses() > inviteData.getUses())
-				{
-					inviteData.incrementUses();
-					eb.appendDescription(" with invite **" + invite.getUrl() + "** (**" + escape(invite.getInviter().getAsTag()) + "**).");
-					Utils.sendMessage(channel, eb.build());
-					break;
-				}
+					continue;
+				if (invite.getUses() == inviteData.getUses())
+					continue;
+				inviteData.incrementUses();
+				eb.appendDescription(" with invite **" + invite.getUrl() + "** (**" + escape(invite.getInviter().getAsTag()) + "**).");
+				Utils.sendMessage(channel, eb.build());
+				break;
 			}
 		});
 	}
@@ -265,6 +264,7 @@ public class Events extends ListenerAdapter
 	{
 		final var guildId = e.getGuild().getIdLong();
 		Cache.getInviteCache().entrySet().removeIf(entry -> entry.getValue().getGuildId() == guildId);
+		MessageCache.pruneCache(guildId);
 		Cache.removeEntry(guildId);
 	}
 

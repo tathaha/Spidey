@@ -23,7 +23,7 @@ public class KSoftAPIHelper
         eb.setColor(nsfw ? Color.PINK : Color.GREEN);
         eb.setAuthor(json.getString("title"), json.getString("source"));
         eb.setImage(json.getString("image_url"));
-        eb.setDescription("A random picture from r/" + query);
+        eb.setDescription("A random post from [r/" + query + "](https://reddit.com/r/" + query + ")");
         return eb.build();
     }
 

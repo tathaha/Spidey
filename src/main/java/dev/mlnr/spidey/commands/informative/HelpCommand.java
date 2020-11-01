@@ -7,14 +7,10 @@ import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandHandler;
 import dev.mlnr.spidey.objects.command.Cooldowns;
 import dev.mlnr.spidey.utils.Utils;
-import dev.mlnr.spidey.utils.collections.CollectionUtils;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
 
 @SuppressWarnings("unused")
@@ -56,7 +52,7 @@ public class HelpCommand extends Command
             commandsCopy.remove("eval");
             final EnumMap<Category, List<Command>> categories = new EnumMap<>(Category.class);
             var nsfwHidden = false;
-            commandsCopy.values().forEach(cmd -> CollectionUtils.add(categories, cmd.getCategory(), cmd));
+            commandsCopy.values().forEach(cmd -> categories.computeIfAbsent(cmd.getCategory(), k -> new ArrayList<>()).add(cmd));
             if (!channel.isNSFW())
             {
                 categories.remove(Category.NSFW);

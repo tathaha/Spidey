@@ -69,6 +69,22 @@ public class MessageCache
         LAST_MESSAGE_EDITED_DATA.remove(messageId);
     }
 
+    public static void pruneCache(final long guildId)
+    {
+        final var entries = MESSAGE_CACHE.entrySet();
+        for (var entry : entries)
+        {
+            final var dataGuildId = entry.getValue().getGuildId();
+            if (dataGuildId != guildId)
+                continue;
+            final var messageId = entry.getKey();
+            MESSAGE_CACHE.remove(messageId);
+            LAST_MESSAGE_DELETED_CACHE.entrySet().removeIf(record -> record.getValue() == messageId);
+            LAST_MESSAGE_EDITED_CACHE.entrySet().removeIf(record -> record.getValue() == messageId);
+            LAST_MESSAGE_EDITED_DATA.entrySet().removeIf(record -> record.getValue().getGuildId() == guildId);
+        }
+    }
+
     public static Map<Long, MessageData> getCache()
     {
         return MESSAGE_CACHE;
