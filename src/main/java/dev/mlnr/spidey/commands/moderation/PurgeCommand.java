@@ -48,7 +48,7 @@ public class PurgeCommand extends Command
         var amount = 0;
         try
         {
-            amount = Integer.parseInt(args[0]);
+            amount = Integer.parseUnsignedInt(args[0]);
         }
         catch (final NumberFormatException ex)
         {
