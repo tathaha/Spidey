@@ -6,8 +6,10 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
 import java.time.Duration;
+import java.util.Set;
 
 public class CommandContext
 {
@@ -48,14 +50,19 @@ public class CommandContext
         return event.getJDA();
     }
 
-    public void reply(final String content)
-    {
-        Utils.sendMessage(getTextChannel(), content);
-    }
-
     public void reply(final EmbedBuilder embedBuilder)
     {
         Utils.sendMessage(getTextChannel(), embedBuilder.build());
+    }
+
+    public void reply(final String content)
+    {
+        reply(content, MessageAction.getDefaultMentions());
+    }
+
+    public void reply(final String content, final Set<Message.MentionType> allowedMentions)
+    {
+        Utils.sendMessage(getTextChannel(), content, allowedMentions);
     }
 
     public void replyError(final String error)
@@ -65,8 +72,13 @@ public class CommandContext
         if (!channel.canTalk())
             return;
         channel.sendMessage(String.format(":no_entry: %s.", error))
-                .delay(Duration.ofSeconds(5))
+                .delay(Duration.ofSeconds(7))
                 .flatMap(Message::delete)
                 .queue(success -> Utils.deleteMessage(getMessage()));
+    }
+
+    public void reactLike()
+    {
+        Utils.addReaction(getMessage(), Emojis.LIKE);
     }
 }

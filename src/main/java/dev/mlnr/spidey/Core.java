@@ -3,6 +3,7 @@ package dev.mlnr.spidey;
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory;
 import dev.mlnr.spidey.utils.EventWaiter;
 import net.dv8tion.jda.api.GatewayEncoding;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
@@ -22,6 +23,7 @@ public class Core
 	private static final Logger LOG = LoggerFactory.getLogger(Core.class);
 	private static final ScheduledExecutorService EXECUTOR = ThreadingConfig.newScheduler(1, () -> "Spidey", "Misc");
 	private static final EventWaiter waiter = new EventWaiter(EXECUTOR, true);
+	private static JDA jda;
 
 	private Core() {}
 
@@ -29,7 +31,7 @@ public class Core
 	{
 		try
 		{
-			JDABuilder.create(System.getenv("Spidey"),
+			jda = JDABuilder.create(System.getenv("Spidey"),
 						GUILD_BANS,
 						GUILD_INVITES,
 						GUILD_MEMBERS,
@@ -67,5 +69,10 @@ public class Core
 	public static ScheduledExecutorService getExecutor()
 	{
 		return EXECUTOR;
+	}
+
+	public static JDA getJDA()
+	{
+		return jda;
 	}
 }

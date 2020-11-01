@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.commands.moderation;
 
-import dev.mlnr.spidey.objects.cache.LogChannelCache;
+import dev.mlnr.spidey.cache.LogChannelCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;

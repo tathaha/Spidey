@@ -1,20 +1,23 @@
 package dev.mlnr.spidey.utils;
 
 import dev.mlnr.spidey.Core;
+import dev.mlnr.spidey.cache.GeneralCache;
+import dev.mlnr.spidey.cache.MessageCache;
 import dev.mlnr.spidey.handlers.CommandHandler;
-import dev.mlnr.spidey.objects.cache.Cache;
-import dev.mlnr.spidey.objects.cache.MessageCache;
 import dev.mlnr.spidey.objects.invites.InviteData;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
@@ -33,16 +36,21 @@ public class Utils
 
     private Utils() {}
 
-    public static void sendMessage(final TextChannel ch, final String toSend)
-    {
-        if (ch.canTalk())
-            ch.sendMessage(toSend).queue();
-    }
-
     public static void sendMessage(final TextChannel ch, final MessageEmbed embed)
     {
         if (ch.canTalk() && ch.getGuild().getSelfMember().hasPermission(ch, Permission.MESSAGE_EMBED_LINKS))
             ch.sendMessage(embed).queue();
+    }
+
+    public static void sendMessage(final TextChannel ch, final String toSend)
+    {
+        sendMessage(ch, toSend, MessageAction.getDefaultMentions());
+    }
+
+    public static void sendMessage(final TextChannel ch, final String toSend, final Set<Message.MentionType> allowedMentions)
+    {
+        if (ch.canTalk())
+            ch.sendMessage(toSend).allowedMentions(allowedMentions == null ? EnumSet.noneOf(Message.MentionType.class) : allowedMentions).queue(); // passing null to allowedMentions allows all mentions, nice logic JDA
     }
 
     public static void deleteMessage(final Message msg)
@@ -103,7 +111,7 @@ public class Utils
     public static void storeInvites(final Guild guild)
     {
         if (guild.getSelfMember().hasPermission(Permission.MANAGE_SERVER))
-            guild.retrieveInvites().queue(invites -> invites.forEach(invite -> Cache.getInviteCache().put(invite.getCode(), new InviteData(invite))));
+            guild.retrieveInvites().queue(invites -> invites.forEach(invite -> GeneralCache.getInviteCache().put(invite.getCode(), new InviteData(invite))));
     }
 
     public static String formatDate(final OffsetDateTime date)

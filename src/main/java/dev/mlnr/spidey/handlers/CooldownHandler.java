@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.handlers;
 
-import dev.mlnr.spidey.objects.cache.Cache;
+import dev.mlnr.spidey.cache.GeneralCache;
 import dev.mlnr.spidey.objects.command.Command;
 
 import java.util.HashMap;
@@ -39,7 +39,7 @@ public class CooldownHandler
     public static int getCooldown(final long guildId, final Command command)
     {
         final var cooldown = command.getCooldown();
-        if (Cache.isVip(guildId))
+        if (GeneralCache.isVip(guildId))
             return cooldown / 2;
         return cooldown;
     }

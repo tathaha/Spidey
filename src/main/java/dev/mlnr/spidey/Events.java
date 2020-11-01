@@ -1,7 +1,7 @@
 package dev.mlnr.spidey;
 
+import dev.mlnr.spidey.cache.*;
 import dev.mlnr.spidey.handlers.CommandHandler;
-import dev.mlnr.spidey.objects.cache.*;
 import dev.mlnr.spidey.objects.invites.InviteData;
 import dev.mlnr.spidey.objects.messages.MessageData;
 import dev.mlnr.spidey.utils.Emojis;
@@ -224,7 +224,7 @@ public class Events extends ListenerAdapter
 		{
 			for (final var invite : invites)
 			{
-				final var inviteData = Cache.getInviteCache().get(invite.getCode());
+				final var inviteData = GeneralCache.getInviteCache().get(invite.getCode());
 				if (inviteData == null || invite.getUses() == inviteData.getUses())
 					continue;
 				inviteData.incrementUses();
@@ -256,9 +256,9 @@ public class Events extends ListenerAdapter
 	public void onGuildLeave(final GuildLeaveEvent event)
 	{
 		final var guildId = event.getGuild().getIdLong();
-		Cache.getInviteCache().entrySet().removeIf(entry -> entry.getValue().getGuildId() == guildId);
+		GeneralCache.getInviteCache().entrySet().removeIf(entry -> entry.getValue().getGuildId() == guildId);
 		MessageCache.pruneCache(guildId);
-		Cache.removeEntry(guildId);
+		GeneralCache.removeEntry(guildId);
 	}
 
 	@Override
@@ -272,9 +272,12 @@ public class Events extends ListenerAdapter
 	@Override
 	public void onRoleDelete(final RoleDeleteEvent event)
 	{
+		final var roleId = event.getRole().getIdLong();
 		final var guildId = event.getGuild().getIdLong();
-		if (event.getRole().getIdLong() == JoinRoleCache.retrieveJoinRole(guildId))
+		if (roleId == JoinRoleCache.retrieveJoinRole(guildId))
 			JoinRoleCache.removeJoinRole(guildId);
+		if (roleId == DJRoleCache.retrieveDJRole(guildId))
+			DJRoleCache.removeDJRole(guildId);
 	}
 
 	@Override
@@ -296,13 +299,13 @@ public class Events extends ListenerAdapter
 	@Override
 	public void onGuildInviteCreate(final GuildInviteCreateEvent event)
 	{
-		Cache.getInviteCache().put(event.getCode(), new InviteData(event.getInvite()));
+		GeneralCache.getInviteCache().put(event.getCode(), new InviteData(event.getInvite()));
 	}
 
 	@Override
 	public void onGuildInviteDelete(final GuildInviteDeleteEvent event)
 	{
-		Cache.getInviteCache().remove(event.getCode());
+		GeneralCache.getInviteCache().remove(event.getCode());
 	}
 
 	@Override

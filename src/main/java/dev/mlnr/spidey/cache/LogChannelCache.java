@@ -1,4 +1,4 @@
-package dev.mlnr.spidey.objects.cache;
+package dev.mlnr.spidey.cache;
 
 import dev.mlnr.spidey.DatabaseManager;
 import net.dv8tion.jda.api.JDA;

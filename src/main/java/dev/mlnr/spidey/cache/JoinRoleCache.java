@@ -1,4 +1,4 @@
-package dev.mlnr.spidey.objects.cache;
+package dev.mlnr.spidey.cache;
 
 import dev.mlnr.spidey.DatabaseManager;
 import net.dv8tion.jda.api.JDA;
@@ -18,7 +18,7 @@ public class JoinRoleCache
     {
         return Objects.requireNonNullElseGet(JOIN_ROLE_CACHE.get(guildId), () ->
         {
-            final var role = DatabaseManager.retrieveRole(guildId);
+            final var role = DatabaseManager.retrieveJoinRole(guildId);
             JOIN_ROLE_CACHE.put(guildId, role);
             return role;
         });
@@ -32,7 +32,7 @@ public class JoinRoleCache
     public static void setJoinRole(final long guildId, final long roleId)
     {
         JOIN_ROLE_CACHE.put(guildId, roleId);
-        DatabaseManager.setRole(guildId, roleId);
+        DatabaseManager.setJoinRole(guildId, roleId);
     }
 
     public static void removeJoinRole(final long guildId)

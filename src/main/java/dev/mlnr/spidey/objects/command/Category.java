@@ -7,7 +7,8 @@ public enum Category
     UTILITY("\uD83D\uDEE0 Utility"),
     INFORMATIVE("\u2139 Informative"),
     NSFW("\uD83D\uDD1E NSFW"),
-    FUN("\uD83D\uDE03 Fun");
+    FUN("\uD83D\uDE03 Fun"),
+    MUSIC("\uD83C\uDFB6 Music");
 
     private final String friendlyName;
 

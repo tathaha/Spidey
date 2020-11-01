@@ -80,9 +80,14 @@ public class DatabaseManager
 		return getPropertyAsLong("channel_id", guildId);
 	}
 
-	public static long retrieveRole(final long guildId)
+	public static long retrieveJoinRole(final long guildId)
 	{
-		return getPropertyAsLong("role_id", guildId);
+		return getPropertyAsLong("join_role_id", guildId);
+	}
+
+	public static long retrieveDJRole(final long guildId)
+	{
+		return getPropertyAsLong("dj_role_id", guildId);
 	}
 
 	public static String retrievePrefix(final long guildId)
@@ -92,19 +97,24 @@ public class DatabaseManager
 
 	// SETTERS
 
-	public static void setChannel(final long guildId, final long value)
+	public static void setChannel(final long guildId, final long channelId)
 	{
-		executeSetQuery("channel_id", guildId, value);
+		executeSetQuery("channel_id", guildId, channelId);
 	}
 
-	public static void setRole(final long guildId, final long value)
+	public static void setJoinRole(final long guildId, final long roleId)
 	{
-		executeSetQuery("role_id", guildId, value);
+		executeSetQuery("join_role_id", guildId, roleId);
 	}
 
-	public static void setPrefix(final long guildId, final String value)
+	public static void setDJRole(final long guildId, final long djRoleId)
 	{
-		executeSetQuery("prefix", guildId, value);
+		executeSetQuery("dj_role_id", guildId, djRoleId);
+	}
+
+	public static void setPrefix(final long guildId, final String prefix)
+	{
+		executeSetQuery("prefix", guildId, prefix);
 	}
 
 	// REMOVALS

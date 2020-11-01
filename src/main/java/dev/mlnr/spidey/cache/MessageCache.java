@@ -1,4 +1,4 @@
-package dev.mlnr.spidey.objects.cache;
+package dev.mlnr.spidey.cache;
 
 import dev.mlnr.spidey.objects.messages.MessageData;
 

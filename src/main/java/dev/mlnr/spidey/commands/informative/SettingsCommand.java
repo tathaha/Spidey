@@ -1,8 +1,9 @@
 package dev.mlnr.spidey.commands.informative;
 
-import dev.mlnr.spidey.objects.cache.JoinRoleCache;
-import dev.mlnr.spidey.objects.cache.LogChannelCache;
-import dev.mlnr.spidey.objects.cache.PrefixCache;
+import dev.mlnr.spidey.cache.DJRoleCache;
+import dev.mlnr.spidey.cache.JoinRoleCache;
+import dev.mlnr.spidey.cache.LogChannelCache;
+import dev.mlnr.spidey.cache.PrefixCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
@@ -36,6 +37,9 @@ public class SettingsCommand extends Command
 
         final var joinRole = JoinRoleCache.getJoinRole(guildId, jda);
         eb.addField("Join role", joinRole == null ? "None" + format(set, "joinrole") : format(pattern, joinRole.getName(), joinRole.getIdLong()), false);
+
+        final var djRole = DJRoleCache.getDJRole(guildId, jda);
+        eb.addField("DJ role", djRole == null ? "None" + format(set, "djrole") : format(pattern, djRole.getName(), djRole.getIdLong()), false);
 
         eb.addField("Prefix", prefix + (prefix.equals("s!") ? " (set a custom prefix with s!prefix)" : ""), false);
 

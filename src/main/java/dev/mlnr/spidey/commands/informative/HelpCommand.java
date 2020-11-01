@@ -1,9 +1,9 @@
 package dev.mlnr.spidey.commands.informative;
 
+import dev.mlnr.spidey.cache.GeneralCache;
+import dev.mlnr.spidey.cache.PrefixCache;
 import dev.mlnr.spidey.handlers.CommandHandler;
 import dev.mlnr.spidey.handlers.CooldownHandler;
-import dev.mlnr.spidey.objects.cache.Cache;
-import dev.mlnr.spidey.objects.cache.PrefixCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
@@ -95,7 +95,7 @@ public class HelpCommand extends Command
         eb.addField("Aliases", aliases.length == 0 ? "None" : String.join(", ", aliases), false);
         eb.addField("Cooldown", cooldown == 0 ? "None" : cooldown + " seconds", false);
 
-        if (!Cache.isVip(guildId))
+        if (!GeneralCache.isVip(guildId))
         {
             eb.addBlankField(false);
             eb.addField("Reducing commands' cooldown", COOLDOWN_REDUCE_HALF + "\nBy donating, you also support the Developer and"

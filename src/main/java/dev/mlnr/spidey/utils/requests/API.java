@@ -14,6 +14,6 @@ public enum API
 
     public String getKey()
     {
-        return key;
+        return this.key;
     }
 }

@@ -1,4 +1,4 @@
-package dev.mlnr.spidey.objects.cache;
+package dev.mlnr.spidey.cache;
 
 import dev.mlnr.spidey.DatabaseManager;
 import dev.mlnr.spidey.objects.invites.InviteData;
@@ -7,12 +7,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class Cache
+public class GeneralCache
 {
     private static final Map<String, InviteData> INVITE_CACHE = new HashMap<>();
     private static final Map<Long, Boolean> VIP_GUILDS_CACHE = new HashMap<>();
 
-    private Cache() {}
+    private GeneralCache() {}
 
     public static Map<String, InviteData> getInviteCache()
     {
