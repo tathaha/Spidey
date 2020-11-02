@@ -1,4 +1,4 @@
-package dev.mlnr.spidey.handlers;
+package dev.mlnr.spidey.handlers.command;
 
 import dev.mlnr.spidey.cache.GeneralCache;
 import dev.mlnr.spidey.objects.command.Command;

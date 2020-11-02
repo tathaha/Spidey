@@ -7,6 +7,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.TrackMarker;
 import dev.mlnr.spidey.cache.music.SegmentSkippingCache;
 import dev.mlnr.spidey.cache.music.VideoSegmentCache;
+import dev.mlnr.spidey.handlers.music.SegmentHandler;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.utils.Emojis;
 import dev.mlnr.spidey.utils.MusicUtils;

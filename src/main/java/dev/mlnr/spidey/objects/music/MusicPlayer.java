@@ -4,6 +4,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import dev.mlnr.spidey.Core;
 import dev.mlnr.spidey.cache.music.MusicPlayerCache;
+import dev.mlnr.spidey.handlers.music.AudioPlayerSendHandler;
 import dev.mlnr.spidey.utils.MusicUtils;
 import net.dv8tion.jda.api.audio.AudioSendHandler;
 

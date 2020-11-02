@@ -3,7 +3,7 @@ package dev.mlnr.spidey.utils;
 import dev.mlnr.spidey.Core;
 import dev.mlnr.spidey.cache.GeneralCache;
 import dev.mlnr.spidey.cache.MessageCache;
-import dev.mlnr.spidey.handlers.CommandHandler;
+import dev.mlnr.spidey.handlers.command.CommandHandler;
 import dev.mlnr.spidey.objects.invites.InviteData;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;

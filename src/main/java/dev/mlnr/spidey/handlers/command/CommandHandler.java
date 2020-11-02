@@ -1,4 +1,4 @@
-package dev.mlnr.spidey.handlers;
+package dev.mlnr.spidey.handlers.command;
 
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
@@ -17,8 +17,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import static dev.mlnr.spidey.handlers.CooldownHandler.cooldown;
-import static dev.mlnr.spidey.handlers.CooldownHandler.isOnCooldown;
+import static dev.mlnr.spidey.handlers.command.CooldownHandler.cooldown;
+import static dev.mlnr.spidey.handlers.command.CooldownHandler.isOnCooldown;
 
 public class CommandHandler
 {

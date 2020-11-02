@@ -1,4 +1,4 @@
-package dev.mlnr.spidey.objects.music;
+package dev.mlnr.spidey.handlers.music;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.TrackMarker;

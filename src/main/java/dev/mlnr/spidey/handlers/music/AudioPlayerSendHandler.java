@@ -1,4 +1,4 @@
-package dev.mlnr.spidey.objects.music;
+package dev.mlnr.spidey.handlers.music;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.playback.MutableAudioFrame;
