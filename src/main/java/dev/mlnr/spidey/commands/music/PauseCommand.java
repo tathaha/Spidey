@@ -8,17 +8,18 @@ import dev.mlnr.spidey.utils.MusicUtils;
 import net.dv8tion.jda.api.Permission;
 
 @SuppressWarnings("unused")
-public class SkipCommand extends Command
+public class PauseCommand extends Command
 {
-    public SkipCommand()
+    public PauseCommand()
     {
-        super("skip", new String[]{}, "Skips a song", "skip", Category.MUSIC, Permission.UNKNOWN, 0, 0);
+        super("pause", new String[]{"unpause"}, "Pauses/unpauses the playback", "pause/unpause", Category.MUSIC, Permission.UNKNOWN, 0, 0);
     }
 
     @Override
     public void execute(final String[] args, final CommandContext ctx)
     {
-        final var musicPlayer = MusicPlayerCache.getMusicPlayer(ctx.getGuild());
+        final var guild = ctx.getGuild();
+        final var musicPlayer = MusicPlayerCache.getMusicPlayer(guild);
         if (musicPlayer == null)
         {
             ctx.replyError("There is no music playing");
@@ -32,10 +33,10 @@ public class SkipCommand extends Command
         }
         if (!MusicUtils.canInteract(ctx.getMember(), playingTrack))
         {
-            ctx.replyError("You have to be the requester of the song or DJ to skip this song");
+            ctx.replyError("You have to be the requester of the song or DJ to pause/unpause the playback");
             return;
         }
-        musicPlayer.skip();
+        musicPlayer.pauseOrUnpause();
         ctx.reactLike();
     }
 }

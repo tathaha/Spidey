@@ -67,7 +67,12 @@ public class CommandContext
 
     public void replyError(final String error)
     {
-        Utils.addReaction(getMessage(), Emojis.CROSS);
+        replyError(error, Emojis.CROSS);
+    }
+
+    public void replyError(final String error, final String failureEmoji)
+    {
+        Utils.addReaction(getMessage(), failureEmoji);
         final var channel = getTextChannel();
         if (!channel.canTalk())
             return;

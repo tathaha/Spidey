@@ -27,7 +27,7 @@ public class RemindCommand extends Command
     @Override
     public void execute(final String[] args, final CommandContext ctx) // TODO database saving
     {
-        final var prefix = PrefixCache.retrievePrefix(ctx.getGuild().getIdLong());
+        final var prefix = PrefixCache.getPrefix(ctx.getGuild().getIdLong());
         final var channel = ctx.getTextChannel();
         final var message = ctx.getMessage();
         if (args.length == 0)

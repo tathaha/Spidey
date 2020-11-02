@@ -14,7 +14,7 @@ public class JoinRoleCache
 
     private JoinRoleCache() {}
 
-    public static long retrieveJoinRole(final long guildId)
+    public static long getJoinRole(final long guildId)
     {
         return Objects.requireNonNullElseGet(JOIN_ROLE_CACHE.get(guildId), () ->
         {
@@ -26,7 +26,7 @@ public class JoinRoleCache
 
     public static Role getJoinRole(final long guildId, final JDA jda)
     {
-        return jda.getRoleById(retrieveJoinRole(guildId));
+        return jda.getRoleById(getJoinRole(guildId));
     }
 
     public static void setJoinRole(final long guildId, final long roleId)

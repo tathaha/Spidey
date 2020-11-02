@@ -4,7 +4,11 @@ import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import com.sedmelluq.discord.lavaplayer.track.TrackMarker;
+import dev.mlnr.spidey.cache.music.SegmentSkippingCache;
+import dev.mlnr.spidey.cache.music.VideoSegmentCache;
 import dev.mlnr.spidey.objects.command.CommandContext;
+import dev.mlnr.spidey.utils.Emojis;
 import dev.mlnr.spidey.utils.MusicUtils;
 
 public class AudioLoader implements AudioLoadResultHandler
@@ -45,19 +49,18 @@ public class AudioLoader implements AudioLoadResultHandler
     @Override
     public void noMatches()
     {
-        ctx.replyError("No matches found for **" + this.query + "**");
+        ctx.replyError("No matches found for **" + this.query + "**", Emojis.DISLIKE);
     }
 
     @Override
     public void loadFailed(final FriendlyException exception)
     {
-        System.out.println(exception.getMessage());
+        ctx.replyError("There was an error while loading the track. Sorry for any inconvenience", Emojis.DISLIKE);
     }
 
     private void loadSingle(final AudioTrack track, final boolean silent)
     {
         final var requester = ctx.getAuthor();
-        track.setUserData(requester.getIdLong());
         final var trackInfo = track.getInfo();
         final var trackScheduler = musicPlayer.getTrackScheduler();
         final var title = trackInfo.title;
@@ -70,6 +73,15 @@ public class AudioLoader implements AudioLoadResultHandler
             ctx.replyError("Fair queue limit has been reached! Don't queue the same song over and over again");
             return;
         }
+
+        if (SegmentSkippingCache.isSkippingEnabled(trackScheduler.getGuildId()))
+        {
+            final var segments = VideoSegmentCache.getVideoSegments(track.getIdentifier());
+            if (segments != null)
+                track.setMarker(new TrackMarker((long) segments.keySet().toArray()[0], new SegmentHandler(track)));
+        }
+
+        track.setUserData(requester.getIdLong());
         trackScheduler.queue(track, this.insertFirst);
 
         if (silent)

@@ -3,7 +3,7 @@ package dev.mlnr.spidey.objects.music;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import dev.mlnr.spidey.Core;
-import dev.mlnr.spidey.cache.MusicPlayerCache;
+import dev.mlnr.spidey.cache.music.MusicPlayerCache;
 import dev.mlnr.spidey.utils.MusicUtils;
 import net.dv8tion.jda.api.audio.AudioSendHandler;
 
@@ -52,14 +52,14 @@ public class MusicPlayer
         return audioPlayer.getPlayingTrack();
     }
 
-    public void pause()
+    public void pauseOrUnpause()
     {
-        audioPlayer.setPaused(true);
+        audioPlayer.setPaused(!isPaused());
     }
 
-    public void unpause()
+    public boolean isPaused()
     {
-        audioPlayer.setPaused(false);
+        return audioPlayer.isPaused();
     }
 
     public void destroyAudioPlayer()

@@ -1,4 +1,4 @@
-package dev.mlnr.spidey.cache;
+package dev.mlnr.spidey.cache.music;
 
 import dev.mlnr.spidey.DatabaseManager;
 import net.dv8tion.jda.api.JDA;
@@ -14,7 +14,7 @@ public class DJRoleCache
 
     private DJRoleCache() {}
 
-    public static long retrieveDJRole(final long guildId)
+    public static long getDJRole(final long guildId)
     {
         return Objects.requireNonNullElseGet(DJ_ROLE_CACHE.get(guildId), () ->
         {
@@ -26,7 +26,7 @@ public class DJRoleCache
 
     public static Role getDJRole(final long guildId, final JDA jda)
     {
-        return jda.getRoleById(retrieveDJRole(guildId));
+        return jda.getRoleById(getDJRole(guildId));
     }
 
     public static void setDJRole(final long guildId, final long roleId)
@@ -38,5 +38,10 @@ public class DJRoleCache
     public static void removeDJRole(final long guildId)
     {
         setDJRole(guildId, 0);
+    }
+
+    public static Map<Long, Long> getCache()
+    {
+        return DJ_ROLE_CACHE;
     }
 }

@@ -1,9 +1,9 @@
 package dev.mlnr.spidey.commands.informative;
 
-import dev.mlnr.spidey.cache.DJRoleCache;
 import dev.mlnr.spidey.cache.JoinRoleCache;
 import dev.mlnr.spidey.cache.LogChannelCache;
 import dev.mlnr.spidey.cache.PrefixCache;
+import dev.mlnr.spidey.cache.music.DJRoleCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
@@ -25,7 +25,7 @@ public class SettingsCommand extends Command
     {
         final var guildId = ctx.getGuild().getIdLong();
         final var jda = ctx.getJDA();
-        final var prefix = PrefixCache.retrievePrefix(guildId);
+        final var prefix = PrefixCache.getPrefix(guildId);
         final var eb = Utils.createEmbedBuilder(ctx.getAuthor()).setColor(0xFEFEFE);
         eb.setAuthor("Current settings for this guild");
 

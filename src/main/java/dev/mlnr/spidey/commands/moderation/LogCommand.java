@@ -22,7 +22,7 @@ public class LogCommand extends Command
 		final var channel = ctx.getTextChannel();
 
 		final var channelId = channel.getIdLong();
-		if (LogChannelCache.retrieveLogChannel(guildId) == channelId)
+		if (LogChannelCache.getLogChannel(guildId) == channelId)
 		{
 			LogChannelCache.removeLogChannel(guildId);
 			ctx.reply(":white_check_mark: The log channel has been reset!");

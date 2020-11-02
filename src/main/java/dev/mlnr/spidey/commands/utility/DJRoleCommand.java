@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.commands.utility;
 
-import dev.mlnr.spidey.cache.JoinRoleCache;
+import dev.mlnr.spidey.cache.music.DJRoleCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
@@ -11,13 +11,13 @@ import net.dv8tion.jda.api.entities.Role;
 import java.util.regex.Pattern;
 
 @SuppressWarnings("unused")
-public class JoinRoleCommand extends Command
+public class DJRoleCommand extends Command
 {
     private static final Pattern ID_PATTERN = Pattern.compile("\\d+");
 
-    public JoinRoleCommand()
+    public DJRoleCommand()
     {
-        super("joinrole", new String[]{}, "Sets/removes the role that is added to a member after joining", "joinrole (id/name of the role or blank to reset)", Category.UTILITY, Permission.MANAGE_SERVER, 1, 4);
+        super("djrole", new String[]{}, "Sets/removes the DJ role", "djrole (id/name of the role or blank to reset)", Category.UTILITY, Permission.MANAGE_SERVER, 1, 4);
     }
 
     @Override
@@ -25,17 +25,16 @@ public class JoinRoleCommand extends Command
     {
         final var guild = ctx.getGuild();
         final var guildId = guild.getIdLong();
-        final var member = ctx.getMember();
-        final var dbRole = JoinRoleCache.getJoinRole(guildId);
+        final var dbRole = DJRoleCache.getDJRole(guildId);
         if (args.length == 0)
         {
             if (dbRole == 0)
             {
-                ctx.replyError("You don't have the join role set");
+                ctx.replyError("You don't have the DJ role set");
                 return;
             }
-            JoinRoleCache.removeJoinRole(guildId);
-            ctx.reply(":white_check_mark: The join role has been removed.");
+            DJRoleCache.removeDJRole(guildId);
+            ctx.reply(":white_check_mark: The DJ role has been removed.");
             return;
         }
         long roleId;
@@ -45,7 +44,7 @@ public class JoinRoleCommand extends Command
             final var parsed = Long.parseUnsignedLong(args[0]);
             if (dbRole == parsed)
             {
-                ctx.replyError("The join role is already set to this role");
+                ctx.replyError("The DJ role is already set to this role");
                 return;
             }
             final var tmp = guild.getRoleById(parsed);
@@ -88,12 +87,7 @@ public class JoinRoleCommand extends Command
                 return;
             }
         }
-        if (!member.canInteract(role))
-        {
-            ctx.replyError("You can't set the join role to a role which you can't interact with");
-            return;
-        }
-        JoinRoleCache.setJoinRole(guildId, roleId);
-        ctx.reply(":white_check_mark: The join role has been set to role `" + role.getName() + "`.");
+        DJRoleCache.setDJRole(guildId, roleId);
+        ctx.reply(":white_check_mark: The DJ role has been set to role `" + role.getName() + "`.");
     }
 }

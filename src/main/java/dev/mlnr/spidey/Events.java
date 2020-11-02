@@ -1,6 +1,8 @@
 package dev.mlnr.spidey;
 
 import dev.mlnr.spidey.cache.*;
+import dev.mlnr.spidey.cache.music.DJRoleCache;
+import dev.mlnr.spidey.cache.music.MusicPlayerCache;
 import dev.mlnr.spidey.handlers.CommandHandler;
 import dev.mlnr.spidey.objects.invites.InviteData;
 import dev.mlnr.spidey.objects.messages.MessageData;
@@ -38,7 +40,7 @@ public class Events extends ListenerAdapter
 		final var message = event.getMessage();
 		final var author = event.getAuthor();
 		final var guildId = guild.getIdLong();
-		final var prefix = PrefixCache.retrievePrefix(guildId);
+		final var prefix = PrefixCache.getPrefix(guildId);
 		final var content = message.getContentRaw().trim();
 		final var channel = event.getChannel();
 
@@ -255,17 +257,19 @@ public class Events extends ListenerAdapter
 	@Override
 	public void onGuildLeave(final GuildLeaveEvent event)
 	{
-		final var guildId = event.getGuild().getIdLong();
+		final var guild = event.getGuild();
+		final var guildId = guild.getIdLong();
 		GeneralCache.getInviteCache().entrySet().removeIf(entry -> entry.getValue().getGuildId() == guildId);
 		MessageCache.pruneCache(guildId);
 		GeneralCache.removeEntry(guildId);
+		MusicPlayerCache.destroyMusicPlayer(guild);
 	}
 
 	@Override
 	public void onTextChannelDelete(final TextChannelDeleteEvent event)
 	{
 		final var guildId = event.getGuild().getIdLong();
-		if (event.getChannel().getIdLong() == LogChannelCache.retrieveLogChannel(guildId))
+		if (event.getChannel().getIdLong() == LogChannelCache.getLogChannel(guildId))
 			LogChannelCache.removeLogChannel(guildId);
 	}
 
@@ -274,9 +278,9 @@ public class Events extends ListenerAdapter
 	{
 		final var roleId = event.getRole().getIdLong();
 		final var guildId = event.getGuild().getIdLong();
-		if (roleId == JoinRoleCache.retrieveJoinRole(guildId))
+		if (roleId == JoinRoleCache.getJoinRole(guildId))
 			JoinRoleCache.removeJoinRole(guildId);
-		if (roleId == DJRoleCache.retrieveDJRole(guildId))
+		if (roleId == DJRoleCache.getDJRole(guildId))
 			DJRoleCache.removeDJRole(guildId);
 	}
 

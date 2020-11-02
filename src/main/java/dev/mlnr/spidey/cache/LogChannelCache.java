@@ -14,7 +14,7 @@ public class LogChannelCache
 
     private LogChannelCache() {}
 
-    public static long retrieveLogChannel(final long guildId)
+    public static long getLogChannel(final long guildId)
     {
         return Objects.requireNonNullElseGet(LOG_CHANNEL_CACHE.get(guildId), () ->
         {
@@ -26,7 +26,7 @@ public class LogChannelCache
 
     public static TextChannel getLogAsChannel(final long guildId, final JDA jda)
     {
-        return jda.getTextChannelById(retrieveLogChannel(guildId));
+        return jda.getTextChannelById(getLogChannel(guildId));
     }
 
     public static void setLogChannel(final long guildId, final long channelId)

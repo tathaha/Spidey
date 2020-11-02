@@ -95,6 +95,11 @@ public class DatabaseManager
 		return getPropertyAsString("prefix", guildId);
 	}
 
+	public static boolean retrieveSkippingEnabled(final long guildId)
+	{
+		return getPropertyAsString("skipping", guildId).equals("t");
+	}
+
 	// SETTERS
 
 	public static void setChannel(final long guildId, final long channelId)
@@ -115,6 +120,11 @@ public class DatabaseManager
 	public static void setPrefix(final long guildId, final String prefix)
 	{
 		executeSetQuery("prefix", guildId, prefix);
+	}
+
+	public static void setSkippingEnabled(final long guildId, final boolean enabled)
+	{
+		executeSetQuery("skipping", guildId, enabled);
 	}
 
 	// REMOVALS

@@ -55,27 +55,19 @@ public class TrackScheduler extends AudioEventAdapter
             queue(currentTrack.makeClone());
             return;
         }
+
         if (currentTrack != null)
             previousTrack = currentTrack;
 
         final var nextTrack = queue.poll();
         currentTrack = nextTrack;
 
-        if (nextTrack != null)
-            audioPlayer.playTrack(nextTrack);
-
-        if (repeatMode == RepeatMode.QUEUE)
-            queue(previousTrack.makeClone());
+        audioPlayer.playTrack(nextTrack != null ? nextTrack : (repeatMode == RepeatMode.QUEUE ? previousTrack.makeClone() : null));
     }
 
     public Deque<AudioTrack> getQueue()
     {
         return this.queue;
-    }
-
-    public AudioTrack getCurrentTrack()
-    {
-        return this.currentTrack;
     }
 
     public RepeatMode getRepeatMode()
@@ -91,6 +83,11 @@ public class TrackScheduler extends AudioEventAdapter
     public Guild getGuild()
     {
         return Core.getJDA().getGuildById(this.guildId);
+    }
+
+    public long getGuildId()
+    {
+        return this.guildId;
     }
 
     @Override

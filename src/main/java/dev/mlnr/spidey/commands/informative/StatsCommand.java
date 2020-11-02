@@ -23,7 +23,7 @@ public class StatsCommand extends Command
 	public void execute(final String[] args, final CommandContext ctx)
 	{
 		final var eb = Utils.createEmbedBuilder(ctx.getAuthor());
-		final var prefix = PrefixCache.retrievePrefix(ctx.getGuild().getIdLong());
+		final var prefix = PrefixCache.getPrefix(ctx.getGuild().getIdLong());
 		final var jda = ctx.getJDA();
 		final var runtime = Runtime.getRuntime();
 		final var total = runtime.totalMemory();

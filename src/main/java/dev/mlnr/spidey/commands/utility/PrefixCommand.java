@@ -19,7 +19,7 @@ public class PrefixCommand extends Command
     {
         final var guild = ctx.getGuild();
         final var guildId = guild.getIdLong();
-        final var actualPrefix = PrefixCache.retrievePrefix(guildId);
+        final var actualPrefix = PrefixCache.getPrefix(guildId);
         if (args.length == 0)
         {
             if (actualPrefix.equals("s!"))

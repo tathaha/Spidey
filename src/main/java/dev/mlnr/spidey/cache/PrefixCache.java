@@ -12,7 +12,7 @@ public class PrefixCache
 
     private PrefixCache() {}
 
-    public static String retrievePrefix(final long guildId)
+    public static String getPrefix(final long guildId)
     {
         return Objects.requireNonNullElseGet(PREFIX_CACHE.get(guildId), () ->
         {

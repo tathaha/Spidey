@@ -40,9 +40,6 @@ public class EvalCommand extends Command
             ctx.replyError("This command can only be executed by the Developer");
             return;
         }
-        var input = args[0];
-        if (input.startsWith("```") && input.endsWith("```"))
-            input = input.substring(3, input.length() - 3);
         SCRIPT_ENGINE.put("guild", channel.getGuild());
         SCRIPT_ENGINE.put("author", author);
         SCRIPT_ENGINE.put("msg", message);
@@ -51,10 +48,10 @@ public class EvalCommand extends Command
         SCRIPT_ENGINE.put("jda", jda);
         SCRIPT_ENGINE.put("api", jda);
         final var eb = Utils.createEmbedBuilder(author);
-        eb.addField("Input", "```java\n" + input + "```", false);
+        eb.addField("Input", "```java\n" + args[0] + "```", false);
         final var toEval = new StringBuilder();
         DEFAULT_IMPORTS.forEach(imp -> toEval.append("import ").append(imp).append(".*; "));
-        toEval.append(input);
+        toEval.append(args[0]);
         try
         {
             final var evaluated = SCRIPT_ENGINE.eval(toEval.toString());

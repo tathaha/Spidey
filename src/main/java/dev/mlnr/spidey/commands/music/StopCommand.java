@@ -8,34 +8,29 @@ import dev.mlnr.spidey.utils.MusicUtils;
 import net.dv8tion.jda.api.Permission;
 
 @SuppressWarnings("unused")
-public class SkipCommand extends Command
+public class StopCommand extends Command
 {
-    public SkipCommand()
+    public StopCommand()
     {
-        super("skip", new String[]{}, "Skips a song", "skip", Category.MUSIC, Permission.UNKNOWN, 0, 0);
+        super("stop", new String[]{"disconnect"}, "Stops the playback. THIS IS NOT THE SAME AS PAUSING!", "stop", Category.MUSIC, Permission.UNKNOWN, 0, 0);
     }
 
     @Override
     public void execute(final String[] args, final CommandContext ctx)
     {
-        final var musicPlayer = MusicPlayerCache.getMusicPlayer(ctx.getGuild());
+        final var guild = ctx.getGuild();
+        final var musicPlayer = MusicPlayerCache.getMusicPlayer(guild);
         if (musicPlayer == null)
         {
             ctx.replyError("There is no music playing");
             return;
         }
-        final var playingTrack = musicPlayer.getPlayingTrack();
-        if (playingTrack == null)
+        if (!MusicUtils.canInteract(ctx.getMember()))
         {
-            ctx.replyError("There is no song playing");
+            ctx.replyError("You have to be a DJ to stop the playback");
             return;
         }
-        if (!MusicUtils.canInteract(ctx.getMember(), playingTrack))
-        {
-            ctx.replyError("You have to be the requester of the song or DJ to skip this song");
-            return;
-        }
-        musicPlayer.skip();
+        MusicPlayerCache.destroyMusicPlayer(guild);
         ctx.reactLike();
     }
 }

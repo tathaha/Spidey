@@ -29,7 +29,7 @@ public class HelpCommand extends Command
         final var commandsMap = CommandHandler.getCommands();
         final var author = ctx.getAuthor();
         final var guildId = ctx.getGuild().getIdLong();
-        final var prefix = PrefixCache.retrievePrefix(guildId);
+        final var prefix = PrefixCache.getPrefix(guildId);
         final var eb = Utils.createEmbedBuilder(author)
                 .setColor(0xFEFEFE)
                 .setAuthor("Spidey's commands", "https://github.com/caneleex/Spidey", ctx.getJDA().getSelfUser().getEffectiveAvatarUrl());

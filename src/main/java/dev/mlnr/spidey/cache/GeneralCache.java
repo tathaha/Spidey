@@ -1,6 +1,8 @@
 package dev.mlnr.spidey.cache;
 
 import dev.mlnr.spidey.DatabaseManager;
+import dev.mlnr.spidey.cache.music.DJRoleCache;
+import dev.mlnr.spidey.cache.music.SegmentSkippingCache;
 import dev.mlnr.spidey.objects.invites.InviteData;
 
 import java.util.HashMap;
@@ -40,6 +42,8 @@ public class GeneralCache
         LogChannelCache.getCache().remove(guildId);
         JoinRoleCache.getCache().remove(guildId);
         PrefixCache.getCache().remove(guildId);
+        DJRoleCache.getCache().remove(guildId);
+        SegmentSkippingCache.getCache().remove(guildId);
         DatabaseManager.removeEntry(guildId);
     }
 }
