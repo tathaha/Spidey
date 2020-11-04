@@ -49,18 +49,22 @@ public class UrbanDictionary
     {
         return this.example;
     }
+
     public String getWord()
     {
         return this.word;
     }
+
     public int getLikes()
     {
         return this.likes;
     }
+
     public int getDislikes()
     {
         return this.dislikes;
     }
+
     public boolean exists()
     {
         return this.exists;

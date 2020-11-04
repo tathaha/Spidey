@@ -62,7 +62,7 @@ public class GuildCommand extends Command
 				ec++;
 				sb.append(emote.getAsMention()).append(ec == emotes.size() ? "" : " ");
 			}
-			eb.addField(String.format("Emotes (**%s** | **%d** animated)", ec, emoteCache.applyStream(stream -> stream.filter(Emote::isAnimated).count())), sb.length() > 1024 ? "Limit exceeded" : sb.toString(), false);
+			eb.addField(String.format("Emotes (**%d** | **%d** animated)", ec, emoteCache.applyStream(stream -> stream.filter(Emote::isAnimated).count())), sb.length() > 1024 ? "Limit exceeded" : sb.toString(), false);
 		}
 		ctx.reply(eb);
 	}

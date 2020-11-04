@@ -29,17 +29,17 @@ public class SettingsCommand extends Command
         final var eb = Utils.createEmbedBuilder(ctx.getAuthor()).setColor(0xFEFEFE);
         eb.setAuthor("Current settings for this guild");
 
-        final var set = " (set one with " + prefix + "%s)";
+        final var setTemplate = " (set one with " + prefix + "%s)";
         final var pattern = "%s (%d)";
 
         final var logChannel = LogChannelCache.getLogAsChannel(guildId, jda);
-        eb.addField("Log channel", logChannel == null ? "None" + format(set, "log") : format(pattern, logChannel.getName(), logChannel.getIdLong()), false);
+        eb.addField("Log channel", logChannel == null ? "None" + format(setTemplate, "log") : format(pattern, logChannel.getName(), logChannel.getIdLong()), false);
 
         final var joinRole = JoinRoleCache.getJoinRole(guildId, jda);
-        eb.addField("Join role", joinRole == null ? "None" + format(set, "joinrole") : format(pattern, joinRole.getName(), joinRole.getIdLong()), false);
+        eb.addField("Join role", joinRole == null ? "None" + format(setTemplate, "joinrole") : format(pattern, joinRole.getName(), joinRole.getIdLong()), false);
 
         final var djRole = DJRoleCache.getDJRole(guildId, jda);
-        eb.addField("DJ role", djRole == null ? "None" + format(set, "djrole") : format(pattern, djRole.getName(), djRole.getIdLong()), false);
+        eb.addField("DJ role", djRole == null ? "None" + format(setTemplate, "djrole") : format(pattern, djRole.getName(), djRole.getIdLong()), false);
 
         eb.addField("Prefix", prefix + (prefix.equals("s!") ? " (set a custom prefix with s!prefix)" : ""), false);
 
