@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.commands.utility;
 
-import dev.mlnr.spidey.cache.music.DJRoleCache;
+import dev.mlnr.spidey.cache.GuildSettingsCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
@@ -25,7 +25,7 @@ public class DJRoleCommand extends Command
     {
         final var guild = ctx.getGuild();
         final var guildId = guild.getIdLong();
-        final var dbRole = DJRoleCache.getDJRole(guildId);
+        final var dbRole = GuildSettingsCache.getDJRoleId(guildId);
         if (args.length == 0)
         {
             if (dbRole == 0)
@@ -33,7 +33,7 @@ public class DJRoleCommand extends Command
                 ctx.replyError("You don't have the DJ role set");
                 return;
             }
-            DJRoleCache.removeDJRole(guildId);
+            GuildSettingsCache.removeDJRole(guildId);
             ctx.reply(":white_check_mark: The DJ role has been removed.");
             return;
         }
@@ -87,7 +87,7 @@ public class DJRoleCommand extends Command
                 return;
             }
         }
-        DJRoleCache.setDJRole(guildId, roleId);
+        GuildSettingsCache.setDJRoleId(guildId, roleId);
         ctx.reply(":white_check_mark: The DJ role has been set to role `" + role.getName() + "`.");
     }
 }

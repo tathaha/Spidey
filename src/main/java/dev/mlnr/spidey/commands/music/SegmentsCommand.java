@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.commands.music;
 
-import dev.mlnr.spidey.cache.PrefixCache;
+import dev.mlnr.spidey.cache.GuildSettingsCache;
 import dev.mlnr.spidey.cache.music.MusicPlayerCache;
 import dev.mlnr.spidey.cache.music.VideoSegmentCache;
 import dev.mlnr.spidey.objects.command.Category;
@@ -43,9 +43,9 @@ public class SegmentsCommand extends Command
                 ctx.replyError("Valid arguments are **force** or **reload**");
                 return;
             }
-            segments = VideoSegmentCache.getVideoSegments(playingTrack.getIdentifier(), true);
+            segments = VideoSegmentCache.getVideoSegments(videoId, true);
         }
-        final var updatePrompt = "If you've just added some segments, force the cache to update by using `" + PrefixCache.getPrefix(guild.getIdLong()) + "segments force`";
+        final var updatePrompt = "If you've just added some segments, force the cache to update by using `" + GuildSettingsCache.getPrefix(guild.getIdLong()) + "segments force`.";
         if (segments == null)
         {
             ctx.replyError("There are no segments in this video. " + updatePrompt);

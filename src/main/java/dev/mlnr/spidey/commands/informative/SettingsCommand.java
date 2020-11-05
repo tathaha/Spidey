@@ -1,9 +1,6 @@
 package dev.mlnr.spidey.commands.informative;
 
-import dev.mlnr.spidey.cache.JoinRoleCache;
-import dev.mlnr.spidey.cache.LogChannelCache;
-import dev.mlnr.spidey.cache.PrefixCache;
-import dev.mlnr.spidey.cache.music.DJRoleCache;
+import dev.mlnr.spidey.cache.GuildSettingsCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
@@ -24,21 +21,20 @@ public class SettingsCommand extends Command
     public void execute(final String[] args, final CommandContext ctx)
     {
         final var guildId = ctx.getGuild().getIdLong();
-        final var jda = ctx.getJDA();
-        final var prefix = PrefixCache.getPrefix(guildId);
+        final var prefix = GuildSettingsCache.getPrefix(guildId);
         final var eb = Utils.createEmbedBuilder(ctx.getAuthor()).setColor(0xFEFEFE);
         eb.setAuthor("Current settings for this guild");
 
         final var setTemplate = " (set one with " + prefix + "%s)";
         final var pattern = "%s (%d)";
 
-        final var logChannel = LogChannelCache.getLogAsChannel(guildId, jda);
+        final var logChannel = GuildSettingsCache.getLogChannel(guildId);
         eb.addField("Log channel", logChannel == null ? "None" + format(setTemplate, "log") : format(pattern, logChannel.getName(), logChannel.getIdLong()), false);
 
-        final var joinRole = JoinRoleCache.getJoinRole(guildId, jda);
+        final var joinRole = GuildSettingsCache.getJoinRole(guildId);
         eb.addField("Join role", joinRole == null ? "None" + format(setTemplate, "joinrole") : format(pattern, joinRole.getName(), joinRole.getIdLong()), false);
 
-        final var djRole = DJRoleCache.getDJRole(guildId, jda);
+        final var djRole = GuildSettingsCache.getDJRole(guildId);
         eb.addField("DJ role", djRole == null ? "None" + format(setTemplate, "djrole") : format(pattern, djRole.getName(), djRole.getIdLong()), false);
 
         eb.addField("Prefix", prefix + (prefix.equals("s!") ? " (set a custom prefix with s!prefix)" : ""), false);

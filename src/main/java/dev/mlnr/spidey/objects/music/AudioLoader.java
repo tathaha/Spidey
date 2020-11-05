@@ -4,10 +4,6 @@ import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import com.sedmelluq.discord.lavaplayer.track.TrackMarker;
-import dev.mlnr.spidey.cache.music.SegmentSkippingCache;
-import dev.mlnr.spidey.cache.music.VideoSegmentCache;
-import dev.mlnr.spidey.handlers.music.SegmentHandler;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.utils.Emojis;
 import dev.mlnr.spidey.utils.MusicUtils;
@@ -30,7 +26,7 @@ public class AudioLoader implements AudioLoadResultHandler
     @Override
     public void trackLoaded(final AudioTrack track)
     {
-        loadSingle(track, false);
+        loadSingle(track);
     }
 
     @Override
@@ -40,7 +36,7 @@ public class AudioLoader implements AudioLoadResultHandler
         final var tracks = playlist.getTracks();
         if (playlist.isSearchResult())
         {
-            loadSingle(tracks.get(0), false);
+            loadSingle(tracks.get(0));
             return;
         }
         tracks.forEach(track -> loadSingle(track, true));
@@ -50,13 +46,18 @@ public class AudioLoader implements AudioLoadResultHandler
     @Override
     public void noMatches()
     {
-        ctx.replyError("No matches found for **" + this.query + "**", Emojis.DISLIKE);
+        ctx.replyError("No matches found for **" + (query.startsWith("ytsearch:") ? query.substring(9) : query) + "**", Emojis.DISLIKE);
     }
 
     @Override
     public void loadFailed(final FriendlyException exception)
     {
-        ctx.replyError("There was an error while loading the track. Sorry for any inconvenience", Emojis.DISLIKE);
+        ctx.replyError("There was an error while loading the track", Emojis.DISLIKE);
+    }
+
+    private void loadSingle(final AudioTrack track)
+    {
+        loadSingle(track, false);
     }
 
     private void loadSingle(final AudioTrack track, final boolean silent)
@@ -65,29 +66,25 @@ public class AudioLoader implements AudioLoadResultHandler
         final var trackInfo = track.getInfo();
         final var trackScheduler = musicPlayer.getTrackScheduler();
         final var title = trackInfo.title;
-        final var author = trackInfo.author;
+        final var channel = trackInfo.author;
         final var length = trackInfo.length;
+        final var stream = trackInfo.isStream;
         final var queue = trackScheduler.getQueue();
 
-        if (queue.stream().filter(queued -> trackInfo.uri.equals(queued.getInfo().uri)).count() > MusicUtils.getMaxFairQueue() && !silent)
+        if (!silent && queue.stream().filter(queued -> trackInfo.uri.equals(queued.getInfo().uri)).count() > MusicUtils.getMaxFairQueue())
         {
             ctx.replyError("Fair queue limit has been reached! Don't queue the same song over and over again");
             return;
         }
 
-        if (SegmentSkippingCache.isSkippingEnabled(trackScheduler.getGuildId()))
-        {
-            final var segments = VideoSegmentCache.getVideoSegments(track.getIdentifier());
-            if (segments != null)
-                track.setMarker(new TrackMarker((long) segments.keySet().toArray()[0], new SegmentHandler(track)));
-        }
-
+        MusicUtils.handleMarkers(track, trackScheduler);
         track.setUserData(requester.getIdLong());
         trackScheduler.queue(track, this.insertFirst);
 
         if (silent)
             return;
         ctx.reactLike();
-        ctx.reply("Track **" + title + "** (**" + MusicUtils.formatDuration(length) + "**) by **" + author + "** has been added to the queue. [" + requester.getAsMention() + "]", null);
+        ctx.reply((stream ? "Livestream" : "Track") + " **" + title + "**" + (stream ? "" : " (**" + MusicUtils.formatDuration(length) + "**)") + " from channel **" + channel + "**" +
+                " has been added to the queue. [" + requester.getAsMention() + "]", null);
     }
 }

@@ -10,6 +10,8 @@ import net.dv8tion.jda.api.entities.Guild;
 import java.util.Deque;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
+import static dev.mlnr.spidey.utils.MusicUtils.handleMarkers;
+
 public class TrackScheduler extends AudioEventAdapter
 {
     private final AudioPlayer audioPlayer;
@@ -52,7 +54,9 @@ public class TrackScheduler extends AudioEventAdapter
     {
         if (repeatMode == RepeatMode.SONG && currentTrack != null)
         {
-            queue(currentTrack.makeClone());
+            final var currentCloned = currentTrack.makeClone();
+            handleMarkers(currentCloned, this);
+            queue(currentCloned);
             return;
         }
 
@@ -62,7 +66,10 @@ public class TrackScheduler extends AudioEventAdapter
         final var nextTrack = queue.poll();
         currentTrack = nextTrack;
 
-        audioPlayer.playTrack(nextTrack != null ? nextTrack : (repeatMode == RepeatMode.QUEUE ? previousTrack.makeClone() : null));
+        final var trackToPlay = nextTrack != null ? nextTrack : (repeatMode == RepeatMode.QUEUE ? previousTrack.makeClone() : null);
+        if (trackToPlay != null)
+            handleMarkers(trackToPlay, this);
+        audioPlayer.playTrack(trackToPlay);
     }
 
     public Deque<AudioTrack> getQueue()

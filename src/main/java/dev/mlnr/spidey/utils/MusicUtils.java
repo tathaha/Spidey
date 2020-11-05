@@ -5,8 +5,12 @@ import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import dev.mlnr.spidey.cache.music.DJRoleCache;
+import com.sedmelluq.discord.lavaplayer.track.TrackMarker;
+import dev.mlnr.spidey.cache.GuildSettingsCache;
+import dev.mlnr.spidey.cache.music.VideoSegmentCache;
+import dev.mlnr.spidey.handlers.music.SegmentHandler;
 import dev.mlnr.spidey.objects.command.CommandContext;
+import dev.mlnr.spidey.objects.music.TrackScheduler;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.VoiceChannel;
@@ -93,7 +97,8 @@ public class MusicUtils
 
     public static boolean isDJ(final Member member)
     {
-        return member.getRoles().stream().anyMatch(role -> role.getIdLong() == DJRoleCache.getDJRole(member.getGuild().getIdLong()));
+        final var djRoleId = GuildSettingsCache.getDJRoleId(member.getGuild().getIdLong());
+        return djRoleId != 0 && member.getRoles().stream().anyMatch(role -> role.getIdLong() == djRoleId);
     }
 
     public static String getProgressBar(final long position, final long duration)
@@ -103,6 +108,15 @@ public class MusicUtils
         for (var i = 0; i < 10; i++)
             progressBuilder.append(activeBlocks == i ? BLOCK_ACTIVE : BLOCK_INACTIVE);
         return progressBuilder.append(BLOCK_INACTIVE).append(" [**").append(formatDuration(position)).append("/").append(formatDuration(duration)).append("**]").toString();
+    }
+
+    public static void handleMarkers(final AudioTrack track, final TrackScheduler trackScheduler)
+    {
+        if (!GuildSettingsCache.isSegmentSkippingEnabled(trackScheduler.getGuildId()))
+            return;
+        final var segments = VideoSegmentCache.getVideoSegments(track.getIdentifier());
+        if (segments != null)
+            track.setMarker(new TrackMarker((long) segments.keySet().toArray()[0], new SegmentHandler(track)));
     }
 
     public enum ConnectFailureReason

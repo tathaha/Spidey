@@ -38,12 +38,13 @@ public class NowPlayingCommand extends Command
         final var duration = playingTrack.getDuration();
         final var trackInfo = playingTrack.getInfo();
         final var progressBuilder = Utils.createEmbedBuilder(ctx.getAuthor());
+        final var stream = trackInfo.isStream;
 
-        progressBuilder.setAuthor(trackInfo.title + (paused ? " - Paused at " + MusicUtils.formatDuration(position) : ""), trackInfo.uri);
+        progressBuilder.setAuthor(trackInfo.title + (paused ? " - Paused" + (stream ? "" : " at " + MusicUtils.formatDuration(position)) : ""), trackInfo.uri);
         progressBuilder.setThumbnail("https://i.ytimg.com/vi/" + trackInfo.identifier + "/maxresdefault.jpg");
         progressBuilder.setColor(paused ? Color.ORANGE : Color.GREEN);
-        progressBuilder.addField("Author", trackInfo.author, true);
-        progressBuilder.setDescription(MusicUtils.getProgressBar(position, duration));
+        progressBuilder.addField("Channel", trackInfo.author, true);
+        progressBuilder.setDescription(stream ? "Livestream" : MusicUtils.getProgressBar(position, duration));
 
         ctx.reply(progressBuilder);
     }

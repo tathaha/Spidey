@@ -44,7 +44,7 @@ public class Requester
                 return null;
             final var json = DataArray.fromJson(body.string());
             final var segments = new LinkedHashMap<Long, Long>();
-            for (int i = 0; i < json.length(); i++)
+            for (var i = 0; i < json.length(); i++)
             {
                 final var segmentTimes = json.getObject(i).getArray("segment");
                 segments.put(segmentTimes.getLong(0) * 1000, segmentTimes.getLong(1) * 1000);

@@ -26,9 +26,9 @@ public class SegmentHandler implements TrackMarkerHandler
         final var segmentEnd = VideoSegmentCache.getSegmentEnd(videoId, position);
         track.setPosition(segmentEnd);
 
-        count++;
+        this.count++;
         final var segments = VideoSegmentCache.getVideoSegments(videoId);
-        if (count < segments.size())
+        if (this.count < segments.size())
             track.setMarker(new TrackMarker((long) segments.keySet().toArray()[count], this));
     }
 }

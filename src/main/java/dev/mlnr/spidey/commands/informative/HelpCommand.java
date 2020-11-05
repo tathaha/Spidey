@@ -1,7 +1,6 @@
 package dev.mlnr.spidey.commands.informative;
 
-import dev.mlnr.spidey.cache.GeneralCache;
-import dev.mlnr.spidey.cache.PrefixCache;
+import dev.mlnr.spidey.cache.GuildSettingsCache;
 import dev.mlnr.spidey.handlers.command.CommandHandler;
 import dev.mlnr.spidey.handlers.command.CooldownHandler;
 import dev.mlnr.spidey.objects.command.Category;
@@ -29,7 +28,7 @@ public class HelpCommand extends Command
         final var commandsMap = CommandHandler.getCommands();
         final var author = ctx.getAuthor();
         final var guildId = ctx.getGuild().getIdLong();
-        final var prefix = PrefixCache.getPrefix(guildId);
+        final var prefix = GuildSettingsCache.getPrefix(guildId);
         final var eb = Utils.createEmbedBuilder(author)
                 .setColor(0xFEFEFE)
                 .setAuthor("Spidey's commands", "https://github.com/caneleex/Spidey", ctx.getJDA().getSelfUser().getEffectiveAvatarUrl());
@@ -95,7 +94,7 @@ public class HelpCommand extends Command
         eb.addField("Aliases", aliases.length == 0 ? "None" : String.join(", ", aliases), false);
         eb.addField("Cooldown", cooldown == 0 ? "None" : cooldown + " seconds", false);
 
-        if (!GeneralCache.isVip(guildId))
+        if (!GuildSettingsCache.isVip(guildId))
         {
             eb.addBlankField(false);
             eb.addField("Reducing commands' cooldown", COOLDOWN_REDUCE_HALF + "\nBy donating, you also support the Developer and"

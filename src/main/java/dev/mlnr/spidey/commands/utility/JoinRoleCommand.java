@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.commands.utility;
 
-import dev.mlnr.spidey.cache.JoinRoleCache;
+import dev.mlnr.spidey.cache.GuildSettingsCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
@@ -26,7 +26,7 @@ public class JoinRoleCommand extends Command
         final var guild = ctx.getGuild();
         final var guildId = guild.getIdLong();
         final var member = ctx.getMember();
-        final var dbRole = JoinRoleCache.getJoinRole(guildId);
+        final var dbRole = GuildSettingsCache.getJoinRoleId(guildId);
         if (args.length == 0)
         {
             if (dbRole == 0)
@@ -34,7 +34,7 @@ public class JoinRoleCommand extends Command
                 ctx.replyError("You don't have the join role set");
                 return;
             }
-            JoinRoleCache.removeJoinRole(guildId);
+            GuildSettingsCache.removeJoinRole(guildId);
             ctx.reply(":white_check_mark: The join role has been removed.");
             return;
         }
@@ -93,7 +93,7 @@ public class JoinRoleCommand extends Command
             ctx.replyError("You can't set the join role to a role which you can't interact with");
             return;
         }
-        JoinRoleCache.setJoinRole(guildId, roleId);
+        GuildSettingsCache.setJoinRoleId(guildId, roleId);
         ctx.reply(":white_check_mark: The join role has been set to role `" + role.getName() + "`.");
     }
 }

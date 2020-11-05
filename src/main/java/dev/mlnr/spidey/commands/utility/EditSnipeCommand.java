@@ -1,6 +1,7 @@
 package dev.mlnr.spidey.commands.utility;
 
 import dev.mlnr.spidey.Core;
+import dev.mlnr.spidey.cache.GuildSettingsCache;
 import dev.mlnr.spidey.cache.MessageCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
@@ -22,6 +23,13 @@ public class EditSnipeCommand extends Command
     @Override
     public void execute(final String[] args, final CommandContext ctx)
     {
+        final var guildId = ctx.getGuild().getIdLong();
+        if (!GuildSettingsCache.isSnipingEnabled(guildId))
+        {
+            ctx.replyError("Sniping messages for this server is disabled, which could be caused by manually disabling it or having more than 10000 people in this server. You can enable sniping by using `"
+                    + GuildSettingsCache.getPrefix(guildId) + "sniping`");
+            return;
+        }
         final var textChannel = ctx.getTextChannel();
         final var channelId = textChannel.getIdLong();
         final var lastEditedMessage = MessageCache.getLastEditedMessage(channelId);

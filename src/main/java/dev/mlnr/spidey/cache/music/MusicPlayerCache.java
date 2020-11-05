@@ -38,9 +38,10 @@ public class MusicPlayerCache
         final var musicPlayer = getMusicPlayer(guild);
         if (musicPlayer == null)
             return;
+        final var guildId = guild.getIdLong();
         musicPlayer.destroyAudioPlayer();
-        MUSIC_PLAYER_CACHE.remove(guild.getIdLong());
-        if (Core.getJDA().getGuildById(guild.getIdLong()) == null) // bot has left the guild
+        MUSIC_PLAYER_CACHE.remove(guildId);
+        if (Core.getJDA().getGuildById(guildId) == null) // bot has left the guild
             return;
         final var audioManager = guild.getAudioManager();
         audioManager.closeAudioConnection();

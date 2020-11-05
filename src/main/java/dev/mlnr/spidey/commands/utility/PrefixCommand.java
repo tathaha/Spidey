@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.commands.utility;
 
-import dev.mlnr.spidey.cache.PrefixCache;
+import dev.mlnr.spidey.cache.GuildSettingsCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
@@ -19,23 +19,22 @@ public class PrefixCommand extends Command
     {
         final var guild = ctx.getGuild();
         final var guildId = guild.getIdLong();
-        final var actualPrefix = PrefixCache.getPrefix(guildId);
+        final var currentPrefix = GuildSettingsCache.getPrefix(guildId);
         if (args.length == 0)
         {
-            if (actualPrefix.equals("s!"))
+            if (currentPrefix.equals("s!"))
                 ctx.replyError("The prefix for this server is already set to the default one");
             else
             {
-                PrefixCache.setPrefix(guildId, "s!");
+                GuildSettingsCache.setPrefix(guildId, "s!");
                 ctx.reply(":white_check_mark: The prefix for this server has been reset to `s!`!");
             }
             return;
         }
-
         final var newPrefix = args[0];
-        if (actualPrefix.equals(newPrefix))
+        if (currentPrefix.equals(newPrefix))
         {
-            ctx.replyError("The prefix for this server is already set to `" + actualPrefix + "`");
+            ctx.replyError("The prefix for this server is already set to `" + currentPrefix + "`");
             return;
         }
         if (newPrefix.length() > 10)
@@ -43,8 +42,7 @@ public class PrefixCommand extends Command
             ctx.replyError("The prefix can't be longer than 10 characters");
             return;
         }
-
-        PrefixCache.setPrefix(guildId, newPrefix);
+        GuildSettingsCache.setPrefix(guildId, newPrefix);
         ctx.reply(":white_check_mark: The prefix has been successfully changed to `" + newPrefix + "`!");
     }
 }

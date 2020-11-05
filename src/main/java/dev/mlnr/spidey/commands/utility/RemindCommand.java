@@ -1,7 +1,7 @@
 package dev.mlnr.spidey.commands.utility;
 
 import dev.mlnr.spidey.Core;
-import dev.mlnr.spidey.cache.PrefixCache;
+import dev.mlnr.spidey.cache.GuildSettingsCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
@@ -27,7 +27,7 @@ public class RemindCommand extends Command
     @Override
     public void execute(final String[] args, final CommandContext ctx) // TODO database saving
     {
-        final var prefix = PrefixCache.getPrefix(ctx.getGuild().getIdLong());
+        final var prefix = GuildSettingsCache.getPrefix(ctx.getGuild().getIdLong());
         final var channel = ctx.getTextChannel();
         final var message = ctx.getMessage();
         if (args.length == 0)

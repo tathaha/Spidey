@@ -1,5 +1,6 @@
 package dev.mlnr.spidey;
 
+import dev.mlnr.spidey.objects.guild.GuildSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,21 +28,22 @@ public class DatabaseManager
 		return null;
 	}
 
-	private static <T> String executeGetQuery(final String property, final long guildId, final Class<T> resultType)
+	public static GuildSettings retrieveGuildSettings(final long guildId)
 	{
-		try (final var db = initializeConnection(); final var ps = db.prepareStatement("SELECT " + property + " FROM guilds WHERE guild_id=?"))
+		try (final var db = initializeConnection(); final var ps = db.prepareStatement("SELECT * FROM guilds WHERE guild_id=?"))
 		{
 			ps.setLong(1, guildId);
 			try (final var rs = ps.executeQuery())
 			{
 				if (!rs.next())
-					return resultType.equals(String.class) ? "" : "0";
-				return rs.getString(property);
+					return new GuildSettings(guildId, 0, 0, "s!", 0, false, true, false); // default values
+				return new GuildSettings(guildId, rs.getLong("log_channel_id"), rs.getLong("join_role_id"), rs.getString("prefix"), rs.getLong("dj_role_id"),
+						rs.getBoolean("segment_skipping"), rs.getBoolean("sniping"), rs.getBoolean("vip"));
 			}
 		}
 		catch (final SQLException ex)
 		{
-			LOG.error("There was an error while requesting the {} property for guild {}!", property, guildId, ex);
+			LOG.error("There was an error while requesting the guild settings for guild {}!", guildId, ex);
 		}
 		return null;
 	}
@@ -60,61 +62,16 @@ public class DatabaseManager
 			LOG.error("There was an error while setting the {} property for guild {}!", property, guildId, ex);
 		}
 	}
-
-	// HELPER GETTERS
-
-	private static String getPropertyAsString(final String property, final long guildId)
-	{
-		return executeGetQuery(property, guildId, String.class);
-	}
-
-	private static long getPropertyAsLong(final String property, final long guildId)
-	{
-		return Long.parseLong(executeGetQuery(property, guildId, long.class));
-	}
-
-	// GETTERS
-
-	public static long retrieveChannel(final long guildId)
-	{
-		return getPropertyAsLong("log_channel_id", guildId);
-	}
-
-	public static long retrieveJoinRole(final long guildId)
-	{
-		return getPropertyAsLong("join_role_id", guildId);
-	}
-
-	public static long retrieveDJRole(final long guildId)
-	{
-		return getPropertyAsLong("dj_role_id", guildId);
-	}
-
-	public static String retrievePrefix(final long guildId)
-	{
-		return getPropertyAsString("prefix", guildId);
-	}
-
-	public static boolean retrieveSkippingEnabled(final long guildId)
-	{
-		return getPropertyAsString("skipping", guildId).equals("t");
-	}
-
 	// SETTERS
 
-	public static void setChannel(final long guildId, final long channelId)
+	public static void setLogChannelId(final long guildId, final long channelId)
 	{
 		executeSetQuery("log_channel_id", guildId, channelId);
 	}
 
-	public static void setJoinRole(final long guildId, final long roleId)
+	public static void setJoinRoleId(final long guildId, final long roleId)
 	{
 		executeSetQuery("join_role_id", guildId, roleId);
-	}
-
-	public static void setDJRole(final long guildId, final long djRoleId)
-	{
-		executeSetQuery("dj_role_id", guildId, djRoleId);
 	}
 
 	public static void setPrefix(final long guildId, final String prefix)
@@ -122,9 +79,24 @@ public class DatabaseManager
 		executeSetQuery("prefix", guildId, prefix);
 	}
 
-	public static void setSkippingEnabled(final long guildId, final boolean enabled)
+	public static void setDJRoleId(final long guildId, final long djRoleId)
 	{
-		executeSetQuery("skipping", guildId, enabled);
+		executeSetQuery("dj_role_id", guildId, djRoleId);
+	}
+
+	public static void setSegmentSkippingEnabled(final long guildId, final boolean enabled)
+	{
+		executeSetQuery("segment_skipping", guildId, enabled);
+	}
+
+	public static void setSnipingEnabled(final long guildId, final boolean enabled)
+	{
+		executeSetQuery("sniping", guildId, enabled);
+	}
+
+	public static void setVip(final long guildId, final boolean vip)
+	{
+		executeSetQuery("vip", guildId, vip);
 	}
 
 	// REMOVALS
@@ -139,12 +111,5 @@ public class DatabaseManager
 		{
 			LOG.error("There was an error while removing the entry for guild {}!", guildId, ex);
 		}
-	}
-
-	// MISC
-
-	public static boolean isVip(final long guildId)
-	{
-		return getPropertyAsString("vip", guildId).equals("t");
 	}
 }

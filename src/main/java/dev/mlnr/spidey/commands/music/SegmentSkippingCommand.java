@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.commands.music;
 
-import dev.mlnr.spidey.cache.music.SegmentSkippingCache;
+import dev.mlnr.spidey.cache.GuildSettingsCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
@@ -25,8 +25,8 @@ public class SegmentSkippingCommand extends Command
             return;
         }
         final var guildId = ctx.getGuild().getIdLong();
-        final var enabled = !SegmentSkippingCache.isSkippingEnabled(guildId);
-        SegmentSkippingCache.setSkippingEnabled(guildId, enabled);
+        final var enabled = !GuildSettingsCache.isSegmentSkippingEnabled(guildId);
+        GuildSettingsCache.setSegmentSkippingEnabled(guildId, enabled);
         ctx.reactLike();
         ctx.reply("Segment skipping has been **" + (enabled ? "enabled" : "disabled") + "**." +
                 (enabled ? " Please remember that this is an experimental feature and you may, but shouldn't experience issues with it. As segments are submitted by anyone without any reviewing, some" +

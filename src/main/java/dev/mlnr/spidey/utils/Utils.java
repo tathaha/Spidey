@@ -139,9 +139,7 @@ public class Utils
 
         final var idMatcher = ID_REGEX.matcher(argument);                                 // 12345678901234567890
         if (idMatcher.matches())
-        {
             return jda.retrieveUserById(idMatcher.group()).complete();
-        }
 
         if (argument.length() >= 2 && argument.length() <= 32)
         {

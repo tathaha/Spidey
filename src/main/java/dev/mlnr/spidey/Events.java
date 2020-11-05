@@ -1,7 +1,8 @@
 package dev.mlnr.spidey;
 
-import dev.mlnr.spidey.cache.*;
-import dev.mlnr.spidey.cache.music.DJRoleCache;
+import dev.mlnr.spidey.cache.GeneralCache;
+import dev.mlnr.spidey.cache.GuildSettingsCache;
+import dev.mlnr.spidey.cache.MessageCache;
 import dev.mlnr.spidey.cache.music.MusicPlayerCache;
 import dev.mlnr.spidey.handlers.command.CommandHandler;
 import dev.mlnr.spidey.objects.invites.InviteData;
@@ -11,7 +12,7 @@ import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.audit.ActionType;
-import net.dv8tion.jda.api.entities.MessageType;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.channel.text.TextChannelDeleteEvent;
 import net.dv8tion.jda.api.events.guild.*;
@@ -19,6 +20,7 @@ import net.dv8tion.jda.api.events.guild.invite.GuildInviteCreateEvent;
 import net.dv8tion.jda.api.events.guild.invite.GuildInviteDeleteEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
+import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateBoostTimeEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateBoostTierEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -30,7 +32,6 @@ import java.time.Instant;
 
 import static net.dv8tion.jda.api.utils.MarkdownSanitizer.escape;
 
-@SuppressWarnings("StringBufferReplaceableByString")
 public class Events extends ListenerAdapter
 {
 	@Override
@@ -38,15 +39,15 @@ public class Events extends ListenerAdapter
 	{
 		final var guild = event.getGuild();
 		final var message = event.getMessage();
-		final var author = event.getAuthor();
 		final var guildId = guild.getIdLong();
-		final var prefix = PrefixCache.getPrefix(guildId);
 		final var content = message.getContentRaw().trim();
-		final var channel = event.getChannel();
 
-		if (!content.isEmpty())
+		if (!content.isEmpty() && GuildSettingsCache.isSnipingEnabled(guildId))
 			MessageCache.cacheMessage(message.getIdLong(), new MessageData(message));
 
+		final var author = event.getAuthor();
+		final var prefix = GuildSettingsCache.getPrefix(guildId);
+		final var channel = event.getChannel();
 		if ((content.equals("<@468523263853592576>") || content.equals("<@!468523263853592576>")) && !author.isBot())
 		{
 			final var eb = new EmbedBuilder();
@@ -56,44 +57,24 @@ public class Events extends ListenerAdapter
 			return;
 		}
 
-		if (content.startsWith(prefix) && !author.isBot())
+		if (!content.startsWith(prefix) || author.isBot())
+			return;
+		if (guild.getSelfMember().hasPermission(Permission.ADMINISTRATOR))
 		{
-			if (guild.getSelfMember().hasPermission(Permission.ADMINISTRATOR))
-			{
-				Utils.sendMessage(channel, CommandHandler.ADMIN_WARNING);
-				return;
-			}
-			CommandHandler.handle(event, prefix);
+			Utils.sendMessage(channel, CommandHandler.ADMIN_WARNING);
 			return;
 		}
-
-		if (message.getType() == MessageType.GUILD_MEMBER_BOOST)
-		{
-			final var eb = new EmbedBuilder();
-			final var log = LogChannelCache.getLogAsChannel(guildId, event.getJDA());
-			if (log == null)
-				return;
-			Utils.deleteMessage(message);
-			eb.setDescription(new StringBuilder().append("<:boosting:699731065052332123>")
-					.append(" **").append(escape(author.getAsTag())).append("** has `boosted` ")
-					.append("the server. The server currently has **").append(guild.getBoostCount()).append("** boosts.").toString());
-			eb.setAuthor("NEW BOOST");
-			eb.setColor(16023551);
-			eb.setFooter("User boost", author.getEffectiveAvatarUrl());
-			eb.setTimestamp(Instant.now());
-			Utils.sendMessage(log, eb.build());
-		}
+		CommandHandler.handle(event, prefix);
 	}
 
 	@Override
 	public void onGuildBan(final GuildBanEvent event)
 	{
-		final var user = event.getUser();
 		final var guild = event.getGuild();
-		final var channel = LogChannelCache.getLogAsChannel(guild.getIdLong(), event.getJDA());
-
+		final var channel = GuildSettingsCache.getLogChannel(guild.getIdLong());
 		if (channel == null)
 			return;
+		final var user = event.getUser();
 		final var escapedTag = escape(user.getAsTag());
 		final var eb = new EmbedBuilder();
 		eb.setDescription(Emojis.CROSS + " **" + escapedTag + "** has been `banned`");
@@ -120,12 +101,11 @@ public class Events extends ListenerAdapter
 	@Override
 	public void onGuildUnban(final GuildUnbanEvent event)
 	{
-		final var user = event.getUser();
 		final var guild = event.getGuild();
-		final var channel = LogChannelCache.getLogAsChannel(guild.getIdLong(), event.getJDA());
-
+		final var channel = GuildSettingsCache.getLogChannel(guild.getIdLong());
 		if (channel == null)
 			return;
+		final var user = event.getUser();
 		final var escapedTag = escape(user.getAsTag());
 		final var eb = new EmbedBuilder();
 		eb.setDescription(Emojis.CHECK + " **" + escapedTag + "** has been `unbanned`");
@@ -150,12 +130,10 @@ public class Events extends ListenerAdapter
 	@Override
 	public void onGuildMemberRemove(final GuildMemberRemoveEvent event)
 	{
-		final var user = event.getUser();
-		final var guild = event.getGuild();
-		final var channel = LogChannelCache.getLogAsChannel(guild.getIdLong(), event.getJDA());
-
+		final var channel = GuildSettingsCache.getLogChannel(event.getGuild().getIdLong());
 		if (channel == null)
 			return;
+		final var user = event.getUser();
 		final var escapedTag = escape(user.getAsTag());
 		final var avatarUrl = user.getEffectiveAvatarUrl();
 		final var userId = user.getIdLong();
@@ -177,17 +155,16 @@ public class Events extends ListenerAdapter
 	@Override
 	public void onGuildMemberJoin(final GuildMemberJoinEvent event)
 	{
-		final var user = event.getUser();
 		final var guild = event.getGuild();
 		final var guildId = guild.getIdLong();
-		final var jda = event.getJDA();
-		final var channel = LogChannelCache.getLogAsChannel(guildId, jda);
-		final var joinRole = JoinRoleCache.getJoinRole(guildId, jda);
-		final var userId = user.getIdLong();
-		final var selfMember = guild.getSelfMember();
-
+		final var channel = GuildSettingsCache.getLogChannel(guildId);
 		if (channel == null)
 			return;
+		final var joinRole = GuildSettingsCache.getJoinRole(guildId);
+		final var selfMember = guild.getSelfMember();
+		final var user = event.getUser();
+		final var userId = user.getIdLong();
+
 		if (joinRole != null && (selfMember.canInteract(joinRole) && selfMember.hasPermission(Permission.MANAGE_ROLES)))
 			guild.addRoleToMember(userId, joinRole).queue();
 
@@ -252,6 +229,9 @@ public class Events extends ListenerAdapter
 		if (defaultChannel != null)
 			Utils.sendMessage(defaultChannel, "Hey! I'm **Spidey**. Thanks for inviting me. To start, check `s!info`.");
 		Utils.storeInvites(guild);
+		final var people = guild.getMemberCache().applyStream(stream -> stream.map(Member::getUser).filter(user -> !user.isBot()).count());
+		if (people >= 10000)
+			GuildSettingsCache.setSnipingEnabled(guild.getIdLong(), false);
 	}
 
 	@Override
@@ -269,8 +249,8 @@ public class Events extends ListenerAdapter
 	public void onTextChannelDelete(final TextChannelDeleteEvent event)
 	{
 		final var guildId = event.getGuild().getIdLong();
-		if (event.getChannel().getIdLong() == LogChannelCache.getLogChannel(guildId))
-			LogChannelCache.removeLogChannel(guildId);
+		if (event.getChannel().getIdLong() == GuildSettingsCache.getLogChannelId(guildId))
+			GuildSettingsCache.removeLogChannel(guildId);
 	}
 
 	@Override
@@ -278,17 +258,36 @@ public class Events extends ListenerAdapter
 	{
 		final var roleId = event.getRole().getIdLong();
 		final var guildId = event.getGuild().getIdLong();
-		if (roleId == JoinRoleCache.getJoinRole(guildId))
-			JoinRoleCache.removeJoinRole(guildId);
-		if (roleId == DJRoleCache.getDJRole(guildId))
-			DJRoleCache.removeDJRole(guildId);
+		if (roleId == GuildSettingsCache.getJoinRoleId(guildId))
+			GuildSettingsCache.removeJoinRole(guildId);
+		if (roleId == GuildSettingsCache.getDJRoleId(guildId))
+			GuildSettingsCache.removeDJRole(guildId);
+	}
+
+	@Override
+	public void onGuildMemberUpdateBoostTime(final GuildMemberUpdateBoostTimeEvent event)
+	{
+		final var guild = event.getGuild();
+		final var log = GuildSettingsCache.getLogChannel(guild.getIdLong());
+		if (log == null)
+			return;
+		if (event.getOldTimeBoosted() != null)
+			return;
+		final var user = event.getUser();
+		final var eb = new EmbedBuilder();
+		eb.setDescription("<:boosting:699731065052332123> **" + escape(user.getAsTag()) + "** has `boosted` the server. The server currently has **" + guild.getBoostCount() + "** boosts.");
+		eb.setAuthor("NEW BOOST");
+		eb.setColor(16023551);
+		eb.setFooter("User boost", user.getEffectiveAvatarUrl());
+		eb.setTimestamp(Instant.now());
+		Utils.sendMessage(log, eb.build());
 	}
 
 	@Override
 	public void onGuildUpdateBoostTier(final GuildUpdateBoostTierEvent event)
 	{
 		final var guild = event.getGuild();
-		final var channel = LogChannelCache.getLogAsChannel(guild.getIdLong(), event.getJDA());
+		final var channel = GuildSettingsCache.getLogChannel(guild.getIdLong());
 		if (channel == null)
 			return;
 		final var eb = new EmbedBuilder();
@@ -321,6 +320,8 @@ public class Events extends ListenerAdapter
 	@Override
 	public void onGuildMessageDelete(final GuildMessageDeleteEvent event)
 	{
+		if (!GuildSettingsCache.isSnipingEnabled(event.getGuild().getIdLong()))
+			return;
 		final var messageId = event.getMessageIdLong();
 		if(!MessageCache.isCached(messageId))
 			return;
@@ -330,6 +331,8 @@ public class Events extends ListenerAdapter
 	@Override
 	public void onGuildMessageUpdate(final GuildMessageUpdateEvent event)
 	{
+		if (!GuildSettingsCache.isSnipingEnabled(event.getGuild().getIdLong()))
+			return;
 		final var messageId = event.getMessageIdLong();
 		if(!MessageCache.isCached(messageId))
 			return;

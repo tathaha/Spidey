@@ -21,8 +21,8 @@ import static net.dv8tion.jda.api.utils.cache.CacheFlag.*;
 public class Core
 {
 	private static final Logger LOG = LoggerFactory.getLogger(Core.class);
-	private static final ScheduledExecutorService EXECUTOR = ThreadingConfig.newScheduler(1, () -> "Spidey", "Misc");
-	private static final EventWaiter waiter = new EventWaiter(EXECUTOR, true);
+	private static final ScheduledExecutorService EXECUTOR = ThreadingConfig.newScheduler(1, () -> "Spidey", "Scheduler");
+	private static final EventWaiter WAITER = new EventWaiter(EXECUTOR, true);
 	private static JDA jda;
 
 	private Core() {}
@@ -46,7 +46,7 @@ public class Core
 						CLIENT_STATUS // i disable these last 2 cacheflags explicitly so i don't get warnings
 					)
 					.setChunkingFilter(ChunkingFilter.exclude(264445053596991498L)) // DBL
-					.addEventListeners(new Events(), waiter)
+					.addEventListeners(new Events(), WAITER)
 					.setActivity(Activity.watching("myself load.."))
 					.setStatus(OnlineStatus.DO_NOT_DISTURB)
 					.setGatewayEncoding(GatewayEncoding.ETF)
@@ -63,7 +63,7 @@ public class Core
 
 	public static EventWaiter getWaiter()
 	{
-		return waiter;
+		return WAITER;
 	}
 
 	public static ScheduledExecutorService getExecutor()
