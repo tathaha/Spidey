@@ -1,4 +1,4 @@
-package dev.mlnr.spidey.commands.utility;
+package dev.mlnr.spidey.commands.settings;
 
 import dev.mlnr.spidey.cache.GuildSettingsCache;
 import dev.mlnr.spidey.objects.command.Category;
@@ -11,7 +11,7 @@ public class VIPCommand extends Command
 {
     public VIPCommand()
     {
-        super("vip", new String[]{}, "Adds/removes a guild to/from VIP guilds", "vip (guild id)", Category.UTILITY, Permission.UNKNOWN, 0, 0);
+        super("vip", new String[]{}, "Adds/removes a guild to/from VIP guilds", "vip (guild id)", Category.SETTINGS, Permission.UNKNOWN, 0, 0);
     }
 
     @Override

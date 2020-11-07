@@ -1,4 +1,4 @@
-package dev.mlnr.spidey.commands.moderation;
+package dev.mlnr.spidey.commands.settings;
 
 import dev.mlnr.spidey.cache.GuildSettingsCache;
 import dev.mlnr.spidey.objects.command.Category;
@@ -11,7 +11,7 @@ public class LogCommand extends Command
 {
 	public LogCommand()
 	{
-		super ("log", new String[]{}, "Sets log channel", "log", Category.MODERATION, Permission.ADMINISTRATOR, 0, 2);
+		super ("log", new String[]{}, "Sets log channel", "log", Category.SETTINGS, Permission.MANAGE_SERVER, 0, 2);
 	}
 
 	@Override

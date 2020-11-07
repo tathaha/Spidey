@@ -1,4 +1,4 @@
-package dev.mlnr.spidey.commands.utility;
+package dev.mlnr.spidey.commands.settings;
 
 import dev.mlnr.spidey.cache.GuildSettingsCache;
 import dev.mlnr.spidey.objects.command.Category;
@@ -11,7 +11,8 @@ public class PrefixCommand extends Command
 {
     public PrefixCommand()
     {
-        super("prefix", new String[]{}, "Sets/removes the prefix for this server", "prefix (new prefix, if not given, the prefix will be reset if set)", Category.UTILITY, Permission.ADMINISTRATOR, 0, 4);
+        super("prefix", new String[]{}, "Sets/removes the prefix for this server", "prefix (new prefix, if not given, the prefix will be reset if set)", Category.SETTINGS,
+                Permission.MANAGE_SERVER, 0, 4);
     }
 
     @Override

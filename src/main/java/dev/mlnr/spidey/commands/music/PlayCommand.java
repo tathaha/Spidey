@@ -30,10 +30,7 @@ public class PlayCommand extends Command
             ctx.replyError("I can't play music as " + connectionFailure.getReason());
             return;
         }
-        var query = args[0];
-        if (!MusicUtils.YOUTUBE_URL_PATTERN.matcher(args[0]).matches())
-            query = "ytsearch:" + query;
-
+        final var query = MusicUtils.YOUTUBE_URL_PATTERN.matcher(args[0]).matches() ? args[0] : "ytsearch:" + args[0];
         final var musicPlayer = MusicPlayerCache.getMusicPlayer(ctx.getGuild(), true);
         final var scheduler = musicPlayer.getTrackScheduler();
 

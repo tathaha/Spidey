@@ -5,7 +5,7 @@ import dev.mlnr.spidey.cache.GuildSettingsCache;
 import dev.mlnr.spidey.cache.MessageCache;
 import dev.mlnr.spidey.cache.music.MusicPlayerCache;
 import dev.mlnr.spidey.handlers.command.CommandHandler;
-import dev.mlnr.spidey.objects.invites.InviteData;
+import dev.mlnr.spidey.objects.guild.InviteData;
 import dev.mlnr.spidey.objects.messages.MessageData;
 import dev.mlnr.spidey.utils.Emojis;
 import dev.mlnr.spidey.utils.Utils;

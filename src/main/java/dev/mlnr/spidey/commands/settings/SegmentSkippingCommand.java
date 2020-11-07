@@ -1,4 +1,4 @@
-package dev.mlnr.spidey.commands.music;
+package dev.mlnr.spidey.commands.settings;
 
 import dev.mlnr.spidey.cache.GuildSettingsCache;
 import dev.mlnr.spidey.objects.command.Category;
@@ -12,8 +12,8 @@ public class SegmentSkippingCommand extends Command
 {
     public SegmentSkippingCommand()
     {
-        super("segmentskipping", new String[]{"segmentskip", "segskip"}, "Enables/disables non-music segment skipping (experimental feature)", "segmentskipping",
-                Category.MUSIC, Permission.UNKNOWN, 0, 0);
+        super("segmentskipping", new String[]{"segmentskip", "segskip", "skipping", "segskipping"}, "Enables/disables non-music segment skipping (experimental feature)", "segmentskipping",
+                Category.SETTINGS, Permission.UNKNOWN, 0, 0);
     }
 
     @Override
@@ -21,7 +21,7 @@ public class SegmentSkippingCommand extends Command
     {
         if (!MusicUtils.canInteract(ctx.getMember()))
         {
-            ctx.replyError("You have to be a DJ to enable/disable the segment skipping");
+            ctx.replyError("You have to be a DJ to enable/disable segment skipping");
             return;
         }
         final var guildId = ctx.getGuild().getIdLong();
@@ -29,7 +29,7 @@ public class SegmentSkippingCommand extends Command
         GuildSettingsCache.setSegmentSkippingEnabled(guildId, enabled);
         ctx.reactLike();
         ctx.reply("Segment skipping has been **" + (enabled ? "enabled" : "disabled") + "**." +
-                (enabled ? " Please remember that this is an experimental feature and you may, but shouldn't experience issues with it. As segments are submitted by anyone without any reviewing, some" +
-                        "segments can be placed at wrong timing. This is not Spidey's issue. Report such submissions on SponsorBlock's Discord, not to us.": ""));
+                (enabled ? " Please remember that this is an experimental feature and you may, but shouldn't experience issues with it. As SponsorBlock is a crowdsourced extension, some segments can be placed " +
+                        "at wrong timing. Report such submissions on SponsorBlock's Discord, not to the Developer.": ""));
     }
 }

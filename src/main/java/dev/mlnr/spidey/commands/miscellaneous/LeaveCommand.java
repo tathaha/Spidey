@@ -20,7 +20,7 @@ public class LeaveCommand extends Command
 {
 	public LeaveCommand()
 	{
-		super("leave", new String[]{}, "Spidey will leave your server", "leave", Category.MISC, Permission.ADMINISTRATOR, 0, 0);
+		super("leave", new String[]{}, "Spidey will leave your server", "leave", Category.MISC, Permission.MANAGE_SERVER, 0, 0);
 	}
 
 	@Override

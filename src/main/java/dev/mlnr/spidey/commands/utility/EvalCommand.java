@@ -21,7 +21,7 @@ public class EvalCommand extends Command
 {
     private static final ScriptEngine SCRIPT_ENGINE = new ScriptEngineManager().getEngineByName("groovy");
     private static final List<String> DEFAULT_IMPORTS = Arrays.asList("net.dv8tion.jda.api.entities.impl", "net.dv8tion.jda.api.managers", "net.dv8tion.jda.api.entities", "net.dv8tion.jda.api", "java.lang",
-            "java.io", "java.math", "java.util", "java.util.concurrent", "java.time");
+            "java.io", "java.math", "java.util", "java.util.concurrent", "java.time", "java.util.stream");
 
     public EvalCommand()
     {
@@ -42,6 +42,7 @@ public class EvalCommand extends Command
         }
         SCRIPT_ENGINE.put("guild", channel.getGuild());
         SCRIPT_ENGINE.put("author", author);
+        SCRIPT_ENGINE.put("member", ctx.getMember());
         SCRIPT_ENGINE.put("msg", message);
         SCRIPT_ENGINE.put("message", message);
         SCRIPT_ENGINE.put("channel", channel);

@@ -6,6 +6,7 @@ import dev.mlnr.spidey.cache.music.VideoSegmentCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
+import dev.mlnr.spidey.utils.StringUtils;
 import net.dv8tion.jda.api.Permission;
 
 import static dev.mlnr.spidey.utils.MusicUtils.formatDuration;
@@ -48,10 +49,11 @@ public class SegmentsCommand extends Command
         final var updatePrompt = "If you've just added some segments, force the cache to update by using `" + GuildSettingsCache.getPrefix(guild.getIdLong()) + "segments force`.";
         if (segments == null)
         {
-            ctx.replyError("There are no segments in this video. " + updatePrompt);
+            ctx.replyError("There are no segments in this video. " + updatePrompt, false);
             return;
         }
-        final var stringBuilder = new StringBuilder("There are **" + segments.size() + "** segments in this video!\n\n");
+        final var segs = segments.size();
+        final var stringBuilder = new StringBuilder("There " + (segs == 1 ? "is" : "are") + " **" +  StringUtils.pluralize(segs, "segment") + "**" + " in this video!\n\n");
         segments.forEach((segmentStart, segmentEnd) -> stringBuilder.append("**").append(formatDuration(segmentStart)).append("**").append(" - ").append("**").append(formatDuration(segmentEnd)).append("**\n"));
         stringBuilder.append("\n").append(updatePrompt);
         ctx.reply(stringBuilder.toString());

@@ -1,4 +1,4 @@
-package dev.mlnr.spidey.commands.utility;
+package dev.mlnr.spidey.commands.settings;
 
 import dev.mlnr.spidey.cache.GuildSettingsCache;
 import dev.mlnr.spidey.objects.command.Category;
@@ -17,7 +17,7 @@ public class DJRoleCommand extends Command
 
     public DJRoleCommand()
     {
-        super("djrole", new String[]{}, "Sets/removes the DJ role", "djrole (id/name of the role or blank to reset)", Category.UTILITY, Permission.MANAGE_SERVER, 1, 4);
+        super("djrole", new String[]{}, "Sets/removes the DJ role", "djrole (id/name of the role or blank to reset)", Category.SETTINGS, Permission.MANAGE_SERVER, 1, 4);
     }
 
     @Override

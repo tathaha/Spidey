@@ -4,6 +4,7 @@ import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.utils.KSoftAPIHelper;
+import dev.mlnr.spidey.utils.StringUtils;
 import dev.mlnr.spidey.utils.Utils;
 import io.github.classgraph.ClassGraph;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -43,11 +44,12 @@ public class CommandHandler
 			Utils.returnError("Please specify a command", message);
 			return;
 		}
-		final var command = content.contains(" ") ? content.substring(0, content.indexOf(' ')) : content;
-		final var cmd = COMMANDS.get(command.toLowerCase());
+		final var command = (content.contains(" ") ? content.substring(0, content.indexOf(' ')) : content).toLowerCase();
+		final var cmd = COMMANDS.get(command);
 		if (cmd == null)
 		{
-			Utils.returnError("**" + command + "** isn't a valid command", message);
+			final var similar = StringUtils.getSimilarCommand(command);
+			Utils.returnError("**" + command + "** isn't a valid command. " + (similar == null ? "Check `" + prefix + "help` for a list of commands." : "Did you perhaps mean **" + similar + "**?"), message, false);
 			return;
 		}
 		final var requiredPermission = cmd.getRequiredPermission();

@@ -8,7 +8,6 @@ import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
-import java.time.Duration;
 import java.util.Set;
 
 public class CommandContext
@@ -67,19 +66,22 @@ public class CommandContext
 
     public void replyError(final String error)
     {
-        replyError(error, Emojis.CROSS);
+        replyError(error, true);
+    }
+
+    public void replyError(final String error, final boolean includeDot)
+    {
+        replyError(error, Emojis.CROSS, includeDot);
     }
 
     public void replyError(final String error, final String failureEmoji)
     {
-        Utils.addReaction(getMessage(), failureEmoji);
-        final var channel = getTextChannel();
-        if (!channel.canTalk())
-            return;
-        channel.sendMessage(String.format(":no_entry: %s.", error))
-                .delay(Duration.ofSeconds(7))
-                .flatMap(Message::delete)
-                .queue(success -> Utils.deleteMessage(getMessage()));
+        replyError(error, failureEmoji, true);
+    }
+
+    public void replyError(final String error, final String failureEmoji, final boolean includeDot)
+    {
+        Utils.returnError(error, getMessage(), failureEmoji, includeDot);
     }
 
     public void reactLike()

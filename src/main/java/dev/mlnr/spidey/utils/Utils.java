@@ -4,7 +4,7 @@ import dev.mlnr.spidey.Core;
 import dev.mlnr.spidey.cache.GeneralCache;
 import dev.mlnr.spidey.cache.MessageCache;
 import dev.mlnr.spidey.handlers.command.CommandHandler;
-import dev.mlnr.spidey.objects.invites.InviteData;
+import dev.mlnr.spidey.objects.guild.InviteData;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
@@ -36,21 +36,21 @@ public class Utils
 
     private Utils() {}
 
-    public static void sendMessage(final TextChannel ch, final MessageEmbed embed)
+    public static void sendMessage(final TextChannel channel, final MessageEmbed embed)
     {
-        if (ch.canTalk() && ch.getGuild().getSelfMember().hasPermission(ch, Permission.MESSAGE_EMBED_LINKS))
-            ch.sendMessage(embed).queue();
+        if (channel.canTalk() && channel.getGuild().getSelfMember().hasPermission(channel, Permission.MESSAGE_EMBED_LINKS))
+            channel.sendMessage(embed).queue();
     }
 
-    public static void sendMessage(final TextChannel ch, final String toSend)
+    public static void sendMessage(final TextChannel channel, final String toSend)
     {
-        sendMessage(ch, toSend, MessageAction.getDefaultMentions());
+        sendMessage(channel, toSend, MessageAction.getDefaultMentions());
     }
 
-    public static void sendMessage(final TextChannel ch, final String toSend, final Set<Message.MentionType> allowedMentions)
+    public static void sendMessage(final TextChannel channel, final String toSend, final Set<Message.MentionType> allowedMentions)
     {
-        if (ch.canTalk())
-            ch.sendMessage(toSend).allowedMentions(allowedMentions == null ? EnumSet.noneOf(Message.MentionType.class) : allowedMentions).queue(); // passing null to allowedMentions allows all mentions, nice logic JDA
+        if (channel.canTalk())
+            channel.sendMessage(toSend).allowedMentions(allowedMentions == null ? EnumSet.noneOf(Message.MentionType.class) : allowedMentions).queue(); // passing null to allowedMentions allows all mentions, nice logic JDA
     }
 
     public static void deleteMessage(final Message msg)
@@ -60,9 +60,9 @@ public class Utils
             msg.delete().queue();
     }
 
-    public static EmbedBuilder createEmbedBuilder(final User u)
+    public static EmbedBuilder createEmbedBuilder(final User user)
     {
-        return new EmbedBuilder().setFooter("Command executed by " + u.getAsTag(), u.getEffectiveAvatarUrl());
+        return new EmbedBuilder().setFooter("Command executed by " + user.getAsTag(), user.getEffectiveAvatarUrl());
     }
 
     public static void addReaction(final Message message, final String reaction)
@@ -73,12 +73,22 @@ public class Utils
 
     public static void returnError(final String errMsg, final Message origin)
     {
-        addReaction(origin, Emojis.CROSS);
+        returnError(errMsg, origin, true);
+    }
+
+    public static void returnError(final String errMsg, final Message origin, final boolean includeDot)
+    {
+        returnError(errMsg, origin, Emojis.CROSS, includeDot);
+    }
+
+    public static void returnError(final String errMsg, final Message origin, final String failureEmoji, final boolean includeDot)
+    {
+        addReaction(origin, failureEmoji);
         final var channel = origin.getTextChannel();
         if (!channel.canTalk())
             return;
-        channel.sendMessage(String.format(":no_entry: %s.", errMsg))
-                .delay(Duration.ofSeconds(5))
+        channel.sendMessage(String.format(":no_entry: %s%s", errMsg, includeDot ? "." : ""))
+                .delay(Duration.ofSeconds(7))
                 .flatMap(Message::delete)
                 .queue(success -> deleteMessage(origin));
     }

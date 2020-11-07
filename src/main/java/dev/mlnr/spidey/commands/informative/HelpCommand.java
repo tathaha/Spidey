@@ -6,11 +6,11 @@ import dev.mlnr.spidey.handlers.command.CooldownHandler;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
+import dev.mlnr.spidey.utils.StringUtils;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
 
 import java.util.*;
-import java.util.function.Function;
 
 @SuppressWarnings("unused")
 public class HelpCommand extends Command
@@ -48,7 +48,7 @@ public class HelpCommand extends Command
             }
             commandsCopy.remove("help");
             commandsCopy.remove("eval");
-            final EnumMap<Category, List<Command>> categories = new EnumMap<>(Category.class);
+            final var categories = new EnumMap<Category, List<Command>>(Category.class);
             var nsfwHidden = false;
             commandsCopy.values().forEach(cmd -> categories.computeIfAbsent(cmd.getCategory(), k -> new ArrayList<>()).add(cmd));
             if (!ctx.getTextChannel().isNSFW())
@@ -63,7 +63,7 @@ public class HelpCommand extends Command
                 sb.append("\n");
                 sb.append(category.getFriendlyName());
                 sb.append(" ").append("-").append(" ");
-                sb.append(listToString(commandz, Command::getInvoke));
+                sb.append(listToString(commandz));
             });
             eb.setDescription("Prefix: **" + prefix + "**\n" + sb + "\n\nTo see more info about a command, type `" + prefix + "help <command>`.");
             if (hidden > 0)
@@ -77,18 +77,17 @@ public class HelpCommand extends Command
         final var command = commandsMap.get(invoke);
         if (command == null)
         {
-            ctx.replyError("**" + invoke + "** isn't a valid command. Check `" + prefix + "help` for a list of commands");
+            final var similar = StringUtils.getSimilarCommand(invoke);
+            ctx.replyError("**" + invoke + "** isn't a valid command. " + (similar == null ? "Check `" + prefix + "help` for a list of commands." : "Did you perhaps mean **" + similar + "**?"), false);
             return;
         }
-        final var description = command.getDescription();
-        final var usage = command.getUsage();
         final var requiredPermission = command.getRequiredPermission();
         final var aliases = command.getAliases();
         final var cooldown = CooldownHandler.getCooldown(guildId, command);
         eb.setAuthor("Viewing command info - " + invoke);
         eb.setColor(0xFEFEFE);
-        eb.addField("Description", description == null ? "Unspecified" : description, false);
-        eb.addField("Usage", usage == null ? "Unspecified" : "`" + prefix + usage + "` (<> = required, () = optional)", false);
+        eb.addField("Description", command.getDescription(), false);
+        eb.addField("Usage", "`" + prefix + command.getUsage() + "` (<> = required, () = optional)", false);
         eb.addField("Category",  command.getCategory().getFriendlyName(), false);
         eb.addField("Required permission", requiredPermission == Permission.UNKNOWN ? "None" : requiredPermission.getName(), false);
         eb.addField("Aliases", aliases.length == 0 ? "None" : String.join(", ", aliases), false);
@@ -103,14 +102,14 @@ public class HelpCommand extends Command
         ctx.reply(eb);
     }
 
-    private String listToString(final List<Command> list, final Function<Command, String> transformer)
+    private String listToString(final List<Command> commands)
     {
         final var builder = new StringBuilder();
-        for (var i = 0; i < list.size(); i++)
+        for (var i = 0; i < commands.size(); i++)
         {
-            final var cmd = list.get(i);
-            builder.append("`").append(transformer.apply(cmd)).append("`");
-            if (i != list.size() - 1)
+            final var cmd = commands.get(i);
+            builder.append("`").append(cmd.getInvoke()).append("`");
+            if (i != commands.size() - 1)
                 builder.append(", ");
         }
         return builder.toString();

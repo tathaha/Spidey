@@ -1,4 +1,4 @@
-package dev.mlnr.spidey.objects.invites;
+package dev.mlnr.spidey.objects.guild;
 
 import net.dv8tion.jda.api.entities.Invite;
 

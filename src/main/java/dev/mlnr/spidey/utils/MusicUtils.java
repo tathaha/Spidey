@@ -79,15 +79,20 @@ public class MusicUtils
         return MAX_FAIR_QUEUE;
     }
 
-    public static String formatDuration(final long length)
+    public static String formatDuration(final long time)
     {
-        final var duration = Duration.ofMillis(length);
-        return String.format("%02d:%02d", duration.toMinutesPart(), duration.toSecondsPart());
+        final var duration = Duration.ofMillis(time);
+        final var hours = duration.toHoursPart();
+        final var minutes = duration.toMinutesPart();
+        final var seconds = duration.toSecondsPart();
+        if (hours > 0)
+            return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+        return String.format("%02d:%02d", minutes, seconds);
     }
 
     public static boolean canInteract(final Member member, final AudioTrack track)
     {
-        return canInteract(member) || track.getUserData(Long.class) == member.getIdLong();
+        return track.getUserData(Long.class) == member.getIdLong() || canInteract(member);
     }
 
     public static boolean canInteract(final Member member)
@@ -106,7 +111,7 @@ public class MusicUtils
         final var activeBlocks = (int) ((float) position / duration * 10);
         final var progressBuilder = new StringBuilder();
         for (var i = 0; i < 10; i++)
-            progressBuilder.append(activeBlocks == i ? BLOCK_ACTIVE : BLOCK_INACTIVE);
+            progressBuilder.append(i == activeBlocks ? BLOCK_ACTIVE : BLOCK_INACTIVE);
         return progressBuilder.append(BLOCK_INACTIVE).append(" [**").append(formatDuration(position)).append("/").append(formatDuration(duration)).append("**]").toString();
     }
 

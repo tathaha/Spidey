@@ -8,6 +8,8 @@ import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.utils.Emojis;
 import dev.mlnr.spidey.utils.MusicUtils;
 
+import static dev.mlnr.spidey.utils.MusicUtils.formatDuration;
+
 public class AudioLoader implements AudioLoadResultHandler
 {
     private final MusicPlayer musicPlayer;
@@ -32,7 +34,6 @@ public class AudioLoader implements AudioLoadResultHandler
     @Override
     public void playlistLoaded(final AudioPlaylist playlist)
     {
-        ctx.reactLike();
         final var tracks = playlist.getTracks();
         if (playlist.isSearchResult())
         {
@@ -40,7 +41,10 @@ public class AudioLoader implements AudioLoadResultHandler
             return;
         }
         tracks.forEach(track -> loadSingle(track, true));
-        ctx.reply("**" + tracks.size() + "** tracks from playlist **" + playlist.getName() + "** have been added to the queue. [" + ctx.getAuthor().getAsMention() + "]", null);
+        final var length = tracks.stream().mapToLong(track -> track.getInfo().length).sum();
+        ctx.reactLike();
+        ctx.reply("**" + tracks.size() + "** tracks from playlist **" + playlist.getName() + "** (**" + formatDuration(length) + "**) have been added to the queue. [" + ctx.getAuthor().getAsMention()
+                + "]", null);
     }
 
     @Override
@@ -84,7 +88,7 @@ public class AudioLoader implements AudioLoadResultHandler
         if (silent)
             return;
         ctx.reactLike();
-        ctx.reply((stream ? "Livestream" : "Track") + " **" + title + "**" + (stream ? "" : " (**" + MusicUtils.formatDuration(length) + "**)") + " from channel **" + channel + "**" +
-                " has been added to the queue. [" + requester.getAsMention() + "]", null);
+        ctx.reply((stream ? "Livestream" : "Track") + " **" + title + "**" + (stream ? "" : " (**" + formatDuration(length) + "**)") + " from channel **" + channel + "**"
+                + " has been added to the queue. [" + requester.getAsMention() + "]", null);
     }
 }
