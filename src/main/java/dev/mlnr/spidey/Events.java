@@ -45,23 +45,12 @@ public class Events extends ListenerAdapter
 		if (!content.isEmpty() && GuildSettingsCache.isSnipingEnabled(guildId))
 			MessageCache.cacheMessage(message.getIdLong(), new MessageData(message));
 
-		final var author = event.getAuthor();
 		final var prefix = GuildSettingsCache.getPrefix(guildId);
-		final var channel = event.getChannel();
-		if ((content.equals("<@468523263853592576>") || content.equals("<@!468523263853592576>")) && !author.isBot())
-		{
-			final var eb = new EmbedBuilder();
-			eb.setColor(16763981);
-			eb.setDescription("Looks like you forgot my prefix, no worries though!\n\nPrefix for this server is `" + prefix + "`.");
-			Utils.sendMessage(channel, eb.build());
-			return;
-		}
-
-		if (!content.startsWith(prefix) || author.isBot())
+		if (!content.startsWith(prefix) || event.getAuthor().isBot())
 			return;
 		if (guild.getSelfMember().hasPermission(Permission.ADMINISTRATOR))
 		{
-			Utils.sendMessage(channel, CommandHandler.ADMIN_WARNING);
+			Utils.sendMessage(event.getChannel(), CommandHandler.ADMIN_WARNING);
 			return;
 		}
 		CommandHandler.handle(event, prefix);
@@ -165,7 +154,7 @@ public class Events extends ListenerAdapter
 		final var user = event.getUser();
 		final var userId = user.getIdLong();
 
-		if (joinRole != null && (selfMember.canInteract(joinRole) && selfMember.hasPermission(Permission.MANAGE_ROLES)))
+		if (joinRole != null && selfMember.canInteract(joinRole) && selfMember.hasPermission(Permission.MANAGE_ROLES))
 			guild.addRoleToMember(userId, joinRole).queue();
 
 		final var escapedTag = escape(user.getAsTag());
@@ -241,8 +230,8 @@ public class Events extends ListenerAdapter
 		final var guildId = guild.getIdLong();
 		GeneralCache.getInviteCache().entrySet().removeIf(entry -> entry.getValue().getGuildId() == guildId);
 		MessageCache.pruneCache(guildId);
-		GeneralCache.removeEntry(guildId);
 		MusicPlayerCache.destroyMusicPlayer(guild);
+		GeneralCache.removeEntry(guildId);
 	}
 
 	@Override

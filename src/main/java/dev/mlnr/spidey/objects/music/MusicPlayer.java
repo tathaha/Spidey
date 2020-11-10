@@ -35,7 +35,7 @@ public class MusicPlayer
     {
         if (leaveTask != null)
             return;
-        leaveTask = Core.getExecutor().schedule(() -> MusicPlayerCache.destroyMusicPlayer(trackScheduler.getGuild()), 2, TimeUnit.MINUTES);
+        leaveTask = Core.getScheduler().schedule(() -> MusicPlayerCache.destroyMusicPlayer(trackScheduler.getGuild()), 2, TimeUnit.MINUTES);
     }
 
     public void cancelLeave()

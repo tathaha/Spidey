@@ -55,7 +55,7 @@ public class TrackScheduler extends AudioEventAdapter
         if (repeatMode == RepeatMode.SONG && currentTrack != null)
         {
             final var currentCloned = currentTrack.makeClone();
-            handleMarkers(currentCloned, this);
+            handleMarkers(currentCloned, this.guildId);
             queue(currentCloned);
             return;
         }
@@ -68,7 +68,7 @@ public class TrackScheduler extends AudioEventAdapter
 
         final var trackToPlay = nextTrack != null ? nextTrack : (repeatMode == RepeatMode.QUEUE ? previousTrack.makeClone() : null);
         if (trackToPlay != null)
-            handleMarkers(trackToPlay, this);
+            handleMarkers(trackToPlay, this.guildId);
         audioPlayer.playTrack(trackToPlay);
     }
 

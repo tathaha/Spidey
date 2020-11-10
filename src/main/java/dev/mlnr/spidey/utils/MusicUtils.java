@@ -10,7 +10,6 @@ import dev.mlnr.spidey.cache.GuildSettingsCache;
 import dev.mlnr.spidey.cache.music.VideoSegmentCache;
 import dev.mlnr.spidey.handlers.music.SegmentHandler;
 import dev.mlnr.spidey.objects.command.CommandContext;
-import dev.mlnr.spidey.objects.music.TrackScheduler;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.VoiceChannel;
@@ -115,19 +114,48 @@ public class MusicUtils
         return progressBuilder.append(BLOCK_INACTIVE).append(" [**").append(formatDuration(position)).append("/").append(formatDuration(duration)).append("**]").toString();
     }
 
-    public static void handleMarkers(final AudioTrack track, final TrackScheduler trackScheduler)
+    public static void handleMarkers(final AudioTrack track, final long guildId)
     {
-        if (!GuildSettingsCache.isSegmentSkippingEnabled(trackScheduler.getGuildId()))
+        if (!GuildSettingsCache.isSegmentSkippingEnabled(guildId))
             return;
         final var segments = VideoSegmentCache.getVideoSegments(track.getIdentifier());
         if (segments != null)
             track.setMarker(new TrackMarker((long) segments.keySet().toArray()[0], new SegmentHandler(track)));
     }
 
+    public static long getLengthWithoutSegments(final AudioTrack track, final long guildId)
+    {
+        final var length = track.getInfo().length;
+        if (!GuildSettingsCache.isSegmentSkippingEnabled(guildId))
+            return length;
+        final var segments = VideoSegmentCache.getVideoSegments(track.getIdentifier());
+        if (segments == null)
+            return length;
+        return length - segments.entrySet().stream().mapToLong(segment -> segment.getValue() - segment.getKey()).sum();
+    }
+
+    public static long getPosition(final AudioTrack track, final long guildId)
+    {
+        var position = track.getPosition();
+        if (!GuildSettingsCache.isSegmentSkippingEnabled(guildId))
+            return position;
+        final var segments = VideoSegmentCache.getVideoSegments(track.getIdentifier());
+        if (segments == null)
+            return position;
+        for (final var segment : segments.entrySet())
+        {
+            final var segmentStart = segment.getKey();
+            final var segmentEnd = segment.getValue();
+            if (position > segmentEnd)
+                position -= segmentEnd - segmentStart;
+        }
+        return position;
+    }
+
     public enum ConnectFailureReason
     {
         NO_CHANNEL("you're not connected to any channel"),
-        NO_PERMS("i don't have permissions to join your channel"),
+        NO_PERMS("i don't have permission to join your channel"),
         CHANNEL_FULL("the voice channel you're in is full"),
         CANT_SPEAK("i can't speak in your channel");
 

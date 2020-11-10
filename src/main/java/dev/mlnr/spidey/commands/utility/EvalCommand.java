@@ -14,8 +14,6 @@ import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 
-import static dev.mlnr.spidey.utils.Utils.addReaction;
-
 @SuppressWarnings("unused")
 public class EvalCommand extends Command
 {
@@ -49,25 +47,23 @@ public class EvalCommand extends Command
         SCRIPT_ENGINE.put("jda", jda);
         SCRIPT_ENGINE.put("api", jda);
         final var eb = Utils.createEmbedBuilder(author);
-        eb.addField("Input", "```java\n" + args[0] + "```", false);
         final var toEval = new StringBuilder();
         DEFAULT_IMPORTS.forEach(imp -> toEval.append("import ").append(imp).append(".*; "));
         toEval.append(args[0]);
         try
         {
             final var evaluated = SCRIPT_ENGINE.eval(toEval.toString());
-            addReaction(message, Emojis.CHECK);
-            eb.setAuthor("SUCCESSFULLY EVALUATED");
+            ctx.reactLike();
+            if (evaluated == null)
+                return;
             eb.setColor(Color.GREEN);
-            if (evaluated != null)
-                eb.addField("Output", "```" + evaluated + "```", false);
+            eb.setDescription("```" + evaluated + "```");
         }
         catch (final ScriptException ex)
         {
-            addReaction(message, Emojis.CROSS);
-            eb.setAuthor("EVALUATING FAILED");
+            Utils.addReaction(ctx.getMessage(), Emojis.DISLIKE);
             eb.setColor(Color.RED);
-            eb.addField("Error", "```" + ex.getMessage() + "```", false);
+            eb.setDescription("```" + ex.getMessage() + "```");
         }
         ctx.reply(eb);
     }

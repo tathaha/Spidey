@@ -21,8 +21,8 @@ import static net.dv8tion.jda.api.utils.cache.CacheFlag.*;
 public class Core
 {
 	private static final Logger LOG = LoggerFactory.getLogger(Core.class);
-	private static final ScheduledExecutorService EXECUTOR = ThreadingConfig.newScheduler(1, () -> "Spidey", "Scheduler");
-	private static final EventWaiter WAITER = new EventWaiter(EXECUTOR, true);
+	private static final ScheduledExecutorService SCHEDULER = ThreadingConfig.newScheduler(1, () -> "Spidey", "Scheduler");
+	private static final EventWaiter WAITER = new EventWaiter(SCHEDULER, true);
 	private static JDA jda;
 
 	private Core() {}
@@ -66,9 +66,9 @@ public class Core
 		return WAITER;
 	}
 
-	public static ScheduledExecutorService getExecutor()
+	public static ScheduledExecutorService getScheduler()
 	{
-		return EXECUTOR;
+		return SCHEDULER;
 	}
 
 	public static JDA getJDA()

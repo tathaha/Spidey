@@ -10,6 +10,8 @@ import net.dv8tion.jda.api.Permission;
 
 import java.awt.*;
 
+import static dev.mlnr.spidey.utils.MusicUtils.formatDuration;
+
 @SuppressWarnings("unused")
 public class NowPlayingCommand extends Command
 {
@@ -21,7 +23,8 @@ public class NowPlayingCommand extends Command
     @Override
     public void execute(final String[] args, final CommandContext ctx)
     {
-        final var musicPlayer = MusicPlayerCache.getMusicPlayer(ctx.getGuild());
+        final var guild = ctx.getGuild();
+        final var musicPlayer = MusicPlayerCache.getMusicPlayer(guild);
         if (musicPlayer == null)
         {
             ctx.replyError("There is no music playing");
@@ -33,19 +36,27 @@ public class NowPlayingCommand extends Command
             ctx.replyError("There is no song playing");
             return;
         }
+        final var guildId = guild.getIdLong();
         final var paused = musicPlayer.isPaused();
-        final var position = playingTrack.getPosition();
-        final var duration = playingTrack.getDuration();
+        final var position = MusicUtils.getPosition(playingTrack, guildId);
         final var trackInfo = playingTrack.getInfo();
         final var progressBuilder = Utils.createEmbedBuilder(ctx.getAuthor());
         final var stream = trackInfo.isStream;
 
-        progressBuilder.setAuthor(trackInfo.title + (paused ? " - Paused" + (stream ? "" : " at " + MusicUtils.formatDuration(position)) : ""), trackInfo.uri);
+        final var lengthWithoutSegments = MusicUtils.getLengthWithoutSegments(playingTrack, guildId);
+        final var originalLength = trackInfo.length;
+
+        progressBuilder.setAuthor(trackInfo.title + (paused ? " - Paused" + (stream ? "" : " at " + formatDuration(position)) : ""), trackInfo.uri);
         progressBuilder.setThumbnail("https://i.ytimg.com/vi/" + trackInfo.identifier + "/maxresdefault.jpg");
         progressBuilder.setColor(paused ? Color.ORANGE : Color.GREEN);
+        progressBuilder.setDescription(stream ? "Livestream" : MusicUtils.getProgressBar(position, lengthWithoutSegments));
         progressBuilder.addField("Channel", trackInfo.author, true);
-        progressBuilder.setDescription(stream ? "Livestream" : MusicUtils.getProgressBar(position, duration));
 
+        if (lengthWithoutSegments != originalLength)
+        {
+            progressBuilder.addField("Duration", formatDuration(originalLength), true);
+            progressBuilder.addField("Duration without segments", formatDuration(lengthWithoutSegments), true);
+        }
         ctx.reply(progressBuilder);
     }
 }

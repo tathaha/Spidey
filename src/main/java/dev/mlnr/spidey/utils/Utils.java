@@ -101,8 +101,8 @@ public class Utils
     public static void startup(final JDA jda)
     {
         CommandHandler.registerCommands();
-        final var executor = Core.getExecutor();
-        final List<Supplier<Activity>> activities = new ArrayList<>(asList(
+        final var executor = Core.getScheduler();
+        final var activities = new ArrayList<Supplier<Activity>>(asList(
                 () -> listening("your commands"),
                 () -> watching("you"),
                 () -> watching(jda.getGuildCache().size() + " guilds"),
@@ -110,7 +110,7 @@ public class Utils
         ));
         executor.scheduleAtFixedRate(() -> jda.getPresence().setActivity(nextActivity(activities)), 0, 30, TimeUnit.SECONDS);
         executor.scheduleAtFixedRate(() -> // TODO maybe clear all caches here too?
-                MessageCache.getCache().entrySet().removeIf(entry -> entry.getValue().getCreation().isBefore(OffsetDateTime.now().minusMinutes(10).toInstant())), 1, 1, TimeUnit.HOURS);
+                MessageCache.getCache().entrySet().removeIf(entry -> entry.getValue().getCreation().isBefore(OffsetDateTime.now().minusMinutes(10).toInstant())), 15, 15, TimeUnit.MINUTES);
     }
 
     private static Activity nextActivity(final List<Supplier<Activity>> activities)
@@ -154,9 +154,7 @@ public class Utils
         if (argument.length() >= 2 && argument.length() <= 32)
         {
             final var results = msg.getGuild().getMembersByEffectiveName(argument, true); // username/nickname
-            if (results.isEmpty())
-                return null;
-            return results.get(0).getUser();
+            return results.isEmpty() ? null : results.get(0).getUser();
         }
         return null;
     }

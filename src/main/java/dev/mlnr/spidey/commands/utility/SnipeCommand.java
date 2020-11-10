@@ -47,7 +47,7 @@ public class SnipeCommand extends Command
         {
             eb.setAuthor(user.getName(), null, user.getEffectiveAvatarUrl());
             ctx.reply(eb);
-            Core.getExecutor().schedule(() -> MessageCache.uncacheMessage(lastDeletedMessage.getChannelId(), lastDeletedMessage.getId()), 2, TimeUnit.MINUTES);
+            Core.getScheduler().schedule(() -> MessageCache.uncacheMessage(lastDeletedMessage.getChannelId(), lastDeletedMessage.getId()), 2, TimeUnit.MINUTES);
         });
     }
 }

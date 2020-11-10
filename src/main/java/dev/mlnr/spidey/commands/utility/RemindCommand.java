@@ -79,7 +79,7 @@ public class RemindCommand extends Command
                .flatMap(Message::delete)
                .queue();
         author.openPrivateChannel()
-              .delay(actualDuration, timeUnit, Core.getExecutor())
+              .delay(actualDuration, timeUnit, Core.getScheduler())
               .flatMap(ch -> ch.sendMessage(eb.build()))
               .onErrorFlatMap(ignored -> channel.canTalk(), ignored -> channel.sendMessage(mention + " " + reminder))
               .queue();

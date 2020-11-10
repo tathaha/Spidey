@@ -40,11 +40,17 @@ public class AudioLoader implements AudioLoadResultHandler
             loadSingle(tracks.get(0));
             return;
         }
-        tracks.forEach(track -> loadSingle(track, true));
-        final var length = tracks.stream().mapToLong(track -> track.getInfo().length).sum();
+        var originalLength = 0L;
+        var durationWithoutSegments = 0L;
+        for (final var track : tracks)
+        {
+            loadSingle(track, true);
+            originalLength += track.getInfo().length;
+            durationWithoutSegments += MusicUtils.getLengthWithoutSegments(track, ctx.getGuild().getIdLong());
+        }
+        final var duration = "(**" + formatDuration(originalLength) + "**" + (durationWithoutSegments == originalLength ? "" : " [**" + formatDuration(durationWithoutSegments) + "** without segments]") + ")";
         ctx.reactLike();
-        ctx.reply("**" + tracks.size() + "** tracks from playlist **" + playlist.getName() + "** (**" + formatDuration(length) + "**) have been added to the queue. [" + ctx.getAuthor().getAsMention()
-                + "]", null);
+        ctx.reply("**" + tracks.size() + "** tracks from playlist **" + playlist.getName() + "** " + duration + " have been added to the queue. [" + ctx.getAuthor().getAsMention()+ "]", null);
     }
 
     @Override
@@ -71,7 +77,7 @@ public class AudioLoader implements AudioLoadResultHandler
         final var trackScheduler = musicPlayer.getTrackScheduler();
         final var title = trackInfo.title;
         final var channel = trackInfo.author;
-        final var length = trackInfo.length;
+        final var originalLength = trackInfo.length;
         final var stream = trackInfo.isStream;
         final var queue = trackScheduler.getQueue();
 
@@ -80,15 +86,19 @@ public class AudioLoader implements AudioLoadResultHandler
             ctx.replyError("Fair queue limit has been reached! Don't queue the same song over and over again");
             return;
         }
+        final var guildId = ctx.getGuild().getIdLong();
 
-        MusicUtils.handleMarkers(track, trackScheduler);
+        MusicUtils.handleMarkers(track, guildId);
         track.setUserData(requester.getIdLong());
         trackScheduler.queue(track, this.insertFirst);
 
         if (silent)
             return;
+        final var lengthWithoutSegments = MusicUtils.getLengthWithoutSegments(track, guildId);
+        final var duration = "(**" + formatDuration(originalLength) + "**" + (lengthWithoutSegments == originalLength ? "" : " [**" + formatDuration(lengthWithoutSegments) + "** without segments]") + ")";
+
         ctx.reactLike();
-        ctx.reply((stream ? "Livestream" : "Track") + " **" + title + "**" + (stream ? "" : " (**" + formatDuration(length) + "**)") + " from channel **" + channel + "**"
-                + " has been added to the queue. [" + requester.getAsMention() + "]", null);
+        ctx.reply((stream ? "Livestream" : "Track") + " **" + title + "**" + (stream ? "" : " " + duration) + " from channel **" + channel + "**" + " has been added to the queue." +
+                " [" + requester.getAsMention() + "]", null);
     }
 }

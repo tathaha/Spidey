@@ -35,10 +35,9 @@ public class DatabaseManager
 			ps.setLong(1, guildId);
 			try (final var rs = ps.executeQuery())
 			{
-				if (!rs.next())
-					return new GuildSettings(guildId, 0, 0, "s!", 0, false, true, false); // default values
-				return new GuildSettings(guildId, rs.getLong("log_channel_id"), rs.getLong("join_role_id"), rs.getString("prefix"), rs.getLong("dj_role_id"),
-						rs.getBoolean("segment_skipping"), rs.getBoolean("sniping"), rs.getBoolean("vip"));
+				return rs.next() ? new GuildSettings(guildId, rs.getLong("log_channel_id"), rs.getLong("join_role_id"), rs.getString("prefix"), rs.getLong("dj_role_id"),
+						rs.getBoolean("segment_skipping"), rs.getBoolean("sniping"), rs.getBoolean("vip"))
+								 : new GuildSettings(guildId, 0, 0, "s!", 0, false, true, false);
 			}
 		}
 		catch (final SQLException ex)
