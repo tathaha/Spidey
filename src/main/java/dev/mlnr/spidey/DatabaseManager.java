@@ -37,7 +37,7 @@ public class DatabaseManager
 			{
 				return rs.next() ? new GuildSettings(guildId, rs.getLong("log_channel_id"), rs.getLong("join_role_id"), rs.getString("prefix"), rs.getLong("dj_role_id"),
 						rs.getBoolean("segment_skipping"), rs.getBoolean("sniping"), rs.getBoolean("vip"))
-								 : new GuildSettings(guildId, 0, 0, "s!", 0, false, true, false);
+						: new GuildSettings(guildId, 0, 0, "s!", 0, false, true, false);
 			}
 		}
 		catch (final SQLException ex)
