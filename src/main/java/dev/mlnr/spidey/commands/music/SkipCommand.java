@@ -4,6 +4,7 @@ import dev.mlnr.spidey.cache.music.MusicPlayerCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
+import dev.mlnr.spidey.utils.Emojis;
 import dev.mlnr.spidey.utils.MusicUtils;
 import net.dv8tion.jda.api.Permission;
 
@@ -30,9 +31,34 @@ public class SkipCommand extends Command
             ctx.replyError("There is no song playing");
             return;
         }
-        if (!MusicUtils.canInteract(ctx.getMember(), playingTrack))
+        if (MusicUtils.canInteract(ctx.getMember(), playingTrack))
         {
-            ctx.replyError("You have to be the requester of the song or DJ to skip this song");
+            musicPlayer.skip();
+            ctx.reactLike();
+            return;
+        }
+        if (!MusicUtils.isMemberConnected(ctx))
+        {
+            ctx.replyError("You need to be connected to the same channel as me in order to vote for skipping", Emojis.DISLIKE);
+            return;
+        }
+        final var trackScheduler = musicPlayer.getTrackScheduler();
+        final var author = ctx.getAuthor();
+        final var mention = author.getAsMention();
+        if (trackScheduler.hasSkipVoted(author))
+        {
+            trackScheduler.removeSkipVote(author);
+            ctx.reactLike();
+            ctx.reply("You've removed your vote to skip the current track. [" + mention + "]", null);
+            return;
+        }
+        trackScheduler.addSkipVote(author);
+        final var skipVotes = trackScheduler.getSkipVotes();
+        final var requiredSkipVotes = trackScheduler.getRequiredSkipVotes();
+        if (skipVotes < requiredSkipVotes)
+        {
+            ctx.reactLike();
+            ctx.reply("You've voted to skip the current track. Votes: **" + skipVotes + "**/**" + requiredSkipVotes + "** [" + mention + "]", null);
             return;
         }
         musicPlayer.skip();

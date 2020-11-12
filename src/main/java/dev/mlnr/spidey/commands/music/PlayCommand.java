@@ -32,10 +32,10 @@ public class PlayCommand extends Command
         }
         final var query = MusicUtils.YOUTUBE_URL_PATTERN.matcher(args[0]).matches() ? args[0] : "ytsearch:" + args[0];
         final var musicPlayer = MusicPlayerCache.getMusicPlayer(ctx.getGuild(), true);
-        final var scheduler = musicPlayer.getTrackScheduler();
+        final var trackScheduler = musicPlayer.getTrackScheduler();
 
-        if (scheduler.getQueue().isEmpty())
-            scheduler.setRepeatMode(null);
+        if (trackScheduler.getQueue().isEmpty())
+            trackScheduler.setRepeatMode(null);
 
         final var loader = new AudioLoader(musicPlayer, query, ctx, false);
         MusicUtils.getAudioPlayerManager().loadItemOrdered(musicPlayer, query, loader);

@@ -11,6 +11,7 @@ import dev.mlnr.spidey.cache.music.VideoSegmentCache;
 import dev.mlnr.spidey.handlers.music.SegmentHandler;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 
@@ -150,6 +151,16 @@ public class MusicUtils
                 position -= segmentEnd - segmentStart;
         }
         return position;
+    }
+
+    public static VoiceChannel getConnectedChannel(final Guild guild)
+    {
+        return guild.getAudioManager().getConnectedChannel();
+    }
+
+    public static boolean isMemberConnected(final CommandContext ctx)
+    {
+        return getConnectedChannel(ctx.getGuild()).getMembers().contains(ctx.getMember());
     }
 
     public enum ConnectFailureReason

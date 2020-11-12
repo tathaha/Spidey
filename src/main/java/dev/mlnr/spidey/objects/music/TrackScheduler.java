@@ -5,9 +5,13 @@ import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import dev.mlnr.spidey.Core;
+import dev.mlnr.spidey.utils.MusicUtils;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.User;
 
+import java.util.ArrayList;
 import java.util.Deque;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 import static dev.mlnr.spidey.utils.MusicUtils.handleMarkers;
@@ -22,6 +26,8 @@ public class TrackScheduler extends AudioEventAdapter
 
     private AudioTrack previousTrack;
     private AudioTrack currentTrack;
+
+    private final List<Long> skipVotes = new ArrayList<>();
 
     public TrackScheduler(final AudioPlayer audioPlayer, final long guildId)
     {
@@ -52,6 +58,7 @@ public class TrackScheduler extends AudioEventAdapter
 
     public void nextTrack()
     {
+        clearSkipVotes();
         if (repeatMode == RepeatMode.SONG && currentTrack != null)
         {
             final var currentCloned = currentTrack.makeClone();
@@ -96,6 +103,43 @@ public class TrackScheduler extends AudioEventAdapter
     {
         return this.guildId;
     }
+
+    // skip voting
+
+    public int getRequiredSkipVotes()
+    {
+        final var listeners = MusicUtils.getConnectedChannel(getGuild()).getMembers().stream()
+                .filter(member -> !member.getUser().isBot() && !member.getVoiceState().isDeafened())
+                .count();
+        return (int) Math.ceil(listeners * 0.55);
+    }
+
+    public int getSkipVotes()
+    {
+        return skipVotes.size();
+    }
+
+    public void addSkipVote(final User user)
+    {
+        skipVotes.add(user.getIdLong());
+    }
+
+    public void removeSkipVote(final User user)
+    {
+        skipVotes.remove(user.getIdLong());
+    }
+
+    public boolean hasSkipVoted(final User user)
+    {
+        return skipVotes.contains(user.getIdLong());
+    }
+
+    public void clearSkipVotes()
+    {
+        skipVotes.clear();
+    }
+
+    //
 
     @Override
     public void onTrackEnd(final AudioPlayer player, final AudioTrack track, final AudioTrackEndReason endReason)
