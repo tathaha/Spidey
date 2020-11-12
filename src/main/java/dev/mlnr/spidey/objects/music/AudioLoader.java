@@ -98,7 +98,7 @@ public class AudioLoader implements AudioLoadResultHandler
         final var duration = "(**" + formatDuration(originalLength) + "**" + (lengthWithoutSegments == originalLength ? "" : " [**" + formatDuration(lengthWithoutSegments) + "** without segments]") + ")";
 
         ctx.reactLike();
-        ctx.reply((stream ? "Livestream" : "Track") + " **" + title + "**" + (stream ? "" : " " + duration) + " from channel **" + channel + "**" + " has been added to the queue." +
-                " [" + requester.getAsMention() + "]", null);
+        ctx.reply((stream ? "Livestream" : "Track") + " **" + title + "**" + (stream ? "" : " " + duration) + " from channel **" + channel + "**" + " has " + (trackScheduler.getQueue().isEmpty()
+                ? "started playing" : "been added to the queue") + ". [" + requester.getAsMention() + "]", null);
     }
 }

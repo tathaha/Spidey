@@ -92,7 +92,7 @@ public class MusicUtils
 
     public static boolean canInteract(final Member member, final AudioTrack track)
     {
-        return track.getUserData(Long.class) == member.getIdLong() || canInteract(member);
+        return getRequesterId(track) == member.getIdLong() || canInteract(member);
     }
 
     public static boolean canInteract(final Member member)
@@ -108,9 +108,9 @@ public class MusicUtils
 
     public static String getProgressBar(final long position, final long duration)
     {
-        final var activeBlocks = (int) ((float) position / duration * 10);
+        final var activeBlocks = (int) ((float) position / duration * 15);
         final var progressBuilder = new StringBuilder();
-        for (var i = 0; i < 10; i++)
+        for (var i = 0; i < 15; i++)
             progressBuilder.append(i == activeBlocks ? BLOCK_ACTIVE : BLOCK_INACTIVE);
         return progressBuilder.append(BLOCK_INACTIVE).append(" [**").append(formatDuration(position)).append("/").append(formatDuration(duration)).append("**]").toString();
     }
@@ -135,24 +135,6 @@ public class MusicUtils
         return length - segments.entrySet().stream().mapToLong(segment -> segment.getValue() - segment.getKey()).sum();
     }
 
-    public static long getPosition(final AudioTrack track, final long guildId)
-    {
-        var position = track.getPosition();
-        if (!GuildSettingsCache.isSegmentSkippingEnabled(guildId))
-            return position;
-        final var segments = VideoSegmentCache.getVideoSegments(track.getIdentifier());
-        if (segments == null)
-            return position;
-        for (final var segment : segments.entrySet())
-        {
-            final var segmentStart = segment.getKey();
-            final var segmentEnd = segment.getValue();
-            if (position > segmentEnd)
-                position -= segmentEnd - segmentStart;
-        }
-        return position;
-    }
-
     public static VoiceChannel getConnectedChannel(final Guild guild)
     {
         return guild.getAudioManager().getConnectedChannel();
@@ -161,6 +143,11 @@ public class MusicUtils
     public static boolean isMemberConnected(final CommandContext ctx)
     {
         return getConnectedChannel(ctx.getGuild()).getMembers().contains(ctx.getMember());
+    }
+
+    public static long getRequesterId(final AudioTrack track)
+    {
+        return track.getUserData(Long.class);
     }
 
     public enum ConnectFailureReason

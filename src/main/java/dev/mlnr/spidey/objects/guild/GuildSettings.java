@@ -9,21 +9,27 @@ public class GuildSettings
     private long logChannelId;
     private long joinRoleId;
     private String prefix;
+
     private long djRoleId;
     private boolean segmentSkippingEnabled;
+    private int defaultVolume;
+
     private boolean snipingEnabled;
     private boolean vip;
 
-    public GuildSettings(final long guildId, final long logChannelId, final long joinRoleId, final String prefix, final long djRoleId, final boolean segmentSkippingEnabled, final boolean snipingEnabled,
-                         final boolean vip)
+    public GuildSettings(final long guildId, final long logChannelId, final long joinRoleId, final String prefix, final long djRoleId, final boolean segmentSkippingEnabled, final int defaultVolume,
+                         final boolean snipingEnabled, final boolean vip)
     {
         this.guildId = guildId;
 
         this.logChannelId = logChannelId;
         this.joinRoleId = joinRoleId;
         this.prefix = prefix;
+
         this.djRoleId = djRoleId;
         this.segmentSkippingEnabled = segmentSkippingEnabled;
+        this.defaultVolume = defaultVolume;
+
         this.snipingEnabled = snipingEnabled;
         this.vip = vip;
     }
@@ -53,6 +59,11 @@ public class GuildSettings
     public boolean isSegmentSkippingEnabled()
     {
         return this.segmentSkippingEnabled;
+    }
+
+    public int getDefaultVolume()
+    {
+        return this.defaultVolume;
     }
 
     public boolean isSnipingEnabled()
@@ -95,6 +106,12 @@ public class GuildSettings
     {
         this.segmentSkippingEnabled = segmentSkippingEnabled;
         DatabaseManager.setSegmentSkippingEnabled(guildId, segmentSkippingEnabled);
+    }
+
+    public void setDefaultVolume(final int defaultVolume)
+    {
+        this.defaultVolume = defaultVolume;
+        DatabaseManager.setDefaultVolume(guildId, defaultVolume);
     }
 
     public void setSnipingEnabled(final boolean snipingEnabled)

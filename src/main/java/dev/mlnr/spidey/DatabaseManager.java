@@ -35,9 +35,10 @@ public class DatabaseManager
 			ps.setLong(1, guildId);
 			try (final var rs = ps.executeQuery())
 			{
-				return rs.next() ? new GuildSettings(guildId, rs.getLong("log_channel_id"), rs.getLong("join_role_id"), rs.getString("prefix"), rs.getLong("dj_role_id"),
-						rs.getBoolean("segment_skipping"), rs.getBoolean("sniping"), rs.getBoolean("vip"))
-						 : new GuildSettings(guildId, 0, 0, "s!", 0, false, true, false);
+				return rs.next() ? new GuildSettings(guildId, rs.getLong("log_channel_id"), rs.getLong("join_role_id"), rs.getString("prefix"),
+						rs.getLong("music.dj_role_id"), rs.getBoolean("music.segment_skipping"), rs.getInt("music.default_volume"), rs.getBoolean("sniping"),
+						rs.getBoolean("vip"))
+						 : new GuildSettings(guildId, 0, 0, "s!", 0, false, 100, true, false); // default settings
 			}
 		}
 		catch (final SQLException ex)
@@ -80,12 +81,17 @@ public class DatabaseManager
 
 	public static void setDJRoleId(final long guildId, final long djRoleId)
 	{
-		executeSetQuery("dj_role_id", guildId, djRoleId);
+		executeSetQuery("music.dj_role_id", guildId, djRoleId);
 	}
 
 	public static void setSegmentSkippingEnabled(final long guildId, final boolean enabled)
 	{
-		executeSetQuery("segment_skipping", guildId, enabled);
+		executeSetQuery("music.segment_skipping", guildId, enabled);
+	}
+
+	public static void setDefaultVolume(final long guildId, final int defaultVolume)
+	{
+		executeSetQuery("music.default_volume", guildId, defaultVolume);
 	}
 
 	public static void setSnipingEnabled(final long guildId, final boolean enabled)

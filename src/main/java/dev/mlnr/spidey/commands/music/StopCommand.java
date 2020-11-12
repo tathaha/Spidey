@@ -5,6 +5,7 @@ import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.utils.MusicUtils;
+import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
 
 @SuppressWarnings("unused")
@@ -31,6 +32,6 @@ public class StopCommand extends Command
             return;
         }
         MusicPlayerCache.destroyMusicPlayer(guild);
-        ctx.reactLike();
+        Utils.addReaction(ctx.getMessage(), "\uD83D\uDC4B"); // wave
     }
 }

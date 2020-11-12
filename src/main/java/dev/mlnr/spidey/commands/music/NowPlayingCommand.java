@@ -38,10 +38,10 @@ public class NowPlayingCommand extends Command
         }
         final var guildId = guild.getIdLong();
         final var paused = musicPlayer.isPaused();
-        final var position = MusicUtils.getPosition(playingTrack, guildId);
         final var trackInfo = playingTrack.getInfo();
         final var progressBuilder = Utils.createEmbedBuilder(ctx.getAuthor());
         final var stream = trackInfo.isStream;
+        final var position = playingTrack.getPosition();
 
         final var lengthWithoutSegments = MusicUtils.getLengthWithoutSegments(playingTrack, guildId);
         final var originalLength = trackInfo.length;
@@ -49,14 +49,12 @@ public class NowPlayingCommand extends Command
         progressBuilder.setAuthor(trackInfo.title + (paused ? " - Paused" + (stream ? "" : " at " + formatDuration(position)) : ""), trackInfo.uri);
         progressBuilder.setThumbnail("https://i.ytimg.com/vi/" + trackInfo.identifier + "/maxresdefault.jpg");
         progressBuilder.setColor(paused ? Color.ORANGE : Color.GREEN);
-        progressBuilder.setDescription(stream ? "Livestream" : MusicUtils.getProgressBar(position, lengthWithoutSegments));
+        progressBuilder.setDescription(stream ? "Livestream" : MusicUtils.getProgressBar(position, originalLength));
         progressBuilder.addField("Channel", trackInfo.author, true);
+        progressBuilder.addField("Requested by", guild.getMemberById(MusicUtils.getRequesterId(playingTrack)).getEffectiveName(), true);
 
         if (lengthWithoutSegments != originalLength)
-        {
-            progressBuilder.addField("Duration", formatDuration(originalLength), true);
-            progressBuilder.addField("Duration without segments", formatDuration(lengthWithoutSegments), true);
-        }
+            progressBuilder.addField("Duration without segments", formatDuration(lengthWithoutSegments), false);
         ctx.reply(progressBuilder);
     }
 }
