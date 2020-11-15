@@ -25,7 +25,7 @@ public abstract class Command
         this.cooldown = cooldown;
     }
 
-    public abstract void execute(final String[] args, final CommandContext context);
+    public abstract void execute(final String[] args, final CommandContext ctx);
 
     public String getInvoke()
     {

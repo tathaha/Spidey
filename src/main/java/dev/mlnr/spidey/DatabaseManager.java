@@ -11,7 +11,7 @@ import java.sql.SQLException;
 @SuppressWarnings("ConstantConditions")
 public class DatabaseManager
 {
-	private static final Logger LOG = LoggerFactory.getLogger(DatabaseManager.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseManager.class);
 
 	private DatabaseManager() {}
 
@@ -23,7 +23,7 @@ public class DatabaseManager
 		}
 		catch (final Exception ex)
 		{
-			LOG.error("There was an error establishing the connection to the database!", ex);
+			LOGGER.error("There was an error establishing the connection to the database!", ex);
 		}
 		return null;
 	}
@@ -43,7 +43,7 @@ public class DatabaseManager
 		}
 		catch (final SQLException ex)
 		{
-			LOG.error("There was an error while requesting the guild settings for guild {}!", guildId, ex);
+			LOGGER.error("There was an error while requesting the guild settings for guild {}!", guildId, ex);
 		}
 		return null;
 	}
@@ -59,7 +59,7 @@ public class DatabaseManager
 		}
 		catch (final SQLException ex)
 		{
-			LOG.error("There was an error while setting the {} property for guild {}!", property, guildId, ex);
+			LOGGER.error("There was an error while setting the {} property for guild {}!", property, guildId, ex);
 		}
 	}
 	// SETTERS
@@ -114,7 +114,7 @@ public class DatabaseManager
 		}
 		catch (final SQLException ex)
 		{
-			LOG.error("There was an error while removing the entry for guild {}!", guildId, ex);
+			LOGGER.error("There was an error while removing the entry for guild {}!", guildId, ex);
 		}
 	}
 }

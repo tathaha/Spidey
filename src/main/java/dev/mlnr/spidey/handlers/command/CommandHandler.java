@@ -24,7 +24,7 @@ import static dev.mlnr.spidey.handlers.command.CooldownHandler.isOnCooldown;
 public class CommandHandler
 {
 	private static final Map<String, Command> COMMANDS = new HashMap<>();
-	private static final Logger LOG = LoggerFactory.getLogger(CommandHandler.class);
+	private static final Logger LOGGER =LoggerFactory.getLogger(CommandHandler.class);
 	private static final ClassGraph CLASS_GRAPH = new ClassGraph().acceptPackages("dev.mlnr.spidey.commands");
 	private static final String NO_PERMS = "Action can't be completed because you don't have **%s** permission";
 	public static final MessageEmbed ADMIN_WARNING = new EmbedBuilder().setAuthor("Potential security risk").setColor(Color.RED)
@@ -105,7 +105,7 @@ public class CommandHandler
 		}
 		catch (final Exception e)
 		{
-			LOG.error("There was an error while registering the commands!", e);
+			LOGGER.error("There was an error while registering the commands!", e);
 		}
 	}
 	

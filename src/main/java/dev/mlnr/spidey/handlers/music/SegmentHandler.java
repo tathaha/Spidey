@@ -9,7 +9,7 @@ public class SegmentHandler implements TrackMarkerHandler
 {
     private final AudioTrack track;
 
-    private int count;
+    private int currentSegment;
 
     public SegmentHandler(final AudioTrack track)
     {
@@ -21,14 +21,11 @@ public class SegmentHandler implements TrackMarkerHandler
     {
         if (!(state == MarkerState.REACHED || state == MarkerState.LATE))
             return;
-        final var position = state == MarkerState.LATE ? 0 : track.getPosition() + 19; // :mmLol:
-        final var videoId = track.getIdentifier();
-        final var segmentEnd = VideoSegmentCache.getSegmentEnd(videoId, position);
-        track.setPosition(segmentEnd);
+        final var segments = VideoSegmentCache.getVideoSegments(track.getIdentifier());
+        track.setPosition(segments.get(this.currentSegment).getSegmentEnd());
 
-        this.count++;
-        final var segments = VideoSegmentCache.getVideoSegments(videoId);
-        if (this.count < segments.size())
-            track.setMarker(new TrackMarker((long) segments.keySet().toArray()[count], this));
+        this.currentSegment++;
+        if (this.currentSegment < segments.size())
+            track.setMarker(new TrackMarker(segments.get(this.currentSegment).getSegmentStart(), this));
     }
 }

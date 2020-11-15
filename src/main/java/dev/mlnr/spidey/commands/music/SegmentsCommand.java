@@ -47,14 +47,14 @@ public class SegmentsCommand extends Command
             segments = VideoSegmentCache.getVideoSegments(videoId, true);
         }
         final var updatePrompt = "If you've just added some segments, force the cache to update by using `" + GuildSettingsCache.getPrefix(guild.getIdLong()) + "segments force`.";
-        if (segments == null)
+        if (segments.isEmpty())
         {
             ctx.replyError("There are no segments in this video. " + updatePrompt, false);
             return;
         }
-        final var segs = segments.size();
-        final var stringBuilder = new StringBuilder("There " + (segs == 1 ? "is" : "are") + " **" +  StringUtils.pluralize(segs, "segment") + "**" + " in this video!\n\n");
-        segments.forEach((segmentStart, segmentEnd) -> stringBuilder.append("**").append(formatDuration(segmentStart)).append("**").append(" - ").append("**").append(formatDuration(segmentEnd)).append("**\n"));
+        final var segmentAmount = segments.size();
+        final var stringBuilder = new StringBuilder("There " + (segmentAmount == 1 ? "is" : "are") + " **" +  StringUtils.pluralize(segmentAmount, "segment") + "**" + " in this video!\n\n");
+        segments.forEach(segment -> stringBuilder.append("**").append(formatDuration(segment.getSegmentStart())).append("**").append(" - ").append("**").append(formatDuration(segment.getSegmentEnd())).append("**\n"));
         stringBuilder.append("\n").append(updatePrompt);
         ctx.reply(stringBuilder.toString());
     }

@@ -29,7 +29,6 @@ public class SegmentSkippingCommand extends Command
         GuildSettingsCache.setSegmentSkippingEnabled(guildId, enabled);
         ctx.reactLike();
         ctx.reply("Segment skipping has been **" + (enabled ? "enabled" : "disabled") + "**." +
-                (enabled ? " Please remember that this is an experimental feature and you may, but shouldn't experience issues with it. As SponsorBlock is a crowdsourced extension, some segments can be placed " +
-                        "at wrong timing. Report such submissions on SponsorBlock's Discord, not to the Developer.": ""));
+                (enabled ? " As SponsorBlock is a crowdsourced extension, some segments can be placed at wrong timing. Report such submissions on SponsorBlock's Discord, not to the Developer.": ""));
     }
 }
