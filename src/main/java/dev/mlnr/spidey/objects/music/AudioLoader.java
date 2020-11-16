@@ -10,7 +10,7 @@ import dev.mlnr.spidey.utils.MusicUtils;
 
 import static dev.mlnr.spidey.utils.MusicUtils.LoadFailureReason.FAIR_QUEUE;
 import static dev.mlnr.spidey.utils.MusicUtils.LoadFailureReason.QUEUE_FULL;
-import static dev.mlnr.spidey.utils.MusicUtils.formatDuration;
+import static dev.mlnr.spidey.utils.MusicUtils.formatLength;
 
 public class AudioLoader implements AudioLoadResultHandler
 {
@@ -44,53 +44,34 @@ public class AudioLoader implements AudioLoadResultHandler
         }
         final var guildId = ctx.getGuild().getIdLong();
         var originalLength = 0L;
-        var durationWithoutSegments = 0L;
+        var lengthWithoutSegments = 0L;
         var tracksLoaded = 0;
-        var overLengthLimit = 0;
-        var overFairQueueLimit = 0;
         for (final var track : tracks)
         {
             final var loadFailure = loadSingle(track, true);
             if (loadFailure == null)
             {
                 originalLength += track.getInfo().length;
-                durationWithoutSegments += MusicUtils.getLengthWithoutSegments(track, guildId);
+                lengthWithoutSegments += MusicUtils.getLengthWithoutSegments(track, guildId);
                 tracksLoaded++;
                 continue;
             }
             if (loadFailure == FAIR_QUEUE)
-            {
-                overFairQueueLimit++;
                 continue;
-            }
             if (loadFailure == QUEUE_FULL)
             {
                 ctx.replyError("I can't add any more tracks as " + QUEUE_FULL.getReason(), Emojis.DISLIKE);
                 break;
             }
-            overLengthLimit++; // the track is over 2 hours long
         }
         if (tracksLoaded == 0)
         {
-            ctx.replyError("No tracks could be loaded from the playlist. ", Emojis.DISLIKE);
+            ctx.replyError("No tracks could be loaded from the playlist.", Emojis.DISLIKE);
             return;
         }
-        final var duration = "(**" + formatDuration(originalLength) + "**" + (durationWithoutSegments == originalLength ? "" : " [**" + formatDuration(durationWithoutSegments) + "** without segments]") + ")";
-        final var trackAmount = tracks.size();
-        final var template = "**" + tracksLoaded + "** tracks from playlist **" + playlist.getName() + "** " + duration + " have been added to the queue. ";
-        if (tracksLoaded == trackAmount)
-        {
-            ctx.reactLike();
-            ctx.reply(template + "[" + ctx.getAuthor().getAsMention() + "]", null);
-            return;
-        }
-        if (overFairQueueLimit == trackAmount)
-        {
-            ctx.replyError("All tracks from the playlist were over the fair queue limit", Emojis.DISLIKE);
-            return;
-        }
-        if (overLengthLimit == trackAmount)
-            ctx.replyError("All tracks from the playlist were longer than 2 hours. To completely remove the length limit, you can purchase permanent VIP for a symbolic price of 2€", Emojis.DISLIKE);
+        ctx.reactLike();
+        ctx.reply("**" + tracksLoaded + "** tracks from playlist **" + playlist.getName() + "** " + formatLength(originalLength, lengthWithoutSegments)
+                + " have been added to the queue. [" + ctx.getAuthor().getAsMention() + "]", null);
     }
 
     @Override
@@ -136,11 +117,12 @@ public class AudioLoader implements AudioLoadResultHandler
         if (playlist)
             return null;
         final var lengthWithoutSegments = MusicUtils.getLengthWithoutSegments(track, guildId);
-        final var duration = "(**" + formatDuration(originalLength) + "**" + (lengthWithoutSegments == originalLength ? "" : " [**" + formatDuration(lengthWithoutSegments) + "** without segments]") + ")";
+        final var responseBuilder = new StringBuilder();
+        responseBuilder.append(stream ? "Livestream" : "Track").append(" **").append(title).append("**").append(stream ? "" : " " + formatLength(originalLength, lengthWithoutSegments)).append(" from channel **")
+                .append(channel).append("** has ").append(queue.isEmpty() ? "started playing" : "been added to the queue").append(". [").append(requester.getAsMention()).append("]");
 
         ctx.reactLike();
-        ctx.reply((stream ? "Livestream" : "Track") + " **" + title + "**" + (stream ? "" : " " + duration) + " from channel **" + channel + "**" + " has " + (queue.isEmpty()
-                ? "started playing" : "been added to the queue") + ". [" + requester.getAsMention() + "]", null);
+        ctx.reply(responseBuilder.toString(), null);
         return null;
     }
 }

@@ -36,6 +36,7 @@ public class MusicUtils
 
     private static final int MAX_FAIR_QUEUE = 3;
 
+    private static final int BLOCK_AMOUNT = 15;
     private static final String BLOCK_INACTIVE = "\u25AC";
     private static final String BLOCK_ACTIVE = "\uD83D\uDD18";
 
@@ -111,9 +112,9 @@ public class MusicUtils
 
     public static String getProgressBar(final long position, final long duration)
     {
-        final var activeBlocks = (int) ((float) position / duration * 15);
+        final var activeBlocks = (int) ((float) position / duration * BLOCK_AMOUNT);
         final var progressBuilder = new StringBuilder();
-        for (var i = 0; i < 15; i++)
+        for (var i = 0; i < BLOCK_AMOUNT; i++)
             progressBuilder.append(i == activeBlocks ? BLOCK_ACTIVE : BLOCK_INACTIVE);
         return progressBuilder.append(BLOCK_INACTIVE).append(" [**").append(formatDuration(position)).append("/").append(formatDuration(duration)).append("**]").toString();
     }
@@ -155,14 +156,24 @@ public class MusicUtils
     {
         final var queue = musicPlayer.getTrackScheduler().getQueue();
         final var trackInfo = track.getInfo();
-        final var isVip = GuildSettingsCache.isVip(guildId);
         if (queue.stream().filter(queued -> trackInfo.uri.equals(queued.getInfo().uri)).count() == MAX_FAIR_QUEUE)
             return FAIR_QUEUE;
-        if (!isVip && queue.size() == MAX_QUEUE_SIZE)
+        if (GuildSettingsCache.isVip(guildId))
+            return null;
+        if (queue.size() == MAX_QUEUE_SIZE)
             return QUEUE_FULL;
-        if (!isVip && trackInfo.length > MAX_TRACK_LENGTH_MILLIS)
+        if (trackInfo.length > MAX_TRACK_LENGTH_MILLIS)
             return TRACK_LONG;
         return null;
+    }
+
+    public static String formatLength(final long originalLength, final long lengthWithoutSegments)
+    {
+        final var durationBuilder = new StringBuilder().append("(**").append(formatDuration(originalLength)).append("**");
+        if (lengthWithoutSegments != originalLength)
+            durationBuilder.append(" [**").append(formatDuration(lengthWithoutSegments)).append("** without segments]");
+        durationBuilder.append(")");
+        return durationBuilder.toString();
     }
 
     public enum ConnectFailureReason
