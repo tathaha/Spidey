@@ -16,7 +16,7 @@ public class SegmentsCommand extends Command
 {
     public SegmentsCommand()
     {
-        super("segments", new String[]{"segs"}, "Lists all non music segments in this video", "segments (force/reload)", Category.MUSIC, Permission.UNKNOWN, 0, 0);
+        super("segments", new String[]{"segs"}, "Lists all non music segments in this video", "segments (force/reload)", Category.MUSIC, Permission.UNKNOWN, 0, 4);
     }
 
     @Override
@@ -39,9 +39,9 @@ public class SegmentsCommand extends Command
         var segments = VideoSegmentCache.getVideoSegments(videoId);
         if (args.length > 0)
         {
-            if (!(args[0].equalsIgnoreCase("reload") || args[0].equalsIgnoreCase("force")))
+            if (!(args[0].toLowerCase().startsWith("rel") || args[0].equalsIgnoreCase("force")))
             {
-                ctx.replyError("Valid arguments are **force** or **reload**");
+                ctx.replyError("Valid arguments are **force** or **(rel)oad**");
                 return;
             }
             segments = VideoSegmentCache.getVideoSegments(videoId, true);
