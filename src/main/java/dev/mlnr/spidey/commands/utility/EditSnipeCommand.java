@@ -1,8 +1,8 @@
 package dev.mlnr.spidey.commands.utility;
 
 import dev.mlnr.spidey.Core;
-import dev.mlnr.spidey.cache.GuildSettingsCache;
 import dev.mlnr.spidey.cache.MessageCache;
+import dev.mlnr.spidey.cache.settings.GuildSettingsCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;

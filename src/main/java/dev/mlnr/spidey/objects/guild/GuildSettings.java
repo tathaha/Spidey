@@ -10,15 +10,18 @@ public class GuildSettings
     private long joinRoleId;
     private String prefix;
 
+    private boolean snipingEnabled;
+    private boolean vip;
+
     private long djRoleId;
     private boolean segmentSkippingEnabled;
     private int defaultVolume;
 
-    private boolean snipingEnabled;
-    private boolean vip;
+    private boolean fairQueueEnabled;
+    private int fairQueueThreshold;
 
-    public GuildSettings(final long guildId, final long logChannelId, final long joinRoleId, final String prefix, final long djRoleId, final boolean segmentSkippingEnabled, final int defaultVolume,
-                         final boolean snipingEnabled, final boolean vip)
+    public GuildSettings(final long guildId, final long logChannelId, final long joinRoleId, final String prefix, final boolean snipingEnabled, final boolean vip, final long djRoleId,
+                         final boolean segmentSkippingEnabled, final int defaultVolume, final boolean fairQueueEnabled, final int fairQueueThreshold)
     {
         this.guildId = guildId;
 
@@ -26,12 +29,15 @@ public class GuildSettings
         this.joinRoleId = joinRoleId;
         this.prefix = prefix;
 
+        this.snipingEnabled = snipingEnabled;
+        this.vip = vip;
+
         this.djRoleId = djRoleId;
         this.segmentSkippingEnabled = segmentSkippingEnabled;
         this.defaultVolume = defaultVolume;
 
-        this.snipingEnabled = snipingEnabled;
-        this.vip = vip;
+        this.fairQueueEnabled = fairQueueEnabled;
+        this.fairQueueThreshold = fairQueueThreshold;
     }
 
     // getters
@@ -51,6 +57,18 @@ public class GuildSettings
         return this.prefix;
     }
 
+    public boolean isSnipingEnabled()
+    {
+        return this.snipingEnabled;
+    }
+
+    public boolean isVip()
+    {
+        return this.vip;
+    }
+
+    // music getters
+
     public long getDjRoleId()
     {
         return this.djRoleId;
@@ -66,14 +84,16 @@ public class GuildSettings
         return this.defaultVolume;
     }
 
-    public boolean isSnipingEnabled()
+    // fair queue getters
+
+    public boolean isFairQueueEnabled()
     {
-        return this.snipingEnabled;
+        return this.fairQueueEnabled;
     }
 
-    public boolean isVip()
+    public int getFairQueueThreshold()
     {
-        return this.vip;
+        return this.fairQueueThreshold;
     }
 
     // setters
@@ -96,16 +116,30 @@ public class GuildSettings
         DatabaseManager.setPrefix(guildId, prefix);
     }
 
+    public void setSnipingEnabled(final boolean enabled)
+    {
+        this.snipingEnabled = enabled;
+        DatabaseManager.setSnipingEnabled(guildId, enabled);
+    }
+
+    public void setVip(final boolean vip)
+    {
+        this.vip = vip;
+        DatabaseManager.setVip(guildId, vip);
+    }
+
+    // music setters
+
     public void setDjRoleId(final long djRoleId)
     {
         this.djRoleId = djRoleId;
         DatabaseManager.setDJRoleId(guildId, djRoleId);
     }
 
-    public void setSegmentSkippingEnabled(final boolean segmentSkippingEnabled)
+    public void setSegmentSkippingEnabled(final boolean enabled)
     {
-        this.segmentSkippingEnabled = segmentSkippingEnabled;
-        DatabaseManager.setSegmentSkippingEnabled(guildId, segmentSkippingEnabled);
+        this.segmentSkippingEnabled = enabled;
+        DatabaseManager.setGuildSegmentSkippingEnabled(guildId, enabled);
     }
 
     public void setDefaultVolume(final int defaultVolume)
@@ -114,15 +148,17 @@ public class GuildSettings
         DatabaseManager.setDefaultVolume(guildId, defaultVolume);
     }
 
-    public void setSnipingEnabled(final boolean snipingEnabled)
+    // fair queue setters
+
+    public void setFairQueueEnabled(final boolean enabled)
     {
-        this.snipingEnabled = snipingEnabled;
-        DatabaseManager.setSnipingEnabled(guildId, snipingEnabled);
+        this.fairQueueEnabled = enabled;
+        DatabaseManager.setFairQueueEnabled(guildId, enabled);
     }
 
-    public void setVip(final boolean vip)
+    public void setFairQueueThreshold(final int threshold)
     {
-        this.vip = vip;
-        DatabaseManager.setVip(guildId, vip);
+        this.fairQueueThreshold = threshold;
+        DatabaseManager.setFairQueueThreshold(guildId, threshold);
     }
 }

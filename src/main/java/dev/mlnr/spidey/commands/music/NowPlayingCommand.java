@@ -50,7 +50,6 @@ public class NowPlayingCommand extends Command
         progressBuilder.setThumbnail("https://i.ytimg.com/vi/" + trackInfo.identifier + "/maxresdefault.jpg");
         progressBuilder.setColor(paused ? Color.ORANGE : Color.GREEN);
         progressBuilder.setDescription(stream ? "Livestream" : MusicUtils.getProgressBar(position, originalLength));
-        progressBuilder.addField("Channel", trackInfo.author, true);
         progressBuilder.addField("Requested by", guild.getMemberById(MusicUtils.getRequesterId(playingTrack)).getEffectiveName(), true);
 
         if (lengthWithoutSegments != originalLength)

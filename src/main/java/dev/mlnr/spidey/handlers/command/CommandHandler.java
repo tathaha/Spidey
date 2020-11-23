@@ -7,13 +7,10 @@ import dev.mlnr.spidey.utils.KSoftAPIHelper;
 import dev.mlnr.spidey.utils.StringUtils;
 import dev.mlnr.spidey.utils.Utils;
 import io.github.classgraph.ClassGraph;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.*;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,14 +21,9 @@ import static dev.mlnr.spidey.handlers.command.CooldownHandler.isOnCooldown;
 public class CommandHandler
 {
 	private static final Map<String, Command> COMMANDS = new HashMap<>();
-	private static final Logger LOGGER =LoggerFactory.getLogger(CommandHandler.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CommandHandler.class);
 	private static final ClassGraph CLASS_GRAPH = new ClassGraph().acceptPackages("dev.mlnr.spidey.commands");
 	private static final String NO_PERMS = "Action can't be completed because you don't have **%s** permission";
-	public static final MessageEmbed ADMIN_WARNING = new EmbedBuilder().setAuthor("Potential security risk").setColor(Color.RED)
-									   .appendDescription("I have Administrator permission for this Discord server.")
-									   .appendDescription("\nAs this is a huge security risk, __i'll refuse to handle any command__.")
-									   .appendDescription("\n\nBots shouldn't have Administrator permission unless you *need* it for **your** bot.")
-									   .appendDescription("\nPlease __remove this permission and i'll work properly again__.").build();
 
 	private CommandHandler() {}
 

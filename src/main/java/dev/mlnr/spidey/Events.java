@@ -1,9 +1,9 @@
 package dev.mlnr.spidey;
 
 import dev.mlnr.spidey.cache.GeneralCache;
-import dev.mlnr.spidey.cache.GuildSettingsCache;
 import dev.mlnr.spidey.cache.MessageCache;
 import dev.mlnr.spidey.cache.music.MusicPlayerCache;
+import dev.mlnr.spidey.cache.settings.GuildSettingsCache;
 import dev.mlnr.spidey.handlers.command.CommandHandler;
 import dev.mlnr.spidey.objects.guild.InviteData;
 import dev.mlnr.spidey.objects.messages.MessageData;
@@ -48,11 +48,6 @@ public class Events extends ListenerAdapter
 		final var prefix = GuildSettingsCache.getPrefix(guildId);
 		if (!content.startsWith(prefix) || event.getAuthor().isBot())
 			return;
-		if (guild.getSelfMember().hasPermission(Permission.ADMINISTRATOR))
-		{
-			Utils.sendMessage(event.getChannel(), CommandHandler.ADMIN_WARNING);
-			return;
-		}
 		CommandHandler.handle(event, prefix);
 	}
 
@@ -231,7 +226,7 @@ public class Events extends ListenerAdapter
 		GeneralCache.getInviteCache().entrySet().removeIf(entry -> entry.getValue().getGuildId() == guildId);
 		MessageCache.pruneCache(guildId);
 		MusicPlayerCache.destroyMusicPlayer(guild);
-		GeneralCache.removeEntry(guildId);
+		GeneralCache.removeGuild(guildId);
 	}
 
 	@Override
@@ -264,7 +259,7 @@ public class Events extends ListenerAdapter
 			return;
 		final var user = event.getUser();
 		final var eb = new EmbedBuilder();
-		eb.setDescription("<:boosting:699731065052332123> **" + escape(user.getAsTag()) + "** has `boosted` the server. The server currently has **" + guild.getBoostCount() + "** boosts.");
+		eb.setDescription("**" + escape(user.getAsTag()) + "** has `boosted` the server. The server currently has **" + guild.getBoostCount() + "** boosts.");
 		eb.setAuthor("NEW BOOST");
 		eb.setColor(16023551);
 		eb.setFooter("User boost", user.getEffectiveAvatarUrl());

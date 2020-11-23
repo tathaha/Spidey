@@ -17,7 +17,7 @@ import static java.lang.Float.parseFloat;
 
 public class Requester
 {
-    private static final Logger LOGGER =LoggerFactory.getLogger(Requester.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Requester.class);
     private static final OkHttpClient HTTP_CLIENT = new OkHttpClient();
     private static final Request.Builder REQUEST_BUILDER = new Request.Builder().header("user-agent", "dev.mlnr.spidey");
 

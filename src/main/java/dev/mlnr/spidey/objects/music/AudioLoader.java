@@ -10,6 +10,7 @@ import dev.mlnr.spidey.utils.MusicUtils;
 
 import static dev.mlnr.spidey.utils.MusicUtils.LoadFailureReason.FAIR_QUEUE;
 import static dev.mlnr.spidey.utils.MusicUtils.LoadFailureReason.QUEUE_FULL;
+import static dev.mlnr.spidey.utils.MusicUtils.createMusicResponseBuilder;
 import static dev.mlnr.spidey.utils.MusicUtils.formatLength;
 
 public class AudioLoader implements AudioLoadResultHandler
@@ -69,9 +70,11 @@ public class AudioLoader implements AudioLoadResultHandler
             ctx.replyError("No tracks could be loaded from the playlist.", Emojis.DISLIKE);
             return;
         }
-        ctx.reactLike();
-        ctx.reply("**" + tracksLoaded + "** tracks from playlist **" + playlist.getName() + "** " + formatLength(originalLength, lengthWithoutSegments)
-                + " have been added to the queue. [" + ctx.getAuthor().getAsMention() + "]", null);
+        final var responseEmbedBuilder = createMusicResponseBuilder();
+        final var responseDescriptionBuilder = responseEmbedBuilder.getDescriptionBuilder();
+        responseDescriptionBuilder.append("Queued").append(" **").append(tracksLoaded).append("** tracks ").append(formatLength(originalLength, lengthWithoutSegments)).append(" [")
+                .append(ctx.getAuthor().getAsMention()).append("]");
+        ctx.reply(responseEmbedBuilder);
     }
 
     @Override
@@ -101,12 +104,11 @@ public class AudioLoader implements AudioLoadResultHandler
         if (loadFailure != null)
         {
             if (!playlist)
-                ctx.replyError("I can't load this track as " + loadFailure.getReason(), Emojis.DISLIKE);
+                ctx.replyError("I can't load this track as " + (loadFailure == FAIR_QUEUE ? MusicUtils.getFormattedFairQueueReason(guildId) : loadFailure.getReason()), Emojis.DISLIKE);
             return loadFailure;
         }
         final var requester = ctx.getAuthor();
-        final var title = trackInfo.title;
-        final var channel = trackInfo.author;
+        final var title = "[" + trackInfo.title + "](" + trackInfo.uri + ")";
         final var originalLength = trackInfo.length;
         final var stream = trackInfo.isStream;
 
@@ -117,12 +119,12 @@ public class AudioLoader implements AudioLoadResultHandler
         if (playlist)
             return null;
         final var lengthWithoutSegments = MusicUtils.getLengthWithoutSegments(track, guildId);
-        final var responseBuilder = new StringBuilder();
-        responseBuilder.append(stream ? "Livestream" : "Track").append(" **").append(title).append("**").append(stream ? "" : " " + formatLength(originalLength, lengthWithoutSegments)).append(" from channel **")
-                .append(channel).append("** has ").append(queue.isEmpty() ? "started playing" : "been added to the queue").append(". [").append(requester.getAsMention()).append("]");
 
-        ctx.reactLike();
-        ctx.reply(responseBuilder.toString(), null);
+        final var responseEmbedBuilder = createMusicResponseBuilder();
+        final var responseDescriptionBuilder = responseEmbedBuilder.getDescriptionBuilder();
+        responseDescriptionBuilder.append(queue.isEmpty() ? "Playing" : "Queued").append(" ").append(title).append(stream ? "" : " " + formatLength(originalLength, lengthWithoutSegments)).append(" [")
+                .append(requester.getAsMention()).append("]");
+        ctx.reply(responseEmbedBuilder);
         return null;
     }
 }

@@ -29,7 +29,7 @@ public class RepeatCommand extends Command
         }
         if (!MusicUtils.canInteract(ctx.getMember()))
         {
-            ctx.replyError("You have to be a DJ to set the repeat mode");
+            ctx.replyError("You have to be a DJ/Server Manager to set the repeat mode");
             return;
         }
         final var trackScheduler = musicPlayer.getTrackScheduler();

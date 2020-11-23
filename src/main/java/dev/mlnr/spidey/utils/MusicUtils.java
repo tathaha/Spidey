@@ -6,11 +6,11 @@ import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.TrackMarker;
-import dev.mlnr.spidey.cache.GuildSettingsCache;
-import dev.mlnr.spidey.cache.music.VideoSegmentCache;
+import dev.mlnr.spidey.cache.settings.GuildSettingsCache;
 import dev.mlnr.spidey.handlers.music.SegmentHandler;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.music.MusicPlayer;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -20,6 +20,8 @@ import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
+import static dev.mlnr.spidey.cache.music.VideoSegmentCache.getVideoSegments;
+import static dev.mlnr.spidey.cache.settings.GuildSettingsCache.isSegmentSkippingEnabled;
 import static dev.mlnr.spidey.utils.MusicUtils.ConnectFailureReason.*;
 import static dev.mlnr.spidey.utils.MusicUtils.LoadFailureReason.*;
 
@@ -27,14 +29,14 @@ public class MusicUtils
 {
     public static final Pattern YOUTUBE_URL_PATTERN = Pattern.compile("^(https?://)?((www|m)\\.)?youtu(\\.be|be\\.com)/(playlist\\?list=([a-zA-Z0-9-_]+))?((watch\\?v=)?([a-zA-Z0-9-_]{11})(&list=([a-zA-Z0-9-_]+))?)?");
 
-    public static final int MAX_QUEUE_SIZE = 150;
+    public static final int MAX_FAIR_QUEUE = 3;
 
     private static final int MAX_TRACK_LENGTH_HOURS = 2;
     public static final long MAX_TRACK_LENGTH_MILLIS = TimeUnit.HOURS.toMillis(MAX_TRACK_LENGTH_HOURS);
 
-    private static final AudioPlayerManager AUDIO_PLAYER_MANAGER = new DefaultAudioPlayerManager();
+    public static final int MAX_QUEUE_SIZE = 150;
 
-    private static final int MAX_FAIR_QUEUE = 3;
+    private static final AudioPlayerManager AUDIO_PLAYER_MANAGER = new DefaultAudioPlayerManager();
 
     private static final int BLOCK_AMOUNT = 15;
     private static final String BLOCK_INACTIVE = "\u25AC";
@@ -121,9 +123,9 @@ public class MusicUtils
 
     public static void handleMarkers(final AudioTrack track, final long guildId)
     {
-        if (!GuildSettingsCache.isSegmentSkippingEnabled(guildId))
+        if (!isSegmentSkippingEnabled(guildId))
             return;
-        final var segments = VideoSegmentCache.getVideoSegments(track.getIdentifier());
+        final var segments = getVideoSegments(track.getIdentifier());
         if (!segments.isEmpty())
             track.setMarker(new TrackMarker(segments.get(0).getSegmentStart(), new SegmentHandler(track)));
     }
@@ -131,9 +133,9 @@ public class MusicUtils
     public static long getLengthWithoutSegments(final AudioTrack track, final long guildId)
     {
         final var length = track.getInfo().length;
-        if (!GuildSettingsCache.isSegmentSkippingEnabled(guildId))
+        if (!isSegmentSkippingEnabled(guildId))
             return length;
-        final var segments = VideoSegmentCache.getVideoSegments(track.getIdentifier());
+        final var segments = getVideoSegments(track.getIdentifier());
         return segments.isEmpty() ? length : length - segments.stream().mapToLong(segment -> segment.getSegmentEnd() - segment.getSegmentStart()).sum();
     }
 
@@ -156,7 +158,8 @@ public class MusicUtils
     {
         final var queue = musicPlayer.getTrackScheduler().getQueue();
         final var trackInfo = track.getInfo();
-        if (queue.stream().filter(queued -> trackInfo.uri.equals(queued.getInfo().uri)).count() == MAX_FAIR_QUEUE)
+        final var fairQueueThreshold = getFairQueueThreshold(guildId);
+        if (fairQueueThreshold != -1 && queue.stream().filter(queued -> trackInfo.uri.equals(queued.getInfo().uri)).count() == fairQueueThreshold)
             return FAIR_QUEUE;
         if (GuildSettingsCache.isVip(guildId))
             return null;
@@ -174,6 +177,21 @@ public class MusicUtils
             durationBuilder.append(" [**").append(formatDuration(lengthWithoutSegments)).append("** without segments]");
         durationBuilder.append(")");
         return durationBuilder.toString();
+    }
+
+    public static EmbedBuilder createMusicResponseBuilder()
+    {
+        return new EmbedBuilder().setColor(Utils.SPIDEY_COLOR);
+    }
+
+    public static String getFormattedFairQueueReason(final long guildId)
+    {
+        return String.format(FAIR_QUEUE.getReason(), GuildSettingsCache.getFairQueueThreshold(guildId), GuildSettingsCache.getPrefix(guildId));
+    }
+
+    private static int getFairQueueThreshold(final long guildId)
+    {
+        return GuildSettingsCache.isFairQueueEnabled(guildId) ? GuildSettingsCache.getFairQueueThreshold(guildId) : -1;
     }
 
     public enum ConnectFailureReason
@@ -200,7 +218,8 @@ public class MusicUtils
     {
         QUEUE_FULL("the max queue size of **" + MAX_QUEUE_SIZE + "** tracks has been reached! To completely remove this limit, you can purchase permanent VIP for a symbolic price of 2€"),
         TRACK_LONG("the track is at least **" + MAX_TRACK_LENGTH_HOURS + "** hours long. To completely remove the length limit, you can purchase permanent VIP for a symbolic price of 2€"),
-        FAIR_QUEUE("the fair queue limit of **" + MAX_FAIR_QUEUE + "** tracks has been reached! Don't queue the same song over and over again");
+        FAIR_QUEUE("the fair queue limit of **%d** tracks has been reached! Don't queue the same song over and over again. A DJ or a Server Manager can disable this or increase the threshold by using" +
+                "`%sfairqueue (threshold)`");
 
         private final String reason;
 

@@ -28,7 +28,7 @@ public class StopCommand extends Command
         }
         if (!MusicUtils.canInteract(ctx.getMember()))
         {
-            ctx.replyError("You have to be a DJ to stop the playback");
+            ctx.replyError("You have to be a DJ/Server Manager to stop the playback");
             return;
         }
         MusicPlayerCache.destroyMusicPlayer(guild);

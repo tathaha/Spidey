@@ -20,7 +20,7 @@ import static net.dv8tion.jda.api.utils.cache.CacheFlag.*;
 
 public class Core
 {
-	private static final Logger LOGGER =LoggerFactory.getLogger(Core.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(Core.class);
 	private static final ScheduledExecutorService SCHEDULER = ThreadingConfig.newScheduler(1, () -> "Spidey", "Scheduler");
 	private static final EventWaiter WAITER = new EventWaiter(SCHEDULER, true);
 	private static JDA jda;

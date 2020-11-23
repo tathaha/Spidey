@@ -1,4 +1,4 @@
-package dev.mlnr.spidey.cache;
+package dev.mlnr.spidey.cache.settings;
 
 import dev.mlnr.spidey.Core;
 import dev.mlnr.spidey.DatabaseManager;
@@ -33,6 +33,18 @@ public class GuildSettingsCache
         return getGuildSettings(guildId).getPrefix();
     }
 
+    public static boolean isSnipingEnabled(final long guildId)
+    {
+        return getGuildSettings(guildId).isSnipingEnabled();
+    }
+
+    public static boolean isVip(final long guildId)
+    {
+        return getGuildSettings(guildId).isVip();
+    }
+
+    // music getters
+
     public static long getDJRoleId(final long guildId)
     {
         return getGuildSettings(guildId).getDjRoleId();
@@ -43,14 +55,21 @@ public class GuildSettingsCache
         return getGuildSettings(guildId).isSegmentSkippingEnabled();
     }
 
-    public static boolean isSnipingEnabled(final long guildId)
+    public static int getDefaultVolume(final long guildId)
     {
-        return getGuildSettings(guildId).isSnipingEnabled();
+        return getGuildSettings(guildId).getDefaultVolume();
     }
 
-    public static boolean isVip(final long guildId)
+    // fair queue getters
+
+    public static boolean isFairQueueEnabled(final long guildId)
     {
-        return getGuildSettings(guildId).isVip();
+        return getGuildSettings(guildId).isFairQueueEnabled();
+    }
+
+    public static int getFairQueueThreshold(final long guildId)
+    {
+        return getGuildSettings(guildId).getFairQueueThreshold();
     }
 
     // setters
@@ -70,24 +89,43 @@ public class GuildSettingsCache
         getGuildSettings(guildId).setPrefix(prefix);
     }
 
-    public static void setDJRoleId(final long guildId, final long djRoleId)
+    public static void setSnipingEnabled(final long guildId, final boolean enabled)
     {
-        getGuildSettings(guildId).setDjRoleId(djRoleId);
-    }
-
-    public static void setSegmentSkippingEnabled(final long guildId, final boolean segmentSkippingEnabled)
-    {
-        getGuildSettings(guildId).setSegmentSkippingEnabled(segmentSkippingEnabled);
-    }
-
-    public static void setSnipingEnabled(final long guildId, final boolean snipingEnabled)
-    {
-        getGuildSettings(guildId).setSnipingEnabled(snipingEnabled);
+        getGuildSettings(guildId).setSnipingEnabled(enabled);
     }
 
     public static void setVip(final long guildId, final boolean vip)
     {
         getGuildSettings(guildId).setVip(vip);
+    }
+
+    // music setters
+
+    public static void setDJRoleId(final long guildId, final long djRoleId)
+    {
+        getGuildSettings(guildId).setDjRoleId(djRoleId);
+    }
+
+    public static void setSegmentSkippingEnabled(final long guildId, final boolean enabled)
+    {
+        getGuildSettings(guildId).setSegmentSkippingEnabled(enabled);
+    }
+
+    public static void setDefaultVolume(final long guildId, final int volume)
+    {
+        getGuildSettings(guildId).setDefaultVolume(volume);
+    }
+
+    // fair queue setters
+
+    public static void setFairQueueEnabled(final long guildId, final boolean enabled)
+    {
+        getGuildSettings(guildId).setFairQueueEnabled(enabled);
+    }
+
+    public static void setFairQueueThreshold(final long guildId, final int threshold)
+    {
+        getGuildSettings(guildId).setFairQueueThreshold(threshold);
     }
 
     // removals

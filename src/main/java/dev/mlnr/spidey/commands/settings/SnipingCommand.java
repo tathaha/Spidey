@@ -1,7 +1,7 @@
 package dev.mlnr.spidey.commands.settings;
 
-import dev.mlnr.spidey.cache.GuildSettingsCache;
 import dev.mlnr.spidey.cache.MessageCache;
+import dev.mlnr.spidey.cache.settings.GuildSettingsCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
@@ -12,7 +12,7 @@ public class SnipingCommand extends Command
 {
     public SnipingCommand()
     {
-        super("sniping", new String[]{}, "Enables/disables message delete/edit sniping", "sniping", Category.SETTINGS, Permission.UNKNOWN, 0, 0);
+        super("sniping", new String[]{}, "Enables/disables message delete/edit sniping", "sniping", Category.SETTINGS, Permission.MANAGE_SERVER, 0, 0);
     }
 
     @Override

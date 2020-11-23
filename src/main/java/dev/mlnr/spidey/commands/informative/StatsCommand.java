@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.commands.informative;
 
-import dev.mlnr.spidey.cache.GuildSettingsCache;
+import dev.mlnr.spidey.cache.settings.GuildSettingsCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
@@ -28,7 +28,7 @@ public class StatsCommand extends Command
 		final var runtime = Runtime.getRuntime();
 		final var total = runtime.totalMemory();
 		final var memory = (total - runtime.freeMemory()) / 1000000;
-		eb.setColor(3288807);
+		eb.setColor(Utils.SPIDEY_COLOR);
 		eb.setAuthor("Spidey's stats", null, jda.getSelfUser().getEffectiveAvatarUrl());
 		eb.setDescription("For more info about Spidey, type " + prefix + "info");
 		eb.addField("Total servers", String.valueOf(jda.getGuildCache().size()), true);

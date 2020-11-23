@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.handlers.command;
 
-import dev.mlnr.spidey.cache.GuildSettingsCache;
+import dev.mlnr.spidey.cache.settings.GuildSettingsCache;
 import dev.mlnr.spidey.objects.command.Command;
 
 import java.util.HashMap;
@@ -10,7 +10,7 @@ public class CooldownHandler
 {
     private static final Map<Command, Map<Long, Long>> COOLDOWN_MAP = new HashMap<>(); // K = Command, V = Map<userId, Timestamp>
 
-    private CooldownHandler(){}
+    private CooldownHandler() {}
 
     public static void cooldown(final long guildId, final long userId, final Command command)
     {

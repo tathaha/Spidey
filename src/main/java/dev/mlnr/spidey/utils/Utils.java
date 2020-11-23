@@ -33,6 +33,7 @@ public class Utils
     private static final Pattern ID_REGEX = Pattern.compile("(\\d{17,20})");
     private static final Pattern TAG_REGEX = Pattern.compile("\\S{2,32}#\\d{4}");
     public static final Pattern TEXT_PATTERN = Pattern.compile("[a-zA-Z0-9-_]+");
+    public static final int SPIDEY_COLOR = 3288807;
 
     private Utils() {}
 
