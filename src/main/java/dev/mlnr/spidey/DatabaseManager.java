@@ -203,28 +203,28 @@ public class DatabaseManager
 		return Collections.emptyList();
 	}
 
-	private static void manageMusicFavorite(final long userId, final String videoId, final boolean add)
+	private static void manageMusicFavorite(final long userId, final String query, final boolean add)
 	{
-		final var query = add ? "INSERT INTO favorites (user_id, query) VALUES (?, ?)" : "DELETE FROM favorites WHERE user_id=? AND query=?";
-		try (final var con = initializeConnection(); final var ps = con.prepareStatement(query))
+		final var sql = add ? "INSERT INTO favorites (user_id, query) VALUES (?, ?)" : "DELETE FROM favorites WHERE user_id=? AND query=?";
+		try (final var con = initializeConnection(); final var ps = con.prepareStatement(sql))
 		{
 			ps.setLong(1, userId);
-			ps.setString(2, videoId);
+			ps.setString(2, query);
 			ps.executeUpdate();
 		}
 		catch (final SQLException ex)
 		{
-			LOGGER.error("There was an error while {} favorite \"{}\" for user {}!", add ? "adding" : "removing", videoId, userId, ex);
+			LOGGER.error("There was an error while {} favorite \"{}\" for user {}!", add ? "adding" : "removing", query, userId, ex);
 		}
 	}
 
-	public static void addMusicFavorite(final long userId, final String videoId)
+	public static void addMusicFavorite(final long userId, final String query)
 	{
-		manageMusicFavorite(userId, videoId, true);
+		manageMusicFavorite(userId, query, true);
 	}
 
-	public static void removeMusicFavorite(final long userId, final String videoId)
+	public static void removeMusicFavorite(final long userId, final String query)
 	{
-		manageMusicFavorite(userId, videoId, false);
+		manageMusicFavorite(userId, query, false);
 	}
 }

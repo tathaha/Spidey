@@ -28,9 +28,9 @@ public class UserSettingsCache
 
     // setters
 
-    public static void addMusicFavorite(final long userId, final String videoId)
+    public static void addMusicFavorite(final long userId, final String query)
     {
-        getUserSettings(userId).addMusicFavorite(videoId);
+        getUserSettings(userId).addMusicFavorite(query);
     }
 
     public static void setSegmentSkippingEnabled(final long userId, final boolean enabled)
@@ -40,9 +40,9 @@ public class UserSettingsCache
 
     // removals
 
-    public static void removeMusicFavorite(final long userId, final String videoId)
+    public static void removeMusicFavorite(final long userId, final String query)
     {
-        getUserSettings(userId).removeMusicFavorite(videoId);
+        getUserSettings(userId).removeMusicFavorite(query);
     }
 
     // other

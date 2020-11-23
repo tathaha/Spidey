@@ -33,10 +33,10 @@ public class UserSettings
 
     // setters
 
-    public void addMusicFavorite(final String videoId)
+    public void addMusicFavorite(final String query)
     {
-        musicFavorites.add(videoId);
-        DatabaseManager.addMusicFavorite(this.userId, videoId);
+        musicFavorites.add(query);
+        DatabaseManager.addMusicFavorite(this.userId, query);
     }
 
     public void setSegmentSkippingEnabled(final boolean enabled)
@@ -47,9 +47,9 @@ public class UserSettings
 
     // removals
 
-    public void removeMusicFavorite(final String videoId)
+    public void removeMusicFavorite(final String query)
     {
-        musicFavorites.remove(videoId);
-        DatabaseManager.removeMusicFavorite(this.userId, videoId);
+        musicFavorites.remove(query);
+        DatabaseManager.removeMusicFavorite(this.userId, query);
     }
 }
