@@ -56,17 +56,7 @@ public class DatabaseManager
 
 	private static <T> void executeGuildSetQuery(final String property, final long guildId, final T value)
 	{
-		final var query = "INSERT INTO guilds (guild_id, " + property + ") VALUES (?, ?) ON CONFLICT (guild_id) DO UPDATE SET " + property + "='" + value + "'";
-		try (final var db = initializeConnection(); final var ps = db.prepareStatement(query))
-		{
-			ps.setLong(1, guildId);
-			ps.setObject(2, value);
-			ps.executeUpdate();
-		}
-		catch (final SQLException ex)
-		{
-			LOGGER.error("There was an error while setting the {} property for guild {}!", property, guildId, ex);
-		}
+		insert(property, guildId, value, false);
 	}
 
 	public static void removeGuild(final long guildId)
@@ -104,16 +94,25 @@ public class DatabaseManager
 
 	private static <T> void executeUserSetQuery(final String property, final long userId, final T value)
 	{
-		final var query = "INSERT INTO users (user_id, " + property + ") VALUES (?, ?) ON CONFLICT (user_id) DO UPDATE SET " + property + "='" + value + "'";
-		try (final var db = initializeConnection(); final var ps = db.prepareStatement(query))
+		insert(property, userId, value, true);
+	}
+
+	// helper method
+
+	private static <T> void insert(final String property, final long id, final T value, final boolean user)
+	{
+		final var table = user ? "users" : "guilds";
+		final var query = "INSERT INTO " + table + " (%s, " + property + ") VALUES (?, ?) ON CONFLICT (%s) DO UPDATE SET " + property + "='" + value + "'";
+		final var idType = user ? "user_id" : "guild_id";
+		try (final var db = initializeConnection(); final var ps = db.prepareStatement(String.format(query, idType, idType)))
 		{
-			ps.setLong(1, userId);
+			ps.setLong(1, id);
 			ps.setObject(2, value);
 			ps.executeUpdate();
 		}
 		catch (final SQLException ex)
 		{
-			LOGGER.error("There was an error while setting the {} property for user {}!", property, userId, ex);
+			LOGGER.error("There was an error while setting the {} property for {} {}!", property, user ? "user" : "guild", id, ex);
 		}
 	}
 
