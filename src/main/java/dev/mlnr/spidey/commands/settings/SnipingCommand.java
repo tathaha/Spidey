@@ -12,7 +12,7 @@ public class SnipingCommand extends Command
 {
     public SnipingCommand()
     {
-        super("sniping", new String[]{}, "Enables/disables message delete/edit sniping", "sniping", Category.SETTINGS, Permission.MANAGE_SERVER, 0, 0);
+        super("sniping", new String[]{}, "Enables/disables message delete/edit sniping", "sniping", Category.SETTINGS, Permission.MANAGE_SERVER, 0, 4);
     }
 
     @Override

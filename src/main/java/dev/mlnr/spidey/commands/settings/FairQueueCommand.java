@@ -14,8 +14,8 @@ public class FairQueueCommand extends Command
 {
     public FairQueueCommand()
     {
-        super("fairqueue", new String[]{"fq"}, "Enables/disables fair queue or sets the threshold", "fairqueue (threshold from 2 to 10; default = " + MusicUtils.MAX_FAIR_QUEUE + ")",
-                Category.SETTINGS, Permission.UNKNOWN, 0, 0);
+        super("fairqueue", new String[]{"fq"}, "Enables/disables fair queue or sets the threshold", "fairqueue (threshold from 2 to 10; default = enabled, " + MusicUtils.MAX_FAIR_QUEUE + ")",
+                Category.SETTINGS, Permission.UNKNOWN, 0, 4);
     }
 
     @Override

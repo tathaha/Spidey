@@ -14,7 +14,7 @@ public class SegmentSkippingCommand extends Command
     public SegmentSkippingCommand()
     {
         super("segmentskipping", new String[]{"segmentskip", "segskip", "skipping", "segskipping"}, "Enables/disables non-music segment skipping (experimental feature)", "segmentskipping",
-                Category.SETTINGS, Permission.UNKNOWN, 0, 0);
+                Category.SETTINGS, Permission.UNKNOWN, 0, 4);
     }
 
     @Override

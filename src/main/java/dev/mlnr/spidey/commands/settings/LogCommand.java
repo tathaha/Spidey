@@ -11,7 +11,7 @@ public class LogCommand extends Command
 {
 	public LogCommand()
 	{
-		super ("log", new String[]{}, "Sets log channel", "log", Category.SETTINGS, Permission.MANAGE_SERVER, 0, 2);
+		super ("log", new String[]{}, "Sets log channel", "log", Category.SETTINGS, Permission.MANAGE_SERVER, 0, 4);
 	}
 
 	@Override
