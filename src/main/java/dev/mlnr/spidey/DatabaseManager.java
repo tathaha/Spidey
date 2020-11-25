@@ -75,27 +75,28 @@ public class DatabaseManager
 
 	public static UserSettings retrieveUserSettings(final long userId)
 	{
-		try (final var db = initializeConnection(); final var ps = db.prepareStatement("SELECT * FROM users WHERE user_id=?"))
-		{
-			ps.setLong(1, userId);
-			try (final var rs = ps.executeQuery())
-			{
-				final var favorites = retrieveMusicFavorites(userId);
-				return rs.next() ? new UserSettings(userId, favorites, rs.getBoolean("music_segment_skipping"))
-						 : new UserSettings(userId, favorites, false); // default settings
-			}
-		}
-		catch (final SQLException ex)
-		{
-			LOGGER.error("There was an error while requesting the user settings for user {}!", userId, ex);
-		}
-		return null;
+//		try (final var db = initializeConnection(); final var ps = db.prepareStatement("SELECT * FROM users WHERE user_id=?"))
+//		{
+//			ps.setLong(1, userId);
+//			try (final var rs = ps.executeQuery())
+//			{
+//				final var favorites = retrieveMusicFavorites(userId);
+//				return rs.next() ? new UserSettings(userId, favorites)
+//						 : new UserSettings(userId, favorites);
+//			}
+//		}
+//		catch (final SQLException ex)
+//		{
+//			LOGGER.error("There was an error while requesting the user settings for user {}!", userId, ex);
+//		}
+//		return null; // TODO change this back after adding user properties
+		return new UserSettings(userId, retrieveMusicFavorites(userId));
 	}
 
-	private static <T> void executeUserSetQuery(final String property, final long userId, final T value)
-	{
-		insert(property, userId, value, true);
-	}
+//	private static <T> void executeUserSetQuery(final String property, final long userId, final T value)
+//	{
+//		insert(property, userId, value, true);
+//	}
 
 	// helper method
 
@@ -151,7 +152,7 @@ public class DatabaseManager
 		executeGuildSetQuery("music_dj_role_id", guildId, djRoleId);
 	}
 
-	public static void setGuildSegmentSkippingEnabled(final long guildId, final boolean enabled)
+	public static void setSegmentSkippingEnabled(final long guildId, final boolean enabled)
 	{
 		executeGuildSetQuery("music_segment_skipping", guildId, enabled);
 	}
@@ -171,13 +172,6 @@ public class DatabaseManager
 	public static void setFairQueueThreshold(final long guildId, final int threshold)
 	{
 		executeGuildSetQuery("music_fair_queue_threshold", guildId, threshold);
-	}
-
-	// user setters
-
-	public static void setUserSegmentSkippingEnabled(final long userId, final boolean enabled)
-	{
-		executeUserSetQuery("music_segment_skipping", userId, enabled);
 	}
 
 	// user favorites stuff

@@ -9,14 +9,12 @@ public class UserSettings
     private final long userId;
 
     private final List<String> musicFavorites;
-    private boolean segmentSkippingEnabled;
 
-    public UserSettings(final long userId, final List<String> musicFavorites, final boolean segmentSkippingEnabled)
+    public UserSettings(final long userId, final List<String> musicFavorites)
     {
         this.userId = userId;
 
         this.musicFavorites = musicFavorites;
-        this.segmentSkippingEnabled = segmentSkippingEnabled;
     }
 
     // getters
@@ -26,23 +24,12 @@ public class UserSettings
         return this.musicFavorites;
     }
 
-    public boolean isSegmentSkippingEnabled()
-    {
-        return this.segmentSkippingEnabled;
-    }
-
     // setters
 
     public void addMusicFavorite(final String query)
     {
         musicFavorites.add(query);
         DatabaseManager.addMusicFavorite(this.userId, query);
-    }
-
-    public void setSegmentSkippingEnabled(final boolean enabled)
-    {
-        this.segmentSkippingEnabled = enabled;
-        DatabaseManager.setUserSegmentSkippingEnabled(this.userId, enabled);
     }
 
     // removals

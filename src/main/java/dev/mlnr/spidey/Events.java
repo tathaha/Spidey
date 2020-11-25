@@ -307,7 +307,7 @@ public class Events extends ListenerAdapter
 		if (!GuildSettingsCache.isSnipingEnabled(event.getGuild().getIdLong()))
 			return;
 		final var messageId = event.getMessageIdLong();
-		if(!MessageCache.isCached(messageId))
+		if (!MessageCache.isCached(messageId))
 			return;
 		MessageCache.setLastDeletedMessage(event.getChannel().getIdLong(), messageId);
 	}
@@ -318,7 +318,7 @@ public class Events extends ListenerAdapter
 		if (!GuildSettingsCache.isSnipingEnabled(event.getGuild().getIdLong()))
 			return;
 		final var messageId = event.getMessageIdLong();
-		if(!MessageCache.isCached(messageId))
+		if (!MessageCache.isCached(messageId))
 			return;
 		MessageCache.cacheMessage(messageId, new MessageData(event.getMessage()));
 		MessageCache.setLastEditedMessage(event.getChannel().getIdLong(), messageId);

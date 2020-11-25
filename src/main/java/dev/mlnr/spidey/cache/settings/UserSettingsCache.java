@@ -21,21 +21,11 @@ public class UserSettingsCache
         return getUserSettings(userId).getMusicFavorites();
     }
 
-    public static boolean isSegmentSkippingEnabled(final long userId)
-    {
-        return getUserSettings(userId).isSegmentSkippingEnabled();
-    }
-
     // setters
 
     public static void addMusicFavorite(final long userId, final String query)
     {
         getUserSettings(userId).addMusicFavorite(query);
-    }
-
-    public static void setSegmentSkippingEnabled(final long userId, final boolean enabled)
-    {
-        getUserSettings(userId).setSegmentSkippingEnabled(enabled);
     }
 
     // removals

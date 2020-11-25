@@ -139,7 +139,7 @@ public class GuildSettings
     public void setSegmentSkippingEnabled(final boolean enabled)
     {
         this.segmentSkippingEnabled = enabled;
-        DatabaseManager.setGuildSegmentSkippingEnabled(guildId, enabled);
+        DatabaseManager.setSegmentSkippingEnabled(guildId, enabled);
     }
 
     public void setDefaultVolume(final int defaultVolume)
