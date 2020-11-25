@@ -5,6 +5,7 @@ import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.utils.MusicUtils;
+import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
 
 @SuppressWarnings("unused")
@@ -36,7 +37,7 @@ public class PauseCommand extends Command
             ctx.replyError("You have to be the requester of the song or DJ to pause/unpause the playback");
             return;
         }
-        musicPlayer.pauseOrUnpause();
-        ctx.reactLike();
+        final var paused = musicPlayer.pauseOrUnpause();
+        Utils.addReaction(ctx.getMessage(), paused ? "\u23F8\uFE0F" : "\u25B6\uFE0F");
     }
 }

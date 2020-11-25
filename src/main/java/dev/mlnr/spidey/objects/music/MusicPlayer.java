@@ -53,9 +53,11 @@ public class MusicPlayer
         return audioPlayer.getPlayingTrack();
     }
 
-    public void pauseOrUnpause()
+    public boolean pauseOrUnpause()
     {
-        audioPlayer.setPaused(!isPaused());
+        final var state = !isPaused();
+        audioPlayer.setPaused(state);
+        return state;
     }
 
     public boolean isPaused()
