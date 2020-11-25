@@ -42,6 +42,7 @@ public class Core
 					)
 					.disableCache(
 						MEMBER_OVERRIDES,
+						ROLE_TAGS,
 						ACTIVITY,
 						CLIENT_STATUS // i disable these last 2 cacheflags explicitly so i don't get warnings
 					)
