@@ -2,7 +2,6 @@ package dev.mlnr.spidey.utils;
 
 import dev.mlnr.spidey.Core;
 import dev.mlnr.spidey.cache.GeneralCache;
-import dev.mlnr.spidey.cache.MessageCache;
 import dev.mlnr.spidey.handlers.command.CommandHandler;
 import dev.mlnr.spidey.objects.guild.InviteData;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -10,6 +9,8 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
+import net.jodah.expiringmap.ExpirationPolicy;
+import net.jodah.expiringmap.ExpiringMap;
 
 import java.time.Duration;
 import java.time.OffsetDateTime;
@@ -102,16 +103,13 @@ public class Utils
     public static void startup(final JDA jda)
     {
         CommandHandler.registerCommands();
-        final var executor = Core.getScheduler();
-        final var activities = new ArrayList<Supplier<Activity>>(asList(
+        final var activities = new ArrayList<Supplier<Activity>>(asList( // we use supplier here so the values of getUserCache and getGuildCache are updated each time
                 () -> listening("your commands"),
                 () -> watching("you"),
                 () -> watching(jda.getGuildCache().size() + " guilds"),
                 () -> watching(jda.getUserCache().size() + " users")
         ));
-        executor.scheduleAtFixedRate(() -> jda.getPresence().setActivity(nextActivity(activities)), 0, 30, TimeUnit.SECONDS);
-        executor.scheduleAtFixedRate(() -> // TODO maybe clear all caches here too?
-                MessageCache.getCache().entrySet().removeIf(entry -> entry.getValue().getCreation().isBefore(OffsetDateTime.now().minusMinutes(10).toInstant())), 15, 15, TimeUnit.MINUTES);
+        Core.getScheduler().scheduleAtFixedRate(() -> jda.getPresence().setActivity(nextActivity(activities)), 0, 30, TimeUnit.SECONDS);
     }
 
     private static Activity nextActivity(final List<Supplier<Activity>> activities)
@@ -158,5 +156,13 @@ public class Utils
             return results.isEmpty() ? null : results.get(0).getUser();
         }
         return null;
+    }
+
+    public static <K, V> ExpiringMap<K, V> createDefaultExpiringMap()
+    {
+        return ExpiringMap.builder()
+                .expirationPolicy(ExpirationPolicy.ACCESSED)
+                .expiration(2, TimeUnit.MINUTES)
+                .build();
     }
 }

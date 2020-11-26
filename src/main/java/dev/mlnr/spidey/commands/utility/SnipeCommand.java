@@ -1,6 +1,5 @@
 package dev.mlnr.spidey.commands.utility;
 
-import dev.mlnr.spidey.Core;
 import dev.mlnr.spidey.cache.MessageCache;
 import dev.mlnr.spidey.cache.settings.GuildSettingsCache;
 import dev.mlnr.spidey.objects.command.Category;
@@ -10,7 +9,6 @@ import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
 
 import java.awt.*;
-import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("unused")
 public class SnipeCommand extends Command
@@ -47,7 +45,6 @@ public class SnipeCommand extends Command
         {
             eb.setAuthor(user.getName(), null, user.getEffectiveAvatarUrl());
             ctx.reply(eb);
-            Core.getScheduler().schedule(() -> MessageCache.uncacheMessage(lastDeletedMessage.getChannelId(), lastDeletedMessage.getId()), 2, TimeUnit.MINUTES);
         });
     }
 }
