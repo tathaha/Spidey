@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.commands.moderation;
 
-import dev.mlnr.spidey.Core;
+import dev.mlnr.spidey.Spidey;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
@@ -111,7 +111,7 @@ public class PurgeCommand extends Command
                 addReaction(message, wastebasket);
                 addReaction(message, Emojis.CROSS);
 
-                Core.getWaiter().waitForEvent(GuildMessageReactionAddEvent.class,
+                Spidey.getWaiter().waitForEvent(GuildMessageReactionAddEvent.class,
                         ev -> ev.getUser() == ctx.getAuthor() && ev.getMessageIdLong() == message.getIdLong(),
                         ev ->
                         {

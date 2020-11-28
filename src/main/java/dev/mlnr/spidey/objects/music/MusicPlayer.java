@@ -2,7 +2,7 @@ package dev.mlnr.spidey.objects.music;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import dev.mlnr.spidey.Core;
+import dev.mlnr.spidey.Spidey;
 import dev.mlnr.spidey.cache.music.MusicPlayerCache;
 import dev.mlnr.spidey.handlers.music.AudioPlayerSendHandler;
 import dev.mlnr.spidey.utils.MusicUtils;
@@ -35,7 +35,7 @@ public class MusicPlayer
     {
         if (leaveTask != null)
             return;
-        leaveTask = Core.getScheduler().schedule(() -> MusicPlayerCache.destroyMusicPlayer(trackScheduler.getGuild()), 2, TimeUnit.MINUTES);
+        leaveTask = Spidey.getScheduler().schedule(() -> MusicPlayerCache.destroyMusicPlayer(trackScheduler.getGuild()), 2, TimeUnit.MINUTES);
     }
 
     public void cancelLeave()

@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.commands.miscellaneous;
 
-import dev.mlnr.spidey.Core;
+import dev.mlnr.spidey.Spidey;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
@@ -34,7 +34,7 @@ public class LeaveCommand extends Command
 		{
 			addReaction(prompt, Emojis.CHECK);
 			addReaction(prompt, Emojis.CROSS);
-			Core.getWaiter().waitForEvent(GuildMessageReactionAddEvent.class,
+			Spidey.getWaiter().waitForEvent(GuildMessageReactionAddEvent.class,
 					ev ->
 					{
 						final var name = ev.getReactionEmote().getName();

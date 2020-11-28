@@ -39,7 +39,7 @@ public class StatsCommand extends Command
 		{
 			final var dbl = Requester.executeRequest("https://top.gg/api/bots/468523263853592576", API.DBL);
 			requested = "[" + "This month: **" + dbl.getInt("monthlyPoints") + "** | Total: **" + dbl.getInt("points") + "**](https://top.gg/bot/468523263853592576)";
-			Core.getScheduler().schedule(() -> requested = null, 20, TimeUnit.SECONDS);
+			Spidey.getScheduler().schedule(() -> requested = null, 20, TimeUnit.SECONDS);
 		}
 		eb.addField("top.gg / DBL votes", requested, true);*/
 		ctx.reply(eb);

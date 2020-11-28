@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.utils;
 
-import dev.mlnr.spidey.Core;
+import dev.mlnr.spidey.Spidey;
 import dev.mlnr.spidey.cache.GeneralCache;
 import dev.mlnr.spidey.handlers.command.CommandHandler;
 import dev.mlnr.spidey.objects.guild.InviteData;
@@ -109,7 +109,7 @@ public class Utils
                 () -> watching(jda.getGuildCache().size() + " guilds"),
                 () -> watching(jda.getUserCache().size() + " users")
         ));
-        Core.getScheduler().scheduleAtFixedRate(() -> jda.getPresence().setActivity(nextActivity(activities)), 0, 30, TimeUnit.SECONDS);
+        Spidey.getScheduler().scheduleAtFixedRate(() -> jda.getPresence().setActivity(nextActivity(activities)), 0, 30, TimeUnit.SECONDS);
     }
 
     private static Activity nextActivity(final List<Supplier<Activity>> activities)

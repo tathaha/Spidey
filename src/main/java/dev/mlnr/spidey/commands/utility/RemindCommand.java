@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.commands.utility;
 
-import dev.mlnr.spidey.Core;
+import dev.mlnr.spidey.Spidey;
 import dev.mlnr.spidey.cache.settings.GuildSettingsCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
@@ -79,7 +79,7 @@ public class RemindCommand extends Command
                .flatMap(Message::delete)
                .queue();
         author.openPrivateChannel()
-              .delay(actualDuration, timeUnit, Core.getScheduler())
+              .delay(actualDuration, timeUnit, Spidey.getScheduler())
               .flatMap(ch -> ch.sendMessage(eb.build()))
               .onErrorFlatMap(ignored -> channel.canTalk(), ignored -> channel.sendMessage(mention + " " + reminder))
               .queue();

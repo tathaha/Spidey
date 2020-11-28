@@ -1,7 +1,7 @@
 package dev.mlnr.spidey.cache.settings;
 
-import dev.mlnr.spidey.Core;
 import dev.mlnr.spidey.DatabaseManager;
+import dev.mlnr.spidey.Spidey;
 import dev.mlnr.spidey.objects.guild.GuildSettings;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -150,19 +150,19 @@ public class GuildSettingsCache
     public static TextChannel getLogChannel(final long guildId)
     {
         final var logChannelId = getLogChannelId(guildId);
-        return logChannelId == 0 ? null : Core.getJDA().getTextChannelById(logChannelId);
+        return logChannelId == 0 ? null : Spidey.getJDA().getTextChannelById(logChannelId);
     }
 
     public static Role getJoinRole(final long guildId)
     {
         final var joinRoleId = getJoinRoleId(guildId);
-        return joinRoleId == 0 ? null : Core.getJDA().getRoleById(joinRoleId);
+        return joinRoleId == 0 ? null : Spidey.getJDA().getRoleById(joinRoleId);
     }
 
     public static Role getDJRole(final long guildId)
     {
         final var djRoleId = getDJRoleId(guildId);
-        return djRoleId == 0 ? null : Core.getJDA().getRoleById(djRoleId);
+        return djRoleId == 0 ? null : Spidey.getJDA().getRoleById(djRoleId);
     }
 
     // other
