@@ -22,6 +22,7 @@ import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateBoostTimeEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateBoostTierEvent;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageUpdateEvent;
@@ -322,5 +323,13 @@ public class Events extends ListenerAdapter
 			return;
 		MessageCache.cacheMessage(messageId, new MessageData(event.getMessage()));
 		MessageCache.setLastEditedMessage(event.getChannel().getIdLong(), messageId);
+	}
+
+	@Override
+	public void onGuildVoiceLeave(final GuildVoiceLeaveEvent event)
+	{
+		if (event.getMember().getIdLong() != event.getJDA().getSelfUser().getIdLong())
+			return;
+		MusicPlayerCache.destroyMusicPlayer(event.getGuild());
 	}
 }

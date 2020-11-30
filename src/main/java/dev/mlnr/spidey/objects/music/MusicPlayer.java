@@ -35,7 +35,7 @@ public class MusicPlayer
     {
         if (leaveTask != null)
             return;
-        leaveTask = Spidey.getScheduler().schedule(() -> MusicPlayerCache.destroyMusicPlayer(trackScheduler.getGuild()), 2, TimeUnit.MINUTES);
+        leaveTask = Spidey.getScheduler().schedule(() -> MusicPlayerCache.disconnectFromChannel(trackScheduler.getGuild()), 2, TimeUnit.MINUTES);
     }
 
     public void cancelLeave()

@@ -1,6 +1,5 @@
 package dev.mlnr.spidey.cache.music;
 
-import dev.mlnr.spidey.Spidey;
 import dev.mlnr.spidey.objects.music.MusicPlayer;
 import net.dv8tion.jda.api.entities.Guild;
 
@@ -33,6 +32,13 @@ public class MusicPlayerCache
         return musicPlayer;
     }
 
+    public static void disconnectFromChannel(final Guild guild)
+    {
+        final var audioManager = guild.getAudioManager();
+        audioManager.closeAudioConnection();
+        audioManager.setSendingHandler(null);
+    }
+
     public static void destroyMusicPlayer(final Guild guild)
     {
         final var musicPlayer = getMusicPlayer(guild);
@@ -41,10 +47,5 @@ public class MusicPlayerCache
         final var guildId = guild.getIdLong();
         musicPlayer.destroyAudioPlayer();
         MUSIC_PLAYER_CACHE.remove(guildId);
-        if (Spidey.getJDA().getGuildById(guildId) == null) // bot has left the guild
-            return;
-        final var audioManager = guild.getAudioManager();
-        audioManager.closeAudioConnection();
-        audioManager.setSendingHandler(null);
     }
 }
