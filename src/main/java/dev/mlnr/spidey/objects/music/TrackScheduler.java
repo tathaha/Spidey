@@ -139,7 +139,7 @@ public class TrackScheduler extends AudioEventAdapter
         skipVotes.clear();
     }
 
-    //
+    // events
 
     @Override
     public void onTrackEnd(final AudioPlayer player, final AudioTrack track, final AudioTrackEndReason endReason)
@@ -147,6 +147,8 @@ public class TrackScheduler extends AudioEventAdapter
         if (endReason.mayStartNext)
             nextTrack();
     }
+
+    // other
 
     public enum RepeatMode
     {

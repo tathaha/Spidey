@@ -33,8 +33,7 @@ public class MusicPlayer
 
     public void scheduleLeave()
     {
-        if (leaveTask != null)
-            return;
+        cancelLeave();
         leaveTask = Spidey.getScheduler().schedule(() -> MusicPlayerCache.disconnectFromChannel(trackScheduler.getGuild()), 2, TimeUnit.MINUTES);
     }
 
@@ -51,6 +50,16 @@ public class MusicPlayer
     public AudioTrack getPlayingTrack()
     {
         return audioPlayer.getPlayingTrack();
+    }
+
+    public void pause()
+    {
+        audioPlayer.setPaused(false);
+    }
+
+    public void unpause()
+    {
+        audioPlayer.setPaused(true);
     }
 
     public boolean pauseOrUnpause()

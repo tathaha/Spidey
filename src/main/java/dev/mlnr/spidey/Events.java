@@ -8,6 +8,7 @@ import dev.mlnr.spidey.handlers.command.CommandHandler;
 import dev.mlnr.spidey.objects.guild.InviteData;
 import dev.mlnr.spidey.objects.messages.MessageData;
 import dev.mlnr.spidey.utils.Emojis;
+import dev.mlnr.spidey.utils.MusicUtils;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
@@ -22,6 +23,7 @@ import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateBoostTimeEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateBoostTierEvent;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -326,10 +328,32 @@ public class Events extends ListenerAdapter
 	}
 
 	@Override
+	public void onGuildVoiceJoin(final GuildVoiceJoinEvent event)
+	{
+		final var guild = event.getGuild();
+		if (!event.getMember().getUser().isBot() && event.getChannelJoined().equals(MusicUtils.getConnectedChannel(guild)))
+		{
+			final var musicPlayer = MusicPlayerCache.getMusicPlayer(guild);
+			musicPlayer.cancelLeave();
+			musicPlayer.unpause();
+		}
+	}
+
+	@Override
 	public void onGuildVoiceLeave(final GuildVoiceLeaveEvent event)
 	{
-		if (event.getMember().getIdLong() != event.getJDA().getSelfUser().getIdLong())
+		final var guild = event.getGuild();
+		if (event.getMember().getIdLong() == event.getJDA().getSelfUser().getIdLong())
+		{
+			MusicPlayerCache.destroyMusicPlayer(guild);
 			return;
-		MusicPlayerCache.destroyMusicPlayer(event.getGuild());
+		}
+		final var connectedChannel = MusicUtils.getConnectedChannel(guild);
+		if (event.getChannelLeft().equals(connectedChannel) && connectedChannel.getMembers().stream().allMatch(member -> member.getUser().isBot()))
+		{
+			final var musicPlayer = MusicPlayerCache.getMusicPlayer(guild);
+			musicPlayer.scheduleLeave();
+			musicPlayer.pause();
+		}
 	}
 }
