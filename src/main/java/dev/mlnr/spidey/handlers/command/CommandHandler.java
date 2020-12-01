@@ -27,6 +27,24 @@ public class CommandHandler
 
 	private CommandHandler() {}
 
+	static
+	{
+		try (final var result = CLASS_GRAPH.scan())
+		{
+			for (final var cls : result.getAllClasses())
+			{
+				final var cmd = (Command) cls.loadClass().getDeclaredConstructor().newInstance();
+				COMMANDS.put(cmd.getInvoke(), cmd);
+				for (final var alias : cmd.getAliases())
+					COMMANDS.put(alias, cmd);
+			}
+		}
+		catch (final Exception e)
+		{
+			LOGGER.error("There was an error while registering the commands!", e);
+		}
+	}
+
 	public static void handle(final GuildMessageReceivedEvent event, final String prefix)
 	{
 		final var message = event.getMessage();
@@ -81,24 +99,6 @@ public class CommandHandler
 		final var args = Arrays.copyOfRange(tmp, 1, tmp.length);
 		cmd.execute(args, new CommandContext(event));
 		cooldown(guildId, userId, cmd);
-	}
-
-	public static void registerCommands()
-	{
-		try (final var result = CLASS_GRAPH.scan())
-		{
-			for (final var cls : result.getAllClasses())
-			{
-				final var cmd = (Command) cls.loadClass().getDeclaredConstructor().newInstance();
-				COMMANDS.put(cmd.getInvoke(), cmd);
-				for (final var alias : cmd.getAliases())
-					COMMANDS.put(alias, cmd);
-			}
-		}
-		catch (final Exception e)
-		{
-			LOGGER.error("There was an error while registering the commands!", e);
-		}
 	}
 	
 	public static Map<String, Command> getCommands()

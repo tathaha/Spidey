@@ -2,7 +2,6 @@ package dev.mlnr.spidey.utils;
 
 import dev.mlnr.spidey.Spidey;
 import dev.mlnr.spidey.cache.GeneralCache;
-import dev.mlnr.spidey.handlers.command.CommandHandler;
 import dev.mlnr.spidey.objects.guild.InviteData;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
@@ -102,7 +101,6 @@ public class Utils
 
     public static void startup(final JDA jda)
     {
-        CommandHandler.registerCommands();
         final var activities = new ArrayList<Supplier<Activity>>(asList( // we use supplier here so the values of getUserCache and getGuildCache are updated each time
                 () -> listening("your commands"),
                 () -> watching("you"),
