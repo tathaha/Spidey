@@ -5,7 +5,7 @@ plugins {
 }
 
 application {
-    mainClassName = 'dev.mlnr.spidey.Core'
+    mainClassName = 'dev.mlnr.spidey.Spidey'
 }
 
 repositories {
