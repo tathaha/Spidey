@@ -331,6 +331,8 @@ public class Events extends ListenerAdapter
 	public void onGuildVoiceJoin(final GuildVoiceJoinEvent event)
 	{
 		final var guild = event.getGuild();
+		System.out.println("bot " + event.getMember().getUser().isBot());
+		System.out.println(event.getChannelJoined().equals(MusicUtils.getConnectedChannel(guild)));
 		if (!event.getMember().getUser().isBot() && event.getChannelJoined().equals(MusicUtils.getConnectedChannel(guild)))
 		{
 			final var musicPlayer = MusicPlayerCache.getMusicPlayer(guild);
