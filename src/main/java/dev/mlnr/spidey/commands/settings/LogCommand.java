@@ -4,6 +4,8 @@ import dev.mlnr.spidey.cache.settings.GuildSettingsCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
+import dev.mlnr.spidey.utils.Emojis;
+import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
 
 @SuppressWarnings("unused")
@@ -26,6 +28,11 @@ public class LogCommand extends Command
 		{
 			GuildSettingsCache.removeLogChannel(guildId);
 			ctx.reply(":white_check_mark: The log channel has been reset!");
+			return;
+		}
+		if (!channel.canTalk())
+		{
+			Utils.addReaction(ctx.getMessage(), Emojis.CROSS);
 			return;
 		}
 		GuildSettingsCache.setLogChannelId(guildId, channelId);
