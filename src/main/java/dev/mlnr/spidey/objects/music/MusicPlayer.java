@@ -54,12 +54,12 @@ public class MusicPlayer
 
     public void pause()
     {
-        audioPlayer.setPaused(false);
+        audioPlayer.setPaused(true);
     }
 
     public void unpause()
     {
-        audioPlayer.setPaused(true);
+        audioPlayer.setPaused(false);
     }
 
     public boolean pauseOrUnpause()
