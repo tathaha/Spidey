@@ -20,8 +20,8 @@ public class SupportGuildsCommand extends Command
 	public void execute(final String[] args, final CommandContext ctx)
 	{
 		final var eb = Utils.createEmbedBuilder(ctx.getAuthor());
-		eb.setAuthor("Guilds of Spidey", "https://discord.gg/VQk2BUCSqM", ctx.getJDA().getSelfUser().getEffectiveAvatarUrl());
-		eb.addField("Spidey's Guild", "[Click to join](https://discord.gg/VQk2BUCSqM)", true);
+		eb.setAuthor("Guilds of Spidey", "https://discord.gg/uJCw7B9fxZ", ctx.getJDA().getSelfUser().getEffectiveAvatarUrl());
+		eb.addField("Spidey's Guild", "[Click to join](https://discord.gg/uJCw7B9fxZ)", true);
 		eb.setColor(Color.BLACK);
 		ctx.reply(eb);
 	}

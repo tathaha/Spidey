@@ -29,7 +29,7 @@ public class StatsCommand extends Command
 		final var total = runtime.totalMemory();
 		final var memory = (total - runtime.freeMemory()) / 1000000;
 		eb.setColor(Utils.SPIDEY_COLOR);
-		eb.setAuthor("Spidey's stats", null, jda.getSelfUser().getEffectiveAvatarUrl());
+		eb.setAuthor("Spidey's stats", "https://spidey.mlnr.dev", jda.getSelfUser().getEffectiveAvatarUrl());
 		eb.setDescription("For more info about Spidey, type " + prefix + "info");
 		eb.addField("Total servers", String.valueOf(jda.getGuildCache().size()), true);
 		eb.addField("Memory usage", memory + "MB / " + (total / 100000) + "MB", true);
@@ -42,6 +42,7 @@ public class StatsCommand extends Command
 			Spidey.getScheduler().schedule(() -> requested = null, 20, TimeUnit.SECONDS);
 		}
 		eb.addField("top.gg / DBL votes", requested, true);*/
+		eb.setFooter("spidey.mlnr.dev");
 		ctx.reply(eb);
 	}
 }

@@ -17,8 +17,8 @@ public class InviteCommand extends Command
     public void execute(final String[] args, final CommandContext ctx)
     {
         ctx.getAuthor().openPrivateChannel()
-           .flatMap(channel -> channel.sendMessage("Link for inviting me: <https://discord.com/oauth2/authorize?client_id=772446532560486410&permissions=1345415392&scope=bot>"))
-           .onErrorFlatMap(ignored -> ctx.getTextChannel().sendMessage("I couldn't send you a PM, here's the link: <https://discord.com/oauth2/authorize?client_id=772446532560486410&permissions=1345415392&scope=bot>"))
+           .flatMap(channel -> channel.sendMessage("Link for inviting me: https://spidey.mlnr.dev"))
+           .onErrorFlatMap(ignored -> ctx.getTextChannel().sendMessage("I couldn't send you a PM, here's the link: https://spidey.mlnr.dev"))
            .queue();
     }
 }

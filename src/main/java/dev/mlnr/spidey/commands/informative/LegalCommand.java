@@ -16,6 +16,6 @@ public class LegalCommand extends Command
 	@Override
 	public void execute(final String[] args, final CommandContext ctx)
 	{
-		ctx.reply("To see the Terms of Service and Privacy Policy, please visit the support guild: discord.gg/VQk2BUCSqM");
+		ctx.reply("To see the Terms of Service and Privacy Policy, please visit the support guild: discord.gg/uJCw7B9fxZ");
 	}
 }
