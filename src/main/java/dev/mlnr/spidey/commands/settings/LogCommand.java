@@ -32,7 +32,9 @@ public class LogCommand extends Command
 		}
 		if (!channel.canTalk())
 		{
-			Utils.addReaction(ctx.getMessage(), Emojis.CROSS);
+			final var message = ctx.getMessage();
+			Utils.addReaction(message, Emojis.CROSS);
+			Utils.addReaction(message, "\uD83D\uDE4A");
 			return;
 		}
 		GuildSettingsCache.setLogChannelId(guildId, channelId);
