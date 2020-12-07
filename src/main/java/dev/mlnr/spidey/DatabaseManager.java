@@ -71,7 +71,7 @@ public class DatabaseManager
 
 	private static <T> void insert(final String property, final long id, final T value)
 	{
-		final var query = "INSERT INTO guilds (%s, " + property + ") VALUES (?, ?) ON CONFLICT (%s) DO UPDATE SET " + property + "='" + value + "'";
+		final var query = "INSERT INTO guilds (guild_id, " + property + ") VALUES (?, ?) ON CONFLICT (guild_id) DO UPDATE SET " + property + "='" + value + "'";
 		try (final var db = initializeConnection(); final var ps = db.prepareStatement(query))
 		{
 			ps.setLong(1, id);
