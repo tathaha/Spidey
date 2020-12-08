@@ -48,7 +48,7 @@ public class Events extends ListenerAdapter
 			MessageCache.cacheMessage(message.getIdLong(), new MessageData(message));
 
 		final var prefix = GuildSettingsCache.getPrefix(guildId);
-		if (!content.startsWith(prefix) || event.getAuthor().isBot())
+		if (!content.startsWith(prefix) || event.getAuthor().isBot() || event.isWebhookMessage())
 			return;
 		CommandHandler.handle(event, prefix);
 	}
