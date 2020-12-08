@@ -48,8 +48,15 @@ public class UserUtils
         if (argument.length() >= 2 && argument.length() <= 32)
         {
             message.getGuild().retrieveMembersByPrefix(argument, 1)                 // username/nickname
-                    .onSuccess(members -> consumer.accept(members.get(0).getUser()))
-                    .onError(failure -> ctx.replyError("User not found"));
+                    .onSuccess(members ->
+                    {
+                        if (members.isEmpty())
+                        {
+                            ctx.replyError("User not found");
+                            return;
+                        }
+                        consumer.accept(members.get(0).getUser());
+                    });
         }
     }
 
