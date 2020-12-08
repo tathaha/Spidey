@@ -29,13 +29,14 @@ public class GuildCommand extends Command
 		eb.addField("Server Name", guild.getName(), true);
 		eb.addField("Server ID", String.valueOf(guild.getIdLong()), true);
 
-		eb.addField("Owner", guild.getOwner().getUser().getAsTag(), true);
-		eb.addField("Owner ID", guild.getOwnerId(), true);
+		final var ownerId = guild.getOwnerId();
+		eb.addField("Owner", "<@" + ownerId + ">", true);
+		eb.addField("Owner ID", ownerId, true);
 
 		eb.addField("Text Channels", String.valueOf(guild.getTextChannelCache().size()), true);
 		eb.addField("Voice Channels", String.valueOf(guild.getVoiceChannelCache().size()), true);
 
-		eb.addField("Members", String.valueOf(guild.getMemberCache().size()), true);
+		eb.addField("Members", String.valueOf(guild.getMemberCount()), true);
 
 		final var verificationLevel = guild.getVerificationLevel().name().toLowerCase();
 		eb.addField("Verification Level", verificationLevel.substring(0, 1).toUpperCase() + verificationLevel.substring(1), true);

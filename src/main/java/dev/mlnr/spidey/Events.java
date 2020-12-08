@@ -13,7 +13,6 @@ import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.audit.ActionType;
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.channel.text.TextChannelDeleteEvent;
 import net.dv8tion.jda.api.events.guild.*;
@@ -216,9 +215,11 @@ public class Events extends ListenerAdapter
 		if (defaultChannel != null)
 			Utils.sendMessage(defaultChannel, "Hey! I'm **Spidey**. Thanks for inviting me. To start, check `s!info`.");
 		Utils.storeInvites(guild);
-		final var people = guild.getMemberCache().applyStream(stream -> stream.map(Member::getUser).filter(user -> !user.isBot()).count());
-		if (people >= 10000)
-			GuildSettingsCache.setSnipingEnabled(guild.getIdLong(), false);
+		guild.findMembers(member -> !member.getUser().isBot()).onSuccess(people ->
+		{
+			if (people.size() >= 10000)
+				GuildSettingsCache.setSnipingEnabled(guild.getIdLong(), false);
+		});
 	}
 
 	@Override

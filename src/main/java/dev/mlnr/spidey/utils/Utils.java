@@ -30,8 +30,6 @@ import static net.dv8tion.jda.api.entities.Activity.watching;
 public class Utils
 {
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("EE, d.LLL y | HH:mm:ss");
-    private static final Pattern ID_REGEX = Pattern.compile("(\\d{17,20})");
-    private static final Pattern TAG_REGEX = Pattern.compile("\\S{2,32}#\\d{4}");
     public static final Pattern TEXT_PATTERN = Pattern.compile("[a-zA-Z0-9-_]+");
     public static final int SPIDEY_COLOR = 3288807;
 
@@ -131,29 +129,6 @@ public class Utils
         final var r = ((255 * value) / max);
         final var g = (255 * (max - value)) / max;
         return ((r & 0x0ff) << 16) | ((g & 0x0ff) << 8) | (0);
-    }
-
-    public static User getUserFromArgument(final String argument, final TextChannel channel, final Message msg)
-    {
-        final var jda = channel.getJDA();
-
-        final var tagMatcher = TAG_REGEX.matcher(argument);                               // User#Discriminator
-        if (tagMatcher.matches())
-            return jda.getUserByTag(tagMatcher.group());
-
-        if (Message.MentionType.USER.getPattern().matcher(argument).matches())            // @user
-            return msg.getMentionedUsers().get(0);
-
-        final var idMatcher = ID_REGEX.matcher(argument);                                 // 12345678901234567890
-        if (idMatcher.matches())
-            return jda.retrieveUserById(idMatcher.group()).complete();
-
-        if (argument.length() >= 2 && argument.length() <= 32)
-        {
-            final var results = msg.getGuild().getMembersByEffectiveName(argument, true); // username/nickname
-            return results.isEmpty() ? null : results.get(0).getUser();
-        }
-        return null;
     }
 
     public static <K, V> ExpiringMap<K, V> createDefaultExpiringMap()

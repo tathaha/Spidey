@@ -5,6 +5,7 @@ import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.utils.Emojis;
+import dev.mlnr.spidey.utils.UserUtils;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -30,21 +31,16 @@ public class PurgeCommand extends Command
     @Override
     public void execute(final String[] args, final CommandContext ctx)
     {
-        final var channel = ctx.getTextChannel();
-        final var msg = ctx.getMessage();
-
-        if (!ctx.getGuild().getSelfMember().hasPermission(channel, getRequiredPermission(), Permission.MESSAGE_HISTORY))
+        if (!ctx.getGuild().getSelfMember().hasPermission(ctx.getTextChannel(), getRequiredPermission(), Permission.MESSAGE_HISTORY))
         {
             ctx.replyError("I don't have permission to purge messages or see the message history in this channel");
             return;
         }
-
         if (args.length == 0)
         {
             ctx.replyError("Wrong syntax");
             return;
         }
-
         var amount = 0;
         try
         {
@@ -60,29 +56,27 @@ public class PurgeCommand extends Command
             ctx.replyError("Please enter a number from 1-100");
             return;
         }
-
-        User user = null;
-        if (args.length == 2)
+        if (args.length == 1)
         {
-            final var fromArg = getUserFromArgument(args[1], channel, msg);
-            if (fromArg == null)
-            {
-                ctx.replyError("User not found");
-                return;
-            }
-            user = fromArg;
+            respond(ctx, null, amount);
+            return;
         }
-        final var limit = amount;
-        final var target = user;
+        final int limit = amount;
+        UserUtils.retrieveUser(args[1], ctx, user -> respond(ctx, user, limit));
+    }
 
-        msg.delete().queue(ignored -> channel.getIterableHistory().cache(false).limit(target == null ? limit : 100).queue(messages ->
+    private void respond(final CommandContext ctx, final User target, final int limit)
+    {
+        final var message = ctx.getMessage();
+        final var channel = ctx.getTextChannel();
+        message.delete().queue(ignored -> channel.getIterableHistory().cache(false).limit(target == null ? 100 : limit).queue(messages ->
         {
             if (messages.isEmpty())
             {
                 ctx.replyError("There are no messages to be deleted");
                 return;
             }
-            final var msgs = target == null ? messages : messages.stream().filter(message -> message.getAuthor().equals(target)).limit(limit).collect(Collectors.toList());
+            final var msgs = target == null ? messages : messages.stream().filter(msg -> msg.getAuthor().equals(target)).limit(limit).collect(Collectors.toList());
             if (msgs.isEmpty())
             {
                 ctx.replyError("There are no messages by user **" + target.getAsTag() + "** to be deleted");
@@ -104,28 +98,28 @@ public class PurgeCommand extends Command
                     .append("\nReacting with :wastebasket: will delete each unpinned message.")
                     .append("\nReacting with :x: will cancel the deletion.")
                     .append("\n\nThe deletion will be cancelled automatically in **1 minute** if a decision isn't made.");
-            channel.sendMessage(builder.toString()).queue(message ->
+            channel.sendMessage(builder.toString()).queue(sentMessage ->
             {
                 final var wastebasket = "\uD83D\uDDD1";
-                addReaction(message, Emojis.CHECK);
-                addReaction(message, wastebasket);
-                addReaction(message, Emojis.CROSS);
+                addReaction(sentMessage, Emojis.CHECK);
+                addReaction(sentMessage, wastebasket);
+                addReaction(sentMessage, Emojis.CROSS);
 
                 Spidey.getWaiter().waitForEvent(GuildMessageReactionAddEvent.class,
-                        ev -> ev.getUser() == ctx.getAuthor() && ev.getMessageIdLong() == message.getIdLong(),
+                        ev -> ev.getUser() == ctx.getAuthor() && ev.getMessageIdLong() == sentMessage.getIdLong(),
                         ev ->
                         {
                             switch (ev.getReactionEmote().getName())
                             {
                                 case Emojis.CHECK:
-                                    deleteMessage(message);
+                                    deleteMessage(sentMessage);
                                     break;
                                 case Emojis.CROSS:
-                                    deleteMessage(message);
+                                    deleteMessage(sentMessage);
                                     return;
                                 case wastebasket:
                                     msgs.removeAll(pinned);
-                                    deleteMessage(message);
+                                    deleteMessage(sentMessage);
                                     if (msgs.isEmpty())
                                     {
                                         ctx.replyError("There are no unpinned messages to be deleted");
@@ -144,8 +138,8 @@ public class PurgeCommand extends Command
     {
         final var future = CompletableFuture.allOf(channel.purgeMessages(toDelete).toArray(new CompletableFuture[0]));
         future.thenRunAsync(() -> channel.sendMessage(generateSuccess(toDelete.size(), user))
-                                         .delay(Duration.ofSeconds(5))
-                                         .flatMap(Message::delete)
-                                         .queue());
+                .delay(Duration.ofSeconds(5))
+                .flatMap(Message::delete)
+                .queue());
     }
 }

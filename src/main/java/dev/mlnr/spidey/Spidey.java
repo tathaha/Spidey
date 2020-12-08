@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.internal.utils.config.ThreadingConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +47,8 @@ public class Spidey
 						ACTIVITY,
 						CLIENT_STATUS // i disable these last 2 cacheflags explicitly so i don't get warnings
 					)
-					.setChunkingFilter(ChunkingFilter.exclude(264445053596991498L)) // DBL
+					.setMemberCachePolicy(MemberCachePolicy.VOICE)
+					.setChunkingFilter(ChunkingFilter.NONE)
 					.addEventListeners(new Events(), WAITER)
 					.setActivity(Activity.watching("myself load.."))
 					.setStatus(OnlineStatus.DO_NOT_DISTURB)
