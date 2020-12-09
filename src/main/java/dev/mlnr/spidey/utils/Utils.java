@@ -103,9 +103,14 @@ public class Utils
                 () -> listening("your commands"),
                 () -> watching("you"),
                 () -> watching(jda.getGuildCache().size() + " guilds"),
-                () -> watching(jda.getUserCache().size() + " users")
+                () -> watching(getUserCount(jda) + " users")
         ));
         Spidey.getScheduler().scheduleAtFixedRate(() -> jda.getPresence().setActivity(nextActivity(activities)), 0, 30, TimeUnit.SECONDS);
+    }
+
+    private static int getUserCount(final JDA jda)
+    {
+        return jda.getGuildCache().applyStream(stream -> stream.mapToInt(Guild::getMemberCount).sum());
     }
 
     private static Activity nextActivity(final List<Supplier<Activity>> activities)
