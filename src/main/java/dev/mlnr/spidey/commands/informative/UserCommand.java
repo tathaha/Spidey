@@ -33,7 +33,6 @@ public class UserCommand extends Command
 
 	private void respond(final CommandContext ctx, final User user, final Member member)
 	{
-		final var guild = ctx.getGuild();
 		final var eb = Utils.createEmbedBuilder(ctx.getAuthor());
 
 		eb.setAuthor("USER INFO - " + user.getAsTag());
@@ -53,8 +52,9 @@ public class UserCommand extends Command
 
 		eb.addField("User joined", formatDate(member.getTimeJoined()), false);
 
-		if (guild.getBoosters().contains(member))
-			eb.addField("Boosting since", formatDate(member.getTimeBoosted()), false);
+		final var boostingSince = member.getTimeBoosted();
+		if (boostingSince != null)
+			eb.addField("Boosting since", formatDate(boostingSince), false);
 
 		final var roles = member.getRoles();
 		if (!roles.isEmpty())
