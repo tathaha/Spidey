@@ -19,7 +19,16 @@ public class UserUtils
         final var message = ctx.getMessage();
         final var jda = message.getJDA();
 
-        final var tagMatcher = TAG_REGEX.matcher(argument);                               // User#Discriminator
+        if (Message.MentionType.USER.getPattern().matcher(argument).matches()) // @User
+        {
+            final var user = message.getMentionedUsers().get(0);
+            if (!checkUser(user, ctx))
+                return;
+            consumer.accept(user);
+            return;
+        }
+
+        final var tagMatcher = TAG_REGEX.matcher(argument);                    // User#Discriminator
         if (tagMatcher.matches())
         {
             final var user = jda.getUserByTag(tagMatcher.group());
@@ -29,16 +38,7 @@ public class UserUtils
             return;
         }
 
-        if (Message.MentionType.USER.getPattern().matcher(argument).matches())            // @User
-        {
-            final var user = message.getMentionedUsers().get(0);
-            if (!checkUser(user, ctx))
-                return;
-            consumer.accept(user);
-            return;
-        }
-
-        final var idMatcher = ID_REGEX.matcher(argument);                                 // 12345678901234567890
+        final var idMatcher = ID_REGEX.matcher(argument);                      // 12345678901234567890
         if (idMatcher.matches())
         {
             jda.retrieveUserById(idMatcher.group()).queue(consumer, failure -> ctx.replyError("User not found"));
@@ -47,7 +47,7 @@ public class UserUtils
 
         if (argument.length() >= 2 && argument.length() <= 32)
         {
-            message.getGuild().retrieveMembersByPrefix(argument, 1)                 // username/nickname
+            message.getGuild().retrieveMembersByPrefix(argument, 1)             // username/nickname
                     .onSuccess(members ->
                     {
                         if (members.isEmpty())
