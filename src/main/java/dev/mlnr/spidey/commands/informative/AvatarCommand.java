@@ -30,7 +30,7 @@ public class AvatarCommand extends Command
 
 	private void respond(final CommandContext ctx, final User user)
 	{
-		final var avatarUrl = user.getEffectiveAvatarUrl();
+		final var avatarUrl = user.getEffectiveAvatarUrl() + "?size=2048";
 		final var eb = Utils.createEmbedBuilder(ctx.getAuthor()).setColor(0xFEFEFE);
 		eb.setAuthor("Avatar of user " + MarkdownSanitizer.escape(user.getAsTag()));
 		eb.setDescription("[Avatar link](" + avatarUrl + ")");
