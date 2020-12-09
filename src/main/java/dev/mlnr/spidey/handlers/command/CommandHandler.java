@@ -3,6 +3,7 @@ package dev.mlnr.spidey.handlers.command;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
+import dev.mlnr.spidey.utils.KSoftAPIHelper;
 import dev.mlnr.spidey.utils.StringUtils;
 import dev.mlnr.spidey.utils.Utils;
 import io.github.classgraph.ClassGraph;
@@ -76,20 +77,18 @@ public class CommandHandler
 			return;
 		}
 
-		// API DEPENDANT COMMANDS HANDLING
+		// NSFW COMMANDS HANDLING
 		final var channel = message.getTextChannel();
 		final var category = cmd.getCategory();
-		final var nsfw = category == Category.NSFW;
-		if ((category == Category.FUN && cmd.getCooldown() > 0) || nsfw) // if a command has a cooldown, i can assume it requires an api
+		if (category == Category.NSFW)
 		{
-			Utils.returnError("NSFW commands are not available at the moment", message);
-//			if (nsfw && !channel.isNSFW())
-//			{
-//				Utils.returnError("You can use nsfw commands only in nsfw channels", message);
-//				return;
-//			}
-//			Utils.sendMessage(channel, KSoftAPIHelper.getImage(cmd.getInvoke(), member, nsfw));
-//			cooldown(guildId, userId, cmd);
+			if (!channel.isNSFW())
+			{
+				Utils.returnError("You can use nsfw commands only in nsfw channels", message);
+				return;
+			}
+			Utils.sendMessage(channel, KSoftAPIHelper.getNsfwImage(cmd.getInvoke(), member));
+			cooldown(guildId, userId, cmd);
 			return;
 		}
 		//
