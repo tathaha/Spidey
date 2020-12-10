@@ -22,14 +22,13 @@ public class CommandHandler
 {
 	private static final Map<String, Command> COMMANDS = new HashMap<>();
 	private static final Logger LOGGER = LoggerFactory.getLogger(CommandHandler.class);
-	private static final ClassGraph CLASS_GRAPH = new ClassGraph().acceptPackages("dev.mlnr.spidey.commands");
-	private static final String NO_PERMS = "Action can't be completed because you don't have **%s** permission";
+	private static final String NO_PERMS = "Action can't be completed because you don't have the **%s** permission";
 
 	private CommandHandler() {}
 
 	static
 	{
-		try (final var result = CLASS_GRAPH.scan())
+		try (final var result = new ClassGraph().acceptPackages("dev.mlnr.spidey.commands").scan())
 		{
 			for (final var cls : result.getAllClasses())
 			{
