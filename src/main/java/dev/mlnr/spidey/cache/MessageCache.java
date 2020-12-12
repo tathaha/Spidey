@@ -64,8 +64,7 @@ public class MessageCache
 
     public static void pruneCache(final long guildId)
     {
-        final var entries = MESSAGE_DATA_CACHE.entrySet();
-        for (final var entry : entries)
+        for (final var entry : MESSAGE_DATA_CACHE.entrySet())
         {
             final var dataGuildId = entry.getValue().getGuildId();
             if (dataGuildId != guildId)
