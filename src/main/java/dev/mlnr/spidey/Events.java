@@ -10,6 +10,7 @@ import dev.mlnr.spidey.objects.messages.MessageData;
 import dev.mlnr.spidey.utils.Emojis;
 import dev.mlnr.spidey.utils.MusicUtils;
 import dev.mlnr.spidey.utils.Utils;
+import dev.mlnr.spidey.utils.requests.Requester;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.audit.ActionType;
@@ -215,6 +216,7 @@ public class Events extends ListenerAdapter
 		if (defaultChannel != null)
 			Utils.sendMessage(defaultChannel, "Hey! I'm **Spidey**. Thanks for inviting me. To start, check `s!info`.");
 		Utils.storeInvites(guild);
+		Requester.updateStats(event.getJDA());
 		guild.findMembers(member -> !member.getUser().isBot()).onSuccess(people ->
 		{
 			if (people.size() >= 10000)
@@ -231,6 +233,7 @@ public class Events extends ListenerAdapter
 		MessageCache.pruneCache(guildId);
 		MusicPlayerCache.destroyMusicPlayer(guild);
 		GeneralCache.removeGuild(guildId);
+		Requester.updateStats(event.getJDA());
 	}
 
 	@Override
@@ -302,7 +305,9 @@ public class Events extends ListenerAdapter
 	@Override
 	public void onReady(final ReadyEvent event)
 	{
-		Utils.startup(event.getJDA());
+		final var jda = event.getJDA();
+		Utils.startup(jda);
+		Requester.updateStats(jda);
 	}
 
 	@Override

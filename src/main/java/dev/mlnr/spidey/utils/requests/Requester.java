@@ -1,14 +1,17 @@
 package dev.mlnr.spidey.utils.requests;
 
 import dev.mlnr.spidey.objects.music.VideoSegment;
+import dev.mlnr.spidey.utils.requests.api.API;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.utils.data.DataArray;
 import net.dv8tion.jda.api.utils.data.DataObject;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -23,20 +26,49 @@ public class Requester
 
     private Requester() {}
 
-    public static DataObject executeRequest(final String url, final API api)
+    public static DataObject executeApiRequest(final API api, final String... args)
     {
+        var url = api.getUrl();
+        if (url.contains("%s")) // i hate this
+        {
+            for (final String arg : args)
+                url = url.replace("%s", arg);
+        }
         REQUEST_BUILDER.url(url);
-        if (api != null)
-            REQUEST_BUILDER.header("Authorization", api.getKey());
+        final var apiKey = api.getKey();
+        if (apiKey != null)
+            REQUEST_BUILDER.header("Authorization", apiKey);
         try (final var response = HTTP_CLIENT.newCall(REQUEST_BUILDER.build()).execute(); final var body = response.body())
         {
             return DataObject.fromJson(body.string());
         }
-        catch (final IOException ex)
+        catch (final Exception ex)
         {
             LOGGER.error("There was an error while executing a request for url {}:", url, ex);
         }
         return DataObject.empty();
+    }
+
+    public static void updateStats(final JDA jda)
+    {
+        final var guildCount = jda.getGuildCache().size();
+        final var botId = jda.getSelfUser().getIdLong();
+        for (final API.Stats statsApi : API.Stats.values())
+        {
+            final var requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), DataObject.empty().put(statsApi.getStatsParam(), guildCount).toString());
+            final var request = new Request.Builder()
+                    .url(String.format(statsApi.getUrl(), botId))
+                    .header("Authorization", statsApi.getKey())
+                    .post(requestBody).build();
+            try (final var ignored = HTTP_CLIENT.newCall(request).execute())
+            {
+                LOGGER.info("Successfully updated stats for API {}", statsApi);
+            }
+            catch (final Exception ex)
+            {
+                LOGGER.error("There was an error while updating stats for API {}!", statsApi, ex);
+            }
+        }
     }
 
     public static List<VideoSegment> retrieveVideoSegments(final String videoId)
@@ -57,7 +89,7 @@ public class Requester
             }
             return segments;
         }
-        catch (final IOException ex)
+        catch (final Exception ex)
         {
             LOGGER.error("There was an error while executing a segments request:", ex);
         }

@@ -1,7 +1,7 @@
 package dev.mlnr.spidey.utils;
 
-import dev.mlnr.spidey.utils.requests.API;
 import dev.mlnr.spidey.utils.requests.Requester;
+import dev.mlnr.spidey.utils.requests.api.API;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.utils.data.DataObject;
@@ -27,6 +27,6 @@ public class KSoftAPIHelper
 
     private static DataObject getImageJson(final String query)
     {
-        return Requester.executeRequest("https://api.ksoft.si/images/rand-reddit/" + query + "?span=month", API.KSOFT);
+        return Requester.executeApiRequest(API.KSOFT_NSFW, query);
     }
 }
