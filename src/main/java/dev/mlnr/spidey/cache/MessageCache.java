@@ -64,13 +64,15 @@ public class MessageCache
 
     public static void pruneCache(final long guildId)
     {
-        for (final var entry : MESSAGE_DATA_CACHE.entrySet())
+        var it = MESSAGE_DATA_CACHE.entrySet().iterator(); // using iterator here instead of a for loop should prevent getting CMEs
+        while (it.hasNext())
         {
-            final var dataGuildId = entry.getValue().getGuildId();
+            final var next = it.next();
+            final var dataGuildId = next.getValue().getGuildId();
             if (dataGuildId != guildId)
                 continue;
-            final var messageId = entry.getKey();
-            MESSAGE_DATA_CACHE.remove(messageId);
+            final var messageId = next.getKey();
+            it.remove();
             LAST_MESSAGE_DELETED_CACHE.entrySet().removeIf(entry1 -> entry1.getValue() == messageId);
             LAST_MESSAGE_EDITED_CACHE.entrySet().removeIf(entry1 -> entry1.getValue() == messageId);
             LAST_MESSAGE_EDITED_DATA_CACHE.entrySet().removeIf(entry1 -> entry1.getValue().getGuildId() == guildId);
