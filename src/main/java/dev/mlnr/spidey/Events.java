@@ -213,10 +213,12 @@ public class Events extends ListenerAdapter
 	{
 		final var guild = event.getGuild();
 		final var defaultChannel = guild.getDefaultChannel();
+		final var jda = event.getJDA();
 		if (defaultChannel != null)
 			Utils.sendMessage(defaultChannel, "Hey! I'm **Spidey**. Thanks for inviting me. To start, check `s!info`.");
 		Utils.storeInvites(guild);
-		Requester.updateStats(event.getJDA());
+		Requester.updateStats(jda);
+		Utils.sendMessage(jda.getTextChannelById(785630223785787452L), "I've joined guild **" + guild.getName() + "** with **" + guild.getMemberCount() + "** members");
 		guild.findMembers(member -> !member.getUser().isBot()).onSuccess(people ->
 		{
 			if (people.size() >= 10000)
@@ -229,11 +231,13 @@ public class Events extends ListenerAdapter
 	{
 		final var guild = event.getGuild();
 		final var guildId = guild.getIdLong();
+		final var jda = event.getJDA();
 		GeneralCache.getInviteCache().entrySet().removeIf(entry -> entry.getValue().getGuildId() == guildId);
 		MessageCache.pruneCache(guildId);
 		MusicPlayerCache.destroyMusicPlayer(guild);
 		GeneralCache.removeGuild(guildId);
-		Requester.updateStats(event.getJDA());
+		Requester.updateStats(jda);
+		Utils.sendMessage(jda.getTextChannelById(785630223785787452L), "I've been kicked out of guild **" + guild.getName() + "** with **" + guild.getMemberCount() + "** members");
 	}
 
 	@Override
