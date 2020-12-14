@@ -1,6 +1,7 @@
 package dev.mlnr.spidey.commands.moderation;
 
 import dev.mlnr.spidey.Spidey;
+import dev.mlnr.spidey.cache.settings.GuildSettingsCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
@@ -38,7 +39,7 @@ public class PurgeCommand extends Command
         }
         if (args.length == 0)
         {
-            ctx.replyError("Wrong syntax");
+            ctx.replyError("Wrong syntax. Use `" + GuildSettingsCache.getPrefix(ctx.getGuild().getIdLong()) + "help purge` to see the proper syntax");
             return;
         }
         var amount = 0;
