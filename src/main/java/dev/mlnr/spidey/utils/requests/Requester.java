@@ -66,7 +66,7 @@ public class Requester
             }
             catch (final Exception ex)
             {
-                LOGGER.error("There was an error while updating stats for API {}!", statsApi, ex);
+                LOGGER.error("There was an error while updating stats for {}!", statsApi, ex);
             }
         }
     }
