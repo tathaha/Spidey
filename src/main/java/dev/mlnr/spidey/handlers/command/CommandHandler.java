@@ -47,7 +47,7 @@ public class CommandHandler
 	public static void handle(final GuildMessageReceivedEvent event, final String prefix)
 	{
 		final var message = event.getMessage();
-		final var content = message.getContentRaw().substring(prefix.length());
+		final var content = message.getContentRaw().substring(prefix.length()).trim();
 		if (content.isEmpty())
 		{
 			Utils.returnError("Please specify a command", message);
