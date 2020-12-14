@@ -69,7 +69,7 @@ public class PurgeCommand extends Command
     {
         final var message = ctx.getMessage();
         final var channel = ctx.getTextChannel();
-        message.delete().queue(ignored -> channel.getIterableHistory().cache(false).limit(target == null ? 100 : limit).queue(messages ->
+        message.delete().queue(ignored -> channel.getIterableHistory().cache(false).limit(target == null ? limit : 100).queue(messages ->
         {
             if (messages.isEmpty())
             {
