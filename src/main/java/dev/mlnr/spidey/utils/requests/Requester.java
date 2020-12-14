@@ -62,7 +62,7 @@ public class Requester
                     .post(requestBody).build();
             try (final var ignored = HTTP_CLIENT.newCall(request).execute())
             {
-                LOGGER.info("Successfully updated stats for {}: {} guilds", statsApi, guildCount);
+                LOGGER.info("Successfully updated stats for {} with {} guilds", statsApi, guildCount);
             }
             catch (final Exception ex)
             {
