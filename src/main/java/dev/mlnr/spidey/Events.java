@@ -212,17 +212,18 @@ public class Events extends ListenerAdapter
 	public void onGuildJoin(final GuildJoinEvent event)
 	{
 		final var guild = event.getGuild();
+		final var guildId = guild.getIdLong();
 		final var defaultChannel = guild.getDefaultChannel();
 		final var jda = event.getJDA();
 		if (defaultChannel != null)
 			Utils.sendMessage(defaultChannel, "Hey! I'm **Spidey**. Thanks for inviting me. To start, check `s!info`.");
 		Utils.storeInvites(guild);
 		Requester.updateStats(jda);
-		Utils.sendMessage(jda.getTextChannelById(785630223785787452L), "I've joined guild **" + guild.getName() + "** with **" + guild.getMemberCount() + "** members");
+		Utils.sendMessage(jda.getTextChannelById(785630223785787452L), "I've joined guild **" + guild.getName() + "** (**" + guildId + "**) with **" + guild.getMemberCount() + "** members");
 		guild.findMembers(member -> !member.getUser().isBot()).onSuccess(people ->
 		{
 			if (people.size() >= 10000)
-				GuildSettingsCache.setSnipingEnabled(guild.getIdLong(), false);
+				GuildSettingsCache.setSnipingEnabled(guildId, false);
 		});
 	}
 
@@ -237,7 +238,7 @@ public class Events extends ListenerAdapter
 		MusicPlayerCache.destroyMusicPlayer(guild);
 		GeneralCache.removeGuild(guildId);
 		Requester.updateStats(jda);
-		Utils.sendMessage(jda.getTextChannelById(785630223785787452L), "I've been kicked out of guild **" + guild.getName() + "** with **" + guild.getMemberCount() + "** members");
+		Utils.sendMessage(jda.getTextChannelById(785630223785787452L), "I've been kicked out of guild **" + guild.getName() + "** (**" + guildId + "**) with **" + guild.getMemberCount() + "** members");
 	}
 
 	@Override
