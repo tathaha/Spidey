@@ -6,7 +6,7 @@ Brief list of features:
 - music (which is still in development, but the playback itself already works)
 
 Music deserves its own section:
-- music also supports non-music segments skipping through [SponsorBlock](https://sponsor.ajay.app) (disabled by default as it can cause unexpected confusion, can be enabled using `s!segskipping`)
+- support for skipping non-music through [SponsorBlock](https://sponsor.ajay.app) (disabled by default as it can cause unexpected confusion, can be enabled using `s!segskipping`)
 - there is fair queue which prevents users from queueing the same song over and over again (enabled by default)
 - fair queue also has customizable threshold (min 2 songs, max 10, default is 3 songs)
 - DJ role (allows to stop the entire playback, enable/disable segment skipping, enable/disable fair queue or set the fair queue threshold)
