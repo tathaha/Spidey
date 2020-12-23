@@ -1,4 +1,4 @@
-# Spidey
+# Spidey, a multipurpose discord bot
 
 Brief list of features:
 - customizable prefix
