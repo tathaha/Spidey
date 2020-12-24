@@ -17,7 +17,7 @@ public class PenisCommand extends Command
 {
     public PenisCommand()
     {
-        super("penis", new String[]{}, "Shows you what's your or entered user's penis", "penis (User#Discriminator, @user, user id or username/nickname)", Category.FUN, Permission.UNKNOWN, 1, 2);
+        super("penis", new String[]{}, "Shows you what's your or entered user's penis", "penis (@user, user id or username/nickname)", Category.FUN, Permission.UNKNOWN, 1, 2);
     }
 
     @Override

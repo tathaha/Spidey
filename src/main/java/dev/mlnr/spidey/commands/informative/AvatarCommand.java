@@ -14,7 +14,7 @@ public class AvatarCommand extends Command
 {
 	public AvatarCommand()
 	{
-		super("avatar", new String[]{"pfp", "av"}, "Shows your/entered user's avatar", "avatar (User#Discriminator, @user, user id or username/nickname)", Category.INFORMATIVE, Permission.UNKNOWN, 1, 2);
+		super("avatar", new String[]{"pfp", "av"}, "Shows your/entered user's avatar", "avatar (@user, user id or username/nickname)", Category.INFORMATIVE, Permission.UNKNOWN, 1, 2);
 	}
 
 	@Override

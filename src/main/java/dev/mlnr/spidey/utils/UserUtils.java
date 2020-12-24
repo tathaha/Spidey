@@ -9,8 +9,7 @@ import java.util.regex.Pattern;
 
 public class UserUtils
 {
-    private static final Pattern ID_REGEX = Pattern.compile("(\\d{17,20})");
-    private static final Pattern TAG_REGEX = Pattern.compile("\\S{2,32}#\\d{4}");
+    private static final Pattern ID_REGEX = Pattern.compile("(\\d{18})");
 
     private UserUtils() {}
 
@@ -22,18 +21,6 @@ public class UserUtils
         if (Message.MentionType.USER.getPattern().matcher(argument).matches()) // @User
         {
             final var user = message.getMentionedUsers().get(0);
-            if (!checkUser(user, ctx))
-                return;
-            consumer.accept(user);
-            return;
-        }
-
-        final var tagMatcher = TAG_REGEX.matcher(argument);                    // User#Discriminator
-        if (tagMatcher.matches())
-        {
-            final var user = jda.getUserByTag(tagMatcher.group());
-            if (!checkUser(user, ctx))
-                return;
             consumer.accept(user);
             return;
         }
@@ -58,13 +45,5 @@ public class UserUtils
                         consumer.accept(members.get(0).getUser());
                     });
         }
-    }
-
-    private static boolean checkUser(final User user, final CommandContext ctx)
-    {
-        if (user != null)
-            return true;
-        ctx.replyError("User not found");
-        return false;
     }
 }
