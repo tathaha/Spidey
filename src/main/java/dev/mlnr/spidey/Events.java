@@ -23,7 +23,8 @@ import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateBoostTierEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
-import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMoveEvent;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageUpdateEvent;
@@ -319,30 +320,31 @@ public class Events extends ListenerAdapter
 	}
 
 	@Override
-	public void onGuildVoiceJoin(final GuildVoiceJoinEvent event)
+	public void onGuildVoiceUpdate(final GuildVoiceUpdateEvent event)
 	{
-		final var guild = event.getGuild();
-		if (!event.getMember().getUser().isBot() && event.getChannelJoined().equals(MusicUtils.getConnectedChannel(guild)))
-		{
-			final var musicPlayer = MusicPlayerCache.getMusicPlayer(guild);
-			musicPlayer.cancelLeave();
-			musicPlayer.unpause();
-		}
-	}
+		final var member = event.getEntity();
+		final var guild = member.getGuild();
+		final var connectedChannel = MusicUtils.getConnectedChannel(guild);
+		final var musicPlayer = MusicPlayerCache.getMusicPlayer(guild);
 
-	@Override
-	public void onGuildVoiceLeave(final GuildVoiceLeaveEvent event)
-	{
-		final var guild = event.getGuild();
-		if (event.getMember().getIdLong() == event.getJDA().getSelfUser().getIdLong())
+		// "join"
+		if (event instanceof GuildVoiceJoinEvent || event instanceof GuildVoiceMoveEvent)
+		{
+			if (!member.getUser().isBot() && event.getChannelJoined().equals(connectedChannel))
+			{
+				musicPlayer.cancelLeave();
+				musicPlayer.unpause();
+			}
+			return;
+		}
+		// "leave"
+		if (member.getIdLong() == event.getJDA().getSelfUser().getIdLong())
 		{
 			MusicPlayerCache.destroyMusicPlayer(guild);
 			return;
 		}
-		final var connectedChannel = MusicUtils.getConnectedChannel(guild);
-		if (event.getChannelLeft().equals(connectedChannel) && connectedChannel.getMembers().stream().allMatch(member -> member.getUser().isBot()))
+		if (event.getChannelLeft().equals(connectedChannel) && connectedChannel.getMembers().stream().allMatch(connectedMember -> connectedMember.getUser().isBot()))
 		{
-			final var musicPlayer = MusicPlayerCache.getMusicPlayer(guild);
 			musicPlayer.scheduleLeave();
 			musicPlayer.pause();
 		}
