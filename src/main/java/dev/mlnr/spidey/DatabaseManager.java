@@ -28,8 +28,6 @@ public class DatabaseManager
 		return null;
 	}
 
-	// guild stuff
-
 	public static GuildSettings retrieveGuildSettings(final long guildId)
 	{
 		try (final var db = initializeConnection(); final var ps = db.prepareStatement("SELECT * FROM guilds WHERE guild_id=?"))
@@ -50,11 +48,6 @@ public class DatabaseManager
 		return null;
 	}
 
-	private static <T> void executeGuildSetQuery(final String property, final long guildId, final T value)
-	{
-		insert(property, guildId, value);
-	}
-
 	public static void removeGuild(final long guildId)
 	{
 		try (final var db = initializeConnection(); final var ps = db.prepareStatement("DELETE FROM guilds WHERE guild_id=" + guildId))
@@ -69,18 +62,18 @@ public class DatabaseManager
 
 	// helper method
 
-	private static <T> void insert(final String property, final long id, final T value)
+	private static <T> void executeSetQuery(final String property, final long guildId, final T value)
 	{
 		final var query = "INSERT INTO guilds (guild_id, " + property + ") VALUES (?, ?) ON CONFLICT (guild_id) DO UPDATE SET " + property + "='" + value + "'";
 		try (final var db = initializeConnection(); final var ps = db.prepareStatement(query))
 		{
-			ps.setLong(1, id);
+			ps.setLong(1, guildId);
 			ps.setObject(2, value);
 			ps.executeUpdate();
 		}
 		catch (final SQLException ex)
 		{
-			LOGGER.error("There was an error while setting the {} property for guild {}!", property, id, ex);
+			LOGGER.error("There was an error while setting the {} property for guild {}!", property, guildId, ex);
 		}
 	}
 
@@ -88,56 +81,55 @@ public class DatabaseManager
 
 	public static void setLogChannelId(final long guildId, final long channelId)
 	{
-		executeGuildSetQuery("log_channel_id", guildId, channelId);
+		executeSetQuery("log_channel_id", guildId, channelId);
 	}
 
 	public static void setJoinRoleId(final long guildId, final long roleId)
 	{
-		executeGuildSetQuery("join_role_id", guildId, roleId);
+		executeSetQuery("join_role_id", guildId, roleId);
 	}
 
 	public static void setPrefix(final long guildId, final String prefix)
 	{
-		executeGuildSetQuery("prefix", guildId, prefix);
+		executeSetQuery("prefix", guildId, prefix);
 	}
 
 	public static void setSnipingEnabled(final long guildId, final boolean enabled)
 	{
-		executeGuildSetQuery("sniping", guildId, enabled);
+		executeSetQuery("sniping", guildId, enabled);
 	}
 
 	public static void setVip(final long guildId, final boolean vip)
 	{
-		executeGuildSetQuery("vip", guildId, vip);
+		executeSetQuery("vip", guildId, vip);
 	}
-
 
 	// music setters
 
 	public static void setDJRoleId(final long guildId, final long djRoleId)
 	{
-		executeGuildSetQuery("music_dj_role_id", guildId, djRoleId);
+		executeSetQuery("music_dj_role_id", guildId, djRoleId);
 	}
 
 	public static void setSegmentSkippingEnabled(final long guildId, final boolean enabled)
 	{
-		executeGuildSetQuery("music_segment_skipping", guildId, enabled);
+		executeSetQuery("music_segment_skipping", guildId, enabled);
 	}
 
 	public static void setDefaultVolume(final long guildId, final int defaultVolume)
 	{
-		executeGuildSetQuery("music_default_volume", guildId, defaultVolume);
+		executeSetQuery("music_default_volume", guildId, defaultVolume);
 	}
 
 	// fair queue setters
 
 	public static void setFairQueueEnabled(final long guildId, final boolean enabled)
 	{
-		executeGuildSetQuery("music_fair_queue_enabled", guildId, enabled);
+		executeSetQuery("music_fair_queue_enabled", guildId, enabled);
 	}
 
 	public static void setFairQueueThreshold(final long guildId, final int threshold)
 	{
-		executeGuildSetQuery("music_fair_queue_threshold", guildId, threshold);
+		executeSetQuery("music_fair_queue_threshold", guildId, threshold);
 	}
 }
