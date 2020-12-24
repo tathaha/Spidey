@@ -21,7 +21,6 @@ import net.dv8tion.jda.api.events.guild.invite.GuildInviteCreateEvent;
 import net.dv8tion.jda.api.events.guild.invite.GuildInviteDeleteEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
-import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateBoostTimeEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateBoostTierEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
@@ -258,25 +257,6 @@ public class Events extends ListenerAdapter
 			GuildSettingsCache.removeJoinRole(guildId);
 		if (roleId == GuildSettingsCache.getDJRoleId(guildId))
 			GuildSettingsCache.removeDJRole(guildId);
-	}
-
-	@Override
-	public void onGuildMemberUpdateBoostTime(final GuildMemberUpdateBoostTimeEvent event)
-	{
-		final var guild = event.getGuild();
-		final var log = GuildSettingsCache.getLogChannel(guild.getIdLong());
-		if (log == null)
-			return;
-		if (event.getOldTimeBoosted() != null)
-			return;
-		final var user = event.getUser();
-		final var eb = new EmbedBuilder();
-		eb.setDescription("**" + escape(user.getAsTag()) + "** has `boosted` the server. The server currently has **" + guild.getBoostCount() + "** boosts.");
-		eb.setAuthor("NEW BOOST");
-		eb.setColor(16023551);
-		eb.setFooter("User boost", user.getEffectiveAvatarUrl());
-		eb.setTimestamp(Instant.now());
-		Utils.sendMessage(log, eb.build());
 	}
 
 	@Override
