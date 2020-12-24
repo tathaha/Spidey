@@ -133,7 +133,7 @@ public class Utils
     {
         final var r = ((255 * value) / max);
         final var g = (255 * (max - value)) / max;
-        return ((r & 0x0ff) << 16) | ((g & 0x0ff) << 8) | (0);
+        return ((r & 0x0ff) << 16) | ((g & 0x0ff) << 8);
     }
 
     public static <K, V> ExpiringMap<K, V> createDefaultExpiringMap()
