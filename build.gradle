@@ -9,6 +9,7 @@ application {
 }
 
 repositories {
+    mavenCentral()
     jcenter()
 }
 
