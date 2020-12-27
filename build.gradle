@@ -9,7 +9,7 @@ application {
 }
 
 repositories {
-    mavenCentral()
+    mavenCentral() // this is just to receive dependabot prs from mvnrepository
     jcenter()
 }
 
