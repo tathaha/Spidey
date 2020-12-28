@@ -58,7 +58,9 @@ public class CommandHandler
         if (cmd == null)
         {
             final var similar = StringUtils.getSimilarCommand(command);
-            Utils.returnError("**" + command + "** isn't a valid command. " + (similar == null ? "Check `" + prefix + "help` for a list of commands." : "Did you perhaps mean **" + similar + "**?"), message, false);
+            Utils.returnError("**" + command + "** isn't a valid command. " + (similar == null
+                    ? "Check `" + prefix + "help` for a list of commands."
+                    : "Did you perhaps mean **" + similar + "**?"), message, false);
             return;
         }
         final var requiredPermission = cmd.getRequiredPermission();
