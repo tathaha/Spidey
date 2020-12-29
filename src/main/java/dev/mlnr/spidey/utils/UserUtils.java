@@ -16,7 +16,6 @@ public class UserUtils
     public static void retrieveUser(final String argument, final CommandContext ctx, final Consumer<User> consumer)
     {
         final var message = ctx.getMessage();
-        final var jda = message.getJDA();
 
         if (Message.MentionType.USER.getPattern().matcher(argument).matches()) // @User
         {
@@ -28,7 +27,7 @@ public class UserUtils
         final var idMatcher = ID_REGEX.matcher(argument);                      // 12345678901234567890
         if (idMatcher.matches())
         {
-            jda.retrieveUserById(idMatcher.group()).queue(consumer, failure -> ctx.replyError("User not found"));
+            ctx.getJDA().retrieveUserById(idMatcher.group()).queue(consumer, failure -> ctx.replyError("User not found"));
             return;
         }
 
