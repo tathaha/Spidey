@@ -24,7 +24,7 @@ public class InfoCommand extends Command
 		eb.setAuthor("Spidey", null, avatar);
 		eb.setColor(0xFEFEFE);
 		eb.setThumbnail(avatar);
-		eb.addField("About me", "Hey, i'm Spidey. I was made by `cane#6666`.", false);
+		eb.addField("About me", "Hey, i'm Spidey. I was made by `cane#0570`.", false);
 		eb.addField("Commands", "Type `" + GuildSettingsCache.getPrefix(ctx.getGuild().getIdLong()) + "help` for a list of commands.", false);
 		eb.addField("Bot info", "[Library](https://github.com/DV8FromTheWorld/JDA) version: `" + JDAInfo.VERSION + "`", false);
 		eb.addField("Links", "[`Website`](https://spidey.mlnr.dev)\n[`Discord`](https://discord.gg/uJCw7B9fxZ)" +
