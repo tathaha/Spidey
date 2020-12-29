@@ -34,7 +34,7 @@ public class UserUtils
 
         if (argument.length() >= 2 && argument.length() <= 32)
         {
-            message.getGuild().retrieveMembersByPrefix(argument, 1)             // username/nickname
+            message.getGuild().retrieveMembersByPrefix(argument, 1)            // username/nickname
                     .onSuccess(members ->
                     {
                         if (members.isEmpty())
