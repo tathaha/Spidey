@@ -51,7 +51,7 @@ public class CommandContext
 
     public void reply(final EmbedBuilder embedBuilder)
     {
-        Utils.sendMessage(getTextChannel(), embedBuilder.build());
+        Utils.sendMessage(getTextChannel(), embedBuilder.build(), getMessage());
     }
 
     public void reply(final String content)
@@ -61,7 +61,7 @@ public class CommandContext
 
     public void reply(final String content, final Set<Message.MentionType> allowedMentions)
     {
-        Utils.sendMessage(getTextChannel(), content, allowedMentions);
+        Utils.sendMessage(getTextChannel(), content, allowedMentions, getMessage());
     }
 
     public void replyError(final String error)

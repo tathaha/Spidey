@@ -2,6 +2,7 @@ package dev.mlnr.spidey.utils;
 
 import dev.mlnr.spidey.Spidey;
 import dev.mlnr.spidey.cache.GeneralCache;
+import dev.mlnr.spidey.cache.ResponseCache;
 import dev.mlnr.spidey.objects.guild.InviteData;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
@@ -37,19 +38,33 @@ public class Utils
 
     public static void sendMessage(final TextChannel channel, final MessageEmbed embed)
     {
+        sendMessage(channel, embed, null);
+    }
+
+    public static void sendMessage(final TextChannel channel, final MessageEmbed embed, final Message invokeMessage)
+    {
         if (channel.canTalk() && channel.getGuild().getSelfMember().hasPermission(channel, Permission.MESSAGE_EMBED_LINKS))
-            channel.sendMessage(embed).queue();
+            channel.sendMessage(embed).queue(response -> setResponse(invokeMessage, response));
     }
 
     public static void sendMessage(final TextChannel channel, final String toSend)
     {
-        sendMessage(channel, toSend, MessageAction.getDefaultMentions());
+        sendMessage(channel, toSend, MessageAction.getDefaultMentions(), null);
     }
 
-    public static void sendMessage(final TextChannel channel, final String toSend, final Set<Message.MentionType> allowedMentions)
+    public static void sendMessage(final TextChannel channel, final String toSend, final Set<Message.MentionType> allowedMentions, final Message invokeMessage)
     {
         if (channel.canTalk())
-            channel.sendMessage(toSend).allowedMentions(allowedMentions == null ? EnumSet.noneOf(Message.MentionType.class) : allowedMentions).queue(); // passing null to allowedMentions allows all mentions, nice logic JDA
+        {
+            channel.sendMessage(toSend).allowedMentions(allowedMentions == null ? EnumSet.noneOf(Message.MentionType.class) : allowedMentions) // passing null to allowedMentions allows all mentions, nice logic JDA
+                    .queue(response -> setResponse(invokeMessage, response));
+        }
+    }
+
+    private static void setResponse(final Message invokeMessage, final Message responseMessage)
+    {
+        if (invokeMessage != null)
+            ResponseCache.setResponseMessageId(invokeMessage.getIdLong(), responseMessage.getIdLong());
     }
 
     public static void deleteMessage(final Message msg)

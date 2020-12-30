@@ -2,6 +2,7 @@ package dev.mlnr.spidey;
 
 import dev.mlnr.spidey.cache.GeneralCache;
 import dev.mlnr.spidey.cache.MessageCache;
+import dev.mlnr.spidey.cache.ResponseCache;
 import dev.mlnr.spidey.cache.music.MusicPlayerCache;
 import dev.mlnr.spidey.cache.settings.GuildSettingsCache;
 import dev.mlnr.spidey.handlers.command.CommandHandler;
@@ -293,18 +294,27 @@ public class Events extends ListenerAdapter
     {
         final var jda = event.getJDA();
         Utils.startActivityScheduler(jda);
-        Requester.updateStats(jda);
+        if (jda.getSelfUser().getIdLong() == 772446532560486410L) // only update stats if it's the production bot
+            Requester.updateStats(jda);
     }
 
     @Override
     public void onGuildMessageDelete(final GuildMessageDeleteEvent event)
     {
+        final var messageId = event.getMessageIdLong();
+        final var responseMessageId = ResponseCache.getResponseMessageId(messageId);
+        final var channel = event.getChannel();
+        if (responseMessageId != null)
+        {
+            channel.deleteMessageById(responseMessageId).queue();
+            ResponseCache.removeResponseMessageId(messageId);
+        }
+
         if (!GuildSettingsCache.isSnipingEnabled(event.getGuild().getIdLong()))
             return;
-        final var messageId = event.getMessageIdLong();
         if (!MessageCache.isCached(messageId))
             return;
-        MessageCache.setLastDeletedMessage(event.getChannel().getIdLong(), messageId);
+        MessageCache.setLastDeletedMessage(channel.getIdLong(), messageId);
     }
 
     @Override

@@ -88,7 +88,7 @@ public class CommandHandler
                 Utils.returnError("You can use nsfw commands only in nsfw channels", message);
                 return;
             }
-            Utils.sendMessage(channel, KSoftAPIHelper.getNsfwImage(cmd.getInvoke(), member));
+            Utils.sendMessage(channel, KSoftAPIHelper.getNsfwImage(cmd.getInvoke(), member), message);
             cooldown(guildId, userId, cmd);
             return;
         }
