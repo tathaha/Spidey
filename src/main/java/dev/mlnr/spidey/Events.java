@@ -292,7 +292,7 @@ public class Events extends ListenerAdapter
     public void onReady(final ReadyEvent event)
     {
         final var jda = event.getJDA();
-        Utils.startup(jda);
+        Utils.startActivityScheduler(jda);
         Requester.updateStats(jda);
     }
 

@@ -97,7 +97,7 @@ public class Utils
         return ":white_check_mark: Successfully deleted **" + count + "** message" + (count > 1 ? "s" : "") + (u == null ? "." : String.format(" by user **%s**.", u.getAsTag()));
     }
 
-    public static void startup(final JDA jda)
+    public static void startActivityScheduler(final JDA jda)
     {
         final var activities = new ArrayList<Supplier<Activity>>(asList( // we use supplier here so the values of getUserCache and getGuildCache are updated each time
                 () -> listening("your commands"),
