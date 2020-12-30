@@ -1,6 +1,5 @@
 package dev.mlnr.spidey.commands.music;
 
-import dev.mlnr.spidey.cache.music.MusicPlayerCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
@@ -13,31 +12,17 @@ public class PlayCommand extends Command
 {
     public PlayCommand()
     {
-        super("play", new String[]{"p"}, "Plays/queues a song", "play <link or search term>", Category.MUSIC, Permission.UNKNOWN, 1, 0);
+        super("play", new String[]{"p"}, "Plays/queues a song", "play <link or search term>", Category.MUSIC, Permission.UNKNOWN, 1, 2);
     }
 
     @Override
     public void execute(final String[] args, final CommandContext ctx)
     {
-        if (args.length == 0)
-        {
-            ctx.replyError("Please enter a link or a search term");
+        final var musicPlayer = MusicUtils.checkQueryInput(args, ctx);
+        if (musicPlayer == null)
             return;
-        }
-        final var connectionFailure = MusicUtils.checkVoiceChannel(ctx);
-        if (connectionFailure != null)
-        {
-            ctx.replyError("I can't play music as " + connectionFailure.getReason());
-            return;
-        }
         final var query = MusicUtils.YOUTUBE_URL_PATTERN.matcher(args[0]).matches() ? args[0] : "ytsearch:" + args[0];
-        final var musicPlayer = MusicPlayerCache.getMusicPlayer(ctx.getGuild(), true);
-        final var trackScheduler = musicPlayer.getTrackScheduler();
-
-        if (trackScheduler.getQueue().isEmpty())
-            trackScheduler.setRepeatMode(null);
-
         final var loader = new AudioLoader(musicPlayer, query, ctx, false);
-        MusicUtils.getAudioPlayerManager().loadItemOrdered(musicPlayer, query, loader);
+        MusicUtils.loadQuery(musicPlayer, query, loader);
     }
 }

@@ -1,11 +1,13 @@
 package dev.mlnr.spidey.utils;
 
+import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.TrackMarker;
+import dev.mlnr.spidey.cache.music.MusicPlayerCache;
 import dev.mlnr.spidey.cache.settings.GuildSettingsCache;
 import dev.mlnr.spidey.handlers.music.SegmentHandler;
 import dev.mlnr.spidey.objects.command.CommandContext;
@@ -50,7 +52,7 @@ public class MusicUtils
         AudioSourceManagers.registerRemoteSources(AUDIO_PLAYER_MANAGER);
     }
 
-    public static ConnectFailureReason checkVoiceChannel(final CommandContext ctx)
+    private static ConnectFailureReason checkVoiceChannel(final CommandContext ctx)
     {
         final var guild = ctx.getGuild();
         final var voiceState = ctx.getMember().getVoiceState();
@@ -192,6 +194,32 @@ public class MusicUtils
     private static int getFairQueueThreshold(final long guildId)
     {
         return GuildSettingsCache.isFairQueueEnabled(guildId) ? GuildSettingsCache.getFairQueueThreshold(guildId) : -1;
+    }
+
+    public static void loadQuery(final MusicPlayer musicPlayer, final String query, final AudioLoadResultHandler loader)
+    {
+        AUDIO_PLAYER_MANAGER.loadItemOrdered(musicPlayer, query, loader);
+    }
+
+    public static MusicPlayer checkQueryInput(final String[] args, final CommandContext ctx)
+    {
+        if (args.length == 0)
+        {
+            ctx.replyError("Please enter a search query");
+            return null;
+        }
+        final var connectionFailure = checkVoiceChannel(ctx);
+        if (connectionFailure != null)
+        {
+            ctx.replyError("I can't play music as " + connectionFailure.getReason());
+            return null;
+        }
+        final var musicPlayer = MusicPlayerCache.getMusicPlayer(ctx.getGuild(), true);
+        final var trackScheduler = musicPlayer.getTrackScheduler();
+
+        if (trackScheduler.getQueue().isEmpty())
+            trackScheduler.setRepeatMode(null);
+        return musicPlayer;
     }
 
     public enum ConnectFailureReason
