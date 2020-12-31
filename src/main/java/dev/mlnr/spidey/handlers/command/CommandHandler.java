@@ -97,7 +97,7 @@ public class CommandHandler
         final var maxArgs = cmd.getMaxArgs();
         final var tmp = content.split("\\s+", maxArgs > 0 ? maxArgs + 1 : 0);
         final var args = Arrays.copyOfRange(tmp, 1, tmp.length);
-        cmd.execute(args, new CommandContext(event));
+        cmd.execute(args, new CommandContext(args, event));
         cooldown(guildId, userId, cmd);
     }
 

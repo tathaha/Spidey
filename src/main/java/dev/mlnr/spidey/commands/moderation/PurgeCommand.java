@@ -6,7 +6,6 @@ import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.utils.Emojis;
-import dev.mlnr.spidey.utils.UserUtils;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -42,28 +41,20 @@ public class PurgeCommand extends Command
             ctx.replyError("Wrong syntax. Use `" + GuildSettingsCache.getPrefix(ctx.getGuild().getIdLong()) + "help purge` to see the proper syntax");
             return;
         }
-        var amount = 0;
-        try
+        ctx.getArgumentAsUnsignedInt(0).ifPresent(amount ->
         {
-            amount = Integer.parseUnsignedInt(args[0]);
-        }
-        catch (final NumberFormatException ex)
-        {
-            ctx.replyError("Entered value is either negative or not a number");
-            return;
-        }
-        if (amount > 100 || amount < 1)
-        {
-            ctx.replyError("Please enter a number from 1-100");
-            return;
-        }
-        if (args.length == 1)
-        {
-            respond(ctx, null, amount);
-            return;
-        }
-        final int limit = amount;
-        UserUtils.retrieveUser(args[1], ctx, user -> respond(ctx, user, limit));
+            if (amount < 1 || amount > 100)
+            {
+                ctx.replyError("Please enter a number from 1-100");
+                return;
+            }
+            if (args.length == 1)
+            {
+                respond(ctx, null, amount);
+                return;
+            }
+            ctx.getArgumentAsUser(1, user -> respond(ctx, user, amount));
+        });
     }
 
     private void respond(final CommandContext ctx, final User target, final int limit)

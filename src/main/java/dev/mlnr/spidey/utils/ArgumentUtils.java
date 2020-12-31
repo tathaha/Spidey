@@ -4,14 +4,28 @@ import dev.mlnr.spidey.objects.command.CommandContext;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 
+import java.util.OptionalInt;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
-public class UserUtils
+public class ArgumentUtils
 {
     private static final Pattern ID_REGEX = Pattern.compile("(\\d{17,18})");
 
-    private UserUtils() {}
+    private ArgumentUtils() {}
+
+    public static OptionalInt parseArgumentAsUnsignedInt(final String argument, final CommandContext ctx)
+    {
+        try
+        {
+            return OptionalInt.of(Integer.parseUnsignedInt(argument));
+        }
+        catch (final NumberFormatException ex)
+        {
+            ctx.replyError("Entered value is either negative or not a number");
+            return OptionalInt.empty();
+        }
+    }
 
     public static void retrieveUser(final String argument, final CommandContext ctx, final Consumer<User> consumer)
     {

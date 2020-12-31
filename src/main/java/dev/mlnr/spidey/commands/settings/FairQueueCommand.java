@@ -32,32 +32,25 @@ public class FairQueueCommand extends Command
             manageFairQueue(guildId, ctx, !isFairQueueEnabled(guildId));
             return;
         }
-        var threshold = 0;
-        try
+        ctx.getArgumentAsUnsignedInt(0).ifPresent(threshold ->
         {
-            threshold = Integer.parseUnsignedInt(args[0]);
-        }
-        catch (final NumberFormatException ex)
-        {
-            ctx.replyError("Please enter a valid threshold from `2` to `10`");
-            return;
-        }
-        if (threshold == 0)
-        {
-            manageFairQueue(guildId, ctx, false);
-            return;
-        }
-        if (!(threshold >= 2 && threshold <= 10))
-        {
-            ctx.replyError("Please enter a threshold from `2` to `10`");
-            return;
-        }
-        if (threshold == GuildSettingsCache.getFairQueueThreshold(guildId))
-        {
-            ctx.replyError("The threshold is already set to **" + threshold + "**");
-            return;
-        }
-        manageFairQueue(guildId, ctx, true, threshold);
+            if (threshold == 0)
+            {
+                manageFairQueue(guildId, ctx, false);
+                return;
+            }
+            if (threshold < 2 || threshold > 10)
+            {
+                ctx.replyError("Please enter a threshold from `2` to `10`");
+                return;
+            }
+            if (threshold == GuildSettingsCache.getFairQueueThreshold(guildId))
+            {
+                ctx.replyError("The threshold is already set to **" + threshold + "**");
+                return;
+            }
+            manageFairQueue(guildId, ctx, true, threshold);
+        });
     }
 
     private void manageFairQueue(final long guildId, final CommandContext ctx, final boolean enabled)

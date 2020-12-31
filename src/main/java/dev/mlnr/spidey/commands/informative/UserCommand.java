@@ -3,7 +3,6 @@ package dev.mlnr.spidey.commands.informative;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
-import dev.mlnr.spidey.utils.UserUtils;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
@@ -27,8 +26,7 @@ public class UserCommand extends Command
 			respond(ctx, ctx.getAuthor(), ctx.getMember());
 			return;
 		}
-		UserUtils.retrieveUser(args[0], ctx, retrievedUser ->
-				ctx.getGuild().retrieveMember(retrievedUser).queue(member -> respond(ctx, retrievedUser, member), failure -> respond(ctx, retrievedUser, null)));
+		ctx.getArgumentAsUser(0, user -> ctx.getGuild().retrieveMember(user).queue(member -> respond(ctx, user, member), failure -> respond(ctx, user, null)));
 	}
 
 	private void respond(final CommandContext ctx, final User user, final Member member)

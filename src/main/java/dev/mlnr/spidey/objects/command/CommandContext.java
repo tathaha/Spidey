@@ -1,5 +1,6 @@
 package dev.mlnr.spidey.objects.command;
 
+import dev.mlnr.spidey.utils.ArgumentUtils;
 import dev.mlnr.spidey.utils.Emojis;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -8,14 +9,18 @@ import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
+import java.util.OptionalInt;
 import java.util.Set;
+import java.util.function.Consumer;
 
 public class CommandContext
 {
+    private final String[] args;
     private final GuildMessageReceivedEvent event;
 
-    public CommandContext(final GuildMessageReceivedEvent event)
+    public CommandContext(final String[] args, final GuildMessageReceivedEvent event)
     {
+        this.args = args;
         this.event = event;
     }
 
@@ -48,6 +53,8 @@ public class CommandContext
     {
         return event.getJDA();
     }
+
+    // interaction methods
 
     public void reply(final EmbedBuilder embedBuilder)
     {
@@ -87,5 +94,17 @@ public class CommandContext
     public void reactLike()
     {
         Utils.addReaction(getMessage(), Emojis.LIKE);
+    }
+
+    // arg stuff
+
+    public OptionalInt getArgumentAsUnsignedInt(final int argIndex)
+    {
+        return ArgumentUtils.parseArgumentAsUnsignedInt(args[argIndex], this);
+    }
+
+    public void getArgumentAsUser(final int argIndex, final Consumer<User> consumer)
+    {
+        ArgumentUtils.retrieveUser(args[argIndex], this, consumer);
     }
 }

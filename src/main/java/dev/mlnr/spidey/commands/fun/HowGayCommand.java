@@ -3,7 +3,6 @@ package dev.mlnr.spidey.commands.fun;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
-import dev.mlnr.spidey.utils.UserUtils;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.User;
@@ -28,13 +27,13 @@ public class HowGayCommand extends Command
             respond(ctx, ctx.getAuthor());
             return;
         }
-        UserUtils.retrieveUser(args[0], ctx, user -> respond(ctx, user));
+        ctx.getArgumentAsUser(0, user -> respond(ctx, user));
     }
 
     private void respond(final CommandContext ctx, final User user)
     {
         final var prideFlag = "\uD83C\uDFF3\uFE0F\u200D\uD83C\uDF08";
-        final var random = ThreadLocalRandom.current().nextInt(0, 100 + 1); // values from 0 to 100, 100 + 1 'cause 100 has to be inclusive
+        final var random = ThreadLocalRandom.current().nextInt(0, 100 + 1); // values from 0 to 100, 100 + 1 cos 100 has to be inclusive
         final var text = " **" + random + "**% gay " + prideFlag;
         final var author = ctx.getAuthor();
         final var eb = Utils.createEmbedBuilder(author);
