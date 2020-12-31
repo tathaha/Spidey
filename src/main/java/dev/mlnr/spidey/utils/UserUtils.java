@@ -16,6 +16,7 @@ public class UserUtils
     public static void retrieveUser(final String argument, final CommandContext ctx, final Consumer<User> consumer)
     {
         final var message = ctx.getMessage();
+        final var author = ctx.getAuthor();
 
         if (Message.MentionType.USER.getPattern().matcher(argument).matches()) // @User
         {
@@ -27,13 +28,31 @@ public class UserUtils
         final var idMatcher = ID_REGEX.matcher(argument);                      // 12345678901234567890
         if (idMatcher.matches())
         {
-            ctx.getJDA().retrieveUserById(idMatcher.group()).queue(consumer, failure -> ctx.replyError("User not found"));
+            final var userId = Long.parseLong(idMatcher.group());
+            if (userId == author.getIdLong())
+            {
+                consumer.accept(author);
+                return;
+            }
+            final var jda = ctx.getJDA();
+            final var selfUser = jda.getSelfUser();
+            if (userId == selfUser.getIdLong())
+            {
+                consumer.accept(selfUser);
+                return;
+            }
+            jda.retrieveUserById(userId).queue(consumer, failure -> ctx.replyError("User not found"));
             return;
         }
 
-        if (argument.length() >= 2 && argument.length() <= 32)
+        if (argument.length() >= 2 && argument.length() <= 32)                 // username/nickname
         {
-            message.getGuild().retrieveMembersByPrefix(argument, 1)            // username/nickname
+            if (argument.equalsIgnoreCase(ctx.getMember().getEffectiveName()))
+            {
+                consumer.accept(author);
+                return;
+            }
+            message.getGuild().retrieveMembersByPrefix(argument, 1)
                     .onSuccess(members ->
                     {
                         if (members.isEmpty())
