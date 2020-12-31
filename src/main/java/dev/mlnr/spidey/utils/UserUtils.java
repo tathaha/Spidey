@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 public class UserUtils
 {
-    private static final Pattern ID_REGEX = Pattern.compile("(\\d{18})");
+    private static final Pattern ID_REGEX = Pattern.compile("(\\d{17,18})");
 
     private UserUtils() {}
 
