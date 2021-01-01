@@ -33,12 +33,19 @@ public class JoinRoleCommand extends Command
         }
         ctx.getArgumentAsRole(0, role ->
         {
+            final var roleId = role.getIdLong();
+            if (roleId == dbRole)
+            {
+                GuildSettingsCache.removeJoinRole(guildId);
+                ctx.reply(":white_check_mark: The join role has been reset!");
+                return;
+            }
             if (!ctx.getMember().canInteract(role))
             {
                 ctx.replyError("You cannot set the join role to a role which you cannot interact with");
                 return;
             }
-            GuildSettingsCache.setJoinRoleId(guildId, role.getIdLong());
+            GuildSettingsCache.setJoinRoleId(guildId, roleId);
             ctx.reply(":white_check_mark: The join role has been set to role `" + role.getName() + "`.");
         });
     }

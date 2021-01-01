@@ -32,12 +32,19 @@ public class DJRoleCommand extends Command
         }
         ctx.getArgumentAsRole(0, role ->
         {
+            final var roleId = role.getIdLong();
+            if (roleId == dbRole)
+            {
+                GuildSettingsCache.removeDJRole(guildId);
+                ctx.reply(":white_check_mark: The DJ role has been reset!");
+                return;
+            }
             if (!ctx.getMember().canInteract(role))
             {
                 ctx.replyError("You cannot set the DJ role to a role which you cannot interact with");
                 return;
             }
-            GuildSettingsCache.setDJRoleId(guildId, role.getIdLong());
+            GuildSettingsCache.setDJRoleId(guildId, roleId);
             ctx.reply(":white_check_mark: The DJ role has been set to role `" + role.getName() + "`.");
         });
     }
