@@ -22,7 +22,7 @@ public class SettingsCommand extends Command
     {
         final var guildId = ctx.getGuild().getIdLong();
         final var prefix = GuildSettingsCache.getPrefix(guildId);
-        final var eb = Utils.createEmbedBuilder(ctx.getAuthor()).setColor(0xFEFEFE);
+        final var eb = Utils.createEmbedBuilder(ctx.getAuthor());
         eb.setAuthor("Current settings for this guild");
 
         final var setTemplate = " (set one with " + prefix + "%s)";

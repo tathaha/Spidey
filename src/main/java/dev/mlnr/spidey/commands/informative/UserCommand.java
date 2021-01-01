@@ -34,7 +34,6 @@ public class UserCommand extends Command
 		final var eb = Utils.createEmbedBuilder(ctx.getAuthor());
 
 		eb.setAuthor("USER INFO - " + user.getAsTag());
-		eb.setColor(0xFEFEFE);
 		eb.setThumbnail(user.getEffectiveAvatarUrl());
 		eb.addField("ID", user.getId(), false);
 		eb.addField("Account created", formatDate(user.getTimeCreated()), true);

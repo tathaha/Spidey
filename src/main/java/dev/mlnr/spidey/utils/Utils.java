@@ -85,7 +85,7 @@ public class Utils
 
     public static EmbedBuilder createEmbedBuilder(final User user)
     {
-        return new EmbedBuilder().setFooter("Command executed by " + user.getAsTag(), user.getEffectiveAvatarUrl());
+        return new EmbedBuilder().setFooter("Command executed by " + user.getAsTag(), user.getEffectiveAvatarUrl()).setColor(0xFEFEFE);
     }
 
     public static void addReaction(final Message message, final String reaction)

@@ -11,8 +11,6 @@ import java.util.function.IntConsumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static dev.mlnr.spidey.utils.Utils.createEmbedBuilder;
-
 public class ArgumentUtils
 {
     private static final Pattern ID_REGEX = Pattern.compile("(\\d{17,18})");
@@ -53,7 +51,7 @@ public class ArgumentUtils
         final var author = ctx.getAuthor();
         final var typeName = type.name().toLowerCase();
         final var notFound = StringUtils.capitalize(typeName) + " not found";
-        final var embedBuilder = createEmbedBuilder(author).setColor(0xFEFEFE);
+        final var embedBuilder = Utils.createEmbedBuilder(author);
 
         if (type.getPattern().matcher(argument).matches())
         {

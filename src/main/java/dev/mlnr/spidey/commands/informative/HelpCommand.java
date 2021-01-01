@@ -29,9 +29,7 @@ public class HelpCommand extends Command
         final var author = ctx.getAuthor();
         final var guildId = ctx.getGuild().getIdLong();
         final var prefix = GuildSettingsCache.getPrefix(guildId);
-        final var eb = Utils.createEmbedBuilder(author)
-                .setColor(0xFEFEFE)
-                .setAuthor("Spidey's commands", "https://github.com/caneleex/Spidey", ctx.getJDA().getSelfUser().getEffectiveAvatarUrl());
+        final var eb = Utils.createEmbedBuilder(author).setAuthor("Spidey's commands", "https://github.com/caneleex/Spidey", ctx.getJDA().getSelfUser().getEffectiveAvatarUrl());
 
         if (args.length == 0)
         {
@@ -85,7 +83,6 @@ public class HelpCommand extends Command
         final var aliases = command.getAliases();
         final var cooldown = CooldownHandler.getCooldown(guildId, command);
         eb.setAuthor("Viewing command info - " + invoke);
-        eb.setColor(0xFEFEFE);
         eb.addField("Description", command.getDescription(), false);
         eb.addField("Usage", "`" + prefix + command.getUsage() + "` (<> = required, () = optional)", false);
         eb.addField("Category",  command.getCategory().getFriendlyName(), false);

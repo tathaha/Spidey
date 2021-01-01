@@ -22,7 +22,6 @@ public class InfoCommand extends Command
 		final var eb = Utils.createEmbedBuilder(ctx.getAuthor());
 		final var avatar = ctx.getJDA().getSelfUser().getEffectiveAvatarUrl();
 		eb.setAuthor("Spidey", null, avatar);
-		eb.setColor(0xFEFEFE);
 		eb.setThumbnail(avatar);
 		eb.addField("About me", "Hey, i'm Spidey. I was made by `cane#0570`.", false);
 		eb.addField("Commands", "Type `" + GuildSettingsCache.getPrefix(ctx.getGuild().getIdLong()) + "help` for a list of commands.", false);

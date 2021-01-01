@@ -25,7 +25,6 @@ public class MembersCommand extends Command
             final var bots = members.stream().filter(member -> member.getUser().isBot()).count();
             final var eb = Utils.createEmbedBuilder(ctx.getAuthor());
             eb.setAuthor("MEMBERCOUNT");
-            eb.setColor(0xFEFEFE);
             eb.setTimestamp(Instant.now());
             eb.addField("Total", "**" + total + "**", true);
             eb.addField("People", "**" + (total - bots) + "**", true);
