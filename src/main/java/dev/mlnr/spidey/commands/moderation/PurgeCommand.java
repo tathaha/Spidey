@@ -40,7 +40,7 @@ public class PurgeCommand extends Command
             ctx.replyError("Wrong syntax. Use `" + GuildSettingsCache.getPrefix(ctx.getGuild().getIdLong()) + "help purge` to see the proper syntax");
             return;
         }
-        ctx.getArgumentAsUnsignedInt(0).ifPresent(amount ->
+        ctx.getArgumentAsUnsignedInt(0, amount ->
         {
             if (amount < 1 || amount > 100)
             {

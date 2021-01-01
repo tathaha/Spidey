@@ -5,7 +5,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 
 import java.util.List;
-import java.util.OptionalInt;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
@@ -20,16 +19,15 @@ public class ArgumentUtils
 
     private ArgumentUtils() {}
 
-    public static OptionalInt parseArgumentAsUnsignedInt(final String argument, final CommandContext ctx)
+    public static void parseArgumentAsUnsignedInt(final String argument, final CommandContext ctx, final IntConsumer consumer)
     {
         try
         {
-            return OptionalInt.of(Integer.parseUnsignedInt(argument));
+            consumer.accept(Integer.parseUnsignedInt(argument));
         }
         catch (final NumberFormatException ex)
         {
             ctx.replyError("Entered value is either negative or not a number");
-            return OptionalInt.empty();
         }
     }
 

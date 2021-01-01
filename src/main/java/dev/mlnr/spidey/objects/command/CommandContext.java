@@ -9,9 +9,9 @@ import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
-import java.util.OptionalInt;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.IntConsumer;
 
 public class CommandContext
 {
@@ -98,9 +98,9 @@ public class CommandContext
 
     // arg stuff
 
-    public OptionalInt getArgumentAsUnsignedInt(final int argIndex)
+    public void getArgumentAsUnsignedInt(final int argIndex, final IntConsumer consumer)
     {
-        return ArgumentUtils.parseArgumentAsUnsignedInt(args[argIndex], this);
+        ArgumentUtils.parseArgumentAsUnsignedInt(args[argIndex], this, consumer);
     }
 
     public void getArgumentAsChannel(final int argIndex, final Consumer<TextChannel> consumer)

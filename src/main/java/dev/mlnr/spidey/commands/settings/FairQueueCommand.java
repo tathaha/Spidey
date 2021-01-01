@@ -32,7 +32,7 @@ public class FairQueueCommand extends Command
             manageFairQueue(guildId, ctx, !isFairQueueEnabled(guildId));
             return;
         }
-        ctx.getArgumentAsUnsignedInt(0).ifPresent(threshold ->
+        ctx.getArgumentAsUnsignedInt(0, threshold ->
         {
             if (threshold == 0)
             {
