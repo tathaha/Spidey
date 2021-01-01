@@ -136,7 +136,7 @@ public class ArgumentUtils
         ctx.replyError(notFound);
     }
 
-    public static void createMentionableSelection(final EmbedBuilder selectionBuilder, final List<? extends IMentionable> mentionables, final CommandContext ctx, final String type,
+    private static void createMentionableSelection(final EmbedBuilder selectionBuilder, final List<? extends IMentionable> mentionables, final CommandContext ctx, final String type,
                                                   final Function<IMentionable, String> mapper, final IntConsumer choiceConsumer)
     {
         StringUtils.createSelection(selectionBuilder, mentionables, ctx, type, mapper::apply, choiceConsumer);
