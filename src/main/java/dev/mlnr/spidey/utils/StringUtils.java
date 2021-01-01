@@ -1,7 +1,17 @@
 package dev.mlnr.spidey.utils;
 
+import dev.mlnr.spidey.Spidey;
 import dev.mlnr.spidey.handlers.command.CommandHandler;
+import dev.mlnr.spidey.objects.command.CommandContext;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
+import java.util.function.IntConsumer;
+
+import static dev.mlnr.spidey.utils.Utils.purgeMessages;
 import static java.lang.Math.min;
 
 public class StringUtils
@@ -63,5 +73,63 @@ public class StringUtils
                 costs[s2.length()] = lastValue;
         }
         return costs[s2.length()];
+    }
+
+    public static <T> void createSelection(final EmbedBuilder selectionBuilder, final List<T> elements, final CommandContext ctx, final String selectionType, final Function<T, String> mapper,
+                                           final IntConsumer choiceConsumer)
+    {
+        final var descriptionBuilder = selectionBuilder.getDescriptionBuilder();
+        final var size = min(elements.size(), 10);
+        for (var i = 0; i < size; i++)
+        {
+            final var elem = elements.get(i);
+            descriptionBuilder.append(i + 1).append(". ").append(mapper.apply(elem)).append("\n");
+        }
+        descriptionBuilder.append("\n\nType a number to select a ").append(selectionType).append(" or `cancel` to cancel the selection.");
+        selectionBuilder.setDescription(descriptionBuilder.toString());
+
+        final var channel = ctx.getTextChannel();
+        channel.sendMessage(selectionBuilder.build()).queue(selectionMessage ->
+        {
+            final var message = ctx.getMessage();
+            Spidey.getWaiter().waitForEvent(GuildMessageReceivedEvent.class, event -> event.getChannel().equals(channel) && event.getAuthor().equals(ctx.getAuthor()),
+                    event ->
+                    {
+                        final var choiceMessage = event.getMessage();
+                        final var content = choiceMessage.getContentRaw();
+                        if (content.equalsIgnoreCase("cancel"))
+                        {
+                            purgeMessages(message, selectionMessage, choiceMessage);
+                            return;
+                        }
+                        var choice = 0;
+                        try
+                        {
+                            choice = Integer.parseUnsignedInt(content);
+                        }
+                        catch (final NumberFormatException ex)
+                        {
+                            ctx.replyError("Entered value is either negative or not a number");
+                            return;
+                        }
+                        if (choice == 0 || choice > size)
+                        {
+                            ctx.replyError("Please enter a number from 1-" + size);
+                            return;
+                        }
+                        choiceConsumer.accept(choice - 1);
+                        Utils.deleteMessage(selectionMessage);
+                    }, 1, TimeUnit.MINUTES,
+                    () ->
+                    {
+                        ctx.replyError("Sorry, you took too long");
+                        purgeMessages(message, selectionMessage);
+                    });
+        });
+    }
+
+    public static String capitalize(final String string)
+    {
+        return string.substring(0, 1).toUpperCase() + string.substring(1).toLowerCase();
     }
 }

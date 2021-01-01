@@ -3,6 +3,7 @@ package dev.mlnr.spidey.commands.informative;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
+import dev.mlnr.spidey.utils.StringUtils;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Emote;
@@ -38,8 +39,7 @@ public class GuildCommand extends Command
 
 		eb.addField("Members", String.valueOf(guild.getMemberCount()), true);
 
-		final var verificationLevel = guild.getVerificationLevel().name().toLowerCase();
-		eb.addField("Verification Level", verificationLevel.substring(0, 1).toUpperCase() + verificationLevel.substring(1), true);
+		eb.addField("Verification Level", StringUtils.capitalize(guild.getVerificationLevel().name()), true);
 
 		eb.addField("Boost tier", String.valueOf(guild.getBoostTier().getKey()), true);
 		eb.addField("Boosts", String.valueOf(guild.getBoostCount()), true);

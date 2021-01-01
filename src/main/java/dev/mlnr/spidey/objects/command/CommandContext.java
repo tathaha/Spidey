@@ -103,8 +103,18 @@ public class CommandContext
         return ArgumentUtils.parseArgumentAsUnsignedInt(args[argIndex], this);
     }
 
+    public void getArgumentAsChannel(final int argIndex, final Consumer<TextChannel> consumer)
+    {
+        ArgumentUtils.parseArgumentAsTextChannel(args[argIndex], this, consumer);
+    }
+
+    public void getArgumentAsRole(final int argIndex, final Consumer<Role> consumer)
+    {
+        ArgumentUtils.parseArgumentAsRole(args[argIndex], this, consumer);
+    }
+
     public void getArgumentAsUser(final int argIndex, final Consumer<User> consumer)
     {
-        ArgumentUtils.retrieveUser(args[argIndex], this, consumer);
+        ArgumentUtils.parseArgumentAsUser(args[argIndex], this, consumer);
     }
 }

@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
@@ -72,6 +73,14 @@ public class Utils
         final var channel = msg.getTextChannel();
         if (channel.getGuild().getSelfMember().hasPermission(channel, Permission.MESSAGE_MANAGE))
             msg.delete().queue();
+    }
+
+    public static CompletableFuture<Void> purgeMessages(final Message... messages)
+    {
+        final var channel = messages[0].getTextChannel();
+        return channel.getGuild().getSelfMember().hasPermission(channel, Permission.MESSAGE_MANAGE)
+                ? CompletableFuture.allOf(channel.purgeMessages(messages).toArray(new CompletableFuture[0]))
+                : new CompletableFuture<>();
     }
 
     public static EmbedBuilder createEmbedBuilder(final User user)

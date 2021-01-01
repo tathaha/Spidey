@@ -14,7 +14,6 @@ import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEve
 
 import java.time.Duration;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -128,7 +127,7 @@ public class PurgeCommand extends Command
 
     private void proceed(final List<Message> toDelete, final User user, final TextChannel channel)
     {
-        final var future = CompletableFuture.allOf(channel.purgeMessages(toDelete).toArray(new CompletableFuture[0]));
+        final var future = purgeMessages(toDelete.toArray(new Message[0]));
         future.thenRunAsync(() -> channel.sendMessage(generateSuccess(toDelete.size(), user))
                 .delay(Duration.ofSeconds(5))
                 .flatMap(Message::delete)
