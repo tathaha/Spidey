@@ -1,11 +1,9 @@
 package dev.mlnr.spidey.utils;
 
-import dev.mlnr.spidey.Spidey;
 import dev.mlnr.spidey.cache.GeneralCache;
 import dev.mlnr.spidey.cache.ResponseCache;
 import dev.mlnr.spidey.objects.guild.InviteData;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
@@ -15,19 +13,11 @@ import net.jodah.expiringmap.ExpiringMap;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Supplier;
 import java.util.regex.Pattern;
-
-import static java.util.Arrays.asList;
-import static net.dv8tion.jda.api.entities.Activity.listening;
-import static net.dv8tion.jda.api.entities.Activity.watching;
 
 public class Utils
 {
@@ -119,27 +109,6 @@ public class Utils
     public static String generateSuccess(final int count, final User u)
     {
         return ":white_check_mark: Successfully deleted **" + count + "** message" + (count > 1 ? "s" : "") + (u == null ? "." : String.format(" by user **%s**.", u.getAsTag()));
-    }
-
-    public static void startActivityScheduler(final JDA jda)
-    {
-        final var activities = new ArrayList<Supplier<Activity>>(asList( // we use supplier here so the values of getUserCache and getGuildCache are updated each time
-                () -> listening("your commands"),
-                () -> watching("you"),
-                () -> watching(jda.getGuildCache().size() + " guilds"),
-                () -> watching(getUserCount(jda) + " users")
-        ));
-        Spidey.getScheduler().scheduleAtFixedRate(() -> jda.getPresence().setActivity(nextActivity(activities)), 0, 30, TimeUnit.SECONDS);
-    }
-
-    private static int getUserCount(final JDA jda)
-    {
-        return jda.getGuildCache().applyStream(stream -> stream.mapToInt(Guild::getMemberCount).sum());
-    }
-
-    private static Activity nextActivity(final List<Supplier<Activity>> activities)
-    {
-        return activities.get(ThreadLocalRandom.current().nextInt(activities.size())).get();
     }
 
     public static void storeInvites(final Guild guild)

@@ -15,6 +15,7 @@ import dev.mlnr.spidey.utils.requests.Requester;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.audit.ActionType;
+import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.channel.text.TextChannelDeleteEvent;
 import net.dv8tion.jda.api.events.guild.*;
@@ -293,7 +294,7 @@ public class Events extends ListenerAdapter
     public void onReady(final ReadyEvent event)
     {
         final var jda = event.getJDA();
-        Utils.startActivityScheduler(jda);
+        jda.getPresence().setActivity(Activity.listening("s!help"));
         if (jda.getSelfUser().getIdLong() == 772446532560486410L) // only update stats if it's the production bot
             Requester.updateStats(jda);
     }
