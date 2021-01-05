@@ -66,7 +66,7 @@ public class Events extends ListenerAdapter
         final var user = event.getUser();
         final var escapedTag = escape(user.getAsTag());
         final var eb = new EmbedBuilder();
-        eb.setDescription(Emojis.CROSS + " **" + escapedTag + "** has been `banned`");
+        eb.setDescription("\uD83D\uDD28 **" + escapedTag + "** has been `banned`");
         eb.setColor(14495300);
         eb.setFooter("User ban", user.getEffectiveAvatarUrl());
         eb.setTimestamp(Instant.now());
