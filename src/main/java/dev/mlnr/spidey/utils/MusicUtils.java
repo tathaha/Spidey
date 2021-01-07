@@ -222,6 +222,12 @@ public class MusicUtils
         return musicPlayer;
     }
 
+    public static String formatTrack(final AudioTrack track)
+    {
+        final var trackInfo = track.getInfo();
+        return "[`" + trackInfo.title + "`](" + trackInfo.uri + ") (**" + formatDuration(trackInfo.length) + "**)";
+    }
+
     public enum ConnectFailureReason
     {
         NO_CHANNEL("you're not connected to any channel"),

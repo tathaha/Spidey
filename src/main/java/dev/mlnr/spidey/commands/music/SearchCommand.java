@@ -39,11 +39,7 @@ public class SearchCommand extends Command
                 selectionEmbedBuilder.setAuthor("Searching for " + args[0]);
 
                 final var tracks = playlist.getTracks();
-                StringUtils.createSelection(selectionEmbedBuilder, tracks, ctx, "track", track ->
-                {
-                    final var trackInfo = track.getInfo();
-                    return "[`" + trackInfo.title + "`](" + trackInfo.uri + ") (**" + MusicUtils.formatDuration(trackInfo.length) + "**)";
-                }, choice ->
+                StringUtils.createSelection(selectionEmbedBuilder, tracks, ctx, "track", MusicUtils::formatTrack, choice ->
                 {
                     final var url = tracks.get(choice).getInfo().uri;
                     final var loader = new AudioLoader(musicPlayer, url, ctx, false);

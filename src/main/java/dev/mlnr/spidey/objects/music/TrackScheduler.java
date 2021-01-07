@@ -10,7 +10,6 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
 
 import java.util.ArrayList;
-import java.util.Deque;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
@@ -21,7 +20,7 @@ public class TrackScheduler extends AudioEventAdapter
     private final AudioPlayer audioPlayer;
     private final long guildId;
 
-    private final Deque<AudioTrack> queue;
+    private final ConcurrentLinkedDeque<AudioTrack> queue;
     private RepeatMode repeatMode;
 
     private AudioTrack previousTrack;
@@ -50,6 +49,7 @@ public class TrackScheduler extends AudioEventAdapter
             currentTrack = track;
             return;
         }
+
         if (addFirst)
             queue.addFirst(track);
         else
@@ -79,7 +79,7 @@ public class TrackScheduler extends AudioEventAdapter
         audioPlayer.playTrack(trackToPlay);
     }
 
-    public Deque<AudioTrack> getQueue()
+    public ConcurrentLinkedDeque<AudioTrack> getQueue()
     {
         return this.queue;
     }

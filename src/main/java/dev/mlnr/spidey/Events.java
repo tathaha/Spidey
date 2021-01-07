@@ -2,6 +2,7 @@ package dev.mlnr.spidey;
 
 import dev.mlnr.spidey.cache.GeneralCache;
 import dev.mlnr.spidey.cache.MessageCache;
+import dev.mlnr.spidey.cache.PaginatorCache;
 import dev.mlnr.spidey.cache.ResponseCache;
 import dev.mlnr.spidey.cache.music.MusicPlayerCache;
 import dev.mlnr.spidey.cache.settings.GuildSettingsCache;
@@ -30,6 +31,7 @@ import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageUpdateEvent;
+import net.dv8tion.jda.api.events.message.guild.react.GenericGuildMessageReactionEvent;
 import net.dv8tion.jda.api.events.role.RoleDeleteEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -310,6 +312,8 @@ public class Events extends ListenerAdapter
             channel.deleteMessageById(responseMessageId).queue();
             ResponseCache.removeResponseMessageId(messageId);
         }
+        else if (PaginatorCache.isPaginator(messageId))
+            PaginatorCache.removePaginator(messageId);
 
         if (!GuildSettingsCache.isSnipingEnabled(event.getGuild().getIdLong()))
             return;
@@ -359,5 +363,54 @@ public class Events extends ListenerAdapter
             musicPlayer.scheduleLeave();
             musicPlayer.pause();
         }
+    }
+
+    @Override
+    public void onGenericGuildMessageReaction(final GenericGuildMessageReactionEvent event)
+    {
+        final var user = event.getUser();
+        if (user.isBot())
+            return;
+        final var messageId = event.getMessageIdLong();
+        if (!PaginatorCache.isPaginator(messageId))
+            return;
+        final var paginator = PaginatorCache.getPaginator(messageId);
+        if (event.getUserIdLong() != paginator.getAuthorId())
+            return;
+        final var reactionEmote = event.getReactionEmote();
+        if (!reactionEmote.isEmoji())
+            return;
+        final var emoji = reactionEmote.getEmoji();
+        final var channel = event.getChannel();
+        final var currentPage = paginator.getCurrentPage();
+        final var pagesConsumer = paginator.getPagesConsumer();
+        final var newPageBuilder = Utils.createEmbedBuilder(user).setColor(Utils.SPIDEY_COLOR);
+        final var totalPages = paginator.getTotalPages();
+
+        switch (emoji)
+        {
+            case Emojis.WASTEBASKET:
+                PaginatorCache.removePaginator(messageId);
+                return;
+            case Emojis.BACKWARDS:
+                if (currentPage == 0)
+                    return;
+                final var previousPage = currentPage - 1;
+                pagesConsumer.accept(previousPage, newPageBuilder);
+                newPageBuilder.setFooter("Page " + (previousPage + 1) + "/" + totalPages);
+                paginator.modifyCurrentPage(-1);
+                break;
+            case Emojis.FORWARD:
+                if (currentPage + 1 == totalPages)
+                    return;
+                final var nextPage = currentPage + 1;
+                pagesConsumer.accept(nextPage, newPageBuilder);
+                newPageBuilder.setFooter("Page " + (nextPage + 1) + "/" + totalPages);
+                paginator.modifyCurrentPage(+1);
+                break;
+            default:
+                return;
+        }
+        channel.editMessageById(messageId, newPageBuilder.build()).queue();
     }
 }

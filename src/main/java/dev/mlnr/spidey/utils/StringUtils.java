@@ -1,11 +1,18 @@
 package dev.mlnr.spidey.utils;
 
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import dev.mlnr.spidey.Spidey;
+import dev.mlnr.spidey.cache.PaginatorCache;
 import dev.mlnr.spidey.handlers.command.CommandHandler;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import org.apache.commons.collections4.ListUtils;
 
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
@@ -131,5 +138,35 @@ public class StringUtils
     public static String capitalize(final String string)
     {
         return string.substring(0, 1).toUpperCase() + string.substring(1).toLowerCase();
+    }
+
+    public static void createQueuePaginator(final Message message, final Deque<AudioTrack> queue)
+    {
+        final var tracksChunks = ListUtils.partition(new ArrayList<>(queue), 10);
+        final var descriptions = new HashMap<Integer, StringBuilder>();
+
+        var currentTrack = 0;
+        var chunk = 0;
+        for (final var tracks : tracksChunks)
+        {
+            final var chunkBuilder = new StringBuilder();
+            for (final var track : tracks)
+            {
+                chunkBuilder.append(currentTrack + 1).append(". ").append(MusicUtils.formatTrack(track)).append(" [<@").append(track.getUserData(Long.class)).append(">]\n");
+                currentTrack++;
+            }
+            descriptions.put(chunk, chunkBuilder);
+            chunk++;
+        }
+
+        final var length = queue.stream().mapToLong(track -> track.getInfo().length).sum();
+        final var size = queue.size();
+        final var pluralized = size == 1 ? "is **1** track" : "are **" + size + "** tracks";
+        PaginatorCache.createPaginator(message, descriptions.size(), (page, embedBuilder) ->
+        {
+            embedBuilder.setAuthor("Queue for " + message.getGuild().getName());
+            embedBuilder.setDescription(descriptions.get(page));
+            embedBuilder.appendDescription("\n\nThere " + pluralized + " in the queue with total length of **" + MusicUtils.formatDuration(length) + "**");
+        });
     }
 }

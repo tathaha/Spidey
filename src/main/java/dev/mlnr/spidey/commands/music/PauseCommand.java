@@ -4,6 +4,7 @@ import dev.mlnr.spidey.cache.music.MusicPlayerCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
+import dev.mlnr.spidey.utils.Emojis;
 import dev.mlnr.spidey.utils.MusicUtils;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
@@ -38,6 +39,6 @@ public class PauseCommand extends Command
             return;
         }
         final var paused = musicPlayer.pauseOrUnpause();
-        Utils.addReaction(ctx.getMessage(), paused ? "\u23F8\uFE0F" : "\u25B6\uFE0F");
+        Utils.addReaction(ctx.getMessage(), paused ? "\u23F8\uFE0F" : Emojis.FORWARD);
     }
 }

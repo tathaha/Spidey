@@ -67,7 +67,7 @@ public class AudioLoader implements AudioLoadResultHandler
         }
         if (tracksLoaded == 0)
         {
-            ctx.replyError("No tracks could be loaded from the playlist.", Emojis.DISLIKE);
+            ctx.replyError("No tracks could be loaded from the playlist", Emojis.DISLIKE);
             return;
         }
         final var responseEmbedBuilder = createMusicResponseBuilder();
