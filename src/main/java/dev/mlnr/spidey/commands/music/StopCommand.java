@@ -13,7 +13,7 @@ public class StopCommand extends Command
 {
     public StopCommand()
     {
-        super("stop", new String[]{"disconnect"}, "Stops the playback. THIS IS NOT THE SAME AS PAUSING!", "stop", Category.MUSIC, Permission.UNKNOWN, 0, 0);
+        super("stop", new String[]{"disconnect", "dis"}, "Stops the playback and disconnects the bot", "stop", Category.MUSIC, Permission.UNKNOWN, 0, 0);
     }
 
     @Override
