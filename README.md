@@ -2,8 +2,9 @@
 
 Brief list of features:
 - customizable prefix
-- logging joins/leaves/boosts (with showing what invite link a user used to join)
 - music (which is still in development, but the playback itself already works)
+- logging joins/leaves/boosts (with showing what invite link a user used to join)
+- adding a role to a user after joining
 
 Music deserves its own section:
 - support for skipping non-music segments through [SponsorBlock](https://sponsor.ajay.app) (disabled by default as it can cause unexpected confusion, can be enabled using `s!segskipping`)
