@@ -29,7 +29,7 @@ public class QueueCommand extends Command
         final var queue = trackScheduler.getQueue();
         if (queue.isEmpty())
         {
-            ctx.reply("The queue is empty.");
+            ctx.replyError("The queue is empty");
             return;
         }
         StringUtils.createQueuePaginator(ctx.getMessage(), queue);
