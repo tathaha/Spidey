@@ -1,13 +1,13 @@
 package dev.mlnr.spidey.commands.settings;
 
-import dev.mlnr.spidey.cache.settings.GuildSettingsCache;
+import dev.mlnr.spidey.cache.GuildSettingsCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.utils.MusicUtils;
 import net.dv8tion.jda.api.Permission;
 
-import static dev.mlnr.spidey.cache.settings.GuildSettingsCache.isFairQueueEnabled;
+import static dev.mlnr.spidey.cache.GuildSettingsCache.isFairQueueEnabled;
 
 @SuppressWarnings("unused")
 public class FairQueueCommand extends Command

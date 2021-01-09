@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.handlers.command;
 
-import dev.mlnr.spidey.cache.settings.GuildSettingsCache;
+import dev.mlnr.spidey.cache.GuildSettingsCache;
 import dev.mlnr.spidey.objects.command.Command;
 
 import java.util.HashMap;

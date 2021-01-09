@@ -1,4 +1,4 @@
-package dev.mlnr.spidey.cache.settings;
+package dev.mlnr.spidey.cache;
 
 import dev.mlnr.spidey.DatabaseManager;
 import dev.mlnr.spidey.Spidey;

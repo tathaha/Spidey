@@ -1,11 +1,7 @@
 package dev.mlnr.spidey;
 
-import dev.mlnr.spidey.cache.GeneralCache;
-import dev.mlnr.spidey.cache.MessageCache;
-import dev.mlnr.spidey.cache.PaginatorCache;
-import dev.mlnr.spidey.cache.ResponseCache;
+import dev.mlnr.spidey.cache.*;
 import dev.mlnr.spidey.cache.music.MusicPlayerCache;
-import dev.mlnr.spidey.cache.settings.GuildSettingsCache;
 import dev.mlnr.spidey.handlers.command.CommandHandler;
 import dev.mlnr.spidey.objects.guild.InviteData;
 import dev.mlnr.spidey.objects.messages.MessageData;

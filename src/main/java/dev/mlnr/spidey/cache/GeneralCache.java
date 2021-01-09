@@ -1,7 +1,6 @@
 package dev.mlnr.spidey.cache;
 
 import dev.mlnr.spidey.DatabaseManager;
-import dev.mlnr.spidey.cache.settings.GuildSettingsCache;
 import dev.mlnr.spidey.objects.guild.InviteData;
 
 import java.util.HashMap;

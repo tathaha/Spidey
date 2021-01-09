@@ -7,8 +7,8 @@ import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.TrackMarker;
+import dev.mlnr.spidey.cache.GuildSettingsCache;
 import dev.mlnr.spidey.cache.music.MusicPlayerCache;
-import dev.mlnr.spidey.cache.settings.GuildSettingsCache;
 import dev.mlnr.spidey.handlers.music.SegmentHandler;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.music.MusicPlayer;
@@ -22,8 +22,8 @@ import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
+import static dev.mlnr.spidey.cache.GuildSettingsCache.isSegmentSkippingEnabled;
 import static dev.mlnr.spidey.cache.music.VideoSegmentCache.getVideoSegments;
-import static dev.mlnr.spidey.cache.settings.GuildSettingsCache.isSegmentSkippingEnabled;
 import static dev.mlnr.spidey.utils.MusicUtils.ConnectFailureReason.*;
 import static dev.mlnr.spidey.utils.MusicUtils.LoadFailureReason.*;
 
