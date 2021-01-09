@@ -8,7 +8,6 @@ import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class GuildSettingsCache
 {
@@ -174,11 +173,11 @@ public class GuildSettingsCache
 
     private static GuildSettings getGuildSettings(final long guildId)
     {
-        return Objects.requireNonNullElseGet(GUILD_SETTINGS_CACHE.get(guildId), () ->
+        return GUILD_SETTINGS_CACHE.computeIfAbsent(guildId, k ->
         {
-           final var settings = DatabaseManager.retrieveGuildSettings(guildId);
-           GUILD_SETTINGS_CACHE.put(guildId, settings);
-           return settings;
+            final var settings = DatabaseManager.retrieveGuildSettings(guildId);
+            GUILD_SETTINGS_CACHE.put(guildId, settings);
+            return settings;
         });
     }
 }
