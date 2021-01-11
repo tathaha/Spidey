@@ -18,7 +18,7 @@ public class SearchCommand extends Command
 {
     public SearchCommand()
     {
-        super("search", new String[]{"ytsearch"}, "Searches a query on YouTube", "search <query>", Category.MUSIC, Permission.UNKNOWN, 1, 4);
+        super("search", new String[]{"ytsearch"}, Category.MUSIC, Permission.UNKNOWN, 1, 4);
     }
 
     @Override
@@ -27,6 +27,7 @@ public class SearchCommand extends Command
         final var musicPlayer = MusicUtils.checkQueryInput(args, ctx);
         if (musicPlayer == null)
             return;
+        final var i18n = ctx.getI18n();
         MusicUtils.loadQuery(musicPlayer, "ytsearch:" + args[0], new AudioLoadResultHandler()
         {
             @Override
@@ -36,7 +37,7 @@ public class SearchCommand extends Command
             public void playlistLoaded(final AudioPlaylist playlist)
             {
                 final var selectionEmbedBuilder = MusicUtils.createMusicResponseBuilder();
-                selectionEmbedBuilder.setAuthor("Searching for " + args[0]);
+                selectionEmbedBuilder.setAuthor(i18n.get("commands.search.other.searching", args[0]));
 
                 final var tracks = playlist.getTracks();
                 StringUtils.createSelection(selectionEmbedBuilder, tracks, ctx, "track", MusicUtils::formatTrack, choice ->
@@ -50,13 +51,13 @@ public class SearchCommand extends Command
             @Override
             public void noMatches()
             {
-                ctx.replyError("No matches found for **" + args[0] + "**", Emojis.DISLIKE);
+                ctx.replyError(i18n.get("music.messages.failure.no_matches", args[0]), Emojis.DISLIKE);
             }
 
             @Override
             public void loadFailed(final FriendlyException exception)
             {
-                ctx.replyError("There was an error while searching your query", Emojis.DISLIKE);
+                ctx.replyError(i18n.get("commands.search.other.error"), Emojis.DISLIKE);
             }
         });
     }

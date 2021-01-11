@@ -11,7 +11,7 @@ public class DJRoleCommand extends Command
 {
     public DJRoleCommand()
     {
-        super("djrole", new String[]{}, "Sets/removes the DJ role", "djrole (@role, role id or name of the role or blank to reset)", Category.SETTINGS, Permission.MANAGE_SERVER, 1, 4);
+        super("djrole", new String[]{}, Category.SETTINGS, Permission.MANAGE_SERVER, 1, 4);
     }
 
     @Override
@@ -19,15 +19,16 @@ public class DJRoleCommand extends Command
     {
         final var guildId = ctx.getGuild().getIdLong();
         final var dbRole = GuildSettingsCache.getDJRoleId(guildId);
+        final var i18n = ctx.getI18n();
         if (args.length == 0)
         {
             if (dbRole == 0)
             {
-                ctx.replyError("You don't have the DJ role set");
+                ctx.replyError(i18n.get("roles.not_set", "DJ"));
                 return;
             }
             GuildSettingsCache.removeDJRole(guildId);
-            ctx.reply(":white_check_mark: The DJ role has been removed.");
+            ctx.reply(i18n.get("roles.removed", "DJ"));
             return;
         }
         ctx.getArgumentAsRole(0, role ->
@@ -36,16 +37,16 @@ public class DJRoleCommand extends Command
             if (roleId == dbRole)
             {
                 GuildSettingsCache.removeDJRole(guildId);
-                ctx.reply(":white_check_mark: The DJ role has been reset!");
+                ctx.reply(i18n.get("roles.reset", "DJ"));
                 return;
             }
             if (!ctx.getMember().canInteract(role))
             {
-                ctx.replyError("You cannot set the DJ role to a role which you cannot interact with");
+                ctx.replyError(i18n.get("roles.cant_interact", "DJ"));
                 return;
             }
             GuildSettingsCache.setDJRoleId(guildId, roleId);
-            ctx.reply(":white_check_mark: The DJ role has been set to role `" + role.getName() + "`.");
+            ctx.reply(i18n.get("roles.set", "DJ", role.getName()));
         });
     }
 }

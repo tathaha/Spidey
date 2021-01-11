@@ -1,6 +1,7 @@
 package dev.mlnr.spidey.objects.guild;
 
 import dev.mlnr.spidey.DatabaseManager;
+import dev.mlnr.spidey.objects.I18n;
 
 public class GuildSettings
 {
@@ -9,6 +10,7 @@ public class GuildSettings
     private long logChannelId;
     private long joinRoleId;
     private String prefix;
+    private I18n i18n;
 
     private boolean snipingEnabled;
     private boolean vip;
@@ -20,7 +22,7 @@ public class GuildSettings
     private boolean fairQueueEnabled;
     private int fairQueueThreshold;
 
-    public GuildSettings(final long guildId, final long logChannelId, final long joinRoleId, final String prefix, final boolean snipingEnabled, final boolean vip, final long djRoleId,
+    public GuildSettings(final long guildId, final long logChannelId, final long joinRoleId, final String prefix, final String language, final boolean snipingEnabled, final boolean vip, final long djRoleId,
                          final boolean segmentSkippingEnabled, final int defaultVolume, final boolean fairQueueEnabled, final int fairQueueThreshold)
     {
         this.guildId = guildId;
@@ -28,6 +30,7 @@ public class GuildSettings
         this.logChannelId = logChannelId;
         this.joinRoleId = joinRoleId;
         this.prefix = prefix;
+        this.i18n = I18n.ofLanguage(language);
 
         this.snipingEnabled = snipingEnabled;
         this.vip = vip;
@@ -55,6 +58,11 @@ public class GuildSettings
     public String getPrefix()
     {
         return this.prefix;
+    }
+
+    public I18n getI18n()
+    {
+        return this.i18n;
     }
 
     public boolean isSnipingEnabled()
@@ -114,6 +122,12 @@ public class GuildSettings
     {
         this.prefix = prefix;
         DatabaseManager.setPrefix(guildId, prefix);
+    }
+
+    public void setLanguage(final String language)
+    {
+        this.i18n = I18n.ofLanguage(language);
+        DatabaseManager.setLanguage(guildId, language);
     }
 
     public void setSnipingEnabled(final boolean enabled)

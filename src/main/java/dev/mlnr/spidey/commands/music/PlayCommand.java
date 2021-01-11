@@ -12,7 +12,7 @@ public class PlayCommand extends Command
 {
     public PlayCommand()
     {
-        super("play", new String[]{"p"}, "Plays/queues a song", "play <link or search term>", Category.MUSIC, Permission.UNKNOWN, 1, 2);
+        super("play", new String[]{"p"}, Category.MUSIC, Permission.UNKNOWN, 1, 2);
     }
 
     @Override

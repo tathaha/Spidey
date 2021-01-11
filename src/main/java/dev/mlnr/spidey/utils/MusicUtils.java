@@ -10,6 +10,7 @@ import com.sedmelluq.discord.lavaplayer.track.TrackMarker;
 import dev.mlnr.spidey.cache.GuildSettingsCache;
 import dev.mlnr.spidey.cache.music.MusicPlayerCache;
 import dev.mlnr.spidey.handlers.music.SegmentHandler;
+import dev.mlnr.spidey.objects.I18n;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.music.MusicPlayer;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -172,11 +173,12 @@ public class MusicUtils
         return null;
     }
 
-    public static String formatLength(final long originalLength, final long lengthWithoutSegments)
+    public static String formatLength(final long originalLength, final long lengthWithoutSegments, final I18n i18n)
     {
         final var durationBuilder = new StringBuilder().append("(**").append(formatDuration(originalLength)).append("**");
         if (lengthWithoutSegments != originalLength)
-            durationBuilder.append(" [**").append(formatDuration(lengthWithoutSegments)).append("** without segments]");
+            durationBuilder.append(" [**").append(formatDuration(lengthWithoutSegments))
+                    .append("** ").append(i18n.get("music.messages.without_segments")).append(")]");
         durationBuilder.append(")");
         return durationBuilder.toString();
     }
@@ -184,11 +186,6 @@ public class MusicUtils
     public static EmbedBuilder createMusicResponseBuilder()
     {
         return new EmbedBuilder().setColor(Utils.SPIDEY_COLOR);
-    }
-
-    public static String getFormattedFairQueueReason(final long guildId)
-    {
-        return String.format(FAIR_QUEUE.getReason(), GuildSettingsCache.getFairQueueThreshold(guildId), GuildSettingsCache.getPrefix(guildId));
     }
 
     private static int getFairQueueThreshold(final long guildId)
@@ -203,15 +200,17 @@ public class MusicUtils
 
     public static MusicPlayer checkQueryInput(final String[] args, final CommandContext ctx)
     {
+        final var i18n = ctx.getI18n();
         if (args.length == 0)
         {
-            ctx.replyError("Please enter a search query");
+            ctx.replyError(i18n.get("music.messages.failure.no_query"));
             return null;
         }
         final var connectionFailure = checkVoiceChannel(ctx);
         if (connectionFailure != null)
         {
-            ctx.replyError("I can't play music as " + connectionFailure.getReason());
+            ctx.replyError(i18n.get("music.messages.failure.connect.cant_play")
+                    + " " + i18n.get("music.messages.failure.connect." + connectionFailure.name().toLowerCase() + "."));
             return null;
         }
         final var musicPlayer = MusicPlayerCache.getMusicPlayer(ctx.getGuild(), true);
@@ -228,43 +227,37 @@ public class MusicUtils
         return "[`" + trackInfo.title + "`](" + trackInfo.uri + ") (**" + formatDuration(trackInfo.length) + "**)";
     }
 
+    public static String formatLoadError(final LoadFailureReason loadFailureReason, final CommandContext ctx)
+    {
+        final var i18n = ctx.getI18n();
+        var base = i18n.get("music.messages.failure.load.cant_load") + " ";
+        switch (loadFailureReason)
+        {
+            case QUEUE_FULL:
+                base +=  i18n.get("music.messages.failure.load.queue_full", MAX_QUEUE_SIZE);
+                break;
+            case TRACK_LONG:
+                base +=  i18n.get("music.messages.failure.load.track_long", MAX_TRACK_LENGTH_HOURS);
+                break;
+            case FAIR_QUEUE:
+                base += i18n.get("music.messages.failure.load.fair_queue", MAX_FAIR_QUEUE, GuildSettingsCache.getPrefix(ctx.getGuild().getIdLong()));
+                break;
+        }
+        return base + ".";
+    }
+
     public enum ConnectFailureReason
     {
-        NO_CHANNEL("you're not connected to any channel"),
-        NO_PERMS("i don't have permission to join your channel"),
-        CHANNEL_FULL("the voice channel you're in is full"),
-        CANT_SPEAK("i can't speak in your channel");
-
-        private final String reason;
-
-        ConnectFailureReason(final String reason)
-        {
-            this.reason = reason;
-        }
-
-        public String getReason()
-        {
-            return this.reason;
-        }
+        NO_CHANNEL,
+        NO_PERMS,
+        CHANNEL_FULL,
+        CANT_SPEAK
     }
 
     public enum LoadFailureReason
     {
-        QUEUE_FULL("the max queue size of **" + MAX_QUEUE_SIZE + "** tracks has been reached! To completely remove this limit, you can purchase permanent VIP for a symbolic price of 2€"),
-        TRACK_LONG("the track is at least **" + MAX_TRACK_LENGTH_HOURS + "** hours long. To completely remove the length limit, you can purchase permanent VIP for a symbolic price of 2€"),
-        FAIR_QUEUE("the fair queue limit of **%d** tracks has been reached! Don't queue the same song over and over again. A DJ or a Server Manager can disable this or increase the threshold by using" +
-                "`%sfairqueue (threshold)`");
-
-        private final String reason;
-
-        LoadFailureReason(final String reason)
-        {
-            this.reason = reason;
-        }
-
-        public String getReason()
-        {
-            return this.reason;
-        }
+        QUEUE_FULL,
+        TRACK_LONG,
+        FAIR_QUEUE
     }
 }

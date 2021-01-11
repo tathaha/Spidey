@@ -16,7 +16,7 @@ public class HowGayCommand extends Command
 {
     public HowGayCommand()
     {
-        super("howgay", new String[]{"gay"}, "Shows you what's your or mentioned user's gay rate", "howgay (@user, user id or username/nickname)", Category.FUN, Permission.UNKNOWN, 1, 2);
+        super("howgay", new String[]{"gay"}, Category.FUN, Permission.UNKNOWN, 1, 2);
     }
 
     @Override
@@ -37,9 +37,12 @@ public class HowGayCommand extends Command
         final var text = " **" + random + "**% gay " + prideFlag;
         final var author = ctx.getAuthor();
         final var eb = Utils.createEmbedBuilder(author);
-        eb.setAuthor("gay rate");
+        final var i18n = ctx.getI18n();
+        eb.setAuthor(i18n.get("commands.howgay.other.title"));
         eb.setColor(getColorHex(random, 100));
-        eb.setDescription((user.equals(author) ? "you are" : user.getAsMention() + " is") + text);
+        eb.setDescription((user.equals(author)
+                ? i18n.get("commands.howgay.other.person.second")
+                : user.getAsMention() + " " + i18n.get("commands.howgay.other.person.third")) + text);
         ctx.reply(eb);
     }
 }

@@ -10,7 +10,7 @@ public class BlowjobsCommand extends Command
 {
     public BlowjobsCommand()
     {
-        super("blowjobs", new String[]{"blowjob"}, "Sends a (NSFW) picture of a blowjob", "blowjobs", Category.NSFW, Permission.UNKNOWN, 0, 4);
+        super("blowjobs", new String[]{"blowjob"}, Category.NSFW, Permission.UNKNOWN, 0, 4);
     }
 
     @Override

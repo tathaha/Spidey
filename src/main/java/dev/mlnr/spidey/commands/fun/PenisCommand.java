@@ -16,7 +16,7 @@ public class PenisCommand extends Command
 {
     public PenisCommand()
     {
-        super("penis", new String[]{}, "Shows you what's your or entered user's penis", "penis (@user, user id or username/nickname)", Category.FUN, Permission.UNKNOWN, 1, 2);
+        super("penis", new String[]{}, Category.FUN, Permission.UNKNOWN, 1, 2);
     }
 
     @Override
@@ -33,12 +33,15 @@ public class PenisCommand extends Command
     private void respond(final CommandContext ctx, final User user)
     {
         final var random = ThreadLocalRandom.current().nextInt(0, 25 + 1); // values from 0 to 25, 25 + 1 cos 25 has to be inclusive
-        final var text = " penis:\n8" + "=".repeat(random) + "D (**" + random + "** cm)";
+        final var text = " :\n8" + "=".repeat(random) + "D (**" + random + "** cm)";
         final var author = ctx.getAuthor();
         final var eb = Utils.createEmbedBuilder(author);
-        eb.setAuthor("penis size machine");
+        final var i18n = ctx.getI18n();
+        eb.setAuthor(i18n.get("commands.penis.other.title"));
         eb.setColor(getColorHex(random, 25));
-        eb.setDescription((user.equals(author) ? "your" : user.getAsMention() + "'s") + text);
+        eb.setDescription((user.equals(author)
+                ? i18n.get("commands.penis.other.person.second")
+                : i18n.get("commands.penis.other.person.third", user.getAsMention()) + text));
         ctx.reply(eb);
     }
 }

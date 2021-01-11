@@ -20,21 +20,22 @@ public class UploadEmoteCommand extends Command
 {
     public UploadEmoteCommand()
     {
-        super("uploademote", new String[]{}, "Uploads the image from the provided url as an emote if possible", "uploademote <link> (name)", Category.UTILITY, Permission.MANAGE_EMOTES, 0, 4);
+        super("uploademote", new String[]{}, Category.UTILITY, Permission.MANAGE_EMOTES, 0, 4);
     }
 
     @Override
     public void execute(final String[] args, final CommandContext ctx)
     {
         final var guild = ctx.getGuild();
+        final var i18n = ctx.getI18n();
         if (!guild.getSelfMember().hasPermission(getRequiredPermission()))
         {
-            ctx.replyError("Spidey does not have the permission to upload emotes");
+            ctx.replyError(i18n.get("commands.uploademote.other.no_perms"));
             return;
         }
         if (args.length == 0)
         {
-            ctx.replyError("Please provide a URL to retrieve the emote from");
+            ctx.replyError(i18n.get("commands.uploademote.other.provide_url"));
             return;
         }
         var name = "";
@@ -50,7 +51,7 @@ public class UploadEmoteCommand extends Command
                 final var ext = args[0].substring(index + 1);
                 if (Icon.IconType.fromExtension(ext) == Icon.IconType.UNKNOWN)
                 {
-                    ctx.replyError("Please provide a URL with a valid format - JP(E)G, PNG, WEBP or GIF");
+                    ctx.replyError(i18n.get("commands.uploademote.other.provide_format"));
                     return;
                 }
                 name = tmp;
@@ -62,12 +63,12 @@ public class UploadEmoteCommand extends Command
         }
         if (!(name.length() >= 2 && name.length() <= 32))
         {
-            ctx.replyError("The name of the emote has to be between 2 and 32 in length");
+            ctx.replyError(i18n.get("commands.uploademote.other.name_length"));
             return;
         }
         else if (!Utils.TEXT_PATTERN.matcher(name).matches())
         {
-            ctx.replyError("The name of the emote has to be in a valid format");
+            ctx.replyError(i18n.get("commands.uploademote.other.valid_format"));
             return;
         }
         final var image = new ByteArrayOutputStream();
@@ -91,18 +92,18 @@ public class UploadEmoteCommand extends Command
         }
         catch (final MalformedURLException ex)
         {
-            ctx.replyError("Please provide a valid URL to retrieve the emote from");
+            ctx.replyError(i18n.get("commands.uploademote.other.provide_url"));
             return;
         }
         catch (final IOException ex)
         {
-            ctx.replyError("Unfortunately, i couldn't create the emote due to an internal error");
+            ctx.replyError(i18n.get("internal_error", "upload the emote", ex.getMessage()));
             return;
         }
         final var byteArray = image.toByteArray();
         if (byteArray.length > 256000)
         {
-            ctx.replyError("The emote size has to be less than **256KB**");
+            ctx.replyError(i18n.get("commands.uploademote.other.size"));
             return;
         }
         final var maxEmotes = guild.getMaxEmotes();
@@ -112,13 +113,14 @@ public class UploadEmoteCommand extends Command
                                                                            .get(animated).size());
         if (maxEmotes == used)
         {
-            ctx.replyError("Guild has the maximum amount of emotes");
+            ctx.replyError(i18n.get("commands.uploademote.other.maximum_size"));
             return;
         }
         guild.createEmote(name, Icon.from(byteArray)).queue(emote ->
         {
             final var left = maxEmotes - used - 1;
-            ctx.reply("Emote " + emote.getAsMention() + " has been successfully uploaded! " + (animated ? "Animated e" : "E") + "mote slots left: **" + (left == 0 ? "None" : left) + "**");
-        }, failure -> ctx.replyError("Unfortunately, i couldn't create the emote due to an internal error: **" + failure.getMessage() + "**. Please report this message to the Developer"));
+            ctx.reply(i18n.get("commands.uploademote.other.success", emote.getAsMention(),
+                    animated ? "Animated emote" : "Emote", (left == 0 ? "None" : left)));
+        }, failure -> ctx.replyError(i18n.get("internal_error", "upload the emote", failure.getMessage())));
     }
 }

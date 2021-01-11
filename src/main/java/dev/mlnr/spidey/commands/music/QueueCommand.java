@@ -12,7 +12,7 @@ public class QueueCommand extends Command
 {
     public QueueCommand()
     {
-        super("queue", new String[]{"q"}, "Lists the current queue", "queue", Category.MUSIC, Permission.UNKNOWN, 0, 3);
+        super("queue", new String[]{"q"}, Category.MUSIC, Permission.UNKNOWN, 0, 3);
     }
 
     @Override
@@ -20,16 +20,17 @@ public class QueueCommand extends Command
     {
         final var guild = ctx.getGuild();
         final var musicPlayer = MusicPlayerCache.getMusicPlayer(guild);
+        final var i18n = ctx.getI18n();
         if (musicPlayer == null)
         {
-            ctx.replyError("There is no music playing");
+            ctx.replyError(i18n.get("music.messages.failure.no_music"));
             return;
         }
         final var trackScheduler = musicPlayer.getTrackScheduler();
         final var queue = trackScheduler.getQueue();
         if (queue.isEmpty())
         {
-            ctx.replyError("The queue is empty");
+            ctx.replyError(i18n.get("commands.queue.other.empty"));
             return;
         }
         StringUtils.createQueuePaginator(ctx.getMessage(), queue);

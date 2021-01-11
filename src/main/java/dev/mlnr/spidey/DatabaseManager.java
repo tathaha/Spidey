@@ -35,10 +35,10 @@ public class DatabaseManager
             ps.setLong(1, guildId);
             try (final var rs = ps.executeQuery())
             {
-                return rs.next() ? new GuildSettings(guildId, rs.getLong("log_channel_id"), rs.getLong("join_role_id"), rs.getString("prefix"),
+                return rs.next() ? new GuildSettings(guildId, rs.getLong("log_channel_id"), rs.getLong("join_role_id"), rs.getString("prefix"), rs.getString("language"),
                         rs.getBoolean("sniping"), rs.getBoolean("vip"), rs.getLong("music_dj_role_id"), rs.getBoolean("music_segment_skipping"),
                         rs.getInt("music_default_volume"), rs.getBoolean("music_fair_queue_enabled"), rs.getInt("music_fair_queue_threshold"))
-                        : new GuildSettings(guildId, 0, 0, "s!", true, false, 0, false, 100, true, 3); // default settings
+                        : new GuildSettings(guildId, 0, 0, "s!", "en", true, false, 0, false, 100, true, 3); // default settings
             }
         }
         catch (final SQLException ex)
@@ -92,6 +92,11 @@ public class DatabaseManager
     public static void setPrefix(final long guildId, final String prefix)
     {
         executeSetQuery("prefix", guildId, prefix);
+    }
+
+    public static void setLanguage(final long guildId, final String language)
+    {
+        executeSetQuery("language", guildId, language);
     }
 
     public static void setSnipingEnabled(final long guildId, final boolean enabled)

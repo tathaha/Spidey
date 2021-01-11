@@ -1,5 +1,6 @@
 package dev.mlnr.spidey.objects.command;
 
+import dev.mlnr.spidey.objects.I18n;
 import dev.mlnr.spidey.utils.ArgumentUtils;
 import dev.mlnr.spidey.utils.Emojis;
 import dev.mlnr.spidey.utils.Utils;
@@ -17,11 +18,13 @@ public class CommandContext
 {
     private final String[] args;
     private final GuildMessageReceivedEvent event;
+    private final I18n i18n;
 
-    public CommandContext(final String[] args, final GuildMessageReceivedEvent event)
+    public CommandContext(final String[] args, final GuildMessageReceivedEvent event, final I18n i18n)
     {
         this.args = args;
         this.event = event;
+        this.i18n = i18n;
     }
 
     public Message getMessage()
@@ -41,7 +44,7 @@ public class CommandContext
 
     public TextChannel getTextChannel()
     {
-        return getMessage().getTextChannel();
+        return event.getChannel();
     }
 
     public Guild getGuild()
@@ -52,6 +55,11 @@ public class CommandContext
     public JDA getJDA()
     {
         return event.getJDA();
+    }
+
+    public I18n getI18n()
+    {
+        return this.i18n;
     }
 
     // interaction methods
@@ -73,22 +81,12 @@ public class CommandContext
 
     public void replyError(final String error)
     {
-        replyError(error, true);
-    }
-
-    public void replyError(final String error, final boolean includeDot)
-    {
-        replyError(error, Emojis.CROSS, includeDot);
+        replyError(error, Emojis.CROSS);
     }
 
     public void replyError(final String error, final String failureEmoji)
     {
-        replyError(error, failureEmoji, true);
-    }
-
-    public void replyError(final String error, final String failureEmoji, final boolean includeDot)
-    {
-        Utils.returnError(error, getMessage(), failureEmoji, includeDot);
+        Utils.returnError(error, getMessage(), failureEmoji);
     }
 
     public void reactLike()

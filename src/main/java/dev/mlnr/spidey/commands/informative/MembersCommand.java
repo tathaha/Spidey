@@ -13,7 +13,7 @@ public class MembersCommand extends Command
 {
     public MembersCommand()
     {
-        super("members", new String[]{"membercount"}, "Shows you the membercount of the guild", "members", Category.INFORMATIVE, Permission.UNKNOWN, 0, 2);
+        super("members", new String[]{"membercount"}, Category.INFORMATIVE, Permission.UNKNOWN, 0, 2);
     }
 
     @Override
@@ -24,11 +24,13 @@ public class MembersCommand extends Command
             final var total = members.size();
             final var bots = members.stream().filter(member -> member.getUser().isBot()).count();
             final var eb = Utils.createEmbedBuilder(ctx.getAuthor());
-            eb.setAuthor("MEMBERCOUNT");
+            final var i18n = ctx.getI18n();
+
+            eb.setAuthor(i18n.get("commands.members.other.title"));
             eb.setTimestamp(Instant.now());
-            eb.addField("Total", "**" + total + "**", true);
-            eb.addField("People", "**" + (total - bots) + "**", true);
-            eb.addField("Bots", "**" + bots + "**", true);
+            eb.addField(i18n.get("commands.members.other.total"), "**" + total + "**", true);
+            eb.addField(i18n.get("commands.members.other.people"), "**" + (total - bots) + "**", true);
+            eb.addField(i18n.get("commands.members.other.bots"), "**" + bots + "**", true);
             ctx.reply(eb);
         });
     }

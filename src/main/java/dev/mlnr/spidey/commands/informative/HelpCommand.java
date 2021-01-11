@@ -15,11 +15,9 @@ import java.util.*;
 @SuppressWarnings("unused")
 public class HelpCommand extends Command
 {
-    private static final String COOLDOWN_REDUCE_HALF = "If you want to reduce the commands' cooldown by half, you can achieve so by donating at least 2€.";
-
     public HelpCommand()
     {
-        super("help", new String[]{"commands", "cmds"}, "Shows the help message", "help (command)", Category.INFORMATIVE, Permission.UNKNOWN, 0, 0);
+        super("help", new String[]{"commands", "cmds"}, Category.INFORMATIVE, Permission.UNKNOWN, 0, 0);
     }
 
     @Override
@@ -29,7 +27,10 @@ public class HelpCommand extends Command
         final var author = ctx.getAuthor();
         final var guildId = ctx.getGuild().getIdLong();
         final var prefix = GuildSettingsCache.getPrefix(guildId);
-        final var eb = Utils.createEmbedBuilder(author).setAuthor("Spidey's commands", "https://github.com/caneleex/Spidey", ctx.getJDA().getSelfUser().getEffectiveAvatarUrl());
+        final var i18n = ctx.getI18n();
+        final var eb = Utils.createEmbedBuilder(author)
+                .setAuthor(i18n.get("commands.help.other.text"), "https://github.com/caneleex/Spidey",
+                        ctx.getJDA().getSelfUser().getEffectiveAvatarUrl());
 
         if (args.length == 0)
         {
@@ -63,11 +64,11 @@ public class HelpCommand extends Command
                 sb.append(" ").append("-").append(" ");
                 sb.append(listToString(commandz));
             });
-            eb.setDescription("Prefix: **" + prefix + "**\n" + sb + "\n\nTo see more info about a command, type `" + prefix + "help <command>`.");
+            eb.setDescription(i18n.get("commands.help.other.embed_content", prefix, sb.toString(), prefix));
             if (hidden > 0)
-                eb.appendDescription("\n**" + hidden + "** commands were hidden as you don't have permissions to use them.");
+                eb.appendDescription(i18n.get("commands.help.other.hidden.text", hidden));
             if (nsfwHidden)
-                eb.appendDescription("\nNSFW commands were hidden from the help msg. If you want to see all NSFW commands, type the help command in a NSFW channel.");
+                eb.appendDescription(i18n.get("commands.help.other.hidden.nsfw"));
             ctx.reply(eb);
             return;
         }
@@ -76,25 +77,35 @@ public class HelpCommand extends Command
         if (command == null)
         {
             final var similar = StringUtils.getSimilarCommand(invoke);
-            ctx.replyError("**" + invoke + "** isn't a valid command. " + (similar == null ? "Check `" + prefix + "help` for a list of commands." : "Did you perhaps mean **" + similar + "**?"), false);
+            ctx.replyError(i18n.get("command_failures.invalid.message", invoke) + (similar == null
+                    ? i18n.get("command_failures.invalid.check_help", prefix)
+                    : i18n.get("command_failures.invalid.suggestion", similar)));
             return;
         }
+        final var none = i18n.get("commands.help.other.command_info.info_none");
         final var requiredPermission = command.getRequiredPermission();
         final var aliases = command.getAliases();
         final var cooldown = CooldownHandler.getCooldown(guildId, command);
-        eb.setAuthor("Viewing command info - " + invoke);
-        eb.addField("Description", command.getDescription(), false);
-        eb.addField("Usage", "`" + prefix + command.getUsage() + "` (<> = required, () = optional)", false);
-        eb.addField("Category",  command.getCategory().getFriendlyName(), false);
-        eb.addField("Required permission", requiredPermission == Permission.UNKNOWN ? "None" : requiredPermission.getName(), false);
-        eb.addField("Aliases", aliases.length == 0 ? "None" : String.join(", ", aliases), false);
-        eb.addField("Cooldown", cooldown == 0 ? "None" : cooldown + " seconds", false);
+
+        eb.setAuthor(i18n.get("commands.help.other.viewing") + " - " + invoke);
+        eb.addField(i18n.get("commands.help.other.command_info.description"),
+                i18n.get("commands." + invoke + ".description"), false);
+
+        eb.addField(i18n.get("commands.help.other.command_info.usage"),
+                "`" + prefix + i18n.get("commands." + invoke + ".usage") + "` " +
+                        i18n.get("commands.help.other.command_info.usage_required_optional"), false);
+
+        eb.addField(i18n.get("commands.help.other.command_info.category"), command.getCategory().getFriendlyName(), false);
+        eb.addField(i18n.get("commands.help.other.command_info.required_permission"), requiredPermission == Permission.UNKNOWN
+                ? none : requiredPermission.getName(), false);
+        eb.addField(i18n.get("commands.help.other.command_info.aliases"), aliases.length == 0 ? none : String.join(", ", aliases), false);
+        eb.addField(i18n.get("commands.help.other.command_info.cooldown"), cooldown == 0 ? none : cooldown + " " +
+                i18n.get("commands.help.other.command_info.seconds"), false);
 
         if (!GuildSettingsCache.isVip(guildId))
         {
             eb.addBlankField(false);
-            eb.addField("Reducing commands' cooldown", COOLDOWN_REDUCE_HALF + "\nBy donating, you also support the Developer and"
-                    + " help cover hosting fees. Type `" + prefix + "info` for the PayPal link. Thank you!", false);
+            eb.addField(i18n.get("commands.help.other.donate.title"), i18n.get("commands.help.other.donate.text"), false);
         }
         ctx.reply(eb);
     }

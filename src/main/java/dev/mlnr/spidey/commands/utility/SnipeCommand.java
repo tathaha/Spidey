@@ -15,17 +15,17 @@ public class SnipeCommand extends Command
 {
     public SnipeCommand()
     {
-        super("snipe", new String[]{"s", "dsnipe"}, "Snipes a deleted message", "snipe", Category.UTILITY, Permission.UNKNOWN, 0, 6);
+        super("snipe", new String[]{"s", "dsnipe"}, Category.UTILITY, Permission.UNKNOWN, 0, 6);
     }
 
     @Override
     public void execute(final String[] args, final CommandContext ctx)
     {
         final var guildId = ctx.getGuild().getIdLong();
+        final var i18n = ctx.getI18n();
         if (!GuildSettingsCache.isSnipingEnabled(guildId))
         {
-            ctx.replyError("Sniping messages for this server is disabled, which could be caused by manually disabling it or having more than 10000 people in this server. You can enable sniping by using `"
-                    + GuildSettingsCache.getPrefix(guildId) + "sniping`");
+            ctx.replyError(i18n.get("sniping.disabled", GuildSettingsCache.getPrefix(guildId)));
             return;
         }
         final var textChannel = ctx.getTextChannel();
@@ -33,7 +33,7 @@ public class SnipeCommand extends Command
         final var lastDeletedMessage = MessageCache.getLastDeletedMessage(channelId);
         if (lastDeletedMessage == null)
         {
-            ctx.replyError("There's no deleted message to snipe");
+            ctx.replyError(i18n.get("sniping.disabled", "deleted"));
             return;
         }
         final var eb = Utils.createEmbedBuilder(ctx.getAuthor());

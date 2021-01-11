@@ -44,6 +44,7 @@ public class AudioLoader implements AudioLoadResultHandler
             return;
         }
         final var guildId = ctx.getGuild().getIdLong();
+        final var i18n = ctx.getI18n();
         var originalLength = 0L;
         var lengthWithoutSegments = 0L;
         var tracksLoaded = 0;
@@ -61,32 +62,32 @@ public class AudioLoader implements AudioLoadResultHandler
                 continue;
             if (loadFailure == QUEUE_FULL)
             {
-                ctx.replyError("I can't add any more tracks as " + QUEUE_FULL.getReason(), Emojis.DISLIKE);
+                ctx.replyError(i18n.get("music.messages.failure.add") + " " + i18n.get("music.messages.failure.load.queue_full", MusicUtils.MAX_QUEUE_SIZE) + ".", Emojis.DISLIKE);
                 break;
             }
         }
         if (tracksLoaded == 0)
         {
-            ctx.replyError("No tracks could be loaded from the playlist", Emojis.DISLIKE);
+            ctx.replyError(i18n.get("music.messages.failure.load.no_tracks"), Emojis.DISLIKE);
             return;
         }
         final var responseEmbedBuilder = createMusicResponseBuilder();
         final var responseDescriptionBuilder = responseEmbedBuilder.getDescriptionBuilder();
-        responseDescriptionBuilder.append("Queued").append(" **").append(tracksLoaded).append("** tracks ").append(formatLength(originalLength, lengthWithoutSegments)).append(" [")
-                .append(ctx.getAuthor().getAsMention()).append("]");
+        responseDescriptionBuilder.append(i18n.get("music.messages.queued")).append(" **").append(tracksLoaded).append("** ").append(i18n.get("music.messages.tracks")).append(" ")
+                .append(formatLength(originalLength, lengthWithoutSegments, i18n)).append(" [").append(ctx.getAuthor().getAsMention()).append("]");
         ctx.reply(responseEmbedBuilder);
     }
 
     @Override
     public void noMatches()
     {
-        ctx.replyError("No matches found for **" + (query.startsWith("ytsearch:") ? query.substring(9) : query) + "**", Emojis.DISLIKE);
+        ctx.replyError(ctx.getI18n().get("music.messages.failure.no_matches", query.startsWith("ytsearch:") ? query.substring(9) : query), Emojis.DISLIKE);
     }
 
     @Override
     public void loadFailed(final FriendlyException exception)
     {
-        ctx.replyError("There was an error while loading the track", Emojis.DISLIKE);
+        ctx.replyError(ctx.getI18n().get("music.messages.failure.load.error"), Emojis.DISLIKE);
     }
 
     private void loadSingle(final AudioTrack track)
@@ -100,13 +101,16 @@ public class AudioLoader implements AudioLoadResultHandler
         final var queue = trackScheduler.getQueue();
         final var trackInfo = track.getInfo();
         final var guildId = ctx.getGuild().getIdLong();
+        final var i18n = ctx.getI18n();
+
         final var loadFailure = MusicUtils.checkTrack(track, this.musicPlayer, guildId);
         if (loadFailure != null)
         {
             if (!playlist)
-                ctx.replyError("I can't load this track as " + (loadFailure == FAIR_QUEUE ? MusicUtils.getFormattedFairQueueReason(guildId) : loadFailure.getReason()), Emojis.DISLIKE);
+                ctx.replyError(MusicUtils.formatLoadError(loadFailure, ctx), Emojis.DISLIKE);
             return loadFailure;
         }
+
         final var requester = ctx.getAuthor();
         final var title = "[" + trackInfo.title + "](" + trackInfo.uri + ")";
         final var originalLength = trackInfo.length;
@@ -122,8 +126,8 @@ public class AudioLoader implements AudioLoadResultHandler
 
         final var responseEmbedBuilder = createMusicResponseBuilder();
         final var responseDescriptionBuilder = responseEmbedBuilder.getDescriptionBuilder();
-        responseDescriptionBuilder.append(queue.isEmpty() ? "Playing" : "Queued").append(" ").append(title).append(stream ? "" : " " + formatLength(originalLength, lengthWithoutSegments)).append(" [")
-                .append(requester.getAsMention()).append("]");
+        responseDescriptionBuilder.append(queue.isEmpty() ? i18n.get("music.messages.playing") : i18n.get("music.messages.queued")).append(" ").append(title)
+                .append(stream ? "" : " " + formatLength(originalLength, lengthWithoutSegments, i18n)).append(" [").append(requester.getAsMention()).append("]");
         ctx.reply(responseEmbedBuilder);
         return null;
     }

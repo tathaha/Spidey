@@ -10,7 +10,7 @@ public class LegalTeensCommand extends Command
 {
     public LegalTeensCommand()
     {
-        super("legalteens", new String[]{"teens"}, "Sends a (NSFW) picture of a legal teen", "legalteens", Category.NSFW, Permission.UNKNOWN, 0, 4);
+        super("legalteens", new String[]{"teens"}, Category.NSFW, Permission.UNKNOWN, 0, 4);
     }
 
     @Override

@@ -13,7 +13,7 @@ public class StopCommand extends Command
 {
     public StopCommand()
     {
-        super("stop", new String[]{"disconnect", "dis"}, "Stops the playback and disconnects the bot", "stop", Category.MUSIC, Permission.UNKNOWN, 0, 0);
+        super("stop", new String[]{"disconnect", "dis"}, Category.MUSIC, Permission.UNKNOWN, 0, 0);
     }
 
     @Override
@@ -21,14 +21,15 @@ public class StopCommand extends Command
     {
         final var guild = ctx.getGuild();
         final var musicPlayer = MusicPlayerCache.getMusicPlayer(guild);
+        final var i18n = ctx.getI18n();
         if (musicPlayer == null)
         {
-            ctx.replyError("There is no music playing");
+            ctx.replyError(i18n.get("music.messages.failure.no_music"));
             return;
         }
         if (!MusicUtils.canInteract(ctx.getMember()))
         {
-            ctx.replyError("You have to be a DJ/Server Manager to stop the playback");
+            ctx.replyError(i18n.get("music.messages.failure.cant_interact", "stop the playback"));
             return;
         }
         MusicPlayerCache.disconnectFromChannel(guild);

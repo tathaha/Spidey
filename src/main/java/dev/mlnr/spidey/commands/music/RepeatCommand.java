@@ -14,7 +14,7 @@ public class RepeatCommand extends Command
 {
     public RepeatCommand()
     {
-        super("repeat", new String[]{"loop"}, "Sets/resets the repeat mode", "repeat (song/queue or blank to reset)", Category.MUSIC, Permission.UNKNOWN, 0, 0);
+        super("repeat", new String[]{"loop"}, Category.MUSIC, Permission.UNKNOWN, 0, 0);
     }
 
     @Override
@@ -22,14 +22,15 @@ public class RepeatCommand extends Command
     {
         final var guild = ctx.getGuild();
         final var musicPlayer = MusicPlayerCache.getMusicPlayer(guild);
+        final var i18n = ctx.getI18n();
         if (musicPlayer == null)
         {
-            ctx.replyError("There is no music playing");
+            ctx.replyError(i18n.get("music.messages.failure.no_music"));
             return;
         }
         if (!MusicUtils.canInteract(ctx.getMember()))
         {
-            ctx.replyError("You have to be a DJ/Server Manager to set the repeat mode");
+            ctx.replyError(i18n.get("music.messages.failure.cant_interact", "set the repeat mode"));
             return;
         }
         final var trackScheduler = musicPlayer.getTrackScheduler();
@@ -37,12 +38,12 @@ public class RepeatCommand extends Command
         {
             if (trackScheduler.getRepeatMode() != null)
             {
-                ctx.replyError("Please provide the repeat mode; **song**/**queue**");
+                ctx.replyError(i18n.get("commands.repeat.other.provide"));
                 return;
             }
             trackScheduler.setRepeatMode(null);
             ctx.reactLike();
-            ctx.reply("The repeat mode has been **reset**.");
+            ctx.reply(i18n.get("commands.repeat.other.reset"));
             return;
         }
         try
@@ -50,11 +51,11 @@ public class RepeatCommand extends Command
             final var repeatMode = TrackScheduler.RepeatMode.valueOf(args[0].toUpperCase());
             trackScheduler.setRepeatMode(repeatMode);
             ctx.reactLike();
-            ctx.reply("The repeat mode has been set to **" + args[0] + "**.");
+            ctx.reply(i18n.get("commands.repeat.other.set", args[0]));
         }
         catch (final IllegalArgumentException ex)
         {
-            ctx.replyError("There is no such repeat mode", Emojis.DISLIKE);
+            ctx.replyError(i18n.get("commands.repeat.other.doesnt_exist"), Emojis.DISLIKE);
         }
     }
 }

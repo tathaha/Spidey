@@ -10,7 +10,7 @@ public class CumslutsCommand extends Command
 {
     public CumslutsCommand()
     {
-        super("cumsluts", new String[]{"cumslut"}, "Sends a (NSFW) picture of a cumslut", "cumsluts", Category.NSFW, Permission.UNKNOWN, 0, 4);
+        super("cumsluts", new String[]{"cumslut"}, Category.NSFW, Permission.UNKNOWN, 0, 4);
     }
 
     @Override

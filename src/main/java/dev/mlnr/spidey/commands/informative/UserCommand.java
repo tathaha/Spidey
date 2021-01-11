@@ -15,7 +15,7 @@ public class UserCommand extends Command
 {
 	public UserCommand()
 	{
-		super("user", new String[]{}, "Shows info about you or entered user", "user (@user, user id or username/nickname)", Category.INFORMATIVE, Permission.UNKNOWN, 1, 2);
+		super("user", new String[]{}, Category.INFORMATIVE, Permission.UNKNOWN, 1, 2);
 	}
 
 	@Override
@@ -32,11 +32,12 @@ public class UserCommand extends Command
 	private void respond(final CommandContext ctx, final User user, final Member member)
 	{
 		final var eb = Utils.createEmbedBuilder(ctx.getAuthor());
+		final var i18n = ctx.getI18n();
 
-		eb.setAuthor("USER INFO - " + user.getAsTag());
+		eb.setAuthor(i18n.get("commands.user.other.title") + " - " + user.getAsTag());
 		eb.setThumbnail(user.getEffectiveAvatarUrl());
 		eb.addField("ID", user.getId(), false);
-		eb.addField("Account created", formatDate(user.getTimeCreated()), true);
+		eb.addField(i18n.get("commands.user.other.created"), formatDate(user.getTimeCreated()), true);
 
 		if (member == null)
 		{
@@ -45,25 +46,21 @@ public class UserCommand extends Command
 		}
 		final var nick = member.getNickname();
 		if (nick != null)
-			eb.addField("Nickname for this guild", nick, false);
+			eb.addField(i18n.get("commands.user.other.nickname"), nick, false);
 
-		eb.addField("User joined", formatDate(member.getTimeJoined()), false);
+		eb.addField(i18n.get("commands.user.other.joined"), formatDate(member.getTimeJoined()), false);
 
 		final var boostingSince = member.getTimeBoosted();
 		if (boostingSince != null)
-			eb.addField("Boosting since", formatDate(boostingSince), false);
+			eb.addField(i18n.get("commands.user.other.boosting"), formatDate(boostingSince), false);
 
 		final var roles = member.getRoles();
 		if (!roles.isEmpty())
 		{
 			final var sb = new StringBuilder();
-			var rc = 0;
-			for (final var role : roles)
-			{
-				++rc;
-				sb.append(role.getName()).append(rc == roles.size() ? "" : ", ");
-			}
-			eb.addField("Roles [**" + rc + "**]", sb.length() > 1024 ? "Limit exceeded" : sb.toString(), false);
+			roles.forEach(role -> sb.append(role.getName()).append(", "));
+			eb.addField(i18n.get("commands.user.other.roles") + " [**" + roles.size() + "**]",
+					sb.length() > 1024 ? i18n.get("limit_exceeded") : sb.toString(), false);
 		}
 		ctx.reply(eb);
 	}

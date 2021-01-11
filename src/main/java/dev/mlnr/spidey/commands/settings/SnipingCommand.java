@@ -12,7 +12,7 @@ public class SnipingCommand extends Command
 {
     public SnipingCommand()
     {
-        super("sniping", new String[]{}, "Enables/disables message delete/edit sniping", "sniping", Category.SETTINGS, Permission.MANAGE_SERVER, 0, 4);
+        super("sniping", new String[]{}, Category.SETTINGS, Permission.MANAGE_SERVER, 0, 4);
     }
 
     @Override
@@ -22,7 +22,7 @@ public class SnipingCommand extends Command
         final var enabled = !GuildSettingsCache.isSnipingEnabled(guildId);
         GuildSettingsCache.setSnipingEnabled(guildId, enabled);
         ctx.reactLike();
-        ctx.reply("Message sniping has been **" + (enabled ? "enabled" : "disabled") + "**.");
+        ctx.reply(ctx.getI18n().get("commands.sniping.other.done", enabled ? "enabled" : "disabled"));
         if (!enabled)
             MessageCache.pruneCache(guildId);
     }

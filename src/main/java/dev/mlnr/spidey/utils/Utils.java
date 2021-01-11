@@ -2,6 +2,7 @@ package dev.mlnr.spidey.utils;
 
 import dev.mlnr.spidey.cache.GeneralCache;
 import dev.mlnr.spidey.cache.ResponseCache;
+import dev.mlnr.spidey.objects.I18n;
 import dev.mlnr.spidey.objects.guild.InviteData;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
@@ -86,29 +87,26 @@ public class Utils
 
     public static void returnError(final String errMsg, final Message origin)
     {
-        returnError(errMsg, origin, true);
+        returnError(errMsg, origin, Emojis.CROSS);
     }
 
-    public static void returnError(final String errMsg, final Message origin, final boolean includeDot)
-    {
-        returnError(errMsg, origin, Emojis.CROSS, includeDot);
-    }
-
-    public static void returnError(final String errMsg, final Message origin, final String failureEmoji, final boolean includeDot)
+    public static void returnError(final String errMsg, final Message origin, final String failureEmoji)
     {
         addReaction(origin, failureEmoji);
         final var channel = origin.getTextChannel();
         if (!channel.canTalk())
             return;
-        channel.sendMessage(String.format(":no_entry: %s%s", errMsg, includeDot ? "." : ""))
+        channel.sendMessage(String.format(":no_entry: %s", errMsg))
                 .delay(Duration.ofSeconds(7))
                 .flatMap(Message::delete)
                 .queue(success -> deleteMessage(origin));
     }
 
-    public static String generateSuccess(final int count, final User u)
+    public static String generateSuccess(final int count, final User user, final I18n i18n)
     {
-        return ":white_check_mark: Successfully deleted **" + count + "** message" + (count > 1 ? "s" : "") + (u == null ? "." : String.format(" by user **%s**.", u.getAsTag()));
+        return i18n.get("commands.purge.messages.success.text", count) + " "
+                + (count == 1 ? i18n.get("commands.purge.messages.success.one") : i18n.get("commands.purge.messages.success.multiple"))
+                + (user == null ? "." : " " + i18n.get("commands.purge.messages.success.user", user));
     }
 
     public static void storeInvites(final Guild guild)

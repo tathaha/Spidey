@@ -13,7 +13,7 @@ public class AvatarCommand extends Command
 {
 	public AvatarCommand()
 	{
-		super("avatar", new String[]{"pfp", "av"}, "Shows your/entered user's avatar", "avatar (@user, user id or username/nickname)", Category.INFORMATIVE, Permission.UNKNOWN, 1, 2);
+		super("avatar", new String[]{"pfp", "av"}, Category.INFORMATIVE, Permission.UNKNOWN, 1, 2);
 	}
 
 	@Override
@@ -31,7 +31,7 @@ public class AvatarCommand extends Command
 	{
 		final var avatarUrl = user.getEffectiveAvatarUrl() + "?size=2048";
 		final var eb = Utils.createEmbedBuilder(ctx.getAuthor());
-		eb.setAuthor("Avatar of user " + MarkdownSanitizer.escape(user.getAsTag()));
+		eb.setAuthor(ctx.getI18n().get("commands.avatar.other.title") + " " + MarkdownSanitizer.escape(user.getAsTag()));
 		eb.setDescription("[Avatar link](" + avatarUrl + ")");
 		eb.setImage(avatarUrl);
 		ctx.reply(eb);

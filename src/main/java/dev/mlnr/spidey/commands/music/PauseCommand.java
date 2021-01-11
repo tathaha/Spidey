@@ -14,7 +14,7 @@ public class PauseCommand extends Command
 {
     public PauseCommand()
     {
-        super("pause", new String[]{"unpause"}, "Pauses/unpauses the playback", "pause/unpause", Category.MUSIC, Permission.UNKNOWN, 0, 0);
+        super("pause", new String[]{"unpause"}, Category.MUSIC, Permission.UNKNOWN, 0, 0);
     }
 
     @Override
@@ -22,20 +22,21 @@ public class PauseCommand extends Command
     {
         final var guild = ctx.getGuild();
         final var musicPlayer = MusicPlayerCache.getMusicPlayer(guild);
+        final var i18n = ctx.getI18n();
         if (musicPlayer == null)
         {
-            ctx.replyError("There is no music playing");
+            ctx.replyError(i18n.get("music.messages.failure.no_music"));
             return;
         }
         final var playingTrack = musicPlayer.getPlayingTrack();
         if (playingTrack == null)
         {
-            ctx.replyError("There is no song playing");
+            ctx.replyError(i18n.get("music.messages.failure.no_song"));
             return;
         }
         if (!MusicUtils.canInteract(ctx.getMember(), playingTrack))
         {
-            ctx.replyError("You have to be the requester of the song or DJ to pause/unpause the playback");
+            ctx.replyError(i18n.get("commands.pause.other.requester"));
             return;
         }
         final var paused = musicPlayer.pauseOrUnpause();

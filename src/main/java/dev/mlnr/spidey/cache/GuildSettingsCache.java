@@ -2,6 +2,7 @@ package dev.mlnr.spidey.cache;
 
 import dev.mlnr.spidey.DatabaseManager;
 import dev.mlnr.spidey.Spidey;
+import dev.mlnr.spidey.objects.I18n;
 import dev.mlnr.spidey.objects.guild.GuildSettings;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -30,6 +31,11 @@ public class GuildSettingsCache
     public static String getPrefix(final long guildId)
     {
         return getGuildSettings(guildId).getPrefix();
+    }
+
+    public static I18n getI18n(final long guildId)
+    {
+        return getGuildSettings(guildId).getI18n();
     }
 
     public static boolean isSnipingEnabled(final long guildId)
@@ -86,6 +92,11 @@ public class GuildSettingsCache
     public static void setPrefix(final long guildId, final String prefix)
     {
         getGuildSettings(guildId).setPrefix(prefix);
+    }
+
+    public static void setLanguage(final long guildId, final String language)
+    {
+        getGuildSettings(guildId).setLanguage(language);
     }
 
     public static void setSnipingEnabled(final long guildId, final boolean enabled)
@@ -173,11 +184,6 @@ public class GuildSettingsCache
 
     private static GuildSettings getGuildSettings(final long guildId)
     {
-        return GUILD_SETTINGS_CACHE.computeIfAbsent(guildId, k ->
-        {
-            final var settings = DatabaseManager.retrieveGuildSettings(guildId);
-            GUILD_SETTINGS_CACHE.put(guildId, settings);
-            return settings;
-        });
+        return GUILD_SETTINGS_CACHE.computeIfAbsent(guildId, k -> DatabaseManager.retrieveGuildSettings(guildId));
     }
 }

@@ -11,8 +11,7 @@ public class JoinRoleCommand extends Command
 {
     public JoinRoleCommand()
     {
-        super("joinrole", new String[]{}, "Sets/removes the role that is added to a member after joining", "joinrole (@role, role id or name of the role or blank to reset)",
-                Category.SETTINGS, Permission.MANAGE_SERVER, 1, 4);
+        super("joinrole", new String[]{}, Category.SETTINGS, Permission.MANAGE_SERVER, 1, 4);
     }
 
     @Override
@@ -20,15 +19,16 @@ public class JoinRoleCommand extends Command
     {
         final var guildId = ctx.getGuild().getIdLong();
         final var dbRole = GuildSettingsCache.getJoinRoleId(guildId);
+        final var i18n = ctx.getI18n();
         if (args.length == 0)
         {
             if (dbRole == 0)
             {
-                ctx.replyError("You don't have the join role set");
+                ctx.replyError(i18n.get("roles.not_set", "join"));
                 return;
             }
             GuildSettingsCache.removeJoinRole(guildId);
-            ctx.reply(":white_check_mark: The join role has been removed.");
+            ctx.reply(i18n.get("roles.removed", "join"));
             return;
         }
         ctx.getArgumentAsRole(0, role ->
@@ -37,16 +37,16 @@ public class JoinRoleCommand extends Command
             if (roleId == dbRole)
             {
                 GuildSettingsCache.removeJoinRole(guildId);
-                ctx.reply(":white_check_mark: The join role has been reset!");
+                ctx.reply(i18n.get("roles.reset", "join"));
                 return;
             }
             if (!ctx.getMember().canInteract(role))
             {
-                ctx.replyError("You cannot set the join role to a role which you cannot interact with");
+                ctx.replyError(i18n.get("roles.cant_interact", "join"));
                 return;
             }
             GuildSettingsCache.setJoinRoleId(guildId, roleId);
-            ctx.reply(":white_check_mark: The join role has been set to role `" + role.getName() + "`.");
+            ctx.reply(i18n.get("roles.not_set", "join", role.getName()));
         });
     }
 }

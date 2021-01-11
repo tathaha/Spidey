@@ -15,17 +15,17 @@ public class EditSnipeCommand extends Command
 {
     public EditSnipeCommand()
     {
-        super("editsnipe", new String[]{"esnipe", "es"}, "Snipes an edited message", "editsnipe", Category.UTILITY, Permission.UNKNOWN, 0, 6);
+        super("editsnipe", new String[]{"esnipe", "es"}, Category.UTILITY, Permission.UNKNOWN, 0, 6);
     }
 
     @Override
     public void execute(final String[] args, final CommandContext ctx)
     {
         final var guildId = ctx.getGuild().getIdLong();
+        final var i18n = ctx.getI18n();
         if (!GuildSettingsCache.isSnipingEnabled(guildId))
         {
-            ctx.replyError("Sniping messages for this server is disabled, which could be caused by manually disabling it or having more than 10000 people in this server. You can enable sniping by using `"
-                    + GuildSettingsCache.getPrefix(guildId) + "sniping`");
+            ctx.replyError(i18n.get("sniping.disabled", GuildSettingsCache.getPrefix(guildId)));
             return;
         }
         final var textChannel = ctx.getTextChannel();
@@ -33,7 +33,7 @@ public class EditSnipeCommand extends Command
         final var lastEditedMessage = MessageCache.getLastEditedMessage(channelId);
         if (lastEditedMessage == null)
         {
-            ctx.replyError("There's no edited message to snipe");
+            ctx.replyError(i18n.get("sniping.disabled", "edited"));
             return;
         }
         final var eb = Utils.createEmbedBuilder(ctx.getAuthor());

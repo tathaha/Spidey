@@ -23,7 +23,7 @@ public class EvalCommand extends Command
 
     public EvalCommand()
     {
-        super("eval", new String[]{}, "Evals java code (developer only)", "eval <code>", Category.UTILITY, Permission.UNKNOWN, 1, 0);
+        super("eval", new String[]{}, Category.UTILITY, Permission.UNKNOWN, 1, 0);
     }
 
     @Override
@@ -35,7 +35,7 @@ public class EvalCommand extends Command
         final var message = ctx.getMessage();
         if (author.getIdLong() != 394607709741252621L)
         {
-            ctx.replyError("This command can only be executed by the Developer");
+            ctx.replyError(ctx.getI18n().get("command_failures.only_dev"));
             return;
         }
         SCRIPT_ENGINE.put("guild", channel.getGuild());

@@ -10,7 +10,7 @@ public class NsfwCommand extends Command
 {
     public NsfwCommand()
     {
-        super("nsfw", new String[]{}, "Sends a nsfw picture", "nsfw", Category.NSFW, Permission.UNKNOWN, 0, 4);
+        super("nsfw", new String[]{}, Category.NSFW, Permission.UNKNOWN, 0, 4);
     }
 
     @Override

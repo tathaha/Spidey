@@ -10,7 +10,7 @@ public class AnalCommand extends Command
 {
     public AnalCommand()
     {
-        super("anal", new String[]{}, "Sends a (NSFW) picture of an anal", "anal", Category.NSFW, Permission.UNKNOWN, 0, 4);
+        super("anal", new String[]{}, Category.NSFW, Permission.UNKNOWN, 0, 4);
     }
 
     @Override

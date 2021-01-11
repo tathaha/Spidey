@@ -14,7 +14,7 @@ public class LogCommand extends Command
 {
 	public LogCommand()
 	{
-		super ("log", new String[]{}, "Sets log channel", "log (#channel, channel id or channel name or blank to reset)", Category.SETTINGS, Permission.MANAGE_SERVER, 1, 4);
+		super ("log", new String[]{}, Category.SETTINGS, Permission.MANAGE_SERVER, 1, 4);
 	}
 
 	@Override
@@ -32,10 +32,11 @@ public class LogCommand extends Command
 	private void proceed(final long guildId, final TextChannel channel, final CommandContext ctx)
 	{
 		final var channelId = channel.getIdLong();
+		final var i18n = ctx.getI18n();
 		if (GuildSettingsCache.getLogChannelId(guildId) == channelId)
 		{
 			GuildSettingsCache.removeLogChannel(guildId);
-			ctx.reply(":white_check_mark: The log channel has been reset!");
+			ctx.reply(i18n.get("commands.log.other.reset"));
 			return;
 		}
 		if (!channel.canTalk())
@@ -46,6 +47,6 @@ public class LogCommand extends Command
 			return;
 		}
 		GuildSettingsCache.setLogChannelId(guildId, channelId);
-		ctx.reply(":white_check_mark: The log channel has been set to channel <#" + channelId + ">!");
+		ctx.reply(i18n.get("commands.log.other.set", channelId));
 	}
 }
