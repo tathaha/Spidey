@@ -62,8 +62,8 @@ public class PaginatorCache
         final var paginator = getPaginator(messageId);
         if (paginator == null)
             return;
-        final var channel = Spidey.getJDA().getTextChannelById(paginator.getInvokeChannelId());
         PAGINATOR_CACHE.remove(messageId);
+        final var channel = Spidey.getJDA().getTextChannelById(paginator.getInvokeChannelId());
         if (channel == null)
             return;
         channel.purgeMessagesById(paginator.getInvokeMessageId(), messageId);
