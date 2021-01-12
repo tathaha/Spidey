@@ -2,7 +2,9 @@ package dev.mlnr.spidey;
 
 import dev.mlnr.spidey.cache.*;
 import dev.mlnr.spidey.cache.music.MusicPlayerCache;
+import dev.mlnr.spidey.handlers.akinator.AkinatorHandler;
 import dev.mlnr.spidey.handlers.command.CommandHandler;
+import dev.mlnr.spidey.objects.akinator.AkinatorContext;
 import dev.mlnr.spidey.objects.guild.InviteData;
 import dev.mlnr.spidey.objects.messages.MessageData;
 import dev.mlnr.spidey.utils.Emojis;
@@ -48,8 +50,17 @@ public class Events extends ListenerAdapter
         if (!content.isEmpty() && GuildSettingsCache.isSnipingEnabled(guildId))
             MessageCache.cacheMessage(message.getIdLong(), new MessageData(message));
 
+        final var author = event.getAuthor();
+        final var userId = author.getIdLong();
+
+        if (AkinatorCache.hasAkinator(userId))
+        {
+            AkinatorHandler.handle(userId, new AkinatorContext(event));
+            return;
+        }
+
         final var prefix = GuildSettingsCache.getPrefix(guildId);
-        if (!content.startsWith(prefix) || event.getAuthor().isBot() || event.isWebhookMessage())
+        if (!content.startsWith(prefix) || author.isBot() || event.isWebhookMessage())
             return;
         CommandHandler.handle(event, prefix);
     }
