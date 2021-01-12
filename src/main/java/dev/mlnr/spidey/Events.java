@@ -364,9 +364,6 @@ public class Events extends ListenerAdapter
     @Override
     public void onGenericGuildMessageReaction(final GenericGuildMessageReactionEvent event)
     {
-        final var user = event.getUser();
-        if (user.isBot())
-            return;
         final var messageId = event.getMessageIdLong();
         if (!PaginatorCache.isPaginator(messageId))
             return;
@@ -380,7 +377,7 @@ public class Events extends ListenerAdapter
         final var channel = event.getChannel();
         final var currentPage = paginator.getCurrentPage();
         final var pagesConsumer = paginator.getPagesConsumer();
-        final var newPageBuilder = Utils.createEmbedBuilder(user).setColor(Utils.SPIDEY_COLOR);
+        final var newPageBuilder = MusicUtils.createMusicResponseBuilder();
         final var totalPages = paginator.getTotalPages();
 
         switch (emoji)

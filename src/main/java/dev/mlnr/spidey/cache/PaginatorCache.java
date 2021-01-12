@@ -19,7 +19,7 @@ public class PaginatorCache
     private static final Map<Long, Paginator> PAGINATOR_CACHE = ExpiringMap.builder()
             .expirationPolicy(ExpirationPolicy.CREATED)
             .expiration(3, TimeUnit.MINUTES)
-            .asyncExpirationListener((messageId, paginator) -> removePaginator((long) messageId))
+            .asyncExpirationListener((messageId, paginator) -> removePaginator((long) messageId, ((Paginator) paginator)))
             .build();
 
     private PaginatorCache() {}
@@ -59,11 +59,20 @@ public class PaginatorCache
 
     public static void removePaginator(final long messageId)
     {
-        final var paginator = getPaginator(messageId);
+        removePaginator(messageId, null);
+    }
+
+    private static void removePaginator(final long messageId, final Paginator removedPaginator)
+    {
+        var paginator = removedPaginator;
         if (paginator == null)
-            return;
+        {
+            paginator = getPaginator(messageId);
+            if (paginator == null)
+                return;
+            PAGINATOR_CACHE.remove(messageId);
+        }
         final var channel = Spidey.getJDA().getTextChannelById(paginator.getInvokeChannelId());
-        PAGINATOR_CACHE.remove(messageId);
         if (channel == null)
             return;
         channel.purgeMessagesById(paginator.getInvokeMessageId(), messageId);
