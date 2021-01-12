@@ -117,7 +117,7 @@ public class StringUtils
                         }
                         if (choice == 0 || choice > size)
                         {
-                            ctx.replyError(i18n.get("number.range", 100));
+                            ctx.replyError(i18n.get("number.range", size));
                             return;
                         }
                         choiceConsumer.accept(choice - 1);
