@@ -25,13 +25,13 @@ public class InfoCommand extends Command
 
 		eb.setAuthor("Spidey", null, avatar);
 		eb.setThumbnail(avatar);
-		eb.addField(i18n.get("commands.info.about.title"), i18n.get("commands.info.about.text", "cane#0570"), false);
-		eb.addField(i18n.get("commands.info.commands.title"),
-				i18n.get("commands.info.commands.text", GuildSettingsCache.getPrefix(ctx.getGuild().getIdLong())), false);
-		eb.addField(i18n.get("commands.info.commands.info.title"), i18n.get("commands.info.commands.text", JDAInfo.VERSION), false);
-		eb.addField(i18n.get("commands.info.commands.links"), "[`Website`](https://spidey.mlnr.dev)\n[`Discord`](https://discord.gg/uJCw7B9fxZ)" +
+		eb.addField(i18n.get("commands.info.fields.about.title"), i18n.get("commands.info.fields.about.text", "cane#0570"), false);
+		eb.addField(i18n.get("commands.info.fields.commands.title"),
+				i18n.get("commands.info.fields.commands.text", GuildSettingsCache.getPrefix(ctx.getGuild().getIdLong())), false);
+		eb.addField(i18n.get("commands.info.fields.info.title"), i18n.get("commands.info.fields.info.text", JDAInfo.VERSION), false);
+		eb.addField(i18n.get("commands.info.fields.links"), "[`Website`](https://spidey.mlnr.dev)\n[`Discord`](https://discord.gg/uJCw7B9fxZ)" +
 				"\n[`GitHub`](https://github.com/caneleex/Spidey)", false);
-		eb.addField(i18n.get("commands.info.commands.support.title"), i18n.get("commands.info.commands.support.text"),false);
+		eb.addField(i18n.get("commands.info.fields.support.title"), i18n.get("commands.info.fields.support.text"),false);
 		ctx.reply(eb);
 	}
 }

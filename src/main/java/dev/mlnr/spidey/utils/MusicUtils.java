@@ -178,7 +178,7 @@ public class MusicUtils
         final var durationBuilder = new StringBuilder().append("(**").append(formatDuration(originalLength)).append("**");
         if (lengthWithoutSegments != originalLength)
             durationBuilder.append(" [**").append(formatDuration(lengthWithoutSegments))
-                    .append("** ").append(i18n.get("music.messages.without_segments")).append(")]");
+                    .append("** ").append(i18n.get("music.messages.without_segments")).append("]");
         durationBuilder.append(")");
         return durationBuilder.toString();
     }

@@ -4,6 +4,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import dev.mlnr.spidey.Spidey;
 import dev.mlnr.spidey.cache.PaginatorCache;
 import dev.mlnr.spidey.handlers.command.CommandHandler;
+import dev.mlnr.spidey.objects.I18n;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
@@ -24,13 +25,6 @@ import static java.lang.Math.min;
 public class StringUtils
 {
     private StringUtils() {}
-
-    public static String pluralize(final long size, final String base)
-    {
-        if (size == 1)
-            return "1 " + base;
-        return size + " " + base + "s";
-    }
 
     public static String getSimilarCommand(final String command)
     {
@@ -92,7 +86,9 @@ public class StringUtils
             final var elem = elements.get(i);
             descriptionBuilder.append(i + 1).append(". ").append(mapper.apply(elem)).append("\n");
         }
-        descriptionBuilder.append("\n\nType a number to select a ").append(selectionType).append(" or `cancel` to cancel the selection.");
+        final var i18n = ctx.getI18n();
+        final var cancel = i18n.get("selection.cancel");
+        descriptionBuilder.append("\n\n").append(i18n.get("selection.type_number", selectionType, cancel));
         selectionBuilder.setDescription(descriptionBuilder.toString());
 
         final var channel = ctx.getTextChannel();
@@ -104,7 +100,7 @@ public class StringUtils
                     {
                         final var choiceMessage = event.getMessage();
                         final var content = choiceMessage.getContentRaw();
-                        if (content.equalsIgnoreCase("cancel"))
+                        if (content.equalsIgnoreCase(cancel))
                         {
                             purgeMessages(message, selectionMessage, choiceMessage);
                             return;
@@ -116,12 +112,12 @@ public class StringUtils
                         }
                         catch (final NumberFormatException ex)
                         {
-                            ctx.replyError("Entered value is either negative or not a number");
+                            ctx.replyError(i18n.get("number.negative"));
                             return;
                         }
                         if (choice == 0 || choice > size)
                         {
-                            ctx.replyError("Please enter a number from 1-" + size);
+                            ctx.replyError(i18n.get("number.range", 100));
                             return;
                         }
                         choiceConsumer.accept(choice - 1);
@@ -129,8 +125,8 @@ public class StringUtils
                     }, 1, TimeUnit.MINUTES,
                     () ->
                     {
-                        ctx.replyError("Sorry, you took too long");
                         purgeMessages(message, selectionMessage);
+                        ctx.replyError("took_too_long");
                     });
         });
     }
@@ -140,7 +136,7 @@ public class StringUtils
         return string.substring(0, 1).toUpperCase() + string.substring(1).toLowerCase();
     }
 
-    public static void createQueuePaginator(final Message message, final Deque<AudioTrack> queue)
+    public static void createQueuePaginator(final Message message, final Deque<AudioTrack> queue, final I18n i18n)
     {
         final var tracksChunks = ListUtils.partition(new ArrayList<>(queue), 10);
         final var descriptions = new HashMap<Integer, StringBuilder>();
@@ -161,12 +157,13 @@ public class StringUtils
 
         final var length = queue.stream().mapToLong(track -> track.getInfo().length).sum();
         final var size = queue.size();
-        final var pluralized = size == 1 ? "is **1** track" : "are **" + size + "** tracks";
+        final var pluralized = size == 1 ? i18n.get("commands.queue.other.text.one") : i18n.get("commands.queue.other.text.multiple", size);
         PaginatorCache.createPaginator(message, descriptions.size(), (page, embedBuilder) ->
         {
             embedBuilder.setAuthor("Queue for " + message.getGuild().getName());
             embedBuilder.setDescription(descriptions.get(page));
-            embedBuilder.appendDescription("\n\nThere " + pluralized + " in the queue with total length of **" + MusicUtils.formatDuration(length) + "**");
+            embedBuilder.appendDescription("\n\n").appendDescription(pluralized).appendDescription(" ")
+                    .appendDescription(i18n.get("commands.queue.other.text.length", MusicUtils.formatDuration(length)));
         });
     }
 }

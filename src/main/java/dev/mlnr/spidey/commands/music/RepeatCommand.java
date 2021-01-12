@@ -36,7 +36,7 @@ public class RepeatCommand extends Command
         final var trackScheduler = musicPlayer.getTrackScheduler();
         if (args.length == 0)
         {
-            if (trackScheduler.getRepeatMode() != null)
+            if (trackScheduler.getRepeatMode() == null)
             {
                 ctx.replyError(i18n.get("commands.repeat.other.provide"));
                 return;

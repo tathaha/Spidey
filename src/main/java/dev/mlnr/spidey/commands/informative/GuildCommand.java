@@ -61,7 +61,12 @@ public class GuildCommand extends Command
 		if (!emotes.isEmpty())
 		{
 			final var sb = new StringBuilder();
-			emotes.forEach(emote -> sb.append(emote.getAsMention()).append(" "));
+			var ec = 0;
+			for (final var emote : emotes)
+			{
+				ec++;
+				sb.append(emote.getAsMention()).append(ec == emotes.size() ? "" : " ");
+			}
 			final var animated = emoteCache.applyStream(stream -> stream.filter(Emote::isAnimated).count());
 			eb.addField(i18n.get("commands.guild.fields.emotes", emotes.size(), animated),
 					sb.length() > 1024 ? i18n.get("limit_exceeded") : sb.toString(),false);

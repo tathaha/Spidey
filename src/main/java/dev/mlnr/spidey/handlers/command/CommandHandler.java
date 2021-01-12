@@ -60,7 +60,7 @@ public class CommandHandler
         if (cmd == null)
         {
             final var similar = StringUtils.getSimilarCommand(command);
-            Utils.returnError(i18n.get("command_failures.invalid.message", command) + (similar == null
+            Utils.returnError(i18n.get("command_failures.invalid.message", command) + " " + (similar == null
                     ? i18n.get("command_failures.invalid.check_help", prefix)
                     : i18n.get("command_failures.invalid.suggestion", similar)), message);
             return;

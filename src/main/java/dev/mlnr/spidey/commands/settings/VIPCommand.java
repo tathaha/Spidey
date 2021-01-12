@@ -27,6 +27,6 @@ public class VIPCommand extends Command
         final var vip = !GuildSettingsCache.isVip(guildId);
         GuildSettingsCache.setVip(guildId, vip);
         ctx.reactLike();
-        ctx.reply(i18n.get("commands.vip.done", vip ? "added" : "removed"));
+        ctx.reply(i18n.get("commands.vip.other.done", guildId, vip ? "added" : "removed"));
     }
 }

@@ -77,7 +77,7 @@ public class HelpCommand extends Command
         if (command == null)
         {
             final var similar = StringUtils.getSimilarCommand(invoke);
-            ctx.replyError(i18n.get("command_failures.invalid.message", invoke) + (similar == null
+            ctx.replyError(i18n.get("command_failures.invalid.message", invoke) + " " + (similar == null
                     ? i18n.get("command_failures.invalid.check_help", prefix)
                     : i18n.get("command_failures.invalid.suggestion", similar)));
             return;

@@ -25,7 +25,7 @@ public class ArgumentUtils
         }
         catch (final NumberFormatException ex)
         {
-            ctx.replyError("Entered value is either negative or not a number");
+            ctx.replyError(ctx.getI18n().get("number.negative"));
         }
     }
 
@@ -50,7 +50,8 @@ public class ArgumentUtils
         final var guild = ctx.getGuild();
         final var author = ctx.getAuthor();
         final var typeName = type.name().toLowerCase();
-        final var notFound = StringUtils.capitalize(typeName) + " not found";
+        final var i18n = ctx.getI18n();
+        final var notFound = i18n.get("argument_parser.not_found." + typeName) + " " + i18n.get("argument_parser.not_found.text");
         final var embedBuilder = Utils.createEmbedBuilder(author);
 
         if (type.getPattern().matcher(argument).matches())
@@ -78,7 +79,7 @@ public class ArgumentUtils
                     consumer.accept(selfUser);
                     return;
                 }
-                jda.retrieveUserById(mentionableId).queue(consumer, failure -> ctx.replyError("User not found"));
+                jda.retrieveUserById(mentionableId).queue(consumer, failure -> ctx.replyError(notFound));
                 return;
             }
             final var mentionable = type == Message.MentionType.CHANNEL ? guild.getTextChannelById(mentionableId) : guild.getRoleById(mentionableId);
@@ -105,7 +106,7 @@ public class ArgumentUtils
                     {
                         if (members.isEmpty())
                         {
-                            ctx.replyError("User not found");
+                            ctx.replyError(notFound);
                             return;
                         }
                         if (members.size() == 1)
@@ -121,7 +122,7 @@ public class ArgumentUtils
             final var mentionables = type == Message.MentionType.CHANNEL ? guild.getTextChannelsByName(argument, true) : guild.getRolesByName(argument, true);
             if (mentionables.isEmpty())
             {
-                ctx.replyError("No " + typeName.toLowerCase() + "s with given name found");
+                ctx.replyError(i18n.get("argument_parser.not_found.name", i18n.get("argument_parser.not_found." + typeName).toLowerCase()));
                 return;
             }
             if (mentionables.size() == 1)

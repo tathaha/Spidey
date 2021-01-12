@@ -33,7 +33,7 @@ public class SnipeCommand extends Command
         final var lastDeletedMessage = MessageCache.getLastDeletedMessage(channelId);
         if (lastDeletedMessage == null)
         {
-            ctx.replyError(i18n.get("sniping.disabled", "deleted"));
+            ctx.replyError(i18n.get("sniping.no_message", "deleted"));
             return;
         }
         final var eb = Utils.createEmbedBuilder(ctx.getAuthor());

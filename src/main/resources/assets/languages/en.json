@@ -2,6 +2,23 @@
   "limit_exceeded": "Limit exceeded",
   "took_too_long": "Sorry, you took too long.",
   "internal_error": "Unfortunately, i couldn't %s due to an internal error: **%s**. Please report this message to the Developer.",
+  "number": {
+    "range": "Please enter a number from 1-%d.",
+    "negative": "Entered value is either negative or not a number."
+  },
+  "selection": {
+    "type_number": "Type a number to select a %s or `%s` to cancel the selection.",
+    "cancel": "cancel"
+  },
+  "argument_parser": {
+    "not_found": {
+      "text": "not found.",
+      "channel": "Channel",
+      "role": "Role",
+      "user": "User",
+      "name": "No %ss with given name found."
+    }
+  },
   "command_failures": {
     "specify": "Please specify a command.",
     "cooldown": "This command is on cooldown.",
@@ -10,7 +27,7 @@
     "only_dev": "This command can only be executed by the Developer.",
     "invalid": {
       "message": "**%s** isn't a valid command.",
-      "check_help": "Check `%s help` for a list of commands.",
+      "check_help": "Check `%shelp` for a list of commands.",
       "suggestion": "Did you perhaps mean **%s**?"
     }
   },
@@ -236,11 +253,10 @@
           "failure": {
             "no_perms": "I don't have permission to purge messages or see the message history in this channel.",
             "wrong_syntax": "Wrong syntax. Use `%shelp purge` to see the correct syntax.",
-            "invalid_number": "Please enter a number from 1-100.",
             "no_messages": {
               "text": "There are no messages to be deleted.",
               "user": "There are no messages by user **%s** to be deleted.",
-              "unpinned": "There are no unpinned messages to be deleted"
+              "unpinned": "There are no unpinned messages to be deleted."
             }
           },
           "pinned": {
@@ -293,7 +309,12 @@
       "description": "Lists the current queue",
       "usage": "queue",
       "other": {
-        "empty": "The queue is empty."
+        "empty": "The queue is empty.",
+        "text": {
+          "one": "There is **1** track in the queue",
+          "multiple": "There are **%d** tracks in the queue",
+          "length": "with total length of **%s**"
+        }
       }
     },
     "repeat": {
@@ -472,7 +493,7 @@
         "valid_format": "The name of the emote has to be in a valid format.",
         "size": "The emote size has to be less than **256KB**.",
         "maximum_size": "Guild has the maximum amount of emotes.",
-        "success": "Emote %s has been successfully uploaded! %s slots left: **%s**."
+        "success": "Emote %s has been successfully uploaded! %s slots left: **%s**"
       }
     }
   }

@@ -28,7 +28,7 @@ public class SegmentSkippingCommand extends Command
         final var enabled = !GuildSettingsCache.isSegmentSkippingEnabled(guildId);
         GuildSettingsCache.setSegmentSkippingEnabled(guildId, enabled);
         ctx.reactLike();
-        ctx.reply(i18n.get("commands.segmentskipping.other.done.text") +
+        ctx.reply(i18n.get("commands.segmentskipping.other.done.text", enabled ? "enabled" : "disabled") +
                 (enabled ? " " + i18n.get("commands.segmentskipping.other.done.warning") : ""));
     }
 }

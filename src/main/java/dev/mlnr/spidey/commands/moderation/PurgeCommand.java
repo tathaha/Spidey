@@ -33,19 +33,19 @@ public class PurgeCommand extends Command
         final var i18n = ctx.getI18n();
         if (!guild.getSelfMember().hasPermission(ctx.getTextChannel(), getRequiredPermission(), Permission.MESSAGE_HISTORY))
         {
-            ctx.replyError(i18n.get("commands.purge.messages.failure.no_perms"));
+            ctx.replyError(i18n.get("commands.purge.other.messages.failure.no_perms"));
             return;
         }
         if (args.length == 0)
         {
-            ctx.replyError(i18n.get("commands.purge.messages.failure.wrong_syntax"), GuildSettingsCache.getPrefix(guild.getIdLong()));
+            ctx.replyError(i18n.get("commands.purge.other.messages.failure.wrong_syntax", GuildSettingsCache.getPrefix(guild.getIdLong())));
             return;
         }
         ctx.getArgumentAsUnsignedInt(0, amount ->
         {
             if (amount < 1 || amount > 100)
             {
-                ctx.replyError(i18n.get("commands.purge.messages.failure.invalid_number"));
+                ctx.replyError(i18n.get("number.range", 100));
                 return;
             }
             if (args.length == 1)
@@ -66,13 +66,13 @@ public class PurgeCommand extends Command
         {
             if (messages.isEmpty())
             {
-                ctx.replyError(i18n.get("commands.purge.messages.failure.no_messages.text"));
+                ctx.replyError(i18n.get("commands.purge.other.messages.failure.no_messages.text"));
                 return;
             }
             final var msgs = target == null ? messages : messages.stream().filter(msg -> msg.getAuthor().equals(target)).limit(limit).collect(Collectors.toList());
             if (msgs.isEmpty())
             {
-                ctx.replyError(i18n.get("commands.purge.messages.failure.no_messages.user", target.getAsTag()));
+                ctx.replyError(i18n.get("commands.purge.other.messages.failure.no_messages.user", target.getAsTag()));
                 return;
             }
             final var pinned = msgs.stream().filter(Message::isPinned).collect(Collectors.toList());
@@ -82,15 +82,15 @@ public class PurgeCommand extends Command
                 return;
             }
             final var size = pinned.size();
-            final var builder = new StringBuilder(size == 1 ? i18n.get("commands.purge.messages.pinned.one")
-                    : i18n.get("commands.purge.messages.pinned.multiple"));
-            builder.append(i18n.get("commands.purge.messages.pinned.confirmation.text")).append(" ");
-            builder.append(size == 1 ? i18n.get("commands.purge.messages.pinned.confirmation.one")
-                    : i18n.get("commands.purge.messages.pinned.confirmation.multiple"));
-            builder.append("?").append(i18n.get("commands.purge.messages.pinned.middle_text.text"));
-            builder.append(" ").append(size == 1 ? i18n.get("commands.purge.messages.pinned.middle_text.one")
-                    : i18n.get("commands.purge.messages.pinned.middle_text_multiple"));
-            builder.append(i18n.get("commands.purge.messages.pinned.end_text"));
+            final var builder = new StringBuilder(size == 1 ? i18n.get("commands.purge.other.messages.pinned.one")
+                    : i18n.get("commands.purge.other.messages.pinned.multiple"));
+            builder.append(" ").append(i18n.get("commands.purge.other.messages.pinned.confirmation.text")).append(" ");
+            builder.append(size == 1 ? i18n.get("commands.purge.other.messages.pinned.confirmation.one")
+                    : i18n.get("commands.purge.other.messages.pinned.confirmation.multiple"));
+            builder.append("? ").append(i18n.get("commands.purge.other.messages.pinned.middle_text.text"));
+            builder.append(" ").append(size == 1 ? i18n.get("commands.purge.other.messages.pinned.middle_text.one")
+                    : i18n.get("commands.purge.other.messages.pinned.middle_text_multiple"));
+            builder.append(i18n.get("commands.purge.other.messages.pinned.end_text"));
 
             channel.sendMessage(builder.toString()).queue(sentMessage ->
             {
@@ -100,7 +100,7 @@ public class PurgeCommand extends Command
                 addReaction(sentMessage, Emojis.CROSS);
 
                 Spidey.getWaiter().waitForEvent(GuildMessageReactionAddEvent.class,
-                        ev -> ev.getUser() == ctx.getAuthor() && ev.getMessageIdLong() == sentMessage.getIdLong(),
+                        ev -> ev.getUser().equals(ctx.getAuthor()) && ev.getMessageIdLong() == sentMessage.getIdLong(),
                         ev ->
                         {
                             switch (ev.getReactionEmote().getName())
@@ -116,14 +116,18 @@ public class PurgeCommand extends Command
                                     deleteMessage(sentMessage);
                                     if (msgs.isEmpty())
                                     {
-                                        ctx.replyError(i18n.get("commands.purge.messages.failure.no_messages.unpinned"));
+                                        ctx.replyError(i18n.get("commands.purge.other.messages.failure.no_messages.unpinned"));
                                         return;
                                     }
                                     break;
                                 default:
                             }
                             proceed(msgs, target, ctx);
-                        }, 1, TimeUnit.MINUTES, () -> ctx.replyError(i18n.get("took_too_long")));
+                        }, 1, TimeUnit.MINUTES, () ->
+                        {
+                            deleteMessage(sentMessage);
+                            ctx.replyError(i18n.get("took_too_long"));
+                        });
             });
         }, throwable -> ctx.replyError(i18n.get("internal_error", "purge messages", throwable.getMessage()))));
     }

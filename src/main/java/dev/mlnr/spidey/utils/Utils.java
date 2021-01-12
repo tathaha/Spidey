@@ -104,9 +104,9 @@ public class Utils
 
     public static String generateSuccess(final int count, final User user, final I18n i18n)
     {
-        return i18n.get("commands.purge.messages.success.text", count) + " "
-                + (count == 1 ? i18n.get("commands.purge.messages.success.one") : i18n.get("commands.purge.messages.success.multiple"))
-                + (user == null ? "." : " " + i18n.get("commands.purge.messages.success.user", user));
+        return i18n.get("commands.purge.other.messages.success.text", count) + " "
+                + (count == 1 ? i18n.get("commands.purge.other.messages.success.one") : i18n.get("commands.purge.other.messages.success.multiple"))
+                + (user == null ? "." : " " + i18n.get("commands.purge.other.messages.success.user", user) + ".");
     }
 
     public static void storeInvites(final Guild guild)

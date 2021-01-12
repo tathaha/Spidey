@@ -58,7 +58,12 @@ public class UserCommand extends Command
 		if (!roles.isEmpty())
 		{
 			final var sb = new StringBuilder();
-			roles.forEach(role -> sb.append(role.getName()).append(", "));
+			var rc = 0;
+			for (final var role : roles)
+			{
+				++rc;
+				sb.append(role.getName()).append(rc == roles.size() ? "" : ", ");
+			}
 			eb.addField(i18n.get("commands.user.other.roles") + " [**" + roles.size() + "**]",
 					sb.length() > 1024 ? i18n.get("limit_exceeded") : sb.toString(), false);
 		}

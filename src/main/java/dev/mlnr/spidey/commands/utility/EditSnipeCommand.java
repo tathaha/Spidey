@@ -33,7 +33,7 @@ public class EditSnipeCommand extends Command
         final var lastEditedMessage = MessageCache.getLastEditedMessage(channelId);
         if (lastEditedMessage == null)
         {
-            ctx.replyError(i18n.get("sniping.disabled", "edited"));
+            ctx.replyError(i18n.get("sniping.no_message", "edited"));
             return;
         }
         final var eb = Utils.createEmbedBuilder(ctx.getAuthor());

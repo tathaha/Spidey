@@ -33,7 +33,7 @@ public class PenisCommand extends Command
     private void respond(final CommandContext ctx, final User user)
     {
         final var random = ThreadLocalRandom.current().nextInt(0, 25 + 1); // values from 0 to 25, 25 + 1 cos 25 has to be inclusive
-        final var text = " :\n8" + "=".repeat(random) + "D (**" + random + "** cm)";
+        final var text = ":\n8" + "=".repeat(random) + "D (**" + random + "** cm)";
         final var author = ctx.getAuthor();
         final var eb = Utils.createEmbedBuilder(author);
         final var i18n = ctx.getI18n();
@@ -41,7 +41,7 @@ public class PenisCommand extends Command
         eb.setColor(getColorHex(random, 25));
         eb.setDescription((user.equals(author)
                 ? i18n.get("commands.penis.other.person.second")
-                : i18n.get("commands.penis.other.person.third", user.getAsMention()) + text));
+                : i18n.get("commands.penis.other.person.third", user.getAsMention())) + text);
         ctx.reply(eb);
     }
 }

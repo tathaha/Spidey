@@ -1,5 +1,6 @@
 package dev.mlnr.spidey.commands.music;
 
+import dev.mlnr.spidey.cache.GuildSettingsCache;
 import dev.mlnr.spidey.cache.music.MusicPlayerCache;
 import dev.mlnr.spidey.cache.music.VideoSegmentCache;
 import dev.mlnr.spidey.objects.command.Category;
@@ -45,13 +46,14 @@ public class SegmentsCommand extends Command
             }
             segments = VideoSegmentCache.getVideoSegments(videoId, true);
         }
-        final var updatePrompt = i18n.get("commands.segments.other.prompt");
+        final var updatePrompt = i18n.get("commands.segments.other.prompt", GuildSettingsCache.getPrefix(guild.getIdLong()));
         if (segments.isEmpty())
         {
             ctx.replyError(i18n.get("commands.segments.other.no_segs") +" " + updatePrompt);
             return;
         }
-        final var stringBuilder = new StringBuilder(segments.size() == 1 ? i18n.get("commands.segments.other.message.one") : i18n.get("commands.segments.other.message.multiple"))
+        final var size = segments.size();
+        final var stringBuilder = new StringBuilder(size == 1 ? i18n.get("commands.segments.other.message.one") : i18n.get("commands.segments.other.message.multiple", size))
                 .append(" ").append(i18n.get("commands.segments.other.message.video"));
 
         segments.forEach(segment -> stringBuilder.append("**").append(formatDuration(segment.getSegmentStart())).append("**").append(" - ").append("**")

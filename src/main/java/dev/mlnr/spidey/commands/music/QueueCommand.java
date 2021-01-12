@@ -33,6 +33,6 @@ public class QueueCommand extends Command
             ctx.replyError(i18n.get("commands.queue.other.empty"));
             return;
         }
-        StringUtils.createQueuePaginator(ctx.getMessage(), queue);
+        StringUtils.createQueuePaginator(ctx.getMessage(), queue, i18n);
     }
 }
