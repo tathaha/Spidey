@@ -7,6 +7,7 @@ import dev.mlnr.spidey.objects.akinator.AkinatorContext;
 import dev.mlnr.spidey.objects.akinator.AkinatorData;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.User;
 
 import java.util.stream.Collectors;
 
@@ -17,8 +18,9 @@ public class AkinatorHandler
 {
     private AkinatorHandler() {}
 
-    public static void handle(final long userId, final AkinatorContext ctx)
+    public static void handle(final User user, final AkinatorContext ctx)
     {
+        final var userId = user.getIdLong();
         final var akinatorData = AkinatorCache.getAkinatorData(userId);
         final var akinator = akinatorData.getAkinator();
         final var message = ctx.getMessage();
@@ -33,13 +35,13 @@ public class AkinatorHandler
 
         if (content.equals(i18n.get("commands.akinator.other.answers.yes.text")) || content.equals(i18n.get("commands.akinator.other.answers.yes.alias")))
             answer = Akiwrapper.Answer.YES;
-        if (content.equals(i18n.get("commands.akinator.other.answers.no.text")) || content.equals(i18n.get("commands.akinator.other.answers.no.alias")))
+        else if (content.equals(i18n.get("commands.akinator.other.answers.no.text")) || content.equals(i18n.get("commands.akinator.other.answers.no.alias")))
             answer = Akiwrapper.Answer.NO;
-        if (content.equals(i18n.get("commands.akinator.other.answers.dont_know.text")) || content.equals(i18n.get("commands.akinator.other.answers.dont_know.alias")))
+        else if (content.equals(i18n.get("commands.akinator.other.answers.dont_know.text")) || content.equals(i18n.get("commands.akinator.other.answers.dont_know.alias")))
             answer = Akiwrapper.Answer.DONT_KNOW;
-        if (content.equals(i18n.get("commands.akinator.other.answers.probably.text")) || content.equals(i18n.get("commands.akinator.other.answers.probably.alias")))
+        else if (content.equals(i18n.get("commands.akinator.other.answers.probably.text")) || content.equals(i18n.get("commands.akinator.other.answers.probably.alias")))
             answer = Akiwrapper.Answer.PROBABLY;
-        if (content.equals(i18n.get("commands.akinator.other.answers.probably_not.text")) || content.equals(i18n.get("commands.akinator.other.answers.probably_not.alias")))
+        else if (content.equals(i18n.get("commands.akinator.other.answers.probably_not.text")) || content.equals(i18n.get("commands.akinator.other.answers.probably_not.alias")))
             answer = Akiwrapper.Answer.PROBABLY_NOT;
         else if (content.equals(cancel))
         {
@@ -52,6 +54,17 @@ public class AkinatorHandler
             returnError(i18n.get("commands.akinator.other.answer", cancel), message);
             return;
         }
+        final var yesno = i18n.get("commands.akinator.other.yesno");
+        if (akinatorData.isPrompted())
+        {
+            if (answer == Akiwrapper.Answer.NO)
+                AkinatorCache.removeAkinator(userId);
+            else if (answer == Akiwrapper.Answer.YES)
+                AkinatorCache.createAkinator(user, ctx);
+            else
+                returnError(yesno, message);
+            return;
+        }
         final var currentGuess = akinatorData.getCurrentGuess();
         if (currentGuess != null)
         {
@@ -61,9 +74,9 @@ public class AkinatorHandler
                 newGuess(akinatorData, embedBuilder, ctx);
             }
             else if (answer == Akiwrapper.Answer.YES)
-                win(embedBuilder, ctx);
+                win(embedBuilder, akinatorData, ctx);
             else
-                returnError(i18n.get("commands.akinator.other.yesno"), message);
+                returnError(yesno, message);
             return;
         }
         final var nextQuestion = akinator.answerCurrentQuestion(answer);
@@ -78,6 +91,7 @@ public class AkinatorHandler
         {
             embedBuilder.setDescription(i18n.get("commands.akinator.other.end.lose"));
             embedBuilder.appendDescription(" ").appendDescription(i18n.get("commands.akinator.other.end.again"));
+            akinatorData.setPrompted(true);
             sendMessage(channel, embedBuilder.build());
             return;
         }
@@ -112,11 +126,12 @@ public class AkinatorHandler
         sendMessage(ctx.getChannel(), embedBuilder.build());
     }
 
-    private static void win(final EmbedBuilder embedBuilder, final AkinatorContext ctx)
+    private static void win(final EmbedBuilder embedBuilder, final AkinatorData akinatorData, final AkinatorContext ctx)
     {
         final var i18n = ctx.getI18n();
         embedBuilder.setDescription(i18n.get("commands.akinator.other.end.win"));
         embedBuilder.appendDescription(" ").appendDescription(i18n.get("commands.akinator.other.end.again"));
+        akinatorData.setPrompted(true);
         sendMessage(ctx.getChannel(), embedBuilder.build());
     }
 

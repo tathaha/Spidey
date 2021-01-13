@@ -51,11 +51,10 @@ public class Events extends ListenerAdapter
             MessageCache.cacheMessage(message.getIdLong(), new MessageData(message));
 
         final var author = event.getAuthor();
-        final var userId = author.getIdLong();
 
-        if (AkinatorCache.hasAkinator(userId))
+        if (AkinatorCache.hasAkinator(author.getIdLong()))
         {
-            AkinatorHandler.handle(userId, new AkinatorContext(event));
+            AkinatorHandler.handle(author, new AkinatorContext(event));
             return;
         }
 

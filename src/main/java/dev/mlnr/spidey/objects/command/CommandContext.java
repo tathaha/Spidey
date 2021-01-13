@@ -62,6 +62,11 @@ public class CommandContext
         return this.i18n;
     }
 
+    public GuildMessageReceivedEvent getEvent()
+    {
+        return this.event;
+    }
+
     // interaction methods
 
     public void reply(final EmbedBuilder embedBuilder)

@@ -11,6 +11,7 @@ public class AkinatorData
     private final Akiwrapper akinator;
     private final List<Long> declined;
     private Guess currentGuess;
+    private boolean prompted;
 
     public AkinatorData(final Akiwrapper akinator)
     {
@@ -45,5 +46,17 @@ public class AkinatorData
     public void setCurrentGuess(final Guess guess)
     {
         this.currentGuess = guess;
+    }
+
+    // prompted
+
+    public boolean isPrompted()
+    {
+        return this.prompted;
+    }
+
+    public void setPrompted(final boolean prompted)
+    {
+        this.prompted = prompted;
     }
 }
