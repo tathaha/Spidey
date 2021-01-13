@@ -13,8 +13,6 @@ import net.jodah.expiringmap.ExpiringMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static dev.mlnr.spidey.utils.Utils.sendMessage;
-
 public class AkinatorCache
 {
     private static final Map<Long, AkinatorData> AKINATOR_CACHE = ExpiringMap.builder()
@@ -34,11 +32,11 @@ public class AkinatorCache
             AKINATOR_CACHE.put(user.getIdLong(), new AkinatorData(akinator));
             var embedBuilder = Utils.createEmbedBuilder(user).setAuthor(i18n.get("commands.akinator.other.of", user.getAsTag())).setColor(Utils.SPIDEY_COLOR);
             embedBuilder.setDescription(i18n.get("commands.akinator.other.question", 1) + " " + akinator.getCurrentQuestion().getQuestion());
-            sendMessage(channel, embedBuilder.build());
+            Utils.sendMessage(channel, embedBuilder.build());
         }
         catch (ServerNotFoundException | UnirestException ex)
         {
-            sendMessage(channel, i18n.get("commands.akinator.other.couldnt_create"));
+            Utils.returnError(i18n.get("commands.akinator.other.couldnt_create"), ctx.getMessage());
         }
     }
 
