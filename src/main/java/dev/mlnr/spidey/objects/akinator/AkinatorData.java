@@ -55,8 +55,8 @@ public class AkinatorData
         return this.prompted;
     }
 
-    public void setPrompted(boolean prompted)
+    public void prompt()
     {
-        this.prompted = prompted;
+        this.prompted = true;
     }
 }

@@ -2,6 +2,7 @@ package dev.mlnr.spidey.handlers.akinator;
 
 import com.markozajc.akiwrapper.Akiwrapper;
 import com.markozajc.akiwrapper.core.entities.Guess;
+import com.markozajc.akiwrapper.core.entities.Question;
 import dev.mlnr.spidey.cache.AkinatorCache;
 import dev.mlnr.spidey.objects.akinator.AkinatorContext;
 import dev.mlnr.spidey.objects.akinator.AkinatorData;
@@ -29,7 +30,6 @@ public class AkinatorHandler
         var i18n = ctx.getI18n();
         var embedBuilder = Utils.createEmbedBuilder(author)
                 .setAuthor(i18n.get("commands.akinator.other.of", author.getAsTag())).setColor(Utils.SPIDEY_COLOR);
-        var cancel = i18n.get("commands.akinator.other.cancel.text");
         var channel = message.getTextChannel();
         Akiwrapper.Answer answer = null;
 
@@ -43,7 +43,18 @@ public class AkinatorHandler
             answer = Akiwrapper.Answer.PROBABLY;
         else if (content.equals(i18n.get("commands.akinator.other.answers.probably_not.text")) || content.equals(i18n.get("commands.akinator.other.answers.probably_not.alias")))
             answer = Akiwrapper.Answer.PROBABLY_NOT;
-        else if (content.equals(cancel))
+        else if (content.equals(i18n.get("commands.akinator.other.answers.undo.text")))
+        {
+            var previousQuestion = akinator.undoAnswer();
+            if (previousQuestion == null)
+            {
+                returnError(i18n.get("commands.akinator.other.answers.undo.error"), message);
+                return;
+            }
+            sendQuestion(previousQuestion, embedBuilder, ctx);
+            return;
+        }
+        else if (content.equals(i18n.get("commands.akinator.other.cancel.text")))
         {
             AkinatorCache.removeAkinator(userId);
             sendMessage(channel, i18n.get("commands.akinator.other.cancel.success"));
@@ -51,7 +62,7 @@ public class AkinatorHandler
         }
         if (answer == null)
         {
-            returnError(i18n.get("commands.akinator.other.answer", cancel), message);
+            returnError(i18n.get("commands.akinator.other.answer"), message);
             return;
         }
         var yesno = i18n.get("commands.akinator.other.yesno");
@@ -91,12 +102,11 @@ public class AkinatorHandler
         {
             embedBuilder.setDescription(i18n.get("commands.akinator.other.end.lose"));
             embedBuilder.appendDescription(" ").appendDescription(i18n.get("commands.akinator.other.end.again"));
-            akinatorData.setPrompted(true);
+            akinatorData.prompt();
             sendMessage(channel, embedBuilder.build());
             return;
         }
-        embedBuilder.setDescription(i18n.get("commands.akinator.other.question", nextQuestion.getStep() + 1) + " " + nextQuestion.getQuestion());
-        sendMessage(channel, embedBuilder.build());
+        sendQuestion(nextQuestion, embedBuilder, ctx);
     }
 
     private static void newGuess(AkinatorData akinatorData, EmbedBuilder embedBuilder, AkinatorContext ctx)
@@ -126,12 +136,18 @@ public class AkinatorHandler
         sendMessage(ctx.getChannel(), embedBuilder.build());
     }
 
+    private static void sendQuestion(Question question, EmbedBuilder embedBuilder, AkinatorContext ctx)
+    {
+        embedBuilder.setDescription(ctx.getI18n().get("commands.akinator.other.question", question.getStep() + 1) + " " + question.getQuestion());
+        sendMessage(ctx.getChannel(), embedBuilder.build());
+    }
+
     private static void win(EmbedBuilder embedBuilder, AkinatorData akinatorData, AkinatorContext ctx)
     {
         var i18n = ctx.getI18n();
         embedBuilder.setDescription(i18n.get("commands.akinator.other.end.win"));
         embedBuilder.appendDescription(" ").appendDescription(i18n.get("commands.akinator.other.end.again"));
-        akinatorData.setPrompted(true);
+        akinatorData.prompt();
         sendMessage(ctx.getChannel(), embedBuilder.build());
     }
 
