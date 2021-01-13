@@ -24,18 +24,18 @@ public class PaginatorCache
 
     private PaginatorCache() {}
 
-    public static void createPaginator(final Message message, final int totalPages, final BiConsumer<Integer, EmbedBuilder> pagesConsumer)
+    public static void createPaginator(Message message, int totalPages, BiConsumer<Integer, EmbedBuilder> pagesConsumer)
     {
-        final var channel = message.getTextChannel();
-        final var author = message.getAuthor();
-        final var embedBuilder = new EmbedBuilder().setColor(Utils.SPIDEY_COLOR);
+        var channel = message.getTextChannel();
+        var author = message.getAuthor();
+        var embedBuilder = new EmbedBuilder().setColor(Utils.SPIDEY_COLOR);
         embedBuilder.setFooter("Page 1/" + totalPages);
         pagesConsumer.accept(0, embedBuilder);
 
         channel.sendMessage(embedBuilder.build()).queue(paginatorMessage ->
         {
-            final var paginatorMessageId = paginatorMessage.getIdLong();
-            final var authorId = author.getIdLong();
+            var paginatorMessageId = paginatorMessage.getIdLong();
+            var authorId = author.getIdLong();
             PAGINATOR_CACHE.put(paginatorMessageId, new Paginator(channel.getIdLong(), message.getIdLong(), authorId, totalPages, pagesConsumer));
 
             Utils.addReaction(paginatorMessage, Emojis.BACKWARDS);
@@ -47,22 +47,22 @@ public class PaginatorCache
         });
     }
 
-    public static Paginator getPaginator(final long messageId)
+    public static Paginator getPaginator(long messageId)
     {
         return PAGINATOR_CACHE.get(messageId);
     }
 
-    public static boolean isPaginator(final long messageId)
+    public static boolean isPaginator(long messageId)
     {
         return PAGINATOR_CACHE.containsKey(messageId);
     }
 
-    public static void removePaginator(final long messageId)
+    public static void removePaginator(long messageId)
     {
         removePaginator(messageId, null);
     }
 
-    private static void removePaginator(final long messageId, final Paginator removedPaginator)
+    private static void removePaginator(long messageId, Paginator removedPaginator)
     {
         var paginator = removedPaginator;
         if (paginator == null)
@@ -72,7 +72,7 @@ public class PaginatorCache
                 return;
             PAGINATOR_CACHE.remove(messageId);
         }
-        final var channel = Spidey.getJDA().getTextChannelById(paginator.getInvokeChannelId());
+        var channel = Spidey.getJDA().getTextChannelById(paginator.getInvokeChannelId());
         if (channel == null)
             return;
         channel.purgeMessagesById(paginator.getInvokeMessageId(), messageId);

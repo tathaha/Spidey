@@ -8,7 +8,7 @@ public enum API
     private final String url;
     private final String key;
 
-    API(final String url, final String key)
+    API(String url, String key)
     {
         this.url = url;
         this.key = key;
@@ -33,7 +33,7 @@ public enum API
         private final String statsParam;
         private final String key;
 
-        Stats(final String url, final String statsParam, final String key)
+        Stats(String url, String statsParam, String key)
         {
             this.url = url;
             this.statsParam = statsParam;

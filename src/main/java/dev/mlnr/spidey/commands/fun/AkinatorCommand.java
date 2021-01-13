@@ -7,6 +7,7 @@ import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import net.dv8tion.jda.api.Permission;
 
+@SuppressWarnings("unused")
 public class AkinatorCommand extends Command
 {
     public AkinatorCommand()
@@ -15,7 +16,7 @@ public class AkinatorCommand extends Command
     }
 
     @Override
-    public void execute(final String[] args, final CommandContext ctx)
+    public void execute(String[] args, CommandContext ctx)
     {
         AkinatorCache.createAkinator(ctx.getAuthor(), new AkinatorContext(ctx.getEvent()));
     }

@@ -40,17 +40,17 @@ import static net.dv8tion.jda.api.utils.MarkdownSanitizer.escape;
 public class Events extends ListenerAdapter
 {
     @Override
-    public void onGuildMessageReceived(final GuildMessageReceivedEvent event)
+    public void onGuildMessageReceived(GuildMessageReceivedEvent event)
     {
-        final var guild = event.getGuild();
-        final var message = event.getMessage();
-        final var guildId = guild.getIdLong();
-        final var content = message.getContentRaw().trim();
+        var guild = event.getGuild();
+        var message = event.getMessage();
+        var guildId = guild.getIdLong();
+        var content = message.getContentRaw().trim();
 
         if (!content.isEmpty() && GuildSettingsCache.isSnipingEnabled(guildId))
             MessageCache.cacheMessage(message.getIdLong(), new MessageData(message));
 
-        final var author = event.getAuthor();
+        var author = event.getAuthor();
 
         if (AkinatorCache.hasAkinator(author.getIdLong()))
         {
@@ -58,22 +58,22 @@ public class Events extends ListenerAdapter
             return;
         }
 
-        final var prefix = GuildSettingsCache.getPrefix(guildId);
+        var prefix = GuildSettingsCache.getPrefix(guildId);
         if (!content.startsWith(prefix) || author.isBot() || event.isWebhookMessage())
             return;
         CommandHandler.handle(event, prefix);
     }
 
     @Override
-    public void onGuildBan(final GuildBanEvent event)
+    public void onGuildBan(GuildBanEvent event)
     {
-        final var guild = event.getGuild();
-        final var channel = GuildSettingsCache.getLogChannel(guild.getIdLong());
+        var guild = event.getGuild();
+        var channel = GuildSettingsCache.getLogChannel(guild.getIdLong());
         if (channel == null)
             return;
-        final var user = event.getUser();
-        final var escapedTag = escape(user.getAsTag());
-        final var eb = new EmbedBuilder();
+        var user = event.getUser();
+        var escapedTag = escape(user.getAsTag());
+        var eb = new EmbedBuilder();
         eb.setDescription("\uD83D\uDD28 **" + escapedTag + "** has been `banned`");
         eb.setColor(14495300);
         eb.setFooter("User ban", user.getEffectiveAvatarUrl());
@@ -86,8 +86,8 @@ public class Events extends ListenerAdapter
         }
         guild.retrieveAuditLogs().type(ActionType.BAN).queue(bans ->
         {
-            final var last = bans.get(0);
-            final var bannerTag = escape(last.getUser().getAsTag());
+            var last = bans.get(0);
+            var bannerTag = escape(last.getUser().getAsTag());
             var reason = last.getReason();
             reason = reason == null || reason.isEmpty() ? "unknown reason" : reason.trim();
             eb.appendDescription(" by **" + bannerTag + "** for **" + reason + "**.");
@@ -96,15 +96,15 @@ public class Events extends ListenerAdapter
     }
 
     @Override
-    public void onGuildUnban(final GuildUnbanEvent event)
+    public void onGuildUnban(GuildUnbanEvent event)
     {
-        final var guild = event.getGuild();
-        final var channel = GuildSettingsCache.getLogChannel(guild.getIdLong());
+        var guild = event.getGuild();
+        var channel = GuildSettingsCache.getLogChannel(guild.getIdLong());
         if (channel == null)
             return;
-        final var user = event.getUser();
-        final var escapedTag = escape(user.getAsTag());
-        final var eb = new EmbedBuilder();
+        var user = event.getUser();
+        var escapedTag = escape(user.getAsTag());
+        var eb = new EmbedBuilder();
         eb.setDescription(Emojis.CHECK + " **" + escapedTag + "** has been `unbanned`");
         eb.setColor(7844437);
         eb.setFooter("User unban", user.getEffectiveAvatarUrl());
@@ -117,24 +117,24 @@ public class Events extends ListenerAdapter
         }
         guild.retrieveAuditLogs().type(ActionType.UNBAN).queue(unbans ->
         {
-            final var last = unbans.get(0);
-            final var unbannerTag = escape(last.getUser().getAsTag());
+            var last = unbans.get(0);
+            var unbannerTag = escape(last.getUser().getAsTag());
             eb.appendDescription(" by **" + unbannerTag + "**.");
             Utils.sendMessage(channel, eb.build());
         });
     }
 
     @Override
-    public void onGuildMemberRemove(final GuildMemberRemoveEvent event)
+    public void onGuildMemberRemove(GuildMemberRemoveEvent event)
     {
-        final var channel = GuildSettingsCache.getLogChannel(event.getGuild().getIdLong());
+        var channel = GuildSettingsCache.getLogChannel(event.getGuild().getIdLong());
         if (channel == null)
             return;
-        final var user = event.getUser();
-        final var escapedTag = escape(user.getAsTag());
-        final var avatarUrl = user.getEffectiveAvatarUrl();
-        final var userId = user.getIdLong();
-        final var eb = new EmbedBuilder();
+        var user = event.getUser();
+        var escapedTag = escape(user.getAsTag());
+        var avatarUrl = user.getEffectiveAvatarUrl();
+        var userId = user.getIdLong();
+        var eb = new EmbedBuilder();
         eb.setColor(14495300);
         eb.setTimestamp(Instant.now());
         if (user.isBot())
@@ -150,24 +150,24 @@ public class Events extends ListenerAdapter
     }
 
     @Override
-    public void onGuildMemberJoin(final GuildMemberJoinEvent event)
+    public void onGuildMemberJoin(GuildMemberJoinEvent event)
     {
-        final var guild = event.getGuild();
-        final var guildId = guild.getIdLong();
-        final var channel = GuildSettingsCache.getLogChannel(guildId);
+        var guild = event.getGuild();
+        var guildId = guild.getIdLong();
+        var channel = GuildSettingsCache.getLogChannel(guildId);
         if (channel == null)
             return;
-        final var joinRole = GuildSettingsCache.getJoinRole(guildId);
-        final var selfMember = guild.getSelfMember();
-        final var user = event.getUser();
-        final var userId = user.getIdLong();
+        var joinRole = GuildSettingsCache.getJoinRole(guildId);
+        var selfMember = guild.getSelfMember();
+        var user = event.getUser();
+        var userId = user.getIdLong();
 
         if (joinRole != null && selfMember.canInteract(joinRole) && selfMember.hasPermission(Permission.MANAGE_ROLES))
             guild.addRoleToMember(userId, joinRole).queue();
 
-        final var escapedTag = escape(user.getAsTag());
-        final var avatarUrl = user.getEffectiveAvatarUrl();
-        final var eb = new EmbedBuilder();
+        var escapedTag = escape(user.getAsTag());
+        var avatarUrl = user.getEffectiveAvatarUrl();
+        var eb = new EmbedBuilder();
         eb.setTimestamp(Instant.now());
         if (user.isBot())
         {
@@ -181,7 +181,7 @@ public class Events extends ListenerAdapter
             }
             guild.retrieveAuditLogs().type(ActionType.BOT_ADD).queue(botsAdded ->
             {
-                final var last = botsAdded.get(0);
+                var last = botsAdded.get(0);
                 eb.setDescription("\uD83E\uDD16 **" + escape(last.getUser().getAsTag()) + "** has `added` bot **" + escapedTag + "** (" + userId + ") to this server.");
                 Utils.sendMessage(channel, eb.build());
             });
@@ -198,9 +198,9 @@ public class Events extends ListenerAdapter
         }
         guild.retrieveInvites().queue(invites ->
         {
-            for (final var invite : invites)
+            for (var invite : invites)
             {
-                final var inviteData = GeneralCache.getInviteCache().get(invite.getCode());
+                var inviteData = GeneralCache.getInviteCache().get(invite.getCode());
                 if (inviteData == null || invite.getUses() == inviteData.getUses())
                     continue;
                 inviteData.incrementUses();
@@ -212,19 +212,19 @@ public class Events extends ListenerAdapter
     }
 
     @Override
-    public void onGuildReady(final GuildReadyEvent event)
+    public void onGuildReady(GuildReadyEvent event)
     {
-        final var guild = event.getGuild();
+        var guild = event.getGuild();
         Utils.storeInvites(guild);
     }
 
     @Override
-    public void onGuildJoin(final GuildJoinEvent event)
+    public void onGuildJoin(GuildJoinEvent event)
     {
-        final var guild = event.getGuild();
-        final var guildId = guild.getIdLong();
-        final var defaultChannel = guild.getDefaultChannel();
-        final var jda = event.getJDA();
+        var guild = event.getGuild();
+        var guildId = guild.getIdLong();
+        var defaultChannel = guild.getDefaultChannel();
+        var jda = event.getJDA();
         if (defaultChannel != null)
             Utils.sendMessage(defaultChannel, "Hey! I'm **Spidey**. Thanks for inviting me. To start, check `s!info`.");
         Utils.storeInvites(guild);
@@ -238,11 +238,11 @@ public class Events extends ListenerAdapter
     }
 
     @Override
-    public void onGuildLeave(final GuildLeaveEvent event)
+    public void onGuildLeave(GuildLeaveEvent event)
     {
-        final var guild = event.getGuild();
-        final var guildId = guild.getIdLong();
-        final var jda = event.getJDA();
+        var guild = event.getGuild();
+        var guildId = guild.getIdLong();
+        var jda = event.getJDA();
         GeneralCache.getInviteCache().entrySet().removeIf(entry -> entry.getValue().getGuildId() == guildId);
         MessageCache.pruneCache(guildId);
         MusicPlayerCache.destroyMusicPlayer(guild);
@@ -252,18 +252,18 @@ public class Events extends ListenerAdapter
     }
 
     @Override
-    public void onTextChannelDelete(final TextChannelDeleteEvent event)
+    public void onTextChannelDelete(TextChannelDeleteEvent event)
     {
-        final var guildId = event.getGuild().getIdLong();
+        var guildId = event.getGuild().getIdLong();
         if (event.getChannel().getIdLong() == GuildSettingsCache.getLogChannelId(guildId))
             GuildSettingsCache.removeLogChannel(guildId);
     }
 
     @Override
-    public void onRoleDelete(final RoleDeleteEvent event)
+    public void onRoleDelete(RoleDeleteEvent event)
     {
-        final var roleId = event.getRole().getIdLong();
-        final var guildId = event.getGuild().getIdLong();
+        var roleId = event.getRole().getIdLong();
+        var guildId = event.getGuild().getIdLong();
         if (roleId == GuildSettingsCache.getJoinRoleId(guildId))
             GuildSettingsCache.removeJoinRole(guildId);
         if (roleId == GuildSettingsCache.getDJRoleId(guildId))
@@ -271,13 +271,13 @@ public class Events extends ListenerAdapter
     }
 
     @Override
-    public void onGuildUpdateBoostTier(final GuildUpdateBoostTierEvent event)
+    public void onGuildUpdateBoostTier(GuildUpdateBoostTierEvent event)
     {
-        final var guild = event.getGuild();
-        final var channel = GuildSettingsCache.getLogChannel(guild.getIdLong());
+        var guild = event.getGuild();
+        var channel = GuildSettingsCache.getLogChannel(guild.getIdLong());
         if (channel == null)
             return;
-        final var eb = new EmbedBuilder();
+        var eb = new EmbedBuilder();
         eb.setAuthor("GUILD BOOST TIER HAS CHANGED");
         eb.setColor(16023551);
         eb.setTimestamp(Instant.now());
@@ -287,32 +287,32 @@ public class Events extends ListenerAdapter
     }
 
     @Override
-    public void onGuildInviteCreate(final GuildInviteCreateEvent event)
+    public void onGuildInviteCreate(GuildInviteCreateEvent event)
     {
         GeneralCache.getInviteCache().put(event.getCode(), new InviteData(event.getInvite()));
     }
 
     @Override
-    public void onGuildInviteDelete(final GuildInviteDeleteEvent event)
+    public void onGuildInviteDelete(GuildInviteDeleteEvent event)
     {
         GeneralCache.getInviteCache().remove(event.getCode());
     }
 
     @Override
-    public void onReady(final ReadyEvent event)
+    public void onReady(ReadyEvent event)
     {
-        final var jda = event.getJDA();
+        var jda = event.getJDA();
         jda.getPresence().setActivity(Activity.listening("s!help"));
         if (jda.getSelfUser().getIdLong() == 772446532560486410L) // only update stats if it's the production bot
             Requester.updateStats(jda);
     }
 
     @Override
-    public void onGuildMessageDelete(final GuildMessageDeleteEvent event)
+    public void onGuildMessageDelete(GuildMessageDeleteEvent event)
     {
-        final var messageId = event.getMessageIdLong();
-        final var responseMessageId = ResponseCache.getResponseMessageId(messageId);
-        final var channel = event.getChannel();
+        var messageId = event.getMessageIdLong();
+        var responseMessageId = ResponseCache.getResponseMessageId(messageId);
+        var channel = event.getChannel();
         if (responseMessageId != null)
         {
             channel.deleteMessageById(responseMessageId).queue();
@@ -329,11 +329,11 @@ public class Events extends ListenerAdapter
     }
 
     @Override
-    public void onGuildMessageUpdate(final GuildMessageUpdateEvent event)
+    public void onGuildMessageUpdate(GuildMessageUpdateEvent event)
     {
         if (!GuildSettingsCache.isSnipingEnabled(event.getGuild().getIdLong()))
             return;
-        final var messageId = event.getMessageIdLong();
+        var messageId = event.getMessageIdLong();
         if (!MessageCache.isCached(messageId))
             return;
         MessageCache.cacheMessage(messageId, new MessageData(event.getMessage()));
@@ -341,12 +341,12 @@ public class Events extends ListenerAdapter
     }
 
     @Override
-    public void onGuildVoiceUpdate(final GuildVoiceUpdateEvent event)
+    public void onGuildVoiceUpdate(GuildVoiceUpdateEvent event)
     {
-        final var member = event.getEntity();
-        final var guild = member.getGuild();
-        final var connectedChannel = MusicUtils.getConnectedChannel(guild);
-        final var musicPlayer = MusicPlayerCache.getMusicPlayer(guild);
+        var member = event.getEntity();
+        var guild = member.getGuild();
+        var connectedChannel = MusicUtils.getConnectedChannel(guild);
+        var musicPlayer = MusicPlayerCache.getMusicPlayer(guild);
 
         // "join"
         if (event instanceof GuildVoiceJoinEvent || event instanceof GuildVoiceMoveEvent)
@@ -372,23 +372,23 @@ public class Events extends ListenerAdapter
     }
 
     @Override
-    public void onGenericGuildMessageReaction(final GenericGuildMessageReactionEvent event)
+    public void onGenericGuildMessageReaction(GenericGuildMessageReactionEvent event)
     {
-        final var messageId = event.getMessageIdLong();
+        var messageId = event.getMessageIdLong();
         if (!PaginatorCache.isPaginator(messageId))
             return;
-        final var paginator = PaginatorCache.getPaginator(messageId);
+        var paginator = PaginatorCache.getPaginator(messageId);
         if (event.getUserIdLong() != paginator.getAuthorId())
             return;
-        final var reactionEmote = event.getReactionEmote();
+        var reactionEmote = event.getReactionEmote();
         if (!reactionEmote.isEmoji())
             return;
-        final var emoji = reactionEmote.getEmoji();
-        final var channel = event.getChannel();
-        final var currentPage = paginator.getCurrentPage();
-        final var pagesConsumer = paginator.getPagesConsumer();
-        final var newPageBuilder = MusicUtils.createMusicResponseBuilder();
-        final var totalPages = paginator.getTotalPages();
+        var emoji = reactionEmote.getEmoji();
+        var channel = event.getChannel();
+        var currentPage = paginator.getCurrentPage();
+        var pagesConsumer = paginator.getPagesConsumer();
+        var newPageBuilder = MusicUtils.createMusicResponseBuilder();
+        var totalPages = paginator.getTotalPages();
 
         switch (emoji)
         {
@@ -398,7 +398,7 @@ public class Events extends ListenerAdapter
             case Emojis.BACKWARDS:
                 if (currentPage == 0)
                     return;
-                final var previousPage = currentPage - 1;
+                var previousPage = currentPage - 1;
                 pagesConsumer.accept(previousPage, newPageBuilder);
                 newPageBuilder.setFooter("Page " + (previousPage + 1) + "/" + totalPages);
                 paginator.modifyCurrentPage(-1);
@@ -406,7 +406,7 @@ public class Events extends ListenerAdapter
             case Emojis.FORWARD:
                 if (currentPage + 1 == totalPages)
                     return;
-                final var nextPage = currentPage + 1;
+                var nextPage = currentPage + 1;
                 pagesConsumer.accept(nextPage, newPageBuilder);
                 newPageBuilder.setFooter("Page " + (nextPage + 1) + "/" + totalPages);
                 paginator.modifyCurrentPage(+1);

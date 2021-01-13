@@ -17,54 +17,54 @@ public class ArgumentUtils
 
     private ArgumentUtils() {}
 
-    public static void parseArgumentAsUnsignedInt(final String argument, final CommandContext ctx, final IntConsumer consumer)
+    public static void parseArgumentAsUnsignedInt(String argument, CommandContext ctx, IntConsumer consumer)
     {
         try
         {
             consumer.accept(Integer.parseUnsignedInt(argument));
         }
-        catch (final NumberFormatException ex)
+        catch (NumberFormatException ex)
         {
             ctx.replyError(ctx.getI18n().get("number.negative"));
         }
     }
 
-    public static void parseArgumentAsTextChannel(final String argument, final CommandContext ctx, final Consumer<TextChannel> consumer)
+    public static void parseArgumentAsTextChannel(String argument, CommandContext ctx, Consumer<TextChannel> consumer)
     {
         parseArgumentAsMentionable(argument, ctx, mentionable -> consumer.accept(((TextChannel) mentionable)), Message.MentionType.CHANNEL);
     }
 
-    public static void parseArgumentAsRole(final String argument, final CommandContext ctx, final Consumer<Role> consumer)
+    public static void parseArgumentAsRole(String argument, CommandContext ctx, Consumer<Role> consumer)
     {
         parseArgumentAsMentionable(argument, ctx, mentionable -> consumer.accept(((Role) mentionable)), Message.MentionType.ROLE);
     }
 
-    public static void parseArgumentAsUser(final String argument, final CommandContext ctx, final Consumer<User> consumer)
+    public static void parseArgumentAsUser(String argument, CommandContext ctx, Consumer<User> consumer)
     {
         parseArgumentAsMentionable(argument, ctx, mentionable -> consumer.accept(((User) mentionable)), Message.MentionType.USER);
     }
 
-    private static void parseArgumentAsMentionable(final String argument, final CommandContext ctx, final Consumer<IMentionable> consumer, final Message.MentionType type)
+    private static void parseArgumentAsMentionable(String argument, CommandContext ctx, Consumer<IMentionable> consumer, Message.MentionType type)
     {
-        final var message = ctx.getMessage();
-        final var guild = ctx.getGuild();
-        final var author = ctx.getAuthor();
-        final var typeName = type.name().toLowerCase();
-        final var i18n = ctx.getI18n();
-        final var notFound = i18n.get("argument_parser.not_found." + typeName) + " " + i18n.get("argument_parser.not_found.text");
-        final var embedBuilder = Utils.createEmbedBuilder(author);
+        var message = ctx.getMessage();
+        var guild = ctx.getGuild();
+        var author = ctx.getAuthor();
+        var typeName = type.name().toLowerCase();
+        var i18n = ctx.getI18n();
+        var notFound = i18n.get("argument_parser.not_found." + typeName) + " " + i18n.get("argument_parser.not_found.text");
+        var embedBuilder = Utils.createEmbedBuilder(author);
 
         if (type.getPattern().matcher(argument).matches())
         {
-            final var mentionable = message.getMentions(type).get(0);
+            var mentionable = message.getMentions(type).get(0);
             consumer.accept(mentionable);
             return;
         }
 
-        final var idMatcher = ID_REGEX.matcher(argument);
+        var idMatcher = ID_REGEX.matcher(argument);
         if (idMatcher.matches())
         {
-            final var mentionableId = Long.parseLong(idMatcher.group());
+            var mentionableId = Long.parseLong(idMatcher.group());
             if (type == Message.MentionType.USER)
             {
                 if (mentionableId == author.getIdLong())
@@ -72,8 +72,8 @@ public class ArgumentUtils
                     consumer.accept(author);
                     return;
                 }
-                final var jda = ctx.getJDA();
-                final var selfUser = jda.getSelfUser();
+                var jda = ctx.getJDA();
+                var selfUser = jda.getSelfUser();
                 if (mentionableId == selfUser.getIdLong())
                 {
                     consumer.accept(selfUser);
@@ -82,7 +82,7 @@ public class ArgumentUtils
                 jda.retrieveUserById(mentionableId).queue(consumer, failure -> ctx.replyError(notFound));
                 return;
             }
-            final var mentionable = type == Message.MentionType.CHANNEL ? guild.getTextChannelById(mentionableId) : guild.getRoleById(mentionableId);
+            var mentionable = type == Message.MentionType.CHANNEL ? guild.getTextChannelById(mentionableId) : guild.getRoleById(mentionableId);
             if (mentionable == null)
             {
                 ctx.replyError(notFound);
@@ -119,7 +119,7 @@ public class ArgumentUtils
                     });
                 return;
             }
-            final var mentionables = type == Message.MentionType.CHANNEL ? guild.getTextChannelsByName(argument, true) : guild.getRolesByName(argument, true);
+            var mentionables = type == Message.MentionType.CHANNEL ? guild.getTextChannelsByName(argument, true) : guild.getRolesByName(argument, true);
             if (mentionables.isEmpty())
             {
                 ctx.replyError(i18n.get("argument_parser.not_found.name", i18n.get("argument_parser.not_found." + typeName).toLowerCase()));
@@ -137,8 +137,8 @@ public class ArgumentUtils
         ctx.replyError(notFound);
     }
 
-    private static void createMentionableSelection(final EmbedBuilder selectionBuilder, final List<? extends IMentionable> mentionables, final CommandContext ctx, final String type,
-                                                  final Function<IMentionable, String> mapper, final IntConsumer choiceConsumer)
+    private static void createMentionableSelection(EmbedBuilder selectionBuilder, List<? extends IMentionable> mentionables, CommandContext ctx, String type,
+                                                  Function<IMentionable, String> mapper, IntConsumer choiceConsumer)
     {
         StringUtils.createSelection(selectionBuilder, mentionables, ctx, type, mapper::apply, choiceConsumer);
     }

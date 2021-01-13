@@ -18,9 +18,9 @@ public class LogCommand extends Command
 	}
 
 	@Override
-	public void execute(final String[] args, final CommandContext ctx)
+	public void execute(String[] args, CommandContext ctx)
 	{
-		final var guildId = ctx.getGuild().getIdLong();
+		var guildId = ctx.getGuild().getIdLong();
 		if (args.length == 0)
 		{
 			proceed(guildId, ctx.getTextChannel(), ctx);
@@ -29,10 +29,10 @@ public class LogCommand extends Command
 		ctx.getArgumentAsChannel(0, channel -> proceed(guildId, channel, ctx));
 	}
 
-	private void proceed(final long guildId, final TextChannel channel, final CommandContext ctx)
+	private void proceed(long guildId, TextChannel channel, CommandContext ctx)
 	{
-		final var channelId = channel.getIdLong();
-		final var i18n = ctx.getI18n();
+		var channelId = channel.getIdLong();
+		var i18n = ctx.getI18n();
 		if (GuildSettingsCache.getLogChannelId(guildId) == channelId)
 		{
 			GuildSettingsCache.removeLogChannel(guildId);
@@ -41,7 +41,7 @@ public class LogCommand extends Command
 		}
 		if (!channel.canTalk())
 		{
-			final var message = ctx.getMessage();
+			var message = ctx.getMessage();
 			Utils.addReaction(message, Emojis.CROSS);
 			Utils.addReaction(message, "\uD83D\uDE4A");
 			return;

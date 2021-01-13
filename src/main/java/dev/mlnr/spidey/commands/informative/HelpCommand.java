@@ -21,25 +21,25 @@ public class HelpCommand extends Command
     }
 
     @Override
-    public void execute(final String[] args, final CommandContext ctx)
+    public void execute(String[] args, CommandContext ctx)
     {
-        final var commandsMap = CommandHandler.getCommands();
-        final var author = ctx.getAuthor();
-        final var guildId = ctx.getGuild().getIdLong();
-        final var prefix = GuildSettingsCache.getPrefix(guildId);
-        final var i18n = ctx.getI18n();
-        final var eb = Utils.createEmbedBuilder(author)
+        var commandsMap = CommandHandler.getCommands();
+        var author = ctx.getAuthor();
+        var guildId = ctx.getGuild().getIdLong();
+        var prefix = GuildSettingsCache.getPrefix(guildId);
+        var i18n = ctx.getI18n();
+        var eb = Utils.createEmbedBuilder(author)
                 .setAuthor(i18n.get("commands.help.other.text"), "https://github.com/caneleex/Spidey",
                         ctx.getJDA().getSelfUser().getEffectiveAvatarUrl());
 
         if (args.length == 0)
         {
-            final var commandsCopy = new HashMap<>(commandsMap);
-            final var entries = commandsCopy.entrySet();
+            var commandsCopy = new HashMap<>(commandsMap);
+            var entries = commandsCopy.entrySet();
             entries.removeIf(entry -> !ctx.getMember().hasPermission(entry.getValue().getRequiredPermission()));
-            final var hidden = commandsMap.size() - commandsCopy.size();
-            final var iter = entries.iterator();
-            final var valueSet = new HashSet<>();
+            var hidden = commandsMap.size() - commandsCopy.size();
+            var iter = entries.iterator();
+            var valueSet = new HashSet<>();
             while (iter.hasNext())
             {
                 if (!valueSet.add(iter.next().getValue()))
@@ -47,7 +47,7 @@ public class HelpCommand extends Command
             }
             commandsCopy.remove("help");
             commandsCopy.remove("eval");
-            final var categories = new EnumMap<Category, List<Command>>(Category.class);
+            var categories = new EnumMap<Category, List<Command>>(Category.class);
             var nsfwHidden = false;
             commandsCopy.values().forEach(cmd -> categories.computeIfAbsent(cmd.getCategory(), k -> new ArrayList<>()).add(cmd));
             if (!ctx.getTextChannel().isNSFW())
@@ -56,7 +56,7 @@ public class HelpCommand extends Command
                 nsfwHidden = true;
             }
 
-            final var sb = new StringBuilder();
+            var sb = new StringBuilder();
             categories.forEach((category, commandz) ->
             {
                 sb.append("\n");
@@ -72,20 +72,20 @@ public class HelpCommand extends Command
             ctx.reply(eb);
             return;
         }
-        final var invoke = args[0].toLowerCase();
-        final var command = commandsMap.get(invoke);
+        var invoke = args[0].toLowerCase();
+        var command = commandsMap.get(invoke);
         if (command == null)
         {
-            final var similar = StringUtils.getSimilarCommand(invoke);
+            var similar = StringUtils.getSimilarCommand(invoke);
             ctx.replyError(i18n.get("command_failures.invalid.message", invoke) + " " + (similar == null
                     ? i18n.get("command_failures.invalid.check_help", prefix)
                     : i18n.get("command_failures.invalid.suggestion", similar)));
             return;
         }
-        final var none = i18n.get("commands.help.other.command_info.info_none");
-        final var requiredPermission = command.getRequiredPermission();
-        final var aliases = command.getAliases();
-        final var cooldown = CooldownHandler.getCooldown(guildId, command);
+        var none = i18n.get("commands.help.other.command_info.info_none");
+        var requiredPermission = command.getRequiredPermission();
+        var aliases = command.getAliases();
+        var cooldown = CooldownHandler.getCooldown(guildId, command);
 
         eb.setAuthor(i18n.get("commands.help.other.viewing") + " - " + invoke);
         eb.addField(i18n.get("commands.help.other.command_info.description"),
@@ -110,12 +110,12 @@ public class HelpCommand extends Command
         ctx.reply(eb);
     }
 
-    private String listToString(final List<Command> commands)
+    private String listToString(List<Command> commands)
     {
-        final var builder = new StringBuilder();
+        var builder = new StringBuilder();
         for (var i = 0; i < commands.size(); i++)
         {
-            final var cmd = commands.get(i);
+            var cmd = commands.get(i);
             builder.append("`").append(cmd.getInvoke()).append("`");
             if (i != commands.size() - 1)
                 builder.append(", ");

@@ -20,7 +20,7 @@ public class PenisCommand extends Command
     }
 
     @Override
-    public void execute(final String[] args, final CommandContext ctx)
+    public void execute(String[] args, CommandContext ctx)
     {
         if (args.length == 0)
         {
@@ -30,13 +30,13 @@ public class PenisCommand extends Command
         ctx.getArgumentAsUser(0, user -> respond(ctx, user));
     }
 
-    private void respond(final CommandContext ctx, final User user)
+    private void respond(CommandContext ctx, User user)
     {
-        final var random = ThreadLocalRandom.current().nextInt(0, 25 + 1); // values from 0 to 25, 25 + 1 cos 25 has to be inclusive
-        final var text = ":\n8" + "=".repeat(random) + "D (**" + random + "** cm)";
-        final var author = ctx.getAuthor();
-        final var eb = Utils.createEmbedBuilder(author);
-        final var i18n = ctx.getI18n();
+        var random = ThreadLocalRandom.current().nextInt(0, 25 + 1); // values from 0 to 25, 25 + 1 cos 25 has to be inclusive
+        var text = ":\n8" + "=".repeat(random) + "D (**" + random + "** cm)";
+        var author = ctx.getAuthor();
+        var eb = Utils.createEmbedBuilder(author);
+        var i18n = ctx.getI18n();
         eb.setAuthor(i18n.get("commands.penis.other.title"));
         eb.setColor(getColorHex(random, 25));
         eb.setDescription((user.equals(author)

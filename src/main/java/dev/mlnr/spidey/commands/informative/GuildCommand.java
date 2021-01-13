@@ -19,11 +19,11 @@ public class GuildCommand extends Command
 	}
 
 	@Override
-	public void execute(final String[] args, final CommandContext ctx)
+	public void execute(String[] args, CommandContext ctx)
 	{
-		final var eb = Utils.createEmbedBuilder(ctx.getAuthor());
-		final var guild = ctx.getGuild();
-		final var i18n = ctx.getI18n();
+		var eb = Utils.createEmbedBuilder(ctx.getAuthor());
+		var guild = ctx.getGuild();
+		var i18n = ctx.getI18n();
 
 		eb.setColor(Color.ORANGE);
 		eb.setThumbnail(guild.getIconUrl());
@@ -31,7 +31,7 @@ public class GuildCommand extends Command
 		eb.addField(i18n.get("commands.guild.fields.name"), guild.getName(), true);
 		eb.addField(i18n.get("commands.guild.fields.id"), String.valueOf(guild.getIdLong()), true);
 
-		final var ownerId = guild.getOwnerId();
+		var ownerId = guild.getOwnerId();
 		eb.addField(i18n.get("commands.guild.fields.owner.title"), "<@" + ownerId + ">", true);
 		eb.addField(i18n.get("commands.guild.fields.owner.id"), ownerId, true);
 
@@ -49,25 +49,25 @@ public class GuildCommand extends Command
 		eb.addField(i18n.get("commands.guild.fields.region"), guild.getRegion().getName(), true);
 		eb.addField(i18n.get("commands.guild.fields.creation"), Utils.formatDate(guild.getTimeCreated()), true);
 
-		final var vanityUrl = guild.getVanityUrl();
+		var vanityUrl = guild.getVanityUrl();
 		eb.addField(i18n.get("commands.guild.fields.vanity_url.title"), guild.getFeatures().contains("VANITY_URL")
 				? (vanityUrl == null ? i18n.get("commands.guild.fields.vanity_url.none") : vanityUrl)
 				: i18n.get("commands.guild.fields.vanity_url.not_eligible"), true);
 
         eb.addField(i18n.get("commands.guild.fields.roles"), String.valueOf(guild.getRoleCache().size() - 1), true);
 
-		final var emoteCache = guild.getEmoteCache();
-		final var emotes = emoteCache.applyStream(stream -> stream.filter(emote -> !emote.isManaged()).collect(Collectors.toList()));
+		var emoteCache = guild.getEmoteCache();
+		var emotes = emoteCache.applyStream(stream -> stream.filter(emote -> !emote.isManaged()).collect(Collectors.toList()));
 		if (!emotes.isEmpty())
 		{
-			final var sb = new StringBuilder();
+			var sb = new StringBuilder();
 			var ec = 0;
-			for (final var emote : emotes)
+			for (var emote : emotes)
 			{
 				ec++;
 				sb.append(emote.getAsMention()).append(ec == emotes.size() ? "" : " ");
 			}
-			final var animated = emoteCache.applyStream(stream -> stream.filter(Emote::isAnimated).count());
+			var animated = emoteCache.applyStream(stream -> stream.filter(Emote::isAnimated).count());
 			eb.addField(i18n.get("commands.guild.fields.emotes", emotes.size(), animated),
 					sb.length() > 1024 ? i18n.get("limit_exceeded") : sb.toString(),false);
 		}

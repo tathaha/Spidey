@@ -28,7 +28,7 @@ public class TrackScheduler extends AudioEventAdapter
 
     private final List<Long> skipVotes = new ArrayList<>();
 
-    public TrackScheduler(final AudioPlayer audioPlayer, final long guildId)
+    public TrackScheduler(AudioPlayer audioPlayer, long guildId)
     {
         this.audioPlayer = audioPlayer;
         audioPlayer.addListener(this);
@@ -36,12 +36,12 @@ public class TrackScheduler extends AudioEventAdapter
         this.queue = new ConcurrentLinkedDeque<>();
     }
 
-    public void queue(final AudioTrack track)
+    public void queue(AudioTrack track)
     {
         queue(track, false);
     }
 
-    public void queue(final AudioTrack track, final boolean addFirst)
+    public void queue(AudioTrack track, boolean addFirst)
     {
         if (audioPlayer.getPlayingTrack() == null)
         {
@@ -61,7 +61,7 @@ public class TrackScheduler extends AudioEventAdapter
         clearSkipVotes();
         if (repeatMode == RepeatMode.SONG && currentTrack != null)
         {
-            final var currentCloned = currentTrack.makeClone();
+            var currentCloned = currentTrack.makeClone();
             handleMarkers(currentCloned, this.guildId);
             queue(currentCloned);
             return;
@@ -70,10 +70,10 @@ public class TrackScheduler extends AudioEventAdapter
         if (currentTrack != null)
             previousTrack = currentTrack;
 
-        final var nextTrack = queue.poll();
+        var nextTrack = queue.poll();
         currentTrack = nextTrack;
 
-        final var trackToPlay = nextTrack != null ? nextTrack : (repeatMode == RepeatMode.QUEUE ? previousTrack.makeClone() : null);
+        var trackToPlay = nextTrack != null ? nextTrack : (repeatMode == RepeatMode.QUEUE ? previousTrack.makeClone() : null);
         if (trackToPlay != null)
             handleMarkers(trackToPlay, this.guildId);
         audioPlayer.playTrack(trackToPlay);
@@ -89,7 +89,7 @@ public class TrackScheduler extends AudioEventAdapter
         return this.repeatMode;
     }
 
-    public void setRepeatMode(final RepeatMode repeatMode)
+    public void setRepeatMode(RepeatMode repeatMode)
     {
         this.repeatMode = repeatMode;
     }
@@ -108,7 +108,7 @@ public class TrackScheduler extends AudioEventAdapter
 
     public int getRequiredSkipVotes()
     {
-        final var listeners = MusicUtils.getConnectedChannel(getGuild()).getMembers().stream()
+        var listeners = MusicUtils.getConnectedChannel(getGuild()).getMembers().stream()
                 .filter(member -> !member.getUser().isBot() && !member.getVoiceState().isDeafened())
                 .count();
         return (int) Math.ceil(listeners * 0.55);
@@ -119,17 +119,17 @@ public class TrackScheduler extends AudioEventAdapter
         return skipVotes.size();
     }
 
-    public void addSkipVote(final User user)
+    public void addSkipVote(User user)
     {
         skipVotes.add(user.getIdLong());
     }
 
-    public void removeSkipVote(final User user)
+    public void removeSkipVote(User user)
     {
         skipVotes.remove(user.getIdLong());
     }
 
-    public boolean hasSkipVoted(final User user)
+    public boolean hasSkipVoted(User user)
     {
         return skipVotes.contains(user.getIdLong());
     }
@@ -142,7 +142,7 @@ public class TrackScheduler extends AudioEventAdapter
     // events
 
     @Override
-    public void onTrackEnd(final AudioPlayer player, final AudioTrack track, final AudioTrackEndReason endReason)
+    public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason)
     {
         if (endReason.mayStartNext)
             nextTrack();

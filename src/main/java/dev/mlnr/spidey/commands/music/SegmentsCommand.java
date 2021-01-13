@@ -19,23 +19,23 @@ public class SegmentsCommand extends Command
     }
 
     @Override
-    public void execute(final String[] args, final CommandContext ctx)
+    public void execute(String[] args, CommandContext ctx)
     {
-        final var guild = ctx.getGuild();
-        final var musicPlayer = MusicPlayerCache.getMusicPlayer(guild);
-        final var i18n = ctx.getI18n();
+        var guild = ctx.getGuild();
+        var musicPlayer = MusicPlayerCache.getMusicPlayer(guild);
+        var i18n = ctx.getI18n();
         if (musicPlayer == null)
         {
             ctx.replyError(i18n.get("music.messages.failure.no_music"));
             return;
         }
-        final var playingTrack = musicPlayer.getPlayingTrack();
+        var playingTrack = musicPlayer.getPlayingTrack();
         if (playingTrack == null)
         {
             ctx.replyError(i18n.get("music.messages.failure.no_song"));
             return;
         }
-        final var videoId = playingTrack.getIdentifier();
+        var videoId = playingTrack.getIdentifier();
         var segments = VideoSegmentCache.getVideoSegments(videoId);
         if (args.length > 0)
         {
@@ -46,14 +46,14 @@ public class SegmentsCommand extends Command
             }
             segments = VideoSegmentCache.getVideoSegments(videoId, true);
         }
-        final var updatePrompt = i18n.get("commands.segments.other.prompt", GuildSettingsCache.getPrefix(guild.getIdLong()));
+        var updatePrompt = i18n.get("commands.segments.other.prompt", GuildSettingsCache.getPrefix(guild.getIdLong()));
         if (segments.isEmpty())
         {
             ctx.replyError(i18n.get("commands.segments.other.no_segs") +" " + updatePrompt);
             return;
         }
-        final var size = segments.size();
-        final var stringBuilder = new StringBuilder(size == 1 ? i18n.get("commands.segments.other.message.one") : i18n.get("commands.segments.other.message.multiple", size))
+        var size = segments.size();
+        var stringBuilder = new StringBuilder(size == 1 ? i18n.get("commands.segments.other.message.one") : i18n.get("commands.segments.other.message.multiple", size))
                 .append(" ").append(i18n.get("commands.segments.other.message.video"));
 
         segments.forEach(segment -> stringBuilder.append("**").append(formatDuration(segment.getSegmentStart())).append("**").append(" - ").append("**")

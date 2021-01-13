@@ -23,55 +23,55 @@ public class MessageCache
 
     private MessageCache() {}
 
-    public static MessageData getLastDeletedMessage(final long channelId)
+    public static MessageData getLastDeletedMessage(long channelId)
     {
-        final var latest = LAST_MESSAGE_DELETED_CACHE.get(channelId);
+        var latest = LAST_MESSAGE_DELETED_CACHE.get(channelId);
         return latest == null ? null : MESSAGE_DATA_CACHE.get(latest);
     }
 
-    public static void setLastDeletedMessage(final long channelId, final long messageId)
+    public static void setLastDeletedMessage(long channelId, long messageId)
     {
         LAST_MESSAGE_DELETED_CACHE.put(channelId, messageId);
     }
 
-    public static void cacheMessage(final long messageId, final MessageData message)
+    public static void cacheMessage(long messageId, MessageData message)
     {
-        final var data = MESSAGE_DATA_CACHE.get(messageId);
+        var data = MESSAGE_DATA_CACHE.get(messageId);
         if (data != null)
             LAST_MESSAGE_EDITED_DATA_CACHE.put(messageId, data);
         MESSAGE_DATA_CACHE.put(messageId, message);
     }
 
-    public static boolean isCached(final long messageId)
+    public static boolean isCached(long messageId)
     {
         return MESSAGE_DATA_CACHE.containsKey(messageId);
     }
 
     // MESSAGE EDITING CACHING
 
-    public static void setLastEditedMessage(final long channelId, final long messageId)
+    public static void setLastEditedMessage(long channelId, long messageId)
     {
         LAST_MESSAGE_EDITED_CACHE.put(channelId, messageId);
     }
 
-    public static MessageData getLastEditedMessage(final long channelId)
+    public static MessageData getLastEditedMessage(long channelId)
     {
-        final var latest = LAST_MESSAGE_EDITED_CACHE.get(channelId);
+        var latest = LAST_MESSAGE_EDITED_CACHE.get(channelId);
         return latest == null ? null : LAST_MESSAGE_EDITED_DATA_CACHE.get(latest);
     }
 
     // other
 
-    public static void pruneCache(final long guildId)
+    public static void pruneCache(long guildId)
     {
         var it = MESSAGE_DATA_CACHE.entrySet().iterator(); // using iterator here instead of a for loop should prevent getting CMEs
         while (it.hasNext())
         {
-            final var next = it.next();
-            final var dataGuildId = next.getValue().getGuildId();
+            var next = it.next();
+            var dataGuildId = next.getValue().getGuildId();
             if (dataGuildId != guildId)
                 continue;
-            final var messageId = next.getKey();
+            var messageId = next.getKey();
             it.remove();
             LAST_MESSAGE_DELETED_CACHE.entrySet().removeIf(entry1 -> entry1.getValue() == messageId);
             LAST_MESSAGE_EDITED_CACHE.entrySet().removeIf(entry1 -> entry1.getValue() == messageId);

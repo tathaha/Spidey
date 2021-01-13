@@ -17,7 +17,7 @@ public class GeneralCache
         return INVITE_CACHE;
     }
 
-    public static void removeGuild(final long guildId)
+    public static void removeGuild(long guildId)
     {
         if (GuildSettingsCache.isVip(guildId))
             return;

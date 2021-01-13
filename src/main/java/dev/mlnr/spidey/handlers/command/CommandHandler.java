@@ -28,46 +28,46 @@ public class CommandHandler
 
     static
     {
-        try (final var result = new ClassGraph().acceptPackages("dev.mlnr.spidey.commands").scan())
+        try (var result = new ClassGraph().acceptPackages("dev.mlnr.spidey.commands").scan())
         {
-            for (final var cls : result.getAllClasses())
+            for (var cls : result.getAllClasses())
             {
-                final var cmd = (Command) cls.loadClass().getDeclaredConstructor().newInstance();
+                var cmd = (Command) cls.loadClass().getDeclaredConstructor().newInstance();
                 COMMANDS.put(cmd.getInvoke(), cmd);
-                for (final var alias : cmd.getAliases())
+                for (var alias : cmd.getAliases())
                     COMMANDS.put(alias, cmd);
             }
         }
-        catch (final Exception e)
+        catch (Exception e)
         {
             LOGGER.error("There was an error while registering the commands!", e);
         }
     }
 
-    public static void handle(final GuildMessageReceivedEvent event, final String prefix)
+    public static void handle(GuildMessageReceivedEvent event, String prefix)
     {
-        final var message = event.getMessage();
-        final var content = message.getContentRaw().substring(prefix.length()).trim();
-        final var guildId = message.getGuild().getIdLong();
-        final var i18n = GuildSettingsCache.getI18n(guildId);
+        var message = event.getMessage();
+        var content = message.getContentRaw().substring(prefix.length()).trim();
+        var guildId = message.getGuild().getIdLong();
+        var i18n = GuildSettingsCache.getI18n(guildId);
         if (content.isEmpty())
         {
             Utils.returnError(i18n.get("command_failures.specify"), message);
             return;
         }
-        final var command = (content.contains(" ") ? content.substring(0, content.indexOf(' ')) : content).toLowerCase();
-        final var cmd = COMMANDS.get(command);
+        var command = (content.contains(" ") ? content.substring(0, content.indexOf(' ')) : content).toLowerCase();
+        var cmd = COMMANDS.get(command);
         if (cmd == null)
         {
-            final var similar = StringUtils.getSimilarCommand(command);
+            var similar = StringUtils.getSimilarCommand(command);
             Utils.returnError(i18n.get("command_failures.invalid.message", command) + " " + (similar == null
                     ? i18n.get("command_failures.invalid.check_help", prefix)
                     : i18n.get("command_failures.invalid.suggestion", similar)), message);
             return;
         }
-        final var requiredPermission = cmd.getRequiredPermission();
-        final var member = message.getMember();
-        final var userId = member.getIdLong();
+        var requiredPermission = cmd.getRequiredPermission();
+        var member = message.getMember();
+        var userId = member.getIdLong();
         if (!member.hasPermission(requiredPermission))
         {
             Utils.returnError(i18n.get("command_failures.no_perms", requiredPermission.getName()), message);
@@ -80,8 +80,8 @@ public class CommandHandler
         }
 
         // NSFW COMMANDS HANDLING
-        final var channel = message.getTextChannel();
-        final var category = cmd.getCategory();
+        var channel = message.getTextChannel();
+        var category = cmd.getCategory();
         if (category == Category.NSFW)
         {
             if (!channel.isNSFW())
@@ -95,9 +95,9 @@ public class CommandHandler
         }
         //
 
-        final var maxArgs = cmd.getMaxArgs();
-        final var tmp = content.split("\\s+", maxArgs > 0 ? maxArgs + 1 : 0);
-        final var args = Arrays.copyOfRange(tmp, 1, tmp.length);
+        var maxArgs = cmd.getMaxArgs();
+        var tmp = content.split("\\s+", maxArgs > 0 ? maxArgs + 1 : 0);
+        var args = Arrays.copyOfRange(tmp, 1, tmp.length);
         cmd.execute(args, new CommandContext(args, event, i18n));
         cooldown(guildId, userId, cmd);
     }

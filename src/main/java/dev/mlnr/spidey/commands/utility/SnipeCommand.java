@@ -19,24 +19,24 @@ public class SnipeCommand extends Command
     }
 
     @Override
-    public void execute(final String[] args, final CommandContext ctx)
+    public void execute(String[] args, CommandContext ctx)
     {
-        final var guildId = ctx.getGuild().getIdLong();
-        final var i18n = ctx.getI18n();
+        var guildId = ctx.getGuild().getIdLong();
+        var i18n = ctx.getI18n();
         if (!GuildSettingsCache.isSnipingEnabled(guildId))
         {
             ctx.replyError(i18n.get("sniping.disabled", GuildSettingsCache.getPrefix(guildId)));
             return;
         }
-        final var textChannel = ctx.getTextChannel();
-        final var channelId = textChannel.getIdLong();
-        final var lastDeletedMessage = MessageCache.getLastDeletedMessage(channelId);
+        var textChannel = ctx.getTextChannel();
+        var channelId = textChannel.getIdLong();
+        var lastDeletedMessage = MessageCache.getLastDeletedMessage(channelId);
         if (lastDeletedMessage == null)
         {
             ctx.replyError(i18n.get("sniping.no_message", "deleted"));
             return;
         }
-        final var eb = Utils.createEmbedBuilder(ctx.getAuthor());
+        var eb = Utils.createEmbedBuilder(ctx.getAuthor());
         eb.setTimestamp(lastDeletedMessage.getCreation());
         eb.setDescription(lastDeletedMessage.getContent());
         eb.setColor(Color.GREEN);

@@ -12,7 +12,7 @@ public enum Category
 
     private final String friendlyName;
 
-    Category(final String friendlyName)
+    Category(String friendlyName)
     {
         this.friendlyName = friendlyName;
     }

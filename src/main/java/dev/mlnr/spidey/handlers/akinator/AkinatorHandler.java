@@ -18,19 +18,19 @@ public class AkinatorHandler
 {
     private AkinatorHandler() {}
 
-    public static void handle(final User user, final AkinatorContext ctx)
+    public static void handle(User user, AkinatorContext ctx)
     {
-        final var userId = user.getIdLong();
-        final var akinatorData = AkinatorCache.getAkinatorData(userId);
-        final var akinator = akinatorData.getAkinator();
-        final var message = ctx.getMessage();
-        final var content = message.getContentStripped().toLowerCase();
-        final var author = message.getAuthor();
-        final var i18n = ctx.getI18n();
-        final var embedBuilder = Utils.createEmbedBuilder(author)
+        var userId = user.getIdLong();
+        var akinatorData = AkinatorCache.getAkinatorData(userId);
+        var akinator = akinatorData.getAkinator();
+        var message = ctx.getMessage();
+        var content = message.getContentStripped().toLowerCase();
+        var author = message.getAuthor();
+        var i18n = ctx.getI18n();
+        var embedBuilder = Utils.createEmbedBuilder(author)
                 .setAuthor(i18n.get("commands.akinator.other.of", author.getAsTag())).setColor(Utils.SPIDEY_COLOR);
-        final var cancel = i18n.get("commands.akinator.other.cancel.text");
-        final var channel = message.getTextChannel();
+        var cancel = i18n.get("commands.akinator.other.cancel.text");
+        var channel = message.getTextChannel();
         Akiwrapper.Answer answer = null;
 
         if (content.equals(i18n.get("commands.akinator.other.answers.yes.text")) || content.equals(i18n.get("commands.akinator.other.answers.yes.alias")))
@@ -54,7 +54,7 @@ public class AkinatorHandler
             returnError(i18n.get("commands.akinator.other.answer", cancel), message);
             return;
         }
-        final var yesno = i18n.get("commands.akinator.other.yesno");
+        var yesno = i18n.get("commands.akinator.other.yesno");
         if (akinatorData.isPrompted())
         {
             if (answer == Akiwrapper.Answer.NO)
@@ -65,7 +65,7 @@ public class AkinatorHandler
                 returnError(yesno, message);
             return;
         }
-        final var currentGuess = akinatorData.getCurrentGuess();
+        var currentGuess = akinatorData.getCurrentGuess();
         if (currentGuess != null)
         {
             if (answer == Akiwrapper.Answer.NO)
@@ -79,8 +79,8 @@ public class AkinatorHandler
                 returnError(yesno, message);
             return;
         }
-        final var nextQuestion = akinator.answerCurrentQuestion(answer);
-        final var guess = getGuess(akinatorData);
+        var nextQuestion = akinator.answerCurrentQuestion(answer);
+        var guess = getGuess(akinatorData);
         if (guess != null)
         {
             sendGuess(guess, embedBuilder, ctx);
@@ -99,9 +99,9 @@ public class AkinatorHandler
         sendMessage(channel, embedBuilder.build());
     }
 
-    private static void newGuess(final AkinatorData akinatorData, final EmbedBuilder embedBuilder, AkinatorContext ctx)
+    private static void newGuess(AkinatorData akinatorData, EmbedBuilder embedBuilder, AkinatorContext ctx)
     {
-        final var guesses = akinatorData.getAkinator().getGuesses().stream().filter(guess -> !akinatorData.isDeclined(guess)).collect(Collectors.toList());
+        var guesses = akinatorData.getAkinator().getGuesses().stream().filter(guess -> !akinatorData.isDeclined(guess)).collect(Collectors.toList());
         var newGuess = getGuess(akinatorData);
         if (newGuess != null)
         {
@@ -119,23 +119,23 @@ public class AkinatorHandler
         akinatorData.setCurrentGuess(null);
     }
 
-    private static void sendGuess(final Guess guess, final EmbedBuilder embedBuilder, AkinatorContext ctx)
+    private static void sendGuess(Guess guess, EmbedBuilder embedBuilder, AkinatorContext ctx)
     {
         embedBuilder.setDescription(ctx.getI18n().get("commands.akinator.other.guess", guess.getProbability() * 100, guess.getName()));
         embedBuilder.setImage(guess.getImage().toString());
         sendMessage(ctx.getChannel(), embedBuilder.build());
     }
 
-    private static void win(final EmbedBuilder embedBuilder, final AkinatorData akinatorData, final AkinatorContext ctx)
+    private static void win(EmbedBuilder embedBuilder, AkinatorData akinatorData, AkinatorContext ctx)
     {
-        final var i18n = ctx.getI18n();
+        var i18n = ctx.getI18n();
         embedBuilder.setDescription(i18n.get("commands.akinator.other.end.win"));
         embedBuilder.appendDescription(" ").appendDescription(i18n.get("commands.akinator.other.end.again"));
         akinatorData.setPrompted(true);
         sendMessage(ctx.getChannel(), embedBuilder.build());
     }
 
-    private static Guess getGuess(final AkinatorData akinatorData)
+    private static Guess getGuess(AkinatorData akinatorData)
     {
         return akinatorData.getAkinator().getGuesses().stream().filter(guess -> guess.getProbability() > 0.85 && !akinatorData.isDeclined(guess))
                 .findFirst().orElse(null);

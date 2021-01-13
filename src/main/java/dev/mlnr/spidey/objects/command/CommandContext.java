@@ -20,7 +20,7 @@ public class CommandContext
     private final GuildMessageReceivedEvent event;
     private final I18n i18n;
 
-    public CommandContext(final String[] args, final GuildMessageReceivedEvent event, final I18n i18n)
+    public CommandContext(String[] args, GuildMessageReceivedEvent event, I18n i18n)
     {
         this.args = args;
         this.event = event;
@@ -69,27 +69,27 @@ public class CommandContext
 
     // interaction methods
 
-    public void reply(final EmbedBuilder embedBuilder)
+    public void reply(EmbedBuilder embedBuilder)
     {
         Utils.sendMessage(getTextChannel(), embedBuilder.build(), getMessage());
     }
 
-    public void reply(final String content)
+    public void reply(String content)
     {
         reply(content, MessageAction.getDefaultMentions());
     }
 
-    public void reply(final String content, final Set<Message.MentionType> allowedMentions)
+    public void reply(String content, Set<Message.MentionType> allowedMentions)
     {
         Utils.sendMessage(getTextChannel(), content, allowedMentions, getMessage());
     }
 
-    public void replyError(final String error)
+    public void replyError(String error)
     {
         replyError(error, Emojis.CROSS);
     }
 
-    public void replyError(final String error, final String failureEmoji)
+    public void replyError(String error, String failureEmoji)
     {
         Utils.returnError(error, getMessage(), failureEmoji);
     }
@@ -101,22 +101,22 @@ public class CommandContext
 
     // arg stuff
 
-    public void getArgumentAsUnsignedInt(final int argIndex, final IntConsumer consumer)
+    public void getArgumentAsUnsignedInt(int argIndex, IntConsumer consumer)
     {
         ArgumentUtils.parseArgumentAsUnsignedInt(args[argIndex], this, consumer);
     }
 
-    public void getArgumentAsChannel(final int argIndex, final Consumer<TextChannel> consumer)
+    public void getArgumentAsChannel(int argIndex, Consumer<TextChannel> consumer)
     {
         ArgumentUtils.parseArgumentAsTextChannel(args[argIndex], this, consumer);
     }
 
-    public void getArgumentAsRole(final int argIndex, final Consumer<Role> consumer)
+    public void getArgumentAsRole(int argIndex, Consumer<Role> consumer)
     {
         ArgumentUtils.parseArgumentAsRole(args[argIndex], this, consumer);
     }
 
-    public void getArgumentAsUser(final int argIndex, final Consumer<User> consumer)
+    public void getArgumentAsUser(int argIndex, Consumer<User> consumer)
     {
         ArgumentUtils.parseArgumentAsUser(args[argIndex], this, consumer);
     }

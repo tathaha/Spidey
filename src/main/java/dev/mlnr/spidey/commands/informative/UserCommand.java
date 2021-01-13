@@ -19,7 +19,7 @@ public class UserCommand extends Command
 	}
 
 	@Override
-	public void execute(final String[] args, final CommandContext ctx)
+	public void execute(String[] args, CommandContext ctx)
 	{
 		if (args.length == 0)
 		{
@@ -29,10 +29,10 @@ public class UserCommand extends Command
 		ctx.getArgumentAsUser(0, user -> ctx.getGuild().retrieveMember(user).queue(member -> respond(ctx, user, member), failure -> respond(ctx, user, null)));
 	}
 
-	private void respond(final CommandContext ctx, final User user, final Member member)
+	private void respond(CommandContext ctx, User user, Member member)
 	{
-		final var eb = Utils.createEmbedBuilder(ctx.getAuthor());
-		final var i18n = ctx.getI18n();
+		var eb = Utils.createEmbedBuilder(ctx.getAuthor());
+		var i18n = ctx.getI18n();
 
 		eb.setAuthor(i18n.get("commands.user.other.title") + " - " + user.getAsTag());
 		eb.setThumbnail(user.getEffectiveAvatarUrl());
@@ -44,22 +44,22 @@ public class UserCommand extends Command
 			ctx.reply(eb);
 			return;
 		}
-		final var nick = member.getNickname();
+		var nick = member.getNickname();
 		if (nick != null)
 			eb.addField(i18n.get("commands.user.other.nickname"), nick, false);
 
 		eb.addField(i18n.get("commands.user.other.joined"), formatDate(member.getTimeJoined()), false);
 
-		final var boostingSince = member.getTimeBoosted();
+		var boostingSince = member.getTimeBoosted();
 		if (boostingSince != null)
 			eb.addField(i18n.get("commands.user.other.boosting"), formatDate(boostingSince), false);
 
-		final var roles = member.getRoles();
+		var roles = member.getRoles();
 		if (!roles.isEmpty())
 		{
-			final var sb = new StringBuilder();
+			var sb = new StringBuilder();
 			var rc = 0;
-			for (final var role : roles)
+			for (var role : roles)
 			{
 				++rc;
 				sb.append(role.getName()).append(rc == roles.size() ? "" : ", ");

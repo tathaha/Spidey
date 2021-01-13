@@ -17,14 +17,14 @@ public class MembersCommand extends Command
     }
 
     @Override
-    public void execute(final String[] args, final CommandContext ctx)
+    public void execute(String[] args, CommandContext ctx)
     {
         ctx.getGuild().loadMembers().onSuccess(members ->
         {
-            final var total = members.size();
-            final var bots = members.stream().filter(member -> member.getUser().isBot()).count();
-            final var eb = Utils.createEmbedBuilder(ctx.getAuthor());
-            final var i18n = ctx.getI18n();
+            var total = members.size();
+            var bots = members.stream().filter(member -> member.getUser().isBot()).count();
+            var eb = Utils.createEmbedBuilder(ctx.getAuthor());
+            var i18n = ctx.getI18n();
 
             eb.setAuthor(i18n.get("commands.members.other.title"));
             eb.setTimestamp(Instant.now());

@@ -11,7 +11,7 @@ public abstract class Command
     private final int maxArgs;
     private final int cooldown;
 
-    protected Command(final String invoke, final String[] aliases, final Category category, final Permission requiredPermission, final int maxArgs, final int cooldown)
+    protected Command(String invoke, String[] aliases,Category category, Permission requiredPermission, int maxArgs, int cooldown)
     {
         this.invoke = invoke;
         this.aliases = aliases;
@@ -21,7 +21,7 @@ public abstract class Command
         this.cooldown = cooldown;
     }
 
-    public abstract void execute(final String[] args, final CommandContext ctx);
+    public abstract void execute(String[] args, CommandContext ctx);
 
     public String getInvoke()
     {

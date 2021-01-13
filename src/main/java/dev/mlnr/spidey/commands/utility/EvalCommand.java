@@ -27,12 +27,12 @@ public class EvalCommand extends Command
     }
 
     @Override
-    public void execute(final String[] args, final CommandContext ctx)
+    public void execute(String[] args, CommandContext ctx)
     {
-        final var author = ctx.getAuthor();
-        final var jda = ctx.getJDA();
-        final var channel = ctx.getTextChannel();
-        final var message = ctx.getMessage();
+        var author = ctx.getAuthor();
+        var jda = ctx.getJDA();
+        var channel = ctx.getTextChannel();
+        var message = ctx.getMessage();
         if (author.getIdLong() != 394607709741252621L)
         {
             ctx.replyError(ctx.getI18n().get("command_failures.only_dev"));
@@ -46,20 +46,20 @@ public class EvalCommand extends Command
         SCRIPT_ENGINE.put("channel", channel);
         SCRIPT_ENGINE.put("jda", jda);
         SCRIPT_ENGINE.put("api", jda);
-        final var eb = Utils.createEmbedBuilder(author);
-        final var toEval = new StringBuilder();
+        var eb = Utils.createEmbedBuilder(author);
+        var toEval = new StringBuilder();
         DEFAULT_IMPORTS.forEach(imp -> toEval.append("import ").append(imp).append(".*; "));
         toEval.append(args[0]);
         try
         {
-            final var evaluated = SCRIPT_ENGINE.eval(toEval.toString());
+            var evaluated = SCRIPT_ENGINE.eval(toEval.toString());
             ctx.reactLike();
             if (evaluated == null)
                 return;
             eb.setColor(Color.GREEN);
             eb.setDescription("```" + evaluated + "```");
         }
-        catch (final ScriptException ex)
+        catch (ScriptException ex)
         {
             Utils.addReaction(ctx.getMessage(), Emojis.DISLIKE);
             eb.setColor(Color.RED);

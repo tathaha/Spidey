@@ -18,15 +18,15 @@ public class StatsCommand extends Command
 	}
 
 	@Override
-	public void execute(final String[] args, final CommandContext ctx)
+	public void execute(String[] args, CommandContext ctx)
 	{
-		final var eb = Utils.createEmbedBuilder(ctx.getAuthor());
-		final var prefix = GuildSettingsCache.getPrefix(ctx.getGuild().getIdLong());
-		final var jda = ctx.getJDA();
-		final var runtime = Runtime.getRuntime();
-		final var total = runtime.totalMemory();
-		final var memory = (total - runtime.freeMemory()) / 1000000;
-		final var i18n = ctx.getI18n();
+		var eb = Utils.createEmbedBuilder(ctx.getAuthor());
+		var prefix = GuildSettingsCache.getPrefix(ctx.getGuild().getIdLong());
+		var jda = ctx.getJDA();
+		var runtime = Runtime.getRuntime();
+		var total = runtime.totalMemory();
+		var memory = (total - runtime.freeMemory()) / 1000000;
+		var i18n = ctx.getI18n();
 
 		eb.setColor(Utils.SPIDEY_COLOR);
 		eb.setAuthor(i18n.get("commands.stats.other.title"), "https://spidey.mlnr.dev", jda.getSelfUser().getEffectiveAvatarUrl());

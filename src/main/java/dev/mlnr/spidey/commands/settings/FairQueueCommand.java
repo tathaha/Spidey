@@ -18,15 +18,15 @@ public class FairQueueCommand extends Command
     }
 
     @Override
-    public void execute(final String[] args, final CommandContext ctx)
+    public void execute(String[] args, CommandContext ctx)
     {
-        final var i18n = ctx.getI18n();
+        var i18n = ctx.getI18n();
         if (!MusicUtils.canInteract(ctx.getMember()))
         {
             ctx.replyError(i18n.get("music.messages.failure.cant_interact", "enable/disable the fair queue or to set the threshold"));
             return;
         }
-        final var guildId = ctx.getGuild().getIdLong();
+        var guildId = ctx.getGuild().getIdLong();
         if (args.length == 0)
         {
             manageFairQueue(guildId, ctx, !isFairQueueEnabled(guildId));
@@ -53,14 +53,14 @@ public class FairQueueCommand extends Command
         });
     }
 
-    private void manageFairQueue(final long guildId, final CommandContext ctx, final boolean enabled)
+    private void manageFairQueue(long guildId, CommandContext ctx, boolean enabled)
     {
         manageFairQueue(guildId, ctx, enabled, -1);
     }
 
-    private void manageFairQueue(final long guildId, final CommandContext ctx, final boolean enabled, final int threshold)
+    private void manageFairQueue(long guildId, CommandContext ctx, boolean enabled, int threshold)
     {
-        final var i18n = ctx.getI18n();
+        var i18n = ctx.getI18n();
         if (!enabled && !isFairQueueEnabled(guildId))
         {
             ctx.replyError(i18n.get("commands.fairqueue.other.already_disabled"));

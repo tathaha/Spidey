@@ -17,7 +17,7 @@ public class AvatarCommand extends Command
 	}
 
 	@Override
-	public void execute(final String[] args, final CommandContext ctx)
+	public void execute(String[] args, CommandContext ctx)
 	{
 		if (args.length == 0)
 		{
@@ -27,10 +27,10 @@ public class AvatarCommand extends Command
 		ctx.getArgumentAsUser(0, user -> respond(ctx, user));
 	}
 
-	private void respond(final CommandContext ctx, final User user)
+	private void respond(CommandContext ctx, User user)
 	{
-		final var avatarUrl = user.getEffectiveAvatarUrl() + "?size=2048";
-		final var eb = Utils.createEmbedBuilder(ctx.getAuthor());
+		var avatarUrl = user.getEffectiveAvatarUrl() + "?size=2048";
+		var eb = Utils.createEmbedBuilder(ctx.getAuthor());
 		eb.setAuthor(ctx.getI18n().get("commands.avatar.other.title") + " " + MarkdownSanitizer.escape(user.getAsTag()));
 		eb.setDescription("[Avatar link](" + avatarUrl + ")");
 		eb.setImage(avatarUrl);

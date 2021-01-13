@@ -10,7 +10,7 @@ public class AkinatorContext
 {
     private final GuildMessageReceivedEvent event;
 
-    public AkinatorContext(final GuildMessageReceivedEvent event)
+    public AkinatorContext(GuildMessageReceivedEvent event)
     {
         this.event = event;
     }

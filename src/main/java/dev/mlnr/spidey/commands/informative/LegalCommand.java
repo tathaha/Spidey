@@ -14,7 +14,7 @@ public class LegalCommand extends Command
 	}
 
 	@Override
-	public void execute(final String[] args, final CommandContext ctx)
+	public void execute(String[] args, CommandContext ctx)
 	{
 		ctx.reply(ctx.getI18n().get("commands.legal.other.text"));
 	}

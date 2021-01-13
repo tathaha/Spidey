@@ -10,17 +10,15 @@ public class MessageData
     private final long authorId;
     private final Instant creation;
     private final String content;
-    private final long channelId;
     private final long guildId;
     private final String jumpUrl;
 
-    public MessageData(final Message message)
+    public MessageData(Message message)
     {
         this.messageId = message.getIdLong();
         this.authorId = message.getAuthor().getIdLong();
         this.creation = message.getTimeCreated().toInstant();
         this.content = message.getContentRaw();
-        this.channelId = message.getTextChannel().getIdLong();
         this.guildId = message.getGuild().getIdLong();
         this.jumpUrl = message.getJumpUrl();
     }
@@ -43,11 +41,6 @@ public class MessageData
     public String getContent()
     {
         return this.content;
-    }
-
-    public long getChannelId()
-    {
-        return this.channelId;
     }
 
     public long getGuildId()

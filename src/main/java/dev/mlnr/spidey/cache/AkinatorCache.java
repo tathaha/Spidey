@@ -24,35 +24,35 @@ public class AkinatorCache
 
     private AkinatorCache() {}
 
-    public static void createAkinator(final User user, final AkinatorContext ctx)
+    public static void createAkinator(User user, AkinatorContext ctx)
     {
-        final var i18n = ctx.getI18n();
-        final var channel = ctx.getChannel();
+        var i18n = ctx.getI18n();
+        var channel = ctx.getChannel();
         try
         {
-            final var akinator = new AkiwrapperBuilder().build();
+            var akinator = new AkiwrapperBuilder().build();
             AKINATOR_CACHE.put(user.getIdLong(), new AkinatorData(akinator));
-            final var embedBuilder = Utils.createEmbedBuilder(user).setAuthor(i18n.get("commands.akinator.other.of", user.getAsTag())).setColor(Utils.SPIDEY_COLOR);
+            var embedBuilder = Utils.createEmbedBuilder(user).setAuthor(i18n.get("commands.akinator.other.of", user.getAsTag())).setColor(Utils.SPIDEY_COLOR);
             embedBuilder.setDescription(i18n.get("commands.akinator.other.question", 1) + " " + akinator.getCurrentQuestion().getQuestion());
             sendMessage(channel, embedBuilder.build());
         }
-        catch (final ServerNotFoundException | UnirestException ex)
+        catch (ServerNotFoundException | UnirestException ex)
         {
             sendMessage(channel, i18n.get("commands.akinator.other.couldnt_create"));
         }
     }
 
-    public static AkinatorData getAkinatorData(final long userId)
+    public static AkinatorData getAkinatorData(long userId)
     {
         return AKINATOR_CACHE.get(userId);
     }
 
-    public static boolean hasAkinator(final long userId)
+    public static boolean hasAkinator(long userId)
     {
         return AKINATOR_CACHE.containsKey(userId);
     }
 
-    public static void removeAkinator(final long userId)
+    public static void removeAkinator(long userId)
     {
         AKINATOR_CACHE.remove(userId);
     }

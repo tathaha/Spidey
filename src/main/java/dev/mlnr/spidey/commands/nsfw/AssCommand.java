@@ -14,5 +14,5 @@ public class AssCommand extends Command
     }
 
     @Override
-    public void execute(final String[] args, final CommandContext ctx) {}
+    public void execute(String[] args, CommandContext ctx) {}
 }

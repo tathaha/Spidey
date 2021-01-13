@@ -16,13 +16,13 @@ public class PlayCommand extends Command
     }
 
     @Override
-    public void execute(final String[] args, final CommandContext ctx)
+    public void execute(String[] args, CommandContext ctx)
     {
-        final var musicPlayer = MusicUtils.checkQueryInput(args, ctx);
+        var musicPlayer = MusicUtils.checkQueryInput(args, ctx);
         if (musicPlayer == null)
             return;
-        final var query = MusicUtils.YOUTUBE_URL_PATTERN.matcher(args[0]).matches() ? args[0] : "ytsearch:" + args[0];
-        final var loader = new AudioLoader(musicPlayer, query, ctx, false);
+        var query = MusicUtils.YOUTUBE_URL_PATTERN.matcher(args[0]).matches() ? args[0] : "ytsearch:" + args[0];
+        var loader = new AudioLoader(musicPlayer, query, ctx, false);
         MusicUtils.loadQuery(musicPlayer, query, loader);
     }
 }

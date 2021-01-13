@@ -53,32 +53,32 @@ public class MusicUtils
         AudioSourceManagers.registerRemoteSources(AUDIO_PLAYER_MANAGER);
     }
 
-    private static ConnectFailureReason checkVoiceChannel(final CommandContext ctx)
+    private static ConnectFailureReason checkVoiceChannel(CommandContext ctx)
     {
-        final var guild = ctx.getGuild();
-        final var voiceState = ctx.getMember().getVoiceState();
+        var guild = ctx.getGuild();
+        var voiceState = ctx.getMember().getVoiceState();
         if (voiceState == null)
             return NO_CHANNEL;
-        final var voiceChannel = voiceState.getChannel();
+        var voiceChannel = voiceState.getChannel();
         if (voiceChannel == null)
             return NO_CHANNEL;
 
         if (guild.getAudioManager().isConnected())
             return null;
 
-        final var selfMember = guild.getSelfMember();
+        var selfMember = guild.getSelfMember();
         if (!selfMember.hasAccess(voiceChannel))
             return NO_PERMS;
         if (!selfMember.hasPermission(voiceChannel, Permission.VOICE_SPEAK))
             return CANT_SPEAK;
-        final var userLimit = voiceChannel.getUserLimit();
+        var userLimit = voiceChannel.getUserLimit();
         if (userLimit != 0 && voiceChannel.getMembers().size() >= userLimit)
             return CHANNEL_FULL;
         connectToVoiceChannel(voiceChannel);
         return null;
     }
 
-    private static void connectToVoiceChannel(final VoiceChannel voiceChannel)
+    private static void connectToVoiceChannel(VoiceChannel voiceChannel)
     {
         voiceChannel.getGuild().getAudioManager().openAudioConnection(voiceChannel);
     }
@@ -88,80 +88,80 @@ public class MusicUtils
         return AUDIO_PLAYER_MANAGER;
     }
 
-    public static String formatDuration(final long time)
+    public static String formatDuration(long time)
     {
-        final var duration = Duration.ofMillis(time);
-        final var hours = duration.toHoursPart();
-        final var minutes = duration.toMinutesPart();
-        final var seconds = duration.toSecondsPart();
+        var duration = Duration.ofMillis(time);
+        var hours = duration.toHoursPart();
+        var minutes = duration.toMinutesPart();
+        var seconds = duration.toSecondsPart();
         if (hours > 0)
             return String.format("%02d:%02d:%02d", hours, minutes, seconds);
         return String.format("%02d:%02d", minutes, seconds);
     }
 
-    public static boolean canInteract(final Member member, final AudioTrack track)
+    public static boolean canInteract(Member member, AudioTrack track)
     {
         return getRequesterId(track) == member.getIdLong() || canInteract(member);
     }
 
-    public static boolean canInteract(final Member member)
+    public static boolean canInteract(Member member)
     {
         return member.hasPermission(Permission.MANAGE_SERVER) || isDJ(member);
     }
 
-    public static boolean isDJ(final Member member)
+    public static boolean isDJ(Member member)
     {
-        final var djRoleId = GuildSettingsCache.getDJRoleId(member.getGuild().getIdLong());
+        var djRoleId = GuildSettingsCache.getDJRoleId(member.getGuild().getIdLong());
         return djRoleId != 0 && member.getRoles().stream().anyMatch(role -> role.getIdLong() == djRoleId);
     }
 
-    public static String getProgressBar(final long position, final long duration)
+    public static String getProgressBar(long position, long duration)
     {
-        final var activeBlocks = (int) ((float) position / duration * BLOCK_AMOUNT);
-        final var progressBuilder = new StringBuilder();
+        var activeBlocks = (int) ((float) position / duration * BLOCK_AMOUNT);
+        var progressBuilder = new StringBuilder();
         for (var i = 0; i < BLOCK_AMOUNT; i++)
             progressBuilder.append(i == activeBlocks ? BLOCK_ACTIVE : BLOCK_INACTIVE);
         return progressBuilder.append(BLOCK_INACTIVE).append(" [**").append(formatDuration(position)).append("/").append(formatDuration(duration)).append("**]").toString();
     }
 
-    public static void handleMarkers(final AudioTrack track, final long guildId)
+    public static void handleMarkers(AudioTrack track, long guildId)
     {
         if (!isSegmentSkippingEnabled(guildId))
             return;
-        final var segments = getVideoSegments(track.getIdentifier());
+        var segments = getVideoSegments(track.getIdentifier());
         if (!segments.isEmpty())
             track.setMarker(new TrackMarker(segments.get(0).getSegmentStart(), new SegmentHandler(track)));
     }
 
-    public static long getLengthWithoutSegments(final AudioTrack track, final long guildId)
+    public static long getLengthWithoutSegments(AudioTrack track, long guildId)
     {
-        final var length = track.getInfo().length;
+        var length = track.getInfo().length;
         if (!isSegmentSkippingEnabled(guildId))
             return length;
-        final var segments = getVideoSegments(track.getIdentifier());
+        var segments = getVideoSegments(track.getIdentifier());
         return segments.isEmpty() ? length : length - segments.stream().mapToLong(segment -> segment.getSegmentEnd() - segment.getSegmentStart()).sum();
     }
 
-    public static VoiceChannel getConnectedChannel(final Guild guild)
+    public static VoiceChannel getConnectedChannel(Guild guild)
     {
         return guild.getAudioManager().getConnectedChannel();
     }
 
-    public static boolean isMemberConnected(final CommandContext ctx)
+    public static boolean isMemberConnected(CommandContext ctx)
     {
         return getConnectedChannel(ctx.getGuild()).getMembers().contains(ctx.getMember());
     }
 
-    public static long getRequesterId(final AudioTrack track)
+    public static long getRequesterId(AudioTrack track)
     {
         return track.getUserData(Long.class);
     }
 
-    public static LoadFailureReason checkTrack(final AudioTrack track, final MusicPlayer musicPlayer, final long guildId)
+    public static LoadFailureReason checkTrack(AudioTrack track, MusicPlayer musicPlayer, long guildId)
     {
-        final var queue = musicPlayer.getTrackScheduler().getQueue();
-        final var trackInfo = track.getInfo();
-        final var fairQueueThreshold = getFairQueueThreshold(guildId);
+        var queue = musicPlayer.getTrackScheduler().getQueue();
+        var trackInfo = track.getInfo();
+        var fairQueueThreshold = getFairQueueThreshold(guildId);
         if (fairQueueThreshold != -1 && queue.stream().filter(queued -> trackInfo.uri.equals(queued.getInfo().uri)).count() == fairQueueThreshold)
             return FAIR_QUEUE;
         if (GuildSettingsCache.isVip(guildId))
@@ -173,9 +173,9 @@ public class MusicUtils
         return null;
     }
 
-    public static String formatLength(final long originalLength, final long lengthWithoutSegments, final I18n i18n)
+    public static String formatLength(long originalLength, long lengthWithoutSegments, I18n i18n)
     {
-        final var durationBuilder = new StringBuilder().append("(**").append(formatDuration(originalLength)).append("**");
+        var durationBuilder = new StringBuilder().append("(**").append(formatDuration(originalLength)).append("**");
         if (lengthWithoutSegments != originalLength)
             durationBuilder.append(" [**").append(formatDuration(lengthWithoutSegments))
                     .append("** ").append(i18n.get("music.messages.without_segments")).append("]");
@@ -188,48 +188,48 @@ public class MusicUtils
         return new EmbedBuilder().setColor(Utils.SPIDEY_COLOR);
     }
 
-    private static int getFairQueueThreshold(final long guildId)
+    private static int getFairQueueThreshold(long guildId)
     {
         return GuildSettingsCache.isFairQueueEnabled(guildId) ? GuildSettingsCache.getFairQueueThreshold(guildId) : -1;
     }
 
-    public static void loadQuery(final MusicPlayer musicPlayer, final String query, final AudioLoadResultHandler loader)
+    public static void loadQuery(MusicPlayer musicPlayer, String query, AudioLoadResultHandler loader)
     {
         AUDIO_PLAYER_MANAGER.loadItemOrdered(musicPlayer, query, loader);
     }
 
-    public static MusicPlayer checkQueryInput(final String[] args, final CommandContext ctx)
+    public static MusicPlayer checkQueryInput(String[] args, CommandContext ctx)
     {
-        final var i18n = ctx.getI18n();
+        var i18n = ctx.getI18n();
         if (args.length == 0)
         {
             ctx.replyError(i18n.get("music.messages.failure.no_query"));
             return null;
         }
-        final var connectionFailure = checkVoiceChannel(ctx);
+        var connectionFailure = checkVoiceChannel(ctx);
         if (connectionFailure != null)
         {
             ctx.replyError(i18n.get("music.messages.failure.connect.cant_play")
                     + " " + i18n.get("music.messages.failure.connect." + connectionFailure.name().toLowerCase() + "."));
             return null;
         }
-        final var musicPlayer = MusicPlayerCache.getMusicPlayer(ctx.getGuild(), true);
-        final var trackScheduler = musicPlayer.getTrackScheduler();
+        var musicPlayer = MusicPlayerCache.getMusicPlayer(ctx.getGuild(), true);
+        var trackScheduler = musicPlayer.getTrackScheduler();
 
         if (trackScheduler.getQueue().isEmpty())
             trackScheduler.setRepeatMode(null);
         return musicPlayer;
     }
 
-    public static String formatTrack(final AudioTrack track)
+    public static String formatTrack(AudioTrack track)
     {
-        final var trackInfo = track.getInfo();
+        var trackInfo = track.getInfo();
         return "[`" + trackInfo.title + "`](" + trackInfo.uri + ") (**" + formatDuration(trackInfo.length) + "**)";
     }
 
-    public static String formatLoadError(final LoadFailureReason loadFailureReason, final CommandContext ctx)
+    public static String formatLoadError(LoadFailureReason loadFailureReason, CommandContext ctx)
     {
-        final var i18n = ctx.getI18n();
+        var i18n = ctx.getI18n();
         var base = i18n.get("music.messages.failure.load.cant_load") + " ";
         switch (loadFailureReason)
         {

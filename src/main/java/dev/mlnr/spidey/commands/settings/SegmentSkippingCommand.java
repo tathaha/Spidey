@@ -16,16 +16,16 @@ public class SegmentSkippingCommand extends Command
     }
 
     @Override
-    public void execute(final String[] args, final CommandContext ctx)
+    public void execute(String[] args, CommandContext ctx)
     {
-        final var i18n = ctx.getI18n();
+        var i18n = ctx.getI18n();
         if (!MusicUtils.canInteract(ctx.getMember()))
         {
             ctx.replyError(i18n.get("music.messages.failure.cant_interact", "enable/disable segment skipping"));
             return;
         }
-        final var guildId = ctx.getGuild().getIdLong();
-        final var enabled = !GuildSettingsCache.isSegmentSkippingEnabled(guildId);
+        var guildId = ctx.getGuild().getIdLong();
+        var enabled = !GuildSettingsCache.isSegmentSkippingEnabled(guildId);
         GuildSettingsCache.setSegmentSkippingEnabled(guildId, enabled);
         ctx.reactLike();
         ctx.reply(i18n.get("commands.segmentskipping.other.done.text", enabled ? "enabled" : "disabled") +

@@ -14,7 +14,7 @@ public class Paginator
     private final int totalPages;
     private final BiConsumer<Integer, EmbedBuilder> pagesConsumer;
 
-    public Paginator(final long invokeChannelId, final long invokeMessageId, final long authorId, final int totalPages, final BiConsumer<Integer, EmbedBuilder> pagesConsumer)
+    public Paginator(long invokeChannelId, long invokeMessageId, long authorId, int totalPages, BiConsumer<Integer, EmbedBuilder> pagesConsumer)
     {
         this.invokeChannelId = invokeChannelId;
         this.invokeMessageId = invokeMessageId;
@@ -23,7 +23,7 @@ public class Paginator
         this.pagesConsumer = pagesConsumer;
     }
 
-    public void modifyCurrentPage(final int i)
+    public void modifyCurrentPage(int i)
     {
         this.currentPage += i;
     }

@@ -17,11 +17,11 @@ public class InfoCommand extends Command
 	}
 
 	@Override
-	public void execute(final String[] args, final CommandContext ctx)
+	public void execute(String[] args, CommandContext ctx)
 	{
-		final var eb = Utils.createEmbedBuilder(ctx.getAuthor());
-		final var avatar = ctx.getJDA().getSelfUser().getEffectiveAvatarUrl();
-		final var i18n = ctx.getI18n();
+		var eb = Utils.createEmbedBuilder(ctx.getAuthor());
+		var avatar = ctx.getJDA().getSelfUser().getEffectiveAvatarUrl();
+		var i18n = ctx.getI18n();
 
 		eb.setAuthor("Spidey", null, avatar);
 		eb.setThumbnail(avatar);

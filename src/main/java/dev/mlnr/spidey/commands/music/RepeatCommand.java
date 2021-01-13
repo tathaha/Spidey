@@ -18,11 +18,11 @@ public class RepeatCommand extends Command
     }
 
     @Override
-    public void execute(final String[] args, final CommandContext ctx)
+    public void execute(String[] args, CommandContext ctx)
     {
-        final var guild = ctx.getGuild();
-        final var musicPlayer = MusicPlayerCache.getMusicPlayer(guild);
-        final var i18n = ctx.getI18n();
+        var guild = ctx.getGuild();
+        var musicPlayer = MusicPlayerCache.getMusicPlayer(guild);
+        var i18n = ctx.getI18n();
         if (musicPlayer == null)
         {
             ctx.replyError(i18n.get("music.messages.failure.no_music"));
@@ -33,7 +33,7 @@ public class RepeatCommand extends Command
             ctx.replyError(i18n.get("music.messages.failure.cant_interact", "set the repeat mode"));
             return;
         }
-        final var trackScheduler = musicPlayer.getTrackScheduler();
+        var trackScheduler = musicPlayer.getTrackScheduler();
         if (args.length == 0)
         {
             if (trackScheduler.getRepeatMode() == null)
@@ -48,12 +48,12 @@ public class RepeatCommand extends Command
         }
         try
         {
-            final var repeatMode = TrackScheduler.RepeatMode.valueOf(args[0].toUpperCase());
+            var repeatMode = TrackScheduler.RepeatMode.valueOf(args[0].toUpperCase());
             trackScheduler.setRepeatMode(repeatMode);
             ctx.reactLike();
             ctx.reply(i18n.get("commands.repeat.other.set", args[0]));
         }
-        catch (final IllegalArgumentException ex)
+        catch (IllegalArgumentException ex)
         {
             ctx.replyError(i18n.get("commands.repeat.other.doesnt_exist"), Emojis.DISLIKE);
         }

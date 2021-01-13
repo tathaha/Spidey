@@ -13,10 +13,10 @@ public class KSoftAPIHelper
 {
     private KSoftAPIHelper() {}
 
-    public static MessageEmbed getNsfwImage(final String query, final Member author)
+    public static MessageEmbed getNsfwImage(String query, Member author)
     {
-        final var eb = Utils.createEmbedBuilder(author.getUser());
-        final var json = getImageJson(query);
+        var eb = Utils.createEmbedBuilder(author.getUser());
+        var json = getImageJson(query);
         eb.setColor(Color.PINK);
         eb.setAuthor(json.getString("title"), json.getString("source"));
         eb.setImage(json.getString("image_url"));
@@ -25,7 +25,7 @@ public class KSoftAPIHelper
         return eb.build();
     }
 
-    private static DataObject getImageJson(final String query)
+    private static DataObject getImageJson(String query)
     {
         return Requester.executeApiRequest(API.KSOFT_NSFW, query);
     }

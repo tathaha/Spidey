@@ -22,28 +22,28 @@ public class SearchCommand extends Command
     }
 
     @Override
-    public void execute(final String[] args, final CommandContext ctx)
+    public void execute(String[] args, CommandContext ctx)
     {
-        final var musicPlayer = MusicUtils.checkQueryInput(args, ctx);
+        var musicPlayer = MusicUtils.checkQueryInput(args, ctx);
         if (musicPlayer == null)
             return;
-        final var i18n = ctx.getI18n();
+        var i18n = ctx.getI18n();
         MusicUtils.loadQuery(musicPlayer, "ytsearch:" + args[0], new AudioLoadResultHandler()
         {
             @Override
-            public void trackLoaded(final AudioTrack track) {}
+            public void trackLoaded(AudioTrack track) {}
 
             @Override
-            public void playlistLoaded(final AudioPlaylist playlist)
+            public void playlistLoaded(AudioPlaylist playlist)
             {
-                final var selectionEmbedBuilder = MusicUtils.createMusicResponseBuilder();
+                var selectionEmbedBuilder = MusicUtils.createMusicResponseBuilder();
                 selectionEmbedBuilder.setAuthor(i18n.get("commands.search.other.searching", args[0]));
 
-                final var tracks = playlist.getTracks();
+                var tracks = playlist.getTracks();
                 StringUtils.createSelection(selectionEmbedBuilder, tracks, ctx, "track", MusicUtils::formatTrack, choice ->
                 {
-                    final var url = tracks.get(choice).getInfo().uri;
-                    final var loader = new AudioLoader(musicPlayer, url, ctx, false);
+                    var url = tracks.get(choice).getInfo().uri;
+                    var loader = new AudioLoader(musicPlayer, url, ctx, false);
                     MusicUtils.loadQuery(musicPlayer, url, loader);
                 });
             }
@@ -55,7 +55,7 @@ public class SearchCommand extends Command
             }
 
             @Override
-            public void loadFailed(final FriendlyException exception)
+            public void loadFailed(FriendlyException exception)
             {
                 ctx.replyError(i18n.get("commands.search.other.error"), Emojis.DISLIKE);
             }

@@ -15,17 +15,17 @@ public class ResponseCache
 
     private ResponseCache() {}
 
-    public static Long getResponseMessageId(final long invokeMessageId)
+    public static Long getResponseMessageId(long invokeMessageId)
     {
         return RESPONSE_CACHE.get(invokeMessageId);
     }
 
-    public static void setResponseMessageId(final long invokeMessageId, final long responseMessageId)
+    public static void setResponseMessageId(long invokeMessageId, long responseMessageId)
     {
         RESPONSE_CACHE.put(invokeMessageId, responseMessageId);
     }
 
-    public static void removeResponseMessageId(final long invokeMessageId)
+    public static void removeResponseMessageId(long invokeMessageId)
     {
         RESPONSE_CACHE.remove(invokeMessageId);
     }

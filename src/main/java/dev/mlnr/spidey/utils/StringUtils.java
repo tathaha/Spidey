@@ -26,12 +26,12 @@ public class StringUtils
 {
     private StringUtils() {}
 
-    public static String getSimilarCommand(final String command)
+    public static String getSimilarCommand(String command)
     {
         return CommandHandler.getCommands().keySet().stream().filter(invoke -> getSimilarity(invoke, command) > 0.5).findFirst().orElse(null);
     }
 
-    private static double getSimilarity(final String s1, final String s2) // https://stackoverflow.com/a/16018452/9046789
+    private static double getSimilarity(String s1, String s2) // https://stackoverflow.com/a/16018452/9046789
     {
         var longer = s1;
         var shorter = s2;
@@ -40,7 +40,7 @@ public class StringUtils
             longer = s2;
             shorter = s1;
         }
-        final var longerLength = longer.length();
+        var longerLength = longer.length();
         if (longerLength == 0)
             return 1.0;
         return (longerLength - editDistance(longer, shorter)) / (double) longerLength;
@@ -51,7 +51,7 @@ public class StringUtils
         s1 = s1.toLowerCase();
         s2 = s2.toLowerCase();
 
-        final var costs = new int[s2.length() + 1];
+        var costs = new int[s2.length() + 1];
         for (int i = 0; i <= s1.length(); i++)
         {
             var lastValue = i;
@@ -76,30 +76,30 @@ public class StringUtils
         return costs[s2.length()];
     }
 
-    public static <T> void createSelection(final EmbedBuilder selectionBuilder, final List<T> elements, final CommandContext ctx, final String selectionType, final Function<T, String> mapper,
-                                           final IntConsumer choiceConsumer)
+    public static <T> void createSelection(EmbedBuilder selectionBuilder, List<T> elements, CommandContext ctx, String selectionType, Function<T, String> mapper,
+                                           IntConsumer choiceConsumer)
     {
-        final var descriptionBuilder = selectionBuilder.getDescriptionBuilder();
-        final var size = min(elements.size(), 10);
+        var descriptionBuilder = selectionBuilder.getDescriptionBuilder();
+        var size = min(elements.size(), 10);
         for (var i = 0; i < size; i++)
         {
-            final var elem = elements.get(i);
+            var elem = elements.get(i);
             descriptionBuilder.append(i + 1).append(". ").append(mapper.apply(elem)).append("\n");
         }
-        final var i18n = ctx.getI18n();
-        final var cancel = i18n.get("selection.cancel");
+        var i18n = ctx.getI18n();
+        var cancel = i18n.get("selection.cancel");
         descriptionBuilder.append("\n\n").append(i18n.get("selection.type_number", selectionType, cancel));
         selectionBuilder.setDescription(descriptionBuilder.toString());
 
-        final var channel = ctx.getTextChannel();
+        var channel = ctx.getTextChannel();
         channel.sendMessage(selectionBuilder.build()).queue(selectionMessage ->
         {
-            final var message = ctx.getMessage();
+            var message = ctx.getMessage();
             Spidey.getWaiter().waitForEvent(GuildMessageReceivedEvent.class, event -> event.getChannel().equals(channel) && event.getAuthor().equals(ctx.getAuthor()),
                     event ->
                     {
-                        final var choiceMessage = event.getMessage();
-                        final var content = choiceMessage.getContentRaw();
+                        var choiceMessage = event.getMessage();
+                        var content = choiceMessage.getContentRaw();
                         if (content.equalsIgnoreCase(cancel))
                         {
                             purgeMessages(message, selectionMessage, choiceMessage);
@@ -110,7 +110,7 @@ public class StringUtils
                         {
                             choice = Integer.parseUnsignedInt(content);
                         }
-                        catch (final NumberFormatException ex)
+                        catch (NumberFormatException ex)
                         {
                             ctx.replyError(i18n.get("number.negative"));
                             return;
@@ -131,22 +131,17 @@ public class StringUtils
         });
     }
 
-    public static String capitalize(final String string)
+    public static void createQueuePaginator(Message message, Deque<AudioTrack> queue, I18n i18n)
     {
-        return string.substring(0, 1).toUpperCase() + string.substring(1).toLowerCase();
-    }
-
-    public static void createQueuePaginator(final Message message, final Deque<AudioTrack> queue, final I18n i18n)
-    {
-        final var tracksChunks = ListUtils.partition(new ArrayList<>(queue), 10);
-        final var descriptions = new HashMap<Integer, StringBuilder>();
+        var tracksChunks = ListUtils.partition(new ArrayList<>(queue), 10);
+        var descriptions = new HashMap<Integer, StringBuilder>();
 
         var currentTrack = 0;
         var chunk = 0;
-        for (final var tracks : tracksChunks)
+        for (var tracks : tracksChunks)
         {
-            final var chunkBuilder = new StringBuilder();
-            for (final var track : tracks)
+            var chunkBuilder = new StringBuilder();
+            for (var track : tracks)
             {
                 chunkBuilder.append(currentTrack + 1).append(". ").append(MusicUtils.formatTrack(track)).append(" [<@").append(track.getUserData(Long.class)).append(">]\n");
                 currentTrack++;
@@ -155,9 +150,9 @@ public class StringUtils
             chunk++;
         }
 
-        final var length = queue.stream().mapToLong(track -> track.getInfo().length).sum();
-        final var size = queue.size();
-        final var pluralized = size == 1 ? i18n.get("commands.queue.other.text.one") : i18n.get("commands.queue.other.text.multiple", size);
+        var length = queue.stream().mapToLong(track -> track.getInfo().length).sum();
+        var size = queue.size();
+        var pluralized = size == 1 ? i18n.get("commands.queue.other.text.one") : i18n.get("commands.queue.other.text.multiple", size);
         PaginatorCache.createPaginator(message, descriptions.size(), (page, embedBuilder) ->
         {
             embedBuilder.setAuthor("Queue for " + message.getGuild().getName());

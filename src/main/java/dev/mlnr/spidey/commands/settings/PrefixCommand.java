@@ -15,12 +15,12 @@ public class PrefixCommand extends Command
     }
 
     @Override
-    public void execute(final String[] args, final CommandContext ctx)
+    public void execute(String[] args, CommandContext ctx)
     {
-        final var guild = ctx.getGuild();
-        final var guildId = guild.getIdLong();
-        final var currentPrefix = GuildSettingsCache.getPrefix(guildId);
-        final var i18n = ctx.getI18n();
+        var guild = ctx.getGuild();
+        var guildId = guild.getIdLong();
+        var currentPrefix = GuildSettingsCache.getPrefix(guildId);
+        var i18n = ctx.getI18n();
         if (args.length == 0)
         {
             if (currentPrefix.equals("s!"))
@@ -32,7 +32,7 @@ public class PrefixCommand extends Command
             }
             return;
         }
-        final var newPrefix = args[0];
+        var newPrefix = args[0];
         if (currentPrefix.equals(newPrefix))
         {
             ctx.replyError(i18n.get("commands.prefix.other.already_set", newPrefix));

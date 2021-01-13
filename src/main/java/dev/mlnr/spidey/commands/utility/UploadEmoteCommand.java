@@ -24,10 +24,10 @@ public class UploadEmoteCommand extends Command
     }
 
     @Override
-    public void execute(final String[] args, final CommandContext ctx)
+    public void execute(String[] args, CommandContext ctx)
     {
-        final var guild = ctx.getGuild();
-        final var i18n = ctx.getI18n();
+        var guild = ctx.getGuild();
+        var i18n = ctx.getI18n();
         if (!guild.getSelfMember().hasPermission(getRequiredPermission()))
         {
             ctx.replyError(i18n.get("commands.uploademote.other.no_perms"));
@@ -43,12 +43,12 @@ public class UploadEmoteCommand extends Command
             name = args[1];
         else
         {
-            final var tmpIndex = args[0].lastIndexOf('/') + 1;
+            var tmpIndex = args[0].lastIndexOf('/') + 1;
             try
             {
-                final var index = args[0].lastIndexOf('.');
-                final var tmp = args[0].substring(tmpIndex, index); // possible name, if it doesn't throw, check for the extension
-                final var ext = args[0].substring(index + 1);
+                var index = args[0].lastIndexOf('.');
+                var tmp = args[0].substring(tmpIndex, index); // possible name, if it doesn't throw, check for the extension
+                var ext = args[0].substring(index + 1);
                 if (Icon.IconType.fromExtension(ext) == Icon.IconType.UNKNOWN)
                 {
                     ctx.replyError(i18n.get("commands.uploademote.other.provide_format"));
@@ -56,7 +56,7 @@ public class UploadEmoteCommand extends Command
                 }
                 name = tmp;
             }
-            catch (final IndexOutOfBoundsException ex)
+            catch (IndexOutOfBoundsException ex)
             {
                 name = args[0].substring(tmpIndex);
             }
@@ -71,14 +71,14 @@ public class UploadEmoteCommand extends Command
             ctx.replyError(i18n.get("commands.uploademote.other.valid_format"));
             return;
         }
-        final var image = new ByteArrayOutputStream();
+        var image = new ByteArrayOutputStream();
         try
         {
-            final var con = (HttpURLConnection) new URL(args[0]).openConnection(); // TODO execute the request using Requester class
+            var con = (HttpURLConnection) new URL(args[0]).openConnection(); // TODO execute the request using Requester class
             con.setRequestProperty("User-Agent", "dev.mlnr.spidey");
-            try (final var stream = con.getInputStream())
+            try (var stream = con.getInputStream())
             {
-                final var chunk = new byte[4096];
+                var chunk = new byte[4096];
                 var bytesRead = 0;
                 while ((bytesRead = stream.read(chunk)) > 0)
                 {
@@ -90,25 +90,25 @@ public class UploadEmoteCommand extends Command
                 con.disconnect();
             }
         }
-        catch (final MalformedURLException ex)
+        catch (MalformedURLException ex)
         {
             ctx.replyError(i18n.get("commands.uploademote.other.provide_url"));
             return;
         }
-        catch (final IOException ex)
+        catch (IOException ex)
         {
             ctx.replyError(i18n.get("internal_error", "upload the emote", ex.getMessage()));
             return;
         }
-        final var byteArray = image.toByteArray();
+        var byteArray = image.toByteArray();
         if (byteArray.length > 256000)
         {
             ctx.replyError(i18n.get("commands.uploademote.other.size"));
             return;
         }
-        final var maxEmotes = guild.getMaxEmotes();
-        final var animated = byteArray[0] == 'G' && byteArray[1] == 'I' && byteArray[2] == 'F' && byteArray[3] == '8' && byteArray[4] == '9' && byteArray[5] == 'a';
-        final var used = guild.getEmoteCache().applyStream(stream -> stream.filter(emote -> !emote.isManaged())
+        var maxEmotes = guild.getMaxEmotes();
+        var animated = byteArray[0] == 'G' && byteArray[1] == 'I' && byteArray[2] == 'F' && byteArray[3] == '8' && byteArray[4] == '9' && byteArray[5] == 'a';
+        var used = guild.getEmoteCache().applyStream(stream -> stream.filter(emote -> !emote.isManaged())
                                                                            .collect(Collectors.partitioningBy(Emote::isAnimated))
                                                                            .get(animated).size());
         if (maxEmotes == used)
@@ -118,7 +118,7 @@ public class UploadEmoteCommand extends Command
         }
         guild.createEmote(name, Icon.from(byteArray)).queue(emote ->
         {
-            final var left = maxEmotes - used - 1;
+            var left = maxEmotes - used - 1;
             ctx.reply(i18n.get("commands.uploademote.other.success", emote.getAsMention(),
                     animated ? "Animated emote" : "Emote", (left == 0 ? "None" : left)));
         }, failure -> ctx.replyError(i18n.get("internal_error", "upload the emote", failure.getMessage())));

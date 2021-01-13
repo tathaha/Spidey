@@ -7,7 +7,7 @@ public class InviteData
     private final long guildId;
     private int uses;
 
-    public InviteData(final Invite invite)
+    public InviteData(Invite invite)
     {
         this.guildId = invite.getGuild().getIdLong();
         this.uses = invite.getUses();

@@ -27,10 +27,10 @@ public class PurgeCommand extends Command
     }
 
     @Override
-    public void execute(final String[] args, final CommandContext ctx)
+    public void execute(String[] args, CommandContext ctx)
     {
-        final var guild = ctx.getGuild();
-        final var i18n = ctx.getI18n();
+        var guild = ctx.getGuild();
+        var i18n = ctx.getI18n();
         if (!guild.getSelfMember().hasPermission(ctx.getTextChannel(), getRequiredPermission(), Permission.MESSAGE_HISTORY))
         {
             ctx.replyError(i18n.get("commands.purge.other.messages.failure.no_perms"));
@@ -57,11 +57,11 @@ public class PurgeCommand extends Command
         });
     }
 
-    private void respond(final CommandContext ctx, final User target, final int limit)
+    private void respond(CommandContext ctx, User target, int limit)
     {
-        final var message = ctx.getMessage();
-        final var channel = ctx.getTextChannel();
-        final var i18n = ctx.getI18n();
+        var message = ctx.getMessage();
+        var channel = ctx.getTextChannel();
+        var i18n = ctx.getI18n();
         message.delete().queue(ignored -> channel.getIterableHistory().cache(false).limit(target == null ? limit : 100).queue(messages ->
         {
             if (messages.isEmpty())
@@ -69,20 +69,20 @@ public class PurgeCommand extends Command
                 ctx.replyError(i18n.get("commands.purge.other.messages.failure.no_messages.text"));
                 return;
             }
-            final var msgs = target == null ? messages : messages.stream().filter(msg -> msg.getAuthor().equals(target)).limit(limit).collect(Collectors.toList());
+            var msgs = target == null ? messages : messages.stream().filter(msg -> msg.getAuthor().equals(target)).limit(limit).collect(Collectors.toList());
             if (msgs.isEmpty())
             {
                 ctx.replyError(i18n.get("commands.purge.other.messages.failure.no_messages.user", target.getAsTag()));
                 return;
             }
-            final var pinned = msgs.stream().filter(Message::isPinned).collect(Collectors.toList());
+            var pinned = msgs.stream().filter(Message::isPinned).collect(Collectors.toList());
             if (pinned.isEmpty())
             {
                 proceed(msgs, target, ctx);
                 return;
             }
-            final var size = pinned.size();
-            final var builder = new StringBuilder(size == 1 ? i18n.get("commands.purge.other.messages.pinned.one")
+            var size = pinned.size();
+            var builder = new StringBuilder(size == 1 ? i18n.get("commands.purge.other.messages.pinned.one")
                     : i18n.get("commands.purge.other.messages.pinned.multiple"));
             builder.append(" ").append(i18n.get("commands.purge.other.messages.pinned.confirmation.text")).append(" ");
             builder.append(size == 1 ? i18n.get("commands.purge.other.messages.pinned.confirmation.one")
@@ -94,9 +94,8 @@ public class PurgeCommand extends Command
 
             channel.sendMessage(builder.toString()).queue(sentMessage ->
             {
-                final var wastebasket = "\uD83D\uDDD1";
                 addReaction(sentMessage, Emojis.CHECK);
-                addReaction(sentMessage, wastebasket);
+                addReaction(sentMessage, Emojis.WASTEBASKET);
                 addReaction(sentMessage, Emojis.CROSS);
 
                 Spidey.getWaiter().waitForEvent(GuildMessageReactionAddEvent.class,
@@ -111,7 +110,7 @@ public class PurgeCommand extends Command
                                 case Emojis.CROSS:
                                     deleteMessage(sentMessage);
                                     return;
-                                case wastebasket:
+                                case Emojis.WASTEBASKET:
                                     msgs.removeAll(pinned);
                                     deleteMessage(sentMessage);
                                     if (msgs.isEmpty())
@@ -132,9 +131,9 @@ public class PurgeCommand extends Command
         }, throwable -> ctx.replyError(i18n.get("internal_error", "purge messages", throwable.getMessage()))));
     }
 
-    private void proceed(final List<Message> toDelete, final User user, final CommandContext ctx)
+    private void proceed(List<Message> toDelete, User user, CommandContext ctx)
     {
-        final var future = purgeMessages(toDelete.toArray(new Message[0]));
+        var future = purgeMessages(toDelete.toArray(new Message[0]));
         future.thenRunAsync(() -> ctx.getTextChannel().sendMessage(generateSuccess(toDelete.size(), user, ctx.getI18n()))
                 .delay(Duration.ofSeconds(5))
                 .flatMap(Message::delete)

@@ -13,7 +13,7 @@ public class AkinatorData
     private Guess currentGuess;
     private boolean prompted;
 
-    public AkinatorData(final Akiwrapper akinator)
+    public AkinatorData(Akiwrapper akinator)
     {
         this.akinator = akinator;
         this.declined = new ArrayList<>();
@@ -26,12 +26,12 @@ public class AkinatorData
 
     // declined guesses
 
-    public void addDeclined(final Guess guess)
+    public void addDeclined(Guess guess)
     {
         declined.add(guess.getIdLong());
     }
 
-    public boolean isDeclined(final Guess guess)
+    public boolean isDeclined(Guess guess)
     {
         return declined.contains(guess.getIdLong());
     }
@@ -43,7 +43,7 @@ public class AkinatorData
         return this.currentGuess;
     }
 
-    public void setCurrentGuess(final Guess guess)
+    public void setCurrentGuess(Guess guess)
     {
         this.currentGuess = guess;
     }
@@ -55,7 +55,7 @@ public class AkinatorData
         return this.prompted;
     }
 
-    public void setPrompted(final boolean prompted)
+    public void setPrompted(boolean prompted)
     {
         this.prompted = prompted;
     }

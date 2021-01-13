@@ -18,26 +18,26 @@ public class I18n
 
     private final DataObject data;
 
-    private I18n(final DataObject data)
+    private I18n(DataObject data)
     {
         this.data = data;
     }
 
     static
     {
-        final var tmp = new HashMap<String, I18n>();
+        var tmp = new HashMap<String, I18n>();
 
-        try (final var langs = I18n.class.getResourceAsStream("/assets/languages/langs.txt"))
+        try (var langs = I18n.class.getResourceAsStream("/assets/languages/langs.txt"))
         {
-            for (final var langCode : IOUtils.toString(langs, StandardCharsets.UTF_8).split("\n"))
+            for (var langCode : IOUtils.toString(langs, StandardCharsets.UTF_8).split("\n"))
             {
-                try (final var langJsonStream = I18n.class.getResourceAsStream("/assets/languages/" + langCode + ".json"))
+                try (var langJsonStream = I18n.class.getResourceAsStream("/assets/languages/" + langCode + ".json"))
                 {
                     tmp.put(langCode, new I18n(DataObject.fromJson(langJsonStream)));
                 }
             }
         }
-        catch (final IOException ex)
+        catch (IOException ex)
         {
             LOGGER.error("There was an error while loading languages, exiting", ex);
             System.exit(1);
@@ -45,17 +45,17 @@ public class I18n
         LANGUAGE_MAP = tmp;
     }
 
-    public static I18n ofLanguage(final String language)
+    public static I18n ofLanguage(String language)
     {
         return LANGUAGE_MAP.get(language);
     }
 
-    public String get(final String key, final Object... args)
+    public String get(String key, Object... args)
     {
         if (!key.contains("."))
             return data.getString(key);
         var object = data;
-        final var parts = key.split("\\.");
+        var parts = key.split("\\.");
         for (var i = 0; i < (parts.length - 1); i++)
             object = object.getObject(parts[i]);
 

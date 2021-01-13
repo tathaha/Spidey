@@ -17,16 +17,16 @@ public class SkipCommand extends Command
     }
 
     @Override
-    public void execute(final String[] args, final CommandContext ctx)
+    public void execute(String[] args, CommandContext ctx)
     {
-        final var musicPlayer = MusicPlayerCache.getMusicPlayer(ctx.getGuild());
-        final var i18n = ctx.getI18n();
+        var musicPlayer = MusicPlayerCache.getMusicPlayer(ctx.getGuild());
+        var i18n = ctx.getI18n();
         if (musicPlayer == null)
         {
             ctx.replyError(i18n.get("music.messages.failure.no_music"));
             return;
         }
-        final var playingTrack = musicPlayer.getPlayingTrack();
+        var playingTrack = musicPlayer.getPlayingTrack();
         if (playingTrack == null)
         {
             ctx.replyError(i18n.get("music.messages.failure.no_song"));
@@ -43,9 +43,9 @@ public class SkipCommand extends Command
             ctx.replyError(i18n.get("commands.skip.other.same_channel"), Emojis.DISLIKE);
             return;
         }
-        final var trackScheduler = musicPlayer.getTrackScheduler();
-        final var author = ctx.getAuthor();
-        final var mention = author.getAsMention();
+        var trackScheduler = musicPlayer.getTrackScheduler();
+        var author = ctx.getAuthor();
+        var mention = author.getAsMention();
         if (trackScheduler.hasSkipVoted(author))
         {
             trackScheduler.removeSkipVote(author);
@@ -54,8 +54,8 @@ public class SkipCommand extends Command
             return;
         }
         trackScheduler.addSkipVote(author);
-        final var skipVotes = trackScheduler.getSkipVotes();
-        final var requiredSkipVotes = trackScheduler.getRequiredSkipVotes();
+        var skipVotes = trackScheduler.getSkipVotes();
+        var requiredSkipVotes = trackScheduler.getRequiredSkipVotes();
         if (skipVotes < requiredSkipVotes)
         {
             ctx.reactLike();

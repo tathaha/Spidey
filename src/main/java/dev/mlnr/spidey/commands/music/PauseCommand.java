@@ -18,17 +18,17 @@ public class PauseCommand extends Command
     }
 
     @Override
-    public void execute(final String[] args, final CommandContext ctx)
+    public void execute(String[] args, CommandContext ctx)
     {
-        final var guild = ctx.getGuild();
-        final var musicPlayer = MusicPlayerCache.getMusicPlayer(guild);
-        final var i18n = ctx.getI18n();
+        var guild = ctx.getGuild();
+        var musicPlayer = MusicPlayerCache.getMusicPlayer(guild);
+        var i18n = ctx.getI18n();
         if (musicPlayer == null)
         {
             ctx.replyError(i18n.get("music.messages.failure.no_music"));
             return;
         }
-        final var playingTrack = musicPlayer.getPlayingTrack();
+        var playingTrack = musicPlayer.getPlayingTrack();
         if (playingTrack == null)
         {
             ctx.replyError(i18n.get("music.messages.failure.no_song"));
@@ -39,7 +39,7 @@ public class PauseCommand extends Command
             ctx.replyError(i18n.get("commands.pause.other.requester"));
             return;
         }
-        final var paused = musicPlayer.pauseOrUnpause();
+        var paused = musicPlayer.pauseOrUnpause();
         Utils.addReaction(ctx.getMessage(), paused ? "\u23F8\uFE0F" : Emojis.FORWARD);
     }
 }

@@ -12,19 +12,19 @@ public class MusicPlayerCache
 
     private MusicPlayerCache() {}
 
-    public static MusicPlayer getMusicPlayer(final Guild guild)
+    public static MusicPlayer getMusicPlayer(Guild guild)
     {
         return getMusicPlayer(guild, false);
     }
 
-    public static MusicPlayer getMusicPlayer(final Guild guild, final boolean createIfAbsent)
+    public static MusicPlayer getMusicPlayer(Guild guild, boolean createIfAbsent)
     {
-        final var guildId = guild.getIdLong();
+        var guildId = guild.getIdLong();
         var musicPlayer = MUSIC_PLAYER_CACHE.get(guildId);
         if (musicPlayer == null && createIfAbsent)
         {
             musicPlayer = new MusicPlayer(guildId);
-            final var audioManager = guild.getAudioManager();
+            var audioManager = guild.getAudioManager();
             audioManager.setSendingHandler(musicPlayer.getAudioSendHandler());
             audioManager.setSelfDeafened(true);
             MUSIC_PLAYER_CACHE.put(guildId, musicPlayer);
@@ -32,19 +32,19 @@ public class MusicPlayerCache
         return musicPlayer;
     }
 
-    public static void disconnectFromChannel(final Guild guild)
+    public static void disconnectFromChannel(Guild guild)
     {
-        final var audioManager = guild.getAudioManager();
+        var audioManager = guild.getAudioManager();
         audioManager.closeAudioConnection();
         audioManager.setSendingHandler(null);
     }
 
-    public static void destroyMusicPlayer(final Guild guild)
+    public static void destroyMusicPlayer(Guild guild)
     {
-        final var musicPlayer = getMusicPlayer(guild);
+        var musicPlayer = getMusicPlayer(guild);
         if (musicPlayer == null)
             return;
-        final var guildId = guild.getIdLong();
+        var guildId = guild.getIdLong();
         musicPlayer.destroyAudioPlayer();
         MUSIC_PLAYER_CACHE.remove(guildId);
     }

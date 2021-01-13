@@ -15,11 +15,11 @@ public class DJRoleCommand extends Command
     }
 
     @Override
-    public void execute(final String[] args, final CommandContext ctx)
+    public void execute(String[] args, CommandContext ctx)
     {
-        final var guildId = ctx.getGuild().getIdLong();
-        final var dbRole = GuildSettingsCache.getDJRoleId(guildId);
-        final var i18n = ctx.getI18n();
+        var guildId = ctx.getGuild().getIdLong();
+        var dbRole = GuildSettingsCache.getDJRoleId(guildId);
+        var i18n = ctx.getI18n();
         if (args.length == 0)
         {
             if (dbRole == 0)
@@ -33,7 +33,7 @@ public class DJRoleCommand extends Command
         }
         ctx.getArgumentAsRole(0, role ->
         {
-            final var roleId = role.getIdLong();
+            var roleId = role.getIdLong();
             if (roleId == dbRole)
             {
                 GuildSettingsCache.removeDJRole(guildId);

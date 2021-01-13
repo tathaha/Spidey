@@ -16,18 +16,18 @@ public class QueueCommand extends Command
     }
 
     @Override
-    public void execute(final String[] args, final CommandContext ctx)
+    public void execute(String[] args, CommandContext ctx)
     {
-        final var guild = ctx.getGuild();
-        final var musicPlayer = MusicPlayerCache.getMusicPlayer(guild);
-        final var i18n = ctx.getI18n();
+        var guild = ctx.getGuild();
+        var musicPlayer = MusicPlayerCache.getMusicPlayer(guild);
+        var i18n = ctx.getI18n();
         if (musicPlayer == null)
         {
             ctx.replyError(i18n.get("music.messages.failure.no_music"));
             return;
         }
-        final var trackScheduler = musicPlayer.getTrackScheduler();
-        final var queue = trackScheduler.getQueue();
+        var trackScheduler = musicPlayer.getTrackScheduler();
+        var queue = trackScheduler.getQueue();
         if (queue.isEmpty())
         {
             ctx.replyError(i18n.get("commands.queue.other.empty"));

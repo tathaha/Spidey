@@ -22,8 +22,8 @@ public class GuildSettings
     private boolean fairQueueEnabled;
     private int fairQueueThreshold;
 
-    public GuildSettings(final long guildId, final long logChannelId, final long joinRoleId, final String prefix, final String language, final boolean snipingEnabled, final boolean vip, final long djRoleId,
-                         final boolean segmentSkippingEnabled, final int defaultVolume, final boolean fairQueueEnabled, final int fairQueueThreshold)
+    public GuildSettings(long guildId, long logChannelId, long joinRoleId, String prefix, String language, boolean snipingEnabled, boolean vip, long djRoleId,
+                         boolean segmentSkippingEnabled, int defaultVolume, boolean fairQueueEnabled, int fairQueueThreshold)
     {
         this.guildId = guildId;
 
@@ -106,37 +106,37 @@ public class GuildSettings
 
     // setters
 
-    public void setLogChannelId(final long logChannelId)
+    public void setLogChannelId(long logChannelId)
     {
         this.logChannelId = logChannelId;
         DatabaseManager.setLogChannelId(guildId, logChannelId);
     }
 
-    public void setJoinRoleId(final long joinRoleId)
+    public void setJoinRoleId(long joinRoleId)
     {
         this.joinRoleId = joinRoleId;
         DatabaseManager.setJoinRoleId(guildId, joinRoleId);
     }
 
-    public void setPrefix(final String prefix)
+    public void setPrefix(String prefix)
     {
         this.prefix = prefix;
         DatabaseManager.setPrefix(guildId, prefix);
     }
 
-    public void setLanguage(final String language)
+    public void setLanguage(String language)
     {
         this.i18n = I18n.ofLanguage(language);
         DatabaseManager.setLanguage(guildId, language);
     }
 
-    public void setSnipingEnabled(final boolean enabled)
+    public void setSnipingEnabled(boolean enabled)
     {
         this.snipingEnabled = enabled;
         DatabaseManager.setSnipingEnabled(guildId, enabled);
     }
 
-    public void setVip(final boolean vip)
+    public void setVip(boolean vip)
     {
         this.vip = vip;
         DatabaseManager.setVip(guildId, vip);
@@ -144,19 +144,19 @@ public class GuildSettings
 
     // music setters
 
-    public void setDjRoleId(final long djRoleId)
+    public void setDjRoleId(long djRoleId)
     {
         this.djRoleId = djRoleId;
         DatabaseManager.setDJRoleId(guildId, djRoleId);
     }
 
-    public void setSegmentSkippingEnabled(final boolean enabled)
+    public void setSegmentSkippingEnabled(boolean enabled)
     {
         this.segmentSkippingEnabled = enabled;
         DatabaseManager.setSegmentSkippingEnabled(guildId, enabled);
     }
 
-    public void setDefaultVolume(final int defaultVolume)
+    public void setDefaultVolume(int defaultVolume)
     {
         this.defaultVolume = defaultVolume;
         DatabaseManager.setDefaultVolume(guildId, defaultVolume);
@@ -164,13 +164,13 @@ public class GuildSettings
 
     // fair queue setters
 
-    public void setFairQueueEnabled(final boolean enabled)
+    public void setFairQueueEnabled(boolean enabled)
     {
         this.fairQueueEnabled = enabled;
         DatabaseManager.setFairQueueEnabled(guildId, enabled);
     }
 
-    public void setFairQueueThreshold(final int threshold)
+    public void setFairQueueThreshold(int threshold)
     {
         this.fairQueueThreshold = threshold;
         DatabaseManager.setFairQueueThreshold(guildId, threshold);
