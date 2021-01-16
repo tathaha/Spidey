@@ -61,10 +61,7 @@ public class AkinatorHandler
             return;
         }
         if (answer == null)
-        {
-            returnError(i18n.get("commands.akinator.other.answer"), message);
             return;
-        }
         var yesno = i18n.get("commands.akinator.other.yesno");
         if (akinatorData.isPrompted())
         {

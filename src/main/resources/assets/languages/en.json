@@ -79,7 +79,6 @@
       "usage": "akinator",
       "other": {
         "couldnt_create": "Sorry, an Akinator game couldn't be created at the moment.",
-        "answer": "Please answer with **yes/no/don't know/probably/probably not**, **undo** to undo your last answer or **cancel** to cancel your session.",
         "of": "Akinator of user %s",
         "question": "Question **%d**:",
         "guess": "I'm **%.1f**%% sure your character is.. **%s**",
