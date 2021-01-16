@@ -119,8 +119,9 @@ public class UploadEmoteCommand extends Command
         guild.createEmote(name, Icon.from(byteArray)).queue(emote ->
         {
             var left = maxEmotes - used - 1;
-            ctx.reply(i18n.get("commands.uploademote.other.success", emote.getAsMention(),
-                    animated ? "Animated emote" : "Emote", (left == 0 ? "None" : left)));
+            ctx.reply(i18n.get("commands.uploademote.other.success.text", emote.getAsMention(),
+                    animated ? i18n.get("commands.uploademote.other.success.animated") : i18n.get("commands.uploademote.other.success.emote"),
+                            (left == 0 ? i18n.get("commands.uploademote.other.success.none") : left)));
         }, failure -> ctx.replyError(i18n.get("internal_error", "upload the emote", failure.getMessage())));
     }
 }

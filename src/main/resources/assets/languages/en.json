@@ -539,7 +539,12 @@
         "valid_format": "The name of the emote has to be in a valid format.",
         "size": "The emote size has to be less than **256KB**.",
         "maximum_size": "Guild has the maximum amount of emotes.",
-        "success": "Emote %s has been successfully uploaded! %s slots left: **%s**"
+        "success": {
+          "text": "Emote %s has been successfully uploaded! %s slots left: **%s**",
+          "emote": "Emote",
+          "animated": "Animated emote",
+          "none": "None"
+        }
       }
     }
   }
