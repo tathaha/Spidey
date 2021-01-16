@@ -2,7 +2,6 @@ package dev.mlnr.spidey.utils;
 
 import dev.mlnr.spidey.cache.GeneralCache;
 import dev.mlnr.spidey.cache.ResponseCache;
-import dev.mlnr.spidey.objects.I18n;
 import dev.mlnr.spidey.objects.guild.InviteData;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
@@ -16,7 +15,6 @@ import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.EnumSet;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
@@ -24,7 +22,7 @@ public class Utils
 {
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("EE, d.LLL y | HH:mm:ss");
     public static final Pattern TEXT_PATTERN = Pattern.compile("[a-zA-Z0-9-_]+");
-    public static int SPIDEY_COLOR = 3288807;
+    public static final int SPIDEY_COLOR = 3288807;
 
     private Utils() {}
 
@@ -66,14 +64,6 @@ public class Utils
             msg.delete().queue();
     }
 
-    public static CompletableFuture<Void> purgeMessages(Message... messages)
-    {
-        var channel = messages[0].getTextChannel();
-        return channel.getGuild().getSelfMember().hasPermission(channel, Permission.MESSAGE_MANAGE)
-                ? CompletableFuture.allOf(channel.purgeMessages(messages).toArray(new CompletableFuture[0]))
-                : new CompletableFuture<>();
-    }
-
     public static EmbedBuilder createEmbedBuilder(User user)
     {
         return new EmbedBuilder().setFooter("Command executed by " + user.getAsTag(), user.getEffectiveAvatarUrl()).setColor(0xFEFEFE);
@@ -100,13 +90,6 @@ public class Utils
                 .delay(Duration.ofSeconds(7))
                 .flatMap(Message::delete)
                 .queue(success -> deleteMessage(origin));
-    }
-
-    public static String generateSuccess(int count, User user, I18n i18n)
-    {
-        return i18n.get("commands.purge.other.messages.success.text", count) + " "
-                + (count == 1 ? i18n.get("commands.purge.other.messages.success.one") : i18n.get("commands.purge.other.messages.success.multiple"))
-                + (user == null ? "." : " " + i18n.get("commands.purge.other.messages.success.user", user) + ".");
     }
 
     public static void storeInvites(Guild guild)

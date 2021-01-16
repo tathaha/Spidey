@@ -2,6 +2,7 @@ package dev.mlnr.spidey.commands.moderation;
 
 import dev.mlnr.spidey.Spidey;
 import dev.mlnr.spidey.cache.GuildSettingsCache;
+import dev.mlnr.spidey.objects.I18n;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
@@ -13,10 +14,12 @@ import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEve
 
 import java.time.Duration;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static dev.mlnr.spidey.utils.Utils.*;
+import static dev.mlnr.spidey.utils.Utils.addReaction;
+import static dev.mlnr.spidey.utils.Utils.deleteMessage;
 
 @SuppressWarnings({"unused", "StringBufferReplaceableByString"})
 public class PurgeCommand extends Command
@@ -133,10 +136,27 @@ public class PurgeCommand extends Command
 
     private void proceed(List<Message> toDelete, User user, CommandContext ctx)
     {
-        var future = purgeMessages(toDelete.toArray(new Message[0]));
-        future.thenRunAsync(() -> ctx.getTextChannel().sendMessage(generateSuccess(toDelete.size(), user, ctx.getI18n()))
-                .delay(Duration.ofSeconds(5))
-                .flatMap(Message::delete)
-                .queue());
+        var channel = ctx.getTextChannel();
+        var future = CompletableFuture.allOf(channel.purgeMessages(toDelete).toArray(new CompletableFuture[0]));
+        future.whenCompleteAsync((ignored, throwable) ->
+        {
+            var i18n = ctx.getI18n();
+            if (throwable != null)
+            {
+                ctx.replyError(i18n.get("internal_error", "purge messages", throwable.getMessage()));
+                return;
+            }
+            channel.sendMessage(generateSuccessMessage(toDelete.size(), user, i18n))
+                    .delay(Duration.ofSeconds(5))
+                    .flatMap(Message::delete)
+                    .queue();
+        });
+    }
+
+    private String generateSuccessMessage(int amount, User user, I18n i18n)
+    {
+        return i18n.get("commands.purge.other.messages.success.text", amount) + " "
+                + (amount == 1 ? i18n.get("commands.purge.other.messages.success.one") : i18n.get("commands.purge.other.messages.success.multiple"))
+                + (user == null ? "." : " " + i18n.get("commands.purge.other.messages.success.user", user) + ".");
     }
 }
