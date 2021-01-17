@@ -46,7 +46,7 @@ public class JoinRoleCommand extends Command
                 return;
             }
             GuildSettingsCache.setJoinRoleId(guildId, roleId);
-            ctx.reply(i18n.get("roles.not_set", "join", role.getName()));
+            ctx.reply(i18n.get("roles.set", "join", role.getName()));
         });
     }
 }
