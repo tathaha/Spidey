@@ -39,8 +39,6 @@ public class CooldownHandler
     public static int getCooldown(long guildId, Command command)
     {
         var cooldown = command.getCooldown();
-        if (GuildSettingsCache.isVip(guildId))
-            return cooldown / 2;
-        return cooldown;
+        return GuildSettingsCache.isVip(guildId) ? cooldown / 2 : cooldown;
     }
 }
