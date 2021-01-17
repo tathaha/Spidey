@@ -5,15 +5,14 @@ import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.utils.MusicUtils;
-import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
 
 @SuppressWarnings("unused")
-public class StopCommand extends Command
+public class ClearCommand extends Command
 {
-    public StopCommand()
+    public ClearCommand()
     {
-        super("stop", new String[]{"disconnect", "dis"}, Category.MUSIC, Permission.UNKNOWN, 0, 0);
+        super("clear", new String[]{"clearqueue", "queueclear"}, Category.MUSIC, Permission.UNKNOWN, 0, 0);
     }
 
     @Override
@@ -22,7 +21,7 @@ public class StopCommand extends Command
         var i18n = ctx.getI18n();
         if (!MusicUtils.canInteract(ctx.getMember()))
         {
-            ctx.replyError(i18n.get("music.messages.failure.cant_interact", "stop the playback"));
+            ctx.replyError(i18n.get("music.messages.failure.cant_interact", "clear the queue"));
             return;
         }
         var guild = ctx.getGuild();
@@ -32,7 +31,14 @@ public class StopCommand extends Command
             ctx.replyError(i18n.get("music.messages.failure.no_music"));
             return;
         }
-        MusicPlayerCache.disconnectFromChannel(guild);
-        Utils.addReaction(ctx.getMessage(), "\uD83D\uDC4B"); // wave
+        var trackScheduler = musicPlayer.getTrackScheduler();
+        var queue = trackScheduler.getQueue();
+        if (queue.isEmpty())
+        {
+            ctx.replyError(i18n.get("commands.queue.other.empty"));
+            return;
+        }
+        queue.clear();
+        ctx.reply(i18n.get("commands.clear.other.cleared"));
     }
 }

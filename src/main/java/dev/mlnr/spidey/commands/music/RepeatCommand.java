@@ -20,17 +20,17 @@ public class RepeatCommand extends Command
     @Override
     public void execute(String[] args, CommandContext ctx)
     {
-        var guild = ctx.getGuild();
-        var musicPlayer = MusicPlayerCache.getMusicPlayer(guild);
         var i18n = ctx.getI18n();
-        if (musicPlayer == null)
-        {
-            ctx.replyError(i18n.get("music.messages.failure.no_music"));
-            return;
-        }
         if (!MusicUtils.canInteract(ctx.getMember()))
         {
             ctx.replyError(i18n.get("music.messages.failure.cant_interact", "set the repeat mode"));
+            return;
+        }
+        var guild = ctx.getGuild();
+        var musicPlayer = MusicPlayerCache.getMusicPlayer(guild);
+        if (musicPlayer == null)
+        {
+            ctx.replyError(i18n.get("music.messages.failure.no_music"));
             return;
         }
         var trackScheduler = musicPlayer.getTrackScheduler();

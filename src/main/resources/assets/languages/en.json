@@ -329,6 +329,13 @@
         }
       }
     },
+    "clear": {
+      "description": "Clears the queue",
+      "usage": "clear",
+      "other": {
+        "cleared": ":white_check_mark: The queue has been cleared."
+      }
+    },
     "nowplaying": {
       "description": "Shows what's the current song",
       "usage": "nowplaying",
