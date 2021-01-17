@@ -19,7 +19,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
 
-import static dev.mlnr.spidey.utils.Utils.purgeMessages;
 import static java.lang.Math.min;
 
 public class StringUtils
@@ -102,7 +101,7 @@ public class StringUtils
                         var content = choiceMessage.getContentRaw();
                         if (content.equalsIgnoreCase(cancel))
                         {
-                            purgeMessages(message, selectionMessage, choiceMessage);
+                            channel.purgeMessages(message, selectionMessage, choiceMessage);
                             return;
                         }
                         var choice = 0;
@@ -125,7 +124,7 @@ public class StringUtils
                     }, 1, TimeUnit.MINUTES,
                     () ->
                     {
-                        purgeMessages(message, selectionMessage);
+                        channel.purgeMessages(message, selectionMessage);
                         ctx.replyError("took_too_long");
                     });
         });
