@@ -5,6 +5,9 @@ import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Message;
+
+import java.util.EnumSet;
 
 @SuppressWarnings("unused")
 public class JoinRoleCommand extends Command
@@ -46,7 +49,7 @@ public class JoinRoleCommand extends Command
                 return;
             }
             GuildSettingsCache.setJoinRoleId(guildId, roleId);
-            ctx.reply(i18n.get("roles.set", "join", role.getName()));
+            ctx.reply(i18n.get("roles.set", "join", role.getAsMention()), EnumSet.complementOf(EnumSet.of(Message.MentionType.ROLE)));
         });
     }
 }
