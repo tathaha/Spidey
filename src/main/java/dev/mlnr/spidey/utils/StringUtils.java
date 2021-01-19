@@ -111,7 +111,7 @@ public class StringUtils
                         }
                         catch (NumberFormatException ex)
                         {
-                            ctx.replyError(i18n.get("number.negative"));
+                            ctx.replyError(i18n.get("number.invalid"));
                             return;
                         }
                         if (choice == 0 || choice > size)

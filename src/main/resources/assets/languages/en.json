@@ -4,7 +4,7 @@
   "internal_error": "Unfortunately, i couldn't %s due to an internal error: **%s**. Please report this message to the Developer.",
   "number": {
     "range": "Please enter a number from 1-%d.",
-    "negative": "Entered value is either negative or not a number."
+    "invalid": "Entered value is either negative or not a number."
   },
   "selection": {
     "type_number": "Type a number to select a %s or `%s` to cancel the selection.",
@@ -35,6 +35,7 @@
     "messages": {
       "failure": {
         "cant_interact": "You have to be a DJ/Server Manager to %s.",
+        "cant_interact_requester": "You have to be the requester of the song or a DJ/Server Manager to %s.",
         "no_query": "Please enter a search query.",
         "no_matches": "No matches found for **%s**.",
         "no_music": "There is no music playing.",
@@ -349,10 +350,7 @@
     },
     "pause": {
       "description": "Pauses/unpauses the playback",
-      "usage": "pause/unpause",
-      "other": {
-        "requester": "You have to be the requester of the song or DJ to pause/unpause the playback."
-      }
+      "usage": "pause/unpause"
     },
     "play": {
       "description": "Plays/queues a song",
@@ -411,9 +409,18 @@
         "added": "You've voted to skip the current track. Votes:"
       }
     },
-    "disconnect": {
+    "stop": {
       "description": "Stops the playback and disconnects the bot",
       "usage": "stop"
+    },
+    "volume": {
+      "description": "Sets the volume of music",
+      "usage": "volume <(+-)volume>",
+      "other": {
+        "current": "Current volume is **%d%%**. You can change this by using `%svolume <volume>`.",
+        "set": "The volume has been set to **%d%%**.",
+        "already_set": "The volume is already set to **%d%%**."
+      }
     },
     "anal": {
       "description": "Sends a (NSFW) picture of an anal",
@@ -458,6 +465,15 @@
     "pussy": {
       "description": "Sends a (NSFW) picture of a pussy",
       "usage": "pussy"
+    },
+    "defaultvolume": {
+      "description": "Sets the default music volume. This volume will be set when you start listening to music",
+      "usage": "defaultvolume <volume>",
+      "other": {
+        "current": "Current default music volume is **%d%%**. You can change this by using `%sdefaultvolume <volume>`.",
+        "set": "The default music volume has been set to **%d%%**.",
+        "already_set": "The default music volume is already set to **%d%%**."
+      }
     },
     "djrole": {
       "description": "Sets/removes the DJ role",

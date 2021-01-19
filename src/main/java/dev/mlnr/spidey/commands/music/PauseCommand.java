@@ -36,7 +36,7 @@ public class PauseCommand extends Command
         }
         if (!MusicUtils.canInteract(ctx.getMember(), playingTrack))
         {
-            ctx.replyError(i18n.get("commands.pause.other.requester"));
+            ctx.replyError(i18n.get("music.messages.failure.cant_interact_requester", "pause the playback"));
             return;
         }
         var paused = musicPlayer.pauseOrUnpause();

@@ -17,6 +17,18 @@ public class ArgumentUtils
 
     private ArgumentUtils() {}
 
+    public static void parseArgumentAsInt(String argument, CommandContext ctx, IntConsumer consumer)
+    {
+        try
+        {
+            consumer.accept(Integer.parseInt(argument));
+        }
+        catch (NumberFormatException ex)
+        {
+            ctx.replyError(ctx.getI18n().get("number.invalid"));
+        }
+    }
+
     public static void parseArgumentAsUnsignedInt(String argument, CommandContext ctx, IntConsumer consumer)
     {
         try
@@ -25,7 +37,7 @@ public class ArgumentUtils
         }
         catch (NumberFormatException ex)
         {
-            ctx.replyError(ctx.getI18n().get("number.negative"));
+            ctx.replyError(ctx.getI18n().get("number.invalid"));
         }
     }
 

@@ -3,6 +3,7 @@ package dev.mlnr.spidey.objects.music;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import dev.mlnr.spidey.Spidey;
+import dev.mlnr.spidey.cache.GuildSettingsCache;
 import dev.mlnr.spidey.cache.music.MusicPlayerCache;
 import dev.mlnr.spidey.handlers.music.AudioPlayerSendHandler;
 import dev.mlnr.spidey.utils.MusicUtils;
@@ -21,6 +22,7 @@ public class MusicPlayer
     public MusicPlayer(long guildId)
     {
         this.audioPlayer = MusicUtils.getAudioPlayerManager().createPlayer();
+        audioPlayer.setVolume(GuildSettingsCache.getDefaultVolume(guildId));
         this.trackScheduler = new TrackScheduler(this.audioPlayer, guildId);
     }
 
@@ -50,6 +52,16 @@ public class MusicPlayer
     public AudioTrack getPlayingTrack()
     {
         return audioPlayer.getPlayingTrack();
+    }
+
+    public int getVolume()
+    {
+        return audioPlayer.getVolume();
+    }
+
+    public void setVolume(int volume)
+    {
+        audioPlayer.setVolume(volume);
     }
 
     public void pause()

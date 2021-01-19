@@ -101,6 +101,11 @@ public class CommandContext
 
     // arg stuff
 
+    public void getArgumentAsInt(int argIndex, IntConsumer consumer)
+    {
+        ArgumentUtils.parseArgumentAsInt(args[argIndex], this, consumer);
+    }
+
     public void getArgumentAsUnsignedInt(int argIndex, IntConsumer consumer)
     {
         ArgumentUtils.parseArgumentAsUnsignedInt(args[argIndex], this, consumer);
