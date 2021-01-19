@@ -15,55 +15,61 @@ public class GuildCommand extends Command
 {
 	public GuildCommand()
 	{
-		super("guild", new String[]{"server"}, "Shows you info about this guild", "guild", Category.INFORMATIVE, Permission.UNKNOWN, 0, 0);
+		super("guild", new String[]{"server"}, Category.INFORMATIVE, Permission.UNKNOWN, 0, 0);
 	}
 
 	@Override
-	public void execute(final String[] args, final CommandContext ctx)
+	public void execute(String[] args, CommandContext ctx)
 	{
-		final var eb = Utils.createEmbedBuilder(ctx.getAuthor());
-		final var guild = ctx.getGuild();
+		var eb = Utils.createEmbedBuilder(ctx.getAuthor());
+		var guild = ctx.getGuild();
+		var i18n = ctx.getI18n();
+
 		eb.setColor(Color.ORANGE);
 		eb.setThumbnail(guild.getIconUrl());
 
-		eb.addField("Server Name", guild.getName(), true);
-		eb.addField("Server ID", String.valueOf(guild.getIdLong()), true);
+		eb.addField(i18n.get("commands.guild.fields.name"), guild.getName(), true);
+		eb.addField(i18n.get("commands.guild.fields.id"), String.valueOf(guild.getIdLong()), true);
 
-		final var ownerId = guild.getOwnerId();
-		eb.addField("Owner", "<@" + ownerId + ">", true);
-		eb.addField("Owner ID", ownerId, true);
+		var ownerId = guild.getOwnerId();
+		eb.addField(i18n.get("commands.guild.fields.owner.title"), "<@" + ownerId + ">", true);
+		eb.addField(i18n.get("commands.guild.fields.owner.id"), ownerId, true);
 
-		eb.addField("Text Channels", String.valueOf(guild.getTextChannelCache().size()), true);
-		eb.addField("Voice Channels", String.valueOf(guild.getVoiceChannelCache().size()), true);
+		eb.addField(i18n.get("commands.guild.fields.channels.text"), String.valueOf(guild.getTextChannelCache().size()), true);
+		eb.addField(i18n.get("commands.guild.fields.channels.voice"), String.valueOf(guild.getVoiceChannelCache().size()), true);
 
-		eb.addField("Members", String.valueOf(guild.getMemberCount()), true);
+		eb.addField(i18n.get("commands.guild.fields.members"), String.valueOf(guild.getMemberCount()), true);
 
-		final var verificationLevel = guild.getVerificationLevel().name().toLowerCase();
-		eb.addField("Verification Level", verificationLevel.substring(0, 1).toUpperCase() + verificationLevel.substring(1), true);
+		eb.addField(i18n.get("commands.guild.fields.verification_level.title"),
+				i18n.get("commands.guild.fields.verification_level." + guild.getVerificationLevel().name().toLowerCase()), true);
 
-		eb.addField("Boost tier", String.valueOf(guild.getBoostTier().getKey()), true);
-		eb.addField("Boosts", String.valueOf(guild.getBoostCount()), true);
+		eb.addField(i18n.get("commands.guild.fields.boost.tier"), String.valueOf(guild.getBoostTier().getKey()), true);
+		eb.addField(i18n.get("commands.guild.fields.boost.amount"), String.valueOf(guild.getBoostCount()), true);
 
-		eb.addField("Region", guild.getRegion().getName(), true);
-		eb.addField("Creation", Utils.formatDate(guild.getTimeCreated()), true);
+		eb.addField(i18n.get("commands.guild.fields.region"), guild.getRegion().getName(), true);
+		eb.addField(i18n.get("commands.guild.fields.creation"), Utils.formatDate(guild.getTimeCreated()), true);
 
-		final var vanityUrl = guild.getVanityUrl();
-		eb.addField("Custom invite/Vanity url", guild.getFeatures().contains("VANITY_URL") ? (vanityUrl == null ? "Guild has no vanity url set" : vanityUrl) : "Guild isn't eligible to set vanity url", true);
+		var vanityUrl = guild.getVanityUrl();
+		eb.addField(i18n.get("commands.guild.fields.vanity_url.title"), guild.getFeatures().contains("VANITY_URL")
+				? (vanityUrl == null ? i18n.get("commands.guild.fields.vanity_url.none") : vanityUrl)
+				: i18n.get("commands.guild.fields.vanity_url.not_eligible"), true);
 
-        eb.addField("Roles", String.valueOf(guild.getRoleCache().size()-1), true);
+        eb.addField(i18n.get("commands.guild.fields.roles"), String.valueOf(guild.getRoleCache().size() - 1), true);
 
-		final var emoteCache = guild.getEmoteCache();
-		final var emotes = emoteCache.applyStream(stream -> stream.filter(emote -> !emote.isManaged()).collect(Collectors.toList()));
+		var emoteCache = guild.getEmoteCache();
+		var emotes = emoteCache.applyStream(stream -> stream.filter(emote -> !emote.isManaged()).collect(Collectors.toList()));
 		if (!emotes.isEmpty())
 		{
-			final var sb = new StringBuilder();
+			var sb = new StringBuilder();
 			var ec = 0;
-			for (final var emote : emotes)
+			for (var emote : emotes)
 			{
 				ec++;
 				sb.append(emote.getAsMention()).append(ec == emotes.size() ? "" : " ");
 			}
-			eb.addField(String.format("Emotes (**%d** | **%d** animated)", ec, emoteCache.applyStream(stream -> stream.filter(Emote::isAnimated).count())), sb.length() > 1024 ? "Limit exceeded" : sb.toString(), false);
+			var animated = emoteCache.applyStream(stream -> stream.filter(Emote::isAnimated).count());
+			eb.addField(i18n.get("commands.guild.fields.emotes", emotes.size(), animated),
+					sb.length() > 1024 ? i18n.get("limit_exceeded") : sb.toString(),false);
 		}
 		ctx.reply(eb);
 	}

@@ -1,5 +1,7 @@
 package dev.mlnr.spidey.objects.command;
 
+import dev.mlnr.spidey.objects.I18n;
+import dev.mlnr.spidey.utils.ArgumentUtils;
 import dev.mlnr.spidey.utils.Emojis;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -9,14 +11,20 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
 import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.IntConsumer;
 
 public class CommandContext
 {
+    private final String[] args;
     private final GuildMessageReceivedEvent event;
+    private final I18n i18n;
 
-    public CommandContext(final GuildMessageReceivedEvent event)
+    public CommandContext(String[] args, GuildMessageReceivedEvent event, I18n i18n)
     {
+        this.args = args;
         this.event = event;
+        this.i18n = i18n;
     }
 
     public Message getMessage()
@@ -36,7 +44,7 @@ public class CommandContext
 
     public TextChannel getTextChannel()
     {
-        return getMessage().getTextChannel();
+        return event.getChannel();
     }
 
     public Guild getGuild()
@@ -49,43 +57,67 @@ public class CommandContext
         return event.getJDA();
     }
 
-    public void reply(final EmbedBuilder embedBuilder)
+    public I18n getI18n()
+    {
+        return this.i18n;
+    }
+
+    public GuildMessageReceivedEvent getEvent()
+    {
+        return this.event;
+    }
+
+    // interaction methods
+
+    public void reply(EmbedBuilder embedBuilder)
     {
         Utils.sendMessage(getTextChannel(), embedBuilder.build(), getMessage());
     }
 
-    public void reply(final String content)
+    public void reply(String content)
     {
         reply(content, MessageAction.getDefaultMentions());
     }
 
-    public void reply(final String content, final Set<Message.MentionType> allowedMentions)
+    public void reply(String content, Set<Message.MentionType> allowedMentions)
     {
         Utils.sendMessage(getTextChannel(), content, allowedMentions, getMessage());
     }
 
-    public void replyError(final String error)
+    public void replyError(String error)
     {
-        replyError(error, true);
+        replyError(error, Emojis.CROSS);
     }
 
-    public void replyError(final String error, final boolean includeDot)
+    public void replyError(String error, String failureEmoji)
     {
-        replyError(error, Emojis.CROSS, includeDot);
-    }
-
-    public void replyError(final String error, final String failureEmoji)
-    {
-        replyError(error, failureEmoji, true);
-    }
-
-    public void replyError(final String error, final String failureEmoji, final boolean includeDot)
-    {
-        Utils.returnError(error, getMessage(), failureEmoji, includeDot);
+        Utils.returnError(error, getMessage(), failureEmoji);
     }
 
     public void reactLike()
     {
         Utils.addReaction(getMessage(), Emojis.LIKE);
+    }
+
+    // arg stuff
+
+    public void getArgumentAsUnsignedInt(int argIndex, IntConsumer consumer)
+    {
+        ArgumentUtils.parseArgumentAsUnsignedInt(args[argIndex], this, consumer);
+    }
+
+    public void getArgumentAsChannel(int argIndex, Consumer<TextChannel> consumer)
+    {
+        ArgumentUtils.parseArgumentAsTextChannel(args[argIndex], this, consumer);
+    }
+
+    public void getArgumentAsRole(int argIndex, Consumer<Role> consumer)
+    {
+        ArgumentUtils.parseArgumentAsRole(args[argIndex], this, consumer);
+    }
+
+    public void getArgumentAsUser(int argIndex, Consumer<User> consumer)
+    {
+        ArgumentUtils.parseArgumentAsUser(args[argIndex], this, consumer);
     }
 }

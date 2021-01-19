@@ -13,16 +13,16 @@ public class VideoSegmentCache
 
     private VideoSegmentCache() {}
 
-    public static List<VideoSegment> getVideoSegments(final String videoId)
+    public static List<VideoSegment> getVideoSegments(String videoId)
     {
         return getVideoSegments(videoId, false);
     }
 
-    public static List<VideoSegment> getVideoSegments(final String videoId, final boolean forceRequest)
+    public static List<VideoSegment> getVideoSegments(String videoId, boolean forceRequest)
     {
         if (SEGMENT_CACHE.containsKey(videoId) && !forceRequest)
             return SEGMENT_CACHE.get(videoId);
-        final var segments = Requester.retrieveVideoSegments(videoId);
+        var segments = Requester.retrieveVideoSegments(videoId);
         SEGMENT_CACHE.put(videoId, segments);
         return segments;
     }

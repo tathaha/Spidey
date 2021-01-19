@@ -10,9 +10,9 @@ public class AsiansCommand extends Command
 {
     public AsiansCommand()
     {
-        super("asiansgonewild", new String[]{"asian", "asians"}, "Sends a (NSFW) picture of an asian", "asiansgonewild", Category.NSFW, Permission.UNKNOWN, 0, 4);
+        super("asiansgonewild", new String[]{"asian", "asians"}, Category.NSFW, Permission.UNKNOWN, 0, 4);
     }
 
     @Override
-    public void execute(final String[] args, final CommandContext ctx) {}
+    public void execute(String[] args, CommandContext ctx) {}
 }

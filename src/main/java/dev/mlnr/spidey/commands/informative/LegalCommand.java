@@ -10,12 +10,12 @@ public class LegalCommand extends Command
 {
 	public LegalCommand()
 	{
-		super("legal", new String[]{"privacy", "tos", "policy", "privacypolicy"}, "Shows you the ToS and Privacy Policy", "legal", Category.INFORMATIVE, Permission.UNKNOWN, 0, 0);
+		super("legal", new String[]{"privacy", "tos", "policy", "privacypolicy"}, Category.INFORMATIVE, Permission.UNKNOWN, 0, 0);
 	}
 
 	@Override
-	public void execute(final String[] args, final CommandContext ctx)
+	public void execute(String[] args, CommandContext ctx)
 	{
-		ctx.reply("To see the Terms of Service and Privacy Policy, please visit the support guild: discord.gg/uJCw7B9fxZ");
+		ctx.reply(ctx.getI18n().get("commands.legal.other.text"));
 	}
 }

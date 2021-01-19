@@ -6,26 +6,22 @@ public abstract class Command
 {
     private final String invoke;
     private final String[] aliases;
-    private final String description;
-    private final String usage;
     private final Category category;
     private final Permission requiredPermission;
     private final int maxArgs;
     private final int cooldown;
 
-    protected Command(final String invoke, final String[] aliases, final String description, final String usage, final Category category, final Permission requiredPermission, final int maxArgs, final int cooldown)
+    protected Command(String invoke, String[] aliases,Category category, Permission requiredPermission, int maxArgs, int cooldown)
     {
         this.invoke = invoke;
         this.aliases = aliases;
-        this.description = description;
-        this.usage = usage;
         this.category = category;
         this.requiredPermission = requiredPermission;
         this.maxArgs = maxArgs;
         this.cooldown = cooldown;
     }
 
-    public abstract void execute(final String[] args, final CommandContext ctx);
+    public abstract void execute(String[] args, CommandContext ctx);
 
     public String getInvoke()
     {
@@ -35,16 +31,6 @@ public abstract class Command
     public String[] getAliases()
     {
         return this.aliases;
-    }
-
-    public String getDescription()
-    {
-        return this.description;
-    }
-
-    public String getUsage()
-    {
-        return this.usage;
     }
 
     public Category getCategory()

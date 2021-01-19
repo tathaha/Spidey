@@ -1,14 +1,14 @@
-package dev.mlnr.spidey.cache.settings;
+package dev.mlnr.spidey.cache;
 
 import dev.mlnr.spidey.DatabaseManager;
 import dev.mlnr.spidey.Spidey;
+import dev.mlnr.spidey.objects.I18n;
 import dev.mlnr.spidey.objects.guild.GuildSettings;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class GuildSettingsCache
 {
@@ -18,167 +18,172 @@ public class GuildSettingsCache
 
     // getters
 
-    public static long getLogChannelId(final long guildId)
+    public static long getLogChannelId(long guildId)
     {
         return getGuildSettings(guildId).getLogChannelId();
     }
 
-    public static long getJoinRoleId(final long guildId)
+    public static long getJoinRoleId(long guildId)
     {
         return getGuildSettings(guildId).getJoinRoleId();
     }
 
-    public static String getPrefix(final long guildId)
+    public static String getPrefix(long guildId)
     {
         return getGuildSettings(guildId).getPrefix();
     }
 
-    public static boolean isSnipingEnabled(final long guildId)
+    public static I18n getI18n(long guildId)
+    {
+        return getGuildSettings(guildId).getI18n();
+    }
+
+    public static boolean isSnipingEnabled(long guildId)
     {
         return getGuildSettings(guildId).isSnipingEnabled();
     }
 
-    public static boolean isVip(final long guildId)
+    public static boolean isVip(long guildId)
     {
         return getGuildSettings(guildId).isVip();
     }
 
     // music getters
 
-    public static long getDJRoleId(final long guildId)
+    public static long getDJRoleId(long guildId)
     {
         return getGuildSettings(guildId).getDjRoleId();
     }
 
-    public static boolean isSegmentSkippingEnabled(final long guildId)
+    public static boolean isSegmentSkippingEnabled(long guildId)
     {
         return getGuildSettings(guildId).isSegmentSkippingEnabled();
     }
 
-    public static int getDefaultVolume(final long guildId)
+    public static int getDefaultVolume(long guildId)
     {
         return getGuildSettings(guildId).getDefaultVolume();
     }
 
     // fair queue getters
 
-    public static boolean isFairQueueEnabled(final long guildId)
+    public static boolean isFairQueueEnabled(long guildId)
     {
         return getGuildSettings(guildId).isFairQueueEnabled();
     }
 
-    public static int getFairQueueThreshold(final long guildId)
+    public static int getFairQueueThreshold(long guildId)
     {
         return getGuildSettings(guildId).getFairQueueThreshold();
     }
 
     // setters
 
-    public static void setLogChannelId(final long guildId, final long logChannelId)
+    public static void setLogChannelId(long guildId, long logChannelId)
     {
         getGuildSettings(guildId).setLogChannelId(logChannelId);
     }
 
-    public static void setJoinRoleId(final long guildId, final long joinRoleId)
+    public static void setJoinRoleId(long guildId, long joinRoleId)
     {
         getGuildSettings(guildId).setJoinRoleId(joinRoleId);
     }
 
-    public static void setPrefix(final long guildId, final String prefix)
+    public static void setPrefix(long guildId, String prefix)
     {
         getGuildSettings(guildId).setPrefix(prefix);
     }
 
-    public static void setSnipingEnabled(final long guildId, final boolean enabled)
+    public static void setLanguage(long guildId, String language)
+    {
+        getGuildSettings(guildId).setLanguage(language);
+    }
+
+    public static void setSnipingEnabled(long guildId, boolean enabled)
     {
         getGuildSettings(guildId).setSnipingEnabled(enabled);
     }
 
-    public static void setVip(final long guildId, final boolean vip)
+    public static void setVip(long guildId, boolean vip)
     {
         getGuildSettings(guildId).setVip(vip);
     }
 
     // music setters
 
-    public static void setDJRoleId(final long guildId, final long djRoleId)
+    public static void setDJRoleId(long guildId, long djRoleId)
     {
         getGuildSettings(guildId).setDjRoleId(djRoleId);
     }
 
-    public static void setSegmentSkippingEnabled(final long guildId, final boolean enabled)
+    public static void setSegmentSkippingEnabled(long guildId, boolean enabled)
     {
         getGuildSettings(guildId).setSegmentSkippingEnabled(enabled);
     }
 
-    public static void setDefaultVolume(final long guildId, final int volume)
+    public static void setDefaultVolume(long guildId, int volume)
     {
         getGuildSettings(guildId).setDefaultVolume(volume);
     }
 
     // fair queue setters
 
-    public static void setFairQueueEnabled(final long guildId, final boolean enabled)
+    public static void setFairQueueEnabled(long guildId, boolean enabled)
     {
         getGuildSettings(guildId).setFairQueueEnabled(enabled);
     }
 
-    public static void setFairQueueThreshold(final long guildId, final int threshold)
+    public static void setFairQueueThreshold(long guildId, int threshold)
     {
         getGuildSettings(guildId).setFairQueueThreshold(threshold);
     }
 
     // removals
 
-    public static void removeLogChannel(final long guildId)
+    public static void removeLogChannel(long guildId)
     {
         setLogChannelId(guildId, 0);
     }
 
-    public static void removeJoinRole(final long guildId)
+    public static void removeJoinRole(long guildId)
     {
         setJoinRoleId(guildId, 0);
     }
 
-    public static void removeDJRole(final long guildId)
+    public static void removeDJRole(long guildId)
     {
         setDJRoleId(guildId, 0);
     }
 
     // misc helpers
 
-    public static TextChannel getLogChannel(final long guildId)
+    public static TextChannel getLogChannel(long guildId)
     {
-        final var logChannelId = getLogChannelId(guildId);
+        var logChannelId = getLogChannelId(guildId);
         return logChannelId == 0 ? null : Spidey.getJDA().getTextChannelById(logChannelId);
     }
 
-    public static Role getJoinRole(final long guildId)
+    public static Role getJoinRole(long guildId)
     {
-        final var joinRoleId = getJoinRoleId(guildId);
+        var joinRoleId = getJoinRoleId(guildId);
         return joinRoleId == 0 ? null : Spidey.getJDA().getRoleById(joinRoleId);
     }
 
-    public static Role getDJRole(final long guildId)
+    public static Role getDJRole(long guildId)
     {
-        final var djRoleId = getDJRoleId(guildId);
+        var djRoleId = getDJRoleId(guildId);
         return djRoleId == 0 ? null : Spidey.getJDA().getRoleById(djRoleId);
     }
 
     // other
 
-    public static void remove(final long guildId)
+    public static void remove(long guildId)
     {
         GUILD_SETTINGS_CACHE.remove(guildId);
     }
 
-    private static GuildSettings getGuildSettings(final long guildId)
+    private static GuildSettings getGuildSettings(long guildId)
     {
-        return Objects.requireNonNullElseGet(GUILD_SETTINGS_CACHE.get(guildId), () ->
-        {
-           final var settings = DatabaseManager.retrieveGuildSettings(guildId);
-           GUILD_SETTINGS_CACHE.put(guildId, settings);
-           return settings;
-        });
+        return GUILD_SETTINGS_CACHE.computeIfAbsent(guildId, k -> DatabaseManager.retrieveGuildSettings(guildId));
     }
 }

@@ -26,70 +26,70 @@ public class Requester
 
     private Requester() {}
 
-    public static DataObject executeApiRequest(final API api, final String... args)
+    public static DataObject executeApiRequest(API api, String... args)
     {
         var url = api.getUrl();
         if (url.contains("%s")) // i hate this
         {
-            for (final String arg : args)
+            for (var arg : args)
                 url = url.replace("%s", arg);
         }
         REQUEST_BUILDER.url(url);
-        final var apiKey = api.getKey();
+        var apiKey = api.getKey();
         if (apiKey != null)
             REQUEST_BUILDER.header("Authorization", apiKey);
-        try (final var response = HTTP_CLIENT.newCall(REQUEST_BUILDER.build()).execute(); final var body = response.body())
+        try (var response = HTTP_CLIENT.newCall(REQUEST_BUILDER.build()).execute(); var body = response.body())
         {
             return DataObject.fromJson(body.string());
         }
-        catch (final Exception ex)
+        catch (Exception ex)
         {
             LOGGER.error("There was an error while executing a request for url {}:", url, ex);
         }
         return DataObject.empty();
     }
 
-    public static void updateStats(final JDA jda)
+    public static void updateStats(JDA jda)
     {
-        final var guildCount = jda.getGuildCache().size();
-        final var botId = jda.getSelfUser().getIdLong();
-        for (final API.Stats statsApi : API.Stats.values())
+        var guildCount = jda.getGuildCache().size();
+        var botId = jda.getSelfUser().getIdLong();
+        for (var statsApi : API.Stats.values())
         {
-            final var requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), DataObject.empty().put(statsApi.getStatsParam(), guildCount).toString());
-            final var request = new Request.Builder()
+            var requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), DataObject.empty().put(statsApi.getStatsParam(), guildCount).toString());
+            var request = new Request.Builder()
                     .url(String.format(statsApi.getUrl(), botId))
                     .header("Authorization", statsApi.getKey())
                     .post(requestBody).build();
-            try (final var ignored = HTTP_CLIENT.newCall(request).execute())
+            try (var ignored = HTTP_CLIENT.newCall(request).execute())
             {
                 LOGGER.info("Successfully updated stats for {} with {} guilds", statsApi, guildCount);
             }
-            catch (final Exception ex)
+            catch (Exception ex)
             {
                 LOGGER.error("There was an error while updating stats for {}!", statsApi, ex);
             }
         }
     }
 
-    public static List<VideoSegment> retrieveVideoSegments(final String videoId)
+    public static List<VideoSegment> retrieveVideoSegments(String videoId)
     {
         REQUEST_BUILDER.url("https://sponsor.ajay.app/api/skipSegments?videoID=" + videoId + "&category=music_offtopic");
-        try (final var response = HTTP_CLIENT.newCall(REQUEST_BUILDER.build()).execute(); final var body = response.body())
+        try (var response = HTTP_CLIENT.newCall(REQUEST_BUILDER.build()).execute(); var body = response.body())
         {
             if (response.code() == 404)
                 return Collections.emptyList();
-            final var json = DataArray.fromJson(body.string());
-            final var segments = new ArrayList<VideoSegment>();
+            var json = DataArray.fromJson(body.string());
+            var segments = new ArrayList<VideoSegment>();
             for (var i = 0; i < json.length(); i++)
             {
-                final var segmentTimes = json.getObject(i).getArray("segment");
-                final var segmentStart = (long) (parseFloat(segmentTimes.getString(0)) * 1000);
-                final var segmentEnd = (long) (parseFloat(segmentTimes.getString(1)) * 1000);
+                var segmentTimes = json.getObject(i).getArray("segment");
+                var segmentStart = (long) (parseFloat(segmentTimes.getString(0)) * 1000);
+                var segmentEnd = (long) (parseFloat(segmentTimes.getString(1)) * 1000);
                 segments.add(new VideoSegment(segmentStart, segmentEnd));
             }
             return segments;
         }
-        catch (final Exception ex)
+        catch (Exception ex)
         {
             LOGGER.error("There was an error while executing a segments request:", ex);
         }

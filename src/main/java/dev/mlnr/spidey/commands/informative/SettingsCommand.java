@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.commands.informative;
 
-import dev.mlnr.spidey.cache.settings.GuildSettingsCache;
+import dev.mlnr.spidey.cache.GuildSettingsCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
@@ -14,30 +14,35 @@ public class SettingsCommand extends Command
 {
     public SettingsCommand()
     {
-        super("settings", new String[]{}, "Shows the current settings for this guild", "settings", Category.INFORMATIVE, Permission.UNKNOWN, 0, 0);
+        super("settings", new String[]{}, Category.INFORMATIVE, Permission.UNKNOWN, 0, 0);
     }
 
     @Override
-    public void execute(final String[] args, final CommandContext ctx)
+    public void execute(String[] args, CommandContext ctx)
     {
-        final var guildId = ctx.getGuild().getIdLong();
-        final var prefix = GuildSettingsCache.getPrefix(guildId);
-        final var eb = Utils.createEmbedBuilder(ctx.getAuthor()).setColor(0xFEFEFE);
-        eb.setAuthor("Current settings for this guild");
+        var guildId = ctx.getGuild().getIdLong();
+        var prefix = GuildSettingsCache.getPrefix(guildId);
+        var eb = Utils.createEmbedBuilder(ctx.getAuthor());
+        var i18n = ctx.getI18n();
 
-        final var setTemplate = " (set one with " + prefix + "%s)";
-        final var pattern = "%s (%d)";
+        eb.setAuthor(i18n.get("commands.settings.other.title"));
 
-        final var logChannel = GuildSettingsCache.getLogChannel(guildId);
-        eb.addField("Log channel", logChannel == null ? "None" + format(setTemplate, "log") : format(pattern, logChannel.getName(), logChannel.getIdLong()), false);
+        var setTemplate = " (" + i18n.get("commands.settings.other.set") + " " + prefix + "%s)";
+        var none = i18n.get("commands.settings.other.none");
 
-        final var joinRole = GuildSettingsCache.getJoinRole(guildId);
-        eb.addField("Join role", joinRole == null ? "None" + format(setTemplate, "joinrole") : format(pattern, joinRole.getName(), joinRole.getIdLong()), false);
+        var logChannel = GuildSettingsCache.getLogChannel(guildId);
+        eb.addField(i18n.get("commands.settings.other.log"),
+                logChannel == null ? none + format(setTemplate, "log") : logChannel.getAsMention(), false);
 
-        final var djRole = GuildSettingsCache.getDJRole(guildId);
-        eb.addField("DJ role", djRole == null ? "None" + format(setTemplate, "djrole") : format(pattern, djRole.getName(), djRole.getIdLong()), false);
+        var joinRole = GuildSettingsCache.getJoinRole(guildId);
+        eb.addField(i18n.get("commands.settings.other.join"),
+                joinRole == null ? none + format(setTemplate, "joinrole") : joinRole.getAsMention(), false);
 
-        eb.addField("Prefix", prefix + (prefix.equals("s!") ? " (set a custom prefix with s!prefix)" : ""), false);
+        var djRole = GuildSettingsCache.getDJRole(guildId);
+        eb.addField(i18n.get("commands.settings.other.dj"),
+                djRole == null ? none + format(setTemplate, "djrole") : djRole.getAsMention(), false);
+
+        eb.addField("Prefix", prefix + (prefix.equals("s!") ? " (" + i18n.get("commands.settings.other.prefix") + ")" : ""), false);
 
         ctx.reply(eb);
     }

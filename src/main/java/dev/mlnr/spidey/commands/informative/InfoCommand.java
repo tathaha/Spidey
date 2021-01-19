@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.commands.informative;
 
-import dev.mlnr.spidey.cache.settings.GuildSettingsCache;
+import dev.mlnr.spidey.cache.GuildSettingsCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
@@ -13,23 +13,25 @@ public class InfoCommand extends Command
 {
 	public InfoCommand()
 	{
-		super("info", new String[]{}, "Shows you info about me", "info", Category.INFORMATIVE, Permission.UNKNOWN, 0, 0);
+		super("info", new String[]{}, Category.INFORMATIVE, Permission.UNKNOWN, 0, 0);
 	}
 
 	@Override
-	public void execute(final String[] args, final CommandContext ctx)
+	public void execute(String[] args, CommandContext ctx)
 	{
-		final var eb = Utils.createEmbedBuilder(ctx.getAuthor());
-		final var avatar = ctx.getJDA().getSelfUser().getEffectiveAvatarUrl();
+		var eb = Utils.createEmbedBuilder(ctx.getAuthor());
+		var avatar = ctx.getJDA().getSelfUser().getEffectiveAvatarUrl();
+		var i18n = ctx.getI18n();
+
 		eb.setAuthor("Spidey", null, avatar);
-		eb.setColor(0xFEFEFE);
 		eb.setThumbnail(avatar);
-		eb.addField("About me", "Hey, i'm Spidey. I was made by `cane#0570`.", false);
-		eb.addField("Commands", "Type `" + GuildSettingsCache.getPrefix(ctx.getGuild().getIdLong()) + "help` for a list of commands.", false);
-		eb.addField("Bot info", "[Library](https://github.com/DV8FromTheWorld/JDA) version: `" + JDAInfo.VERSION + "`", false);
-		eb.addField("Links", "[`Website`](https://spidey.mlnr.dev)\n[`Discord`](https://discord.gg/uJCw7B9fxZ)" +
+		eb.addField(i18n.get("commands.info.fields.about.title"), i18n.get("commands.info.fields.about.text", "cane#0570"), false);
+		eb.addField(i18n.get("commands.info.fields.commands.title"),
+				i18n.get("commands.info.fields.commands.text", GuildSettingsCache.getPrefix(ctx.getGuild().getIdLong())), false);
+		eb.addField(i18n.get("commands.info.fields.info.title"), i18n.get("commands.info.fields.info.text", JDAInfo.VERSION), false);
+		eb.addField(i18n.get("commands.info.fields.links"), "[`Website`](https://spidey.mlnr.dev)\n[`Discord`](https://discord.gg/uJCw7B9fxZ)" +
 				"\n[`GitHub`](https://github.com/caneleex/Spidey)", false);
-		eb.addField("Support", "If you want to support the development of Spidey, you can do so by donating using my [PayPal](https://paypal.me/caneleex). Thank you!", false);
+		eb.addField(i18n.get("commands.info.fields.support.title"), i18n.get("commands.info.fields.support.text"),false);
 		ctx.reply(eb);
 	}
 }

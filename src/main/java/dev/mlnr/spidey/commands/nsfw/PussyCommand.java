@@ -10,9 +10,9 @@ public class PussyCommand extends Command
 {
     public PussyCommand()
     {
-        super("pussy", new String[]{"vagina"}, "Sends a (NSFW) picture of pussy", "pussy", Category.NSFW, Permission.UNKNOWN, 0, 4);
+        super("pussy", new String[]{"vagina"}, Category.NSFW, Permission.UNKNOWN, 0, 4);
     }
 
     @Override
-    public void execute(final String[] args, final CommandContext ctx) {}
+    public void execute(String[] args, CommandContext ctx) {}
 }

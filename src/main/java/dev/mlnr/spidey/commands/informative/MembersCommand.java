@@ -13,23 +13,24 @@ public class MembersCommand extends Command
 {
     public MembersCommand()
     {
-        super("members", new String[]{"membercount"}, "Shows you the membercount of the guild", "members", Category.INFORMATIVE, Permission.UNKNOWN, 0, 2);
+        super("members", new String[]{"membercount"}, Category.INFORMATIVE, Permission.UNKNOWN, 0, 2);
     }
 
     @Override
-    public void execute(final String[] args, final CommandContext ctx)
+    public void execute(String[] args, CommandContext ctx)
     {
         ctx.getGuild().loadMembers().onSuccess(members ->
         {
-            final var total = members.size();
-            final var bots = members.stream().filter(member -> member.getUser().isBot()).count();
-            final var eb = Utils.createEmbedBuilder(ctx.getAuthor());
-            eb.setAuthor("MEMBERCOUNT");
-            eb.setColor(0xFEFEFE);
+            var total = members.size();
+            var bots = members.stream().filter(member -> member.getUser().isBot()).count();
+            var eb = Utils.createEmbedBuilder(ctx.getAuthor());
+            var i18n = ctx.getI18n();
+
+            eb.setAuthor(i18n.get("commands.members.other.title"));
             eb.setTimestamp(Instant.now());
-            eb.addField("Total", "**" + total + "**", true);
-            eb.addField("People", "**" + (total - bots) + "**", true);
-            eb.addField("Bots", "**" + bots + "**", true);
+            eb.addField(i18n.get("commands.members.other.total"), "**" + total + "**", true);
+            eb.addField(i18n.get("commands.members.other.people"), "**" + (total - bots) + "**", true);
+            eb.addField(i18n.get("commands.members.other.bots"), "**" + bots + "**", true);
             ctx.reply(eb);
         });
     }

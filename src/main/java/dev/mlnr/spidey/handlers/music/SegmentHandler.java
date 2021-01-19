@@ -11,17 +11,17 @@ public class SegmentHandler implements TrackMarkerHandler
 
     private int currentSegment;
 
-    public SegmentHandler(final AudioTrack track)
+    public SegmentHandler(AudioTrack track)
     {
         this.track = track;
     }
 
     @Override
-    public void handle(final MarkerState state)
+    public void handle(MarkerState state)
     {
         if (!(state == MarkerState.REACHED || state == MarkerState.LATE))
             return;
-        final var segments = VideoSegmentCache.getVideoSegments(track.getIdentifier());
+        var segments = VideoSegmentCache.getVideoSegments(track.getIdentifier());
         track.setPosition(segments.get(this.currentSegment).getSegmentEnd());
 
         this.currentSegment++;

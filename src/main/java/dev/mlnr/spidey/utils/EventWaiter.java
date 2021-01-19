@@ -47,8 +47,8 @@ public class EventWaiter implements EventListener
         Checks.notNull(condition, "The provided condition predicate");
         Checks.notNull(action, "The provided action consumer");
 
-        final var we = new WaitingEvent<>(condition, action);
-        final var set = waitingEvents.computeIfAbsent(classType, c -> new HashSet<>());
+        var we = new WaitingEvent<>(condition, action);
+        var set = waitingEvents.computeIfAbsent(classType, c -> new HashSet<>());
         set.add(we);
 
         if (timeout > 0 && unit != null)
@@ -70,7 +70,7 @@ public class EventWaiter implements EventListener
 
         while (c != null)
         {
-            final var set = waitingEvents.get(c);
+            var set = waitingEvents.get(c);
             if (set != null)
                 set.removeAll(Stream.of(set.toArray(new WaitingEvent[0])).filter(i -> i.attempt(event)).collect(Collectors.toSet()));
             if (event instanceof ShutdownEvent && shutdownAutomatically)

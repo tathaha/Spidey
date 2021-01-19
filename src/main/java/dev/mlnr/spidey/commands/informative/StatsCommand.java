@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.commands.informative;
 
-import dev.mlnr.spidey.cache.settings.GuildSettingsCache;
+import dev.mlnr.spidey.cache.GuildSettingsCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
@@ -14,24 +14,26 @@ public class StatsCommand extends Command
 {
 	public StatsCommand()
 	{
-		super("stats", new String[]{}, "Shows you Spidey's stats", "stats", Category.INFORMATIVE, Permission.UNKNOWN, 0, 0);
+		super("stats", new String[]{}, Category.INFORMATIVE, Permission.UNKNOWN, 0, 0);
 	}
 
 	@Override
-	public void execute(final String[] args, final CommandContext ctx)
+	public void execute(String[] args, CommandContext ctx)
 	{
-		final var eb = Utils.createEmbedBuilder(ctx.getAuthor());
-		final var prefix = GuildSettingsCache.getPrefix(ctx.getGuild().getIdLong());
-		final var jda = ctx.getJDA();
-		final var runtime = Runtime.getRuntime();
-		final var total = runtime.totalMemory();
-		final var memory = (total - runtime.freeMemory()) / 1000000;
+		var eb = Utils.createEmbedBuilder(ctx.getAuthor());
+		var prefix = GuildSettingsCache.getPrefix(ctx.getGuild().getIdLong());
+		var jda = ctx.getJDA();
+		var runtime = Runtime.getRuntime();
+		var total = runtime.totalMemory();
+		var memory = (total - runtime.freeMemory()) / 1000000;
+		var i18n = ctx.getI18n();
+
 		eb.setColor(Utils.SPIDEY_COLOR);
-		eb.setAuthor("Spidey's stats", "https://spidey.mlnr.dev", jda.getSelfUser().getEffectiveAvatarUrl());
-		eb.setDescription("For more info about Spidey, type " + prefix + "info");
-		eb.addField("Total servers", String.valueOf(jda.getGuildCache().size()), true);
-		eb.addField("Memory usage", memory + "MB / " + (total / 100000) + "MB", true);
-		eb.addField("Thread count", String.valueOf(ManagementFactory.getThreadMXBean().getThreadCount()), true);
+		eb.setAuthor(i18n.get("commands.stats.other.title"), "https://spidey.mlnr.dev", jda.getSelfUser().getEffectiveAvatarUrl());
+		eb.setDescription(i18n.get("commands.stats.other.more", prefix));
+		eb.addField(i18n.get("commands.stats.other.total_servers"), String.valueOf(jda.getGuildCache().size()), true);
+		eb.addField(i18n.get("commands.stats.other.memory"), memory + "MB / " + (total / 100000) + "MB", true);
+		eb.addField(i18n.get("commands.stats.other.threads"), String.valueOf(ManagementFactory.getThreadMXBean().getThreadCount()), true);
 		eb.setFooter("spidey.mlnr.dev");
 		ctx.reply(eb);
 	}

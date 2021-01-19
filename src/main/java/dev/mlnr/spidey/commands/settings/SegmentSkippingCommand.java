@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.commands.settings;
 
-import dev.mlnr.spidey.cache.settings.GuildSettingsCache;
+import dev.mlnr.spidey.cache.GuildSettingsCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
@@ -12,23 +12,23 @@ public class SegmentSkippingCommand extends Command
 {
     public SegmentSkippingCommand()
     {
-        super("segmentskipping", new String[]{"segmentskip", "segskip", "skipping", "segskipping"}, "Enables/disables non-music segment skipping using [SponsorBlock](https://sponsor.ajay.app)",
-                "segmentskipping", Category.SETTINGS, Permission.UNKNOWN, 0, 4);
+        super("segmentskipping", new String[]{"segmentskip", "segskip", "skipping", "segskipping"}, Category.SETTINGS, Permission.UNKNOWN, 0, 4);
     }
 
     @Override
-    public void execute(final String[] args, final CommandContext ctx)
+    public void execute(String[] args, CommandContext ctx)
     {
+        var i18n = ctx.getI18n();
         if (!MusicUtils.canInteract(ctx.getMember()))
         {
-            ctx.replyError("You have to be a DJ to enable/disable segment skipping");
+            ctx.replyError(i18n.get("music.messages.failure.cant_interact", "enable/disable segment skipping"));
             return;
         }
-        final var guildId = ctx.getGuild().getIdLong();
-        final var enabled = !GuildSettingsCache.isSegmentSkippingEnabled(guildId);
+        var guildId = ctx.getGuild().getIdLong();
+        var enabled = !GuildSettingsCache.isSegmentSkippingEnabled(guildId);
         GuildSettingsCache.setSegmentSkippingEnabled(guildId, enabled);
         ctx.reactLike();
-        ctx.reply("Segment skipping has been **" + (enabled ? "enabled" : "disabled") + "**." +
-                (enabled ? " As SponsorBlock is a crowdsourced extension, some segments can be placed at wrong timing. Report such submissions on SponsorBlock's Discord, not to the Developer.": ""));
+        ctx.reply(i18n.get("commands.segmentskipping.other.done.text", enabled ? "enabled" : "disabled") +
+                (enabled ? " " + i18n.get("commands.segmentskipping.other.done.warning") : ""));
     }
 }

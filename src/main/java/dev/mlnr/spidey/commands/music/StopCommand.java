@@ -13,22 +13,23 @@ public class StopCommand extends Command
 {
     public StopCommand()
     {
-        super("stop", new String[]{"disconnect"}, "Stops the playback. THIS IS NOT THE SAME AS PAUSING!", "stop", Category.MUSIC, Permission.UNKNOWN, 0, 0);
+        super("stop", new String[]{"disconnect", "dis"}, Category.MUSIC, Permission.UNKNOWN, 0, 0);
     }
 
     @Override
-    public void execute(final String[] args, final CommandContext ctx)
+    public void execute(String[] args, CommandContext ctx)
     {
-        final var guild = ctx.getGuild();
-        final var musicPlayer = MusicPlayerCache.getMusicPlayer(guild);
-        if (musicPlayer == null)
-        {
-            ctx.replyError("There is no music playing");
-            return;
-        }
+        var i18n = ctx.getI18n();
         if (!MusicUtils.canInteract(ctx.getMember()))
         {
-            ctx.replyError("You have to be a DJ/Server Manager to stop the playback");
+            ctx.replyError(i18n.get("music.messages.failure.cant_interact", "stop the playback"));
+            return;
+        }
+        var guild = ctx.getGuild();
+        var musicPlayer = MusicPlayerCache.getMusicPlayer(guild);
+        if (musicPlayer == null)
+        {
+            ctx.replyError(i18n.get("music.messages.failure.no_music"));
             return;
         }
         MusicPlayerCache.disconnectFromChannel(guild);

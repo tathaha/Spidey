@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.handlers.command;
 
-import dev.mlnr.spidey.cache.settings.GuildSettingsCache;
+import dev.mlnr.spidey.cache.GuildSettingsCache;
 import dev.mlnr.spidey.objects.command.Command;
 
 import java.util.HashMap;
@@ -12,20 +12,20 @@ public class CooldownHandler
 
     private CooldownHandler() {}
 
-    public static void cooldown(final long guildId, final long userId, final Command command)
+    public static void cooldown(long guildId, long userId, Command command)
     {
-        final var cooldown = command.getCooldown();
+        var cooldown = command.getCooldown();
         if (cooldown == 0)
             return;
         COOLDOWN_MAP.computeIfAbsent(command, k -> new HashMap<>()).put(userId, System.currentTimeMillis() + getCooldown(guildId, command) * 1000L);
     }
 
-    public static boolean isOnCooldown(final long userId, final Command command)
+    public static boolean isOnCooldown(long userId, Command command)
     {
-        final var entry = COOLDOWN_MAP.get(command);
+        var entry = COOLDOWN_MAP.get(command);
         if (entry == null)
             return false;
-        final var lastUsed = entry.get(userId);
+        var lastUsed = entry.get(userId);
         if (lastUsed == null)
             return false;
         if (System.currentTimeMillis() > lastUsed)
@@ -36,11 +36,9 @@ public class CooldownHandler
         return true;
     }
 
-    public static int getCooldown(final long guildId, final Command command)
+    public static int getCooldown(long guildId, Command command)
     {
-        final var cooldown = command.getCooldown();
-        if (GuildSettingsCache.isVip(guildId))
-            return cooldown / 2;
-        return cooldown;
+        var cooldown = command.getCooldown();
+        return GuildSettingsCache.isVip(guildId) ? cooldown / 2 : cooldown;
     }
 }

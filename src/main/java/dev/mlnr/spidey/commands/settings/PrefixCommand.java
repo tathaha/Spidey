@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.commands.settings;
 
-import dev.mlnr.spidey.cache.settings.GuildSettingsCache;
+import dev.mlnr.spidey.cache.GuildSettingsCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
@@ -11,39 +11,39 @@ public class PrefixCommand extends Command
 {
     public PrefixCommand()
     {
-        super("prefix", new String[]{}, "Sets/removes the prefix for this server", "prefix (new prefix, if not given, the prefix will be reset if set)", Category.SETTINGS,
-                Permission.MANAGE_SERVER, 0, 4);
+        super("prefix", new String[]{}, Category.SETTINGS, Permission.MANAGE_SERVER, 0, 4);
     }
 
     @Override
-    public void execute(final String[] args, final CommandContext ctx)
+    public void execute(String[] args, CommandContext ctx)
     {
-        final var guild = ctx.getGuild();
-        final var guildId = guild.getIdLong();
-        final var currentPrefix = GuildSettingsCache.getPrefix(guildId);
+        var guild = ctx.getGuild();
+        var guildId = guild.getIdLong();
+        var currentPrefix = GuildSettingsCache.getPrefix(guildId);
+        var i18n = ctx.getI18n();
         if (args.length == 0)
         {
             if (currentPrefix.equals("s!"))
-                ctx.replyError("The prefix for this server is already set to the default one");
+                ctx.replyError(i18n.get("commands.prefix.other.already_default"));
             else
             {
                 GuildSettingsCache.setPrefix(guildId, "s!");
-                ctx.reply(":white_check_mark: The prefix for this server has been reset to `s!`!");
+                ctx.reply(i18n.get("commands.prefix.other.reset"));
             }
             return;
         }
-        final var newPrefix = args[0];
+        var newPrefix = args[0];
         if (currentPrefix.equals(newPrefix))
         {
-            ctx.replyError("The prefix for this server is already set to `" + currentPrefix + "`");
+            ctx.replyError(i18n.get("commands.prefix.other.already_set", newPrefix));
             return;
         }
         if (newPrefix.length() > 10)
         {
-            ctx.replyError("The prefix can't be longer than 10 characters");
+            ctx.replyError(i18n.get("commands.prefix.other.longer"));
             return;
         }
         GuildSettingsCache.setPrefix(guildId, newPrefix);
-        ctx.reply(":white_check_mark: The prefix has been successfully changed to `" + newPrefix + "`!");
+        ctx.reply(i18n.get("commands.prefix.other.changed", newPrefix));
     }
 }

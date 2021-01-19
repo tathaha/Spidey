@@ -1,5 +1,6 @@
 package dev.mlnr.spidey.handlers.command;
 
+import dev.mlnr.spidey.cache.GuildSettingsCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
@@ -22,70 +23,70 @@ public class CommandHandler
 {
     private static final Map<String, Command> COMMANDS = new HashMap<>();
     private static final Logger LOGGER = LoggerFactory.getLogger(CommandHandler.class);
-    private static final String NO_PERMS = "Action can't be completed because you don't have the **%s** permission";
 
     private CommandHandler() {}
 
     static
     {
-        try (final var result = new ClassGraph().acceptPackages("dev.mlnr.spidey.commands").scan())
+        try (var result = new ClassGraph().acceptPackages("dev.mlnr.spidey.commands").scan())
         {
-            for (final var cls : result.getAllClasses())
+            for (var cls : result.getAllClasses())
             {
-                final var cmd = (Command) cls.loadClass().getDeclaredConstructor().newInstance();
+                var cmd = (Command) cls.loadClass().getDeclaredConstructor().newInstance();
                 COMMANDS.put(cmd.getInvoke(), cmd);
-                for (final var alias : cmd.getAliases())
+                for (var alias : cmd.getAliases())
                     COMMANDS.put(alias, cmd);
             }
         }
-        catch (final Exception e)
+        catch (Exception e)
         {
             LOGGER.error("There was an error while registering the commands!", e);
         }
     }
 
-    public static void handle(final GuildMessageReceivedEvent event, final String prefix)
+    public static void handle(GuildMessageReceivedEvent event, String prefix)
     {
-        final var message = event.getMessage();
-        final var content = message.getContentRaw().substring(prefix.length()).trim();
+        var message = event.getMessage();
+        var content = message.getContentRaw().substring(prefix.length()).trim();
+        var guildId = message.getGuild().getIdLong();
+        var i18n = GuildSettingsCache.getI18n(guildId);
         if (content.isEmpty())
         {
-            Utils.returnError("Please specify a command", message);
+            Utils.returnError(i18n.get("command_failures.specify"), message);
             return;
         }
-        final var command = (content.contains(" ") ? content.substring(0, content.indexOf(' ')) : content).toLowerCase();
-        final var cmd = COMMANDS.get(command);
+        var command = (content.contains(" ") ? content.substring(0, content.indexOf(' ')) : content).toLowerCase();
+        var cmd = COMMANDS.get(command);
         if (cmd == null)
         {
-            final var similar = StringUtils.getSimilarCommand(command);
-            Utils.returnError("**" + command + "** isn't a valid command. " + (similar == null
-                    ? "Check `" + prefix + "help` for a list of commands."
-                    : "Did you perhaps mean **" + similar + "**?"), message, false);
+            var similar = StringUtils.getSimilarCommand(command);
+            Utils.returnError(i18n.get("command_failures.invalid.message", command) + " " + (similar == null
+                    ? i18n.get("command_failures.invalid.check_help", prefix)
+                    : i18n.get("command_failures.invalid.suggestion", similar)), message);
             return;
         }
-        final var requiredPermission = cmd.getRequiredPermission();
-        final var member = message.getMember();
-        final var userId = member.getIdLong();
+        var requiredPermission = cmd.getRequiredPermission();
+        var member = message.getMember();
+        var userId = member.getIdLong();
         if (!member.hasPermission(requiredPermission))
         {
-            Utils.returnError(String.format(NO_PERMS, requiredPermission.getName()), message);
+            Utils.returnError(i18n.get("command_failures.no_perms", requiredPermission.getName()), message);
             return;
         }
-        final var guildId = message.getGuild().getIdLong();
         if (isOnCooldown(userId, cmd))
         {
-            Utils.returnError("The command is on cooldown", message);
+            Utils.returnError(i18n.get("command_failures.cooldown"), message);
             return;
         }
 
         // NSFW COMMANDS HANDLING
-        final var channel = message.getTextChannel();
-        final var category = cmd.getCategory();
+        var channel = message.getTextChannel();
+        var category = cmd.getCategory();
         if (category == Category.NSFW)
         {
             if (!channel.isNSFW())
             {
-                Utils.returnError("You can use nsfw commands only in nsfw channels", message);
+                Utils.returnError(i18n.get("command_failures.only_nsfw"), message);
                 return;
             }
             Utils.sendMessage(channel, KSoftAPIHelper.getNsfwImage(cmd.getInvoke(), member), message);
@@ -94,10 +95,10 @@ public class CommandHandler
         }
         //
 
-        final var maxArgs = cmd.getMaxArgs();
-        final var tmp = content.split("\\s+", maxArgs > 0 ? maxArgs + 1 : 0);
-        final var args = Arrays.copyOfRange(tmp, 1, tmp.length);
-        cmd.execute(args, new CommandContext(event));
+        var maxArgs = cmd.getMaxArgs();
+        var tmp = content.split("\\s+", maxArgs > 0 ? maxArgs + 1 : 0);
+        var args = Arrays.copyOfRange(tmp, 1, tmp.length);
+        cmd.execute(args, new CommandContext(args, event, i18n));
         cooldown(guildId, userId, cmd);
     }
 

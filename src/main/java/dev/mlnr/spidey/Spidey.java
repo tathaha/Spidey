@@ -28,7 +28,7 @@ public class Spidey
 
     private Spidey() {}
 
-    public static void main(final String[] args)
+    public static void main(String[] args)
     {
         try
         {
@@ -58,7 +58,7 @@ public class Spidey
                     .awaitReady();
             RestAction.setDefaultFailure(null);
         }
-        catch (final Exception e)
+        catch (Exception e)
         {
             LOGGER.error("There was an error while building JDA!", e);
         }

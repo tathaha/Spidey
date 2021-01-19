@@ -18,7 +18,7 @@ public class MusicPlayer
 
     private ScheduledFuture<?> leaveTask;
 
-    public MusicPlayer(final long guildId)
+    public MusicPlayer(long guildId)
     {
         this.audioPlayer = MusicUtils.getAudioPlayerManager().createPlayer();
         this.trackScheduler = new TrackScheduler(this.audioPlayer, guildId);
@@ -64,7 +64,7 @@ public class MusicPlayer
 
     public boolean pauseOrUnpause()
     {
-        final var state = !isPaused();
+        var state = !isPaused();
         audioPlayer.setPaused(state);
         return state;
     }

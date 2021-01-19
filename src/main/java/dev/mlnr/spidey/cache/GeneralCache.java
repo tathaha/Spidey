@@ -1,7 +1,6 @@
 package dev.mlnr.spidey.cache;
 
 import dev.mlnr.spidey.DatabaseManager;
-import dev.mlnr.spidey.cache.settings.GuildSettingsCache;
 import dev.mlnr.spidey.objects.guild.InviteData;
 
 import java.util.HashMap;
@@ -18,7 +17,7 @@ public class GeneralCache
         return INVITE_CACHE;
     }
 
-    public static void removeGuild(final long guildId)
+    public static void removeGuild(long guildId)
     {
         if (GuildSettingsCache.isVip(guildId))
             return;

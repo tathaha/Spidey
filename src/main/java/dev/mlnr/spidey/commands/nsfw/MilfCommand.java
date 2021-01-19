@@ -10,9 +10,9 @@ public class MilfCommand extends Command
 {
     public MilfCommand()
     {
-        super("milf", new String[]{"milfs"}, "Sends a (NSFW) picture of a milf", "milf", Category.NSFW, Permission.UNKNOWN, 0, 4);
+        super("milf", new String[]{"milfs"}, Category.NSFW, Permission.UNKNOWN, 0, 4);
     }
 
     @Override
-    public void execute(final String[] args, final CommandContext ctx) {}
+    public void execute(String[] args, CommandContext ctx) {}
 }

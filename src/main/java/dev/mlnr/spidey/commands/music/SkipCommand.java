@@ -13,22 +13,23 @@ public class SkipCommand extends Command
 {
     public SkipCommand()
     {
-        super("skip", new String[]{}, "Skips a song", "skip", Category.MUSIC, Permission.UNKNOWN, 0, 0);
+        super("skip", new String[]{}, Category.MUSIC, Permission.UNKNOWN, 0, 0);
     }
 
     @Override
-    public void execute(final String[] args, final CommandContext ctx)
+    public void execute(String[] args, CommandContext ctx)
     {
-        final var musicPlayer = MusicPlayerCache.getMusicPlayer(ctx.getGuild());
+        var musicPlayer = MusicPlayerCache.getMusicPlayer(ctx.getGuild());
+        var i18n = ctx.getI18n();
         if (musicPlayer == null)
         {
-            ctx.replyError("There is no music playing");
+            ctx.replyError(i18n.get("music.messages.failure.no_music"));
             return;
         }
-        final var playingTrack = musicPlayer.getPlayingTrack();
+        var playingTrack = musicPlayer.getPlayingTrack();
         if (playingTrack == null)
         {
-            ctx.replyError("There is no song playing");
+            ctx.replyError(i18n.get("music.messages.failure.no_song"));
             return;
         }
         if (MusicUtils.canInteract(ctx.getMember(), playingTrack))
@@ -39,26 +40,26 @@ public class SkipCommand extends Command
         }
         if (!MusicUtils.isMemberConnected(ctx))
         {
-            ctx.replyError("You need to be connected to the same channel as me in order to vote for skipping", Emojis.DISLIKE);
+            ctx.replyError(i18n.get("commands.skip.other.same_channel"), Emojis.DISLIKE);
             return;
         }
-        final var trackScheduler = musicPlayer.getTrackScheduler();
-        final var author = ctx.getAuthor();
-        final var mention = author.getAsMention();
+        var trackScheduler = musicPlayer.getTrackScheduler();
+        var author = ctx.getAuthor();
+        var mention = author.getAsMention();
         if (trackScheduler.hasSkipVoted(author))
         {
             trackScheduler.removeSkipVote(author);
             ctx.reactLike();
-            ctx.reply("You've removed your vote to skip the current track. [" + mention + "]", null);
+            ctx.reply(i18n.get("commands.skip.other.removed") + " [" + mention + "]", null);
             return;
         }
         trackScheduler.addSkipVote(author);
-        final var skipVotes = trackScheduler.getSkipVotes();
-        final var requiredSkipVotes = trackScheduler.getRequiredSkipVotes();
+        var skipVotes = trackScheduler.getSkipVotes();
+        var requiredSkipVotes = trackScheduler.getRequiredSkipVotes();
         if (skipVotes < requiredSkipVotes)
         {
             ctx.reactLike();
-            ctx.reply("You've voted to skip the current track. Votes: **" + skipVotes + "**/**" + requiredSkipVotes + "** [" + mention + "]", null);
+            ctx.reply(i18n.get("commands.skip.other.added") + " **" + skipVotes + "**/**" + requiredSkipVotes + "** [" + mention + "]", null);
             return;
         }
         musicPlayer.skip();

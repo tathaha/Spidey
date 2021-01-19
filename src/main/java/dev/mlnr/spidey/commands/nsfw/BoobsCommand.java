@@ -10,9 +10,9 @@ public class BoobsCommand extends Command
 {
     public BoobsCommand()
     {
-        super("boobs", new String[]{"tits", "titties", "boobies"}, "Sends a (NSFW) picture of boobs", "boobs", Category.NSFW, Permission.UNKNOWN, 0, 4);
+        super("boobs", new String[]{"tits", "titties", "boobies"}, Category.NSFW, Permission.UNKNOWN, 0, 4);
     }
 
     @Override
-    public void execute(final String[] args, final CommandContext ctx) {}
+    public void execute(String[] args, CommandContext ctx) {}
 }

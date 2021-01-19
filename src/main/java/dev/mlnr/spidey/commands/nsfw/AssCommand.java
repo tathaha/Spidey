@@ -10,9 +10,9 @@ public class AssCommand extends Command
 {
     public AssCommand()
     {
-        super("ass", new String[]{"butt", "booty"}, "Sends a (NSFW) picture of ass", "ass", Category.NSFW, Permission.UNKNOWN, 0, 4);
+        super("ass", new String[]{"butt", "booty"}, Category.NSFW, Permission.UNKNOWN, 0, 4);
     }
 
     @Override
-    public void execute(final String[] args, final CommandContext ctx) {}
+    public void execute(String[] args, CommandContext ctx) {}
 }
