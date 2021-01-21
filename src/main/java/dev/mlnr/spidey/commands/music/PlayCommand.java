@@ -22,7 +22,7 @@ public class PlayCommand extends Command
         if (musicPlayer == null)
             return;
         var query = MusicUtils.YOUTUBE_URL_PATTERN.matcher(args[0]).matches() ? args[0] : "ytsearch:" + args[0];
-        var loader = new AudioLoader(musicPlayer, query, ctx, false);
+        var loader = new AudioLoader(musicPlayer, query, ctx);
         MusicUtils.loadQuery(musicPlayer, query, loader);
     }
 }

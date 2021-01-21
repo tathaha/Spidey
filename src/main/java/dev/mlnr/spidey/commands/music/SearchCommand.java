@@ -43,7 +43,7 @@ public class SearchCommand extends Command
                 StringUtils.createSelection(selectionEmbedBuilder, tracks, ctx, "track", MusicUtils::formatTrack, choice ->
                 {
                     var url = tracks.get(choice).getInfo().uri;
-                    var loader = new AudioLoader(musicPlayer, url, ctx, false);
+                    var loader = new AudioLoader(musicPlayer, url, ctx);
                     MusicUtils.loadQuery(musicPlayer, url, loader);
                 });
             }

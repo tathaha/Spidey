@@ -11,8 +11,6 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.apache.commons.collections4.ListUtils;
 
-import java.util.ArrayList;
-import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -130,9 +128,9 @@ public class StringUtils
         });
     }
 
-    public static void createQueuePaginator(Message message, Deque<AudioTrack> queue, I18n i18n)
+    public static void createQueuePaginator(Message message, List<AudioTrack> queue, I18n i18n)
     {
-        var tracksChunks = ListUtils.partition(new ArrayList<>(queue), 10);
+        var tracksChunks = ListUtils.partition(queue, 10);
         var descriptions = new HashMap<Integer, StringBuilder>();
 
         var currentTrack = 0;

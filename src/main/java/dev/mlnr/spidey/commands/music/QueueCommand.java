@@ -27,7 +27,7 @@ public class QueueCommand extends Command
             return;
         }
         var trackScheduler = musicPlayer.getTrackScheduler();
-        var queue = trackScheduler.getQueue();
+        var queue = trackScheduler.getQueueAsList();
         if (queue.isEmpty())
         {
             ctx.replyError(i18n.get("commands.queue.other.empty"));

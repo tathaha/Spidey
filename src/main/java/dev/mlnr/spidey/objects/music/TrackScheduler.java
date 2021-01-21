@@ -10,8 +10,9 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.Queue;
 
 import static dev.mlnr.spidey.utils.MusicUtils.handleMarkers;
 
@@ -20,7 +21,7 @@ public class TrackScheduler extends AudioEventAdapter
     private final AudioPlayer audioPlayer;
     private final long guildId;
 
-    private final ConcurrentLinkedDeque<AudioTrack> queue;
+    private final Queue<AudioTrack> queue = new LinkedList<>();
     private RepeatMode repeatMode;
 
     private AudioTrack previousTrack;
@@ -33,15 +34,9 @@ public class TrackScheduler extends AudioEventAdapter
         this.audioPlayer = audioPlayer;
         audioPlayer.addListener(this);
         this.guildId = guildId;
-        this.queue = new ConcurrentLinkedDeque<>();
     }
 
     public void queue(AudioTrack track)
-    {
-        queue(track, false);
-    }
-
-    public void queue(AudioTrack track, boolean addFirst)
     {
         if (audioPlayer.getPlayingTrack() == null)
         {
@@ -49,16 +44,12 @@ public class TrackScheduler extends AudioEventAdapter
             currentTrack = track;
             return;
         }
-
-        if (addFirst)
-            queue.addFirst(track);
-        else
-            queue.offer(track);
+        queue.offer(track);
     }
 
     public void nextTrack()
     {
-        clearSkipVotes();
+        skipVotes.clear();
         if (repeatMode == RepeatMode.SONG && currentTrack != null)
         {
             var currentCloned = currentTrack.makeClone();
@@ -79,9 +70,14 @@ public class TrackScheduler extends AudioEventAdapter
         audioPlayer.playTrack(trackToPlay);
     }
 
-    public ConcurrentLinkedDeque<AudioTrack> getQueue()
+    public Queue<AudioTrack> getQueue()
     {
         return this.queue;
+    }
+
+    public List<AudioTrack> getQueueAsList()
+    {
+        return (List<AudioTrack>) this.queue;
     }
 
     public RepeatMode getRepeatMode()
@@ -132,11 +128,6 @@ public class TrackScheduler extends AudioEventAdapter
     public boolean hasSkipVoted(User user)
     {
         return skipVotes.contains(user.getIdLong());
-    }
-
-    public void clearSkipVotes()
-    {
-        skipVotes.clear();
     }
 
     // events

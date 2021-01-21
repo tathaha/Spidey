@@ -6,7 +6,6 @@ import dev.mlnr.spidey.utils.Paginator;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.jodah.expiringmap.ExpirationPolicy;
 import net.jodah.expiringmap.ExpiringMap;
 
@@ -27,23 +26,17 @@ public class PaginatorCache
     public static void createPaginator(Message message, int totalPages, BiConsumer<Integer, EmbedBuilder> pagesConsumer)
     {
         var channel = message.getTextChannel();
-        var author = message.getAuthor();
         var embedBuilder = new EmbedBuilder().setColor(Utils.SPIDEY_COLOR);
         embedBuilder.setFooter("Page 1/" + totalPages);
         pagesConsumer.accept(0, embedBuilder);
 
         channel.sendMessage(embedBuilder.build()).queue(paginatorMessage ->
         {
-            var paginatorMessageId = paginatorMessage.getIdLong();
-            var authorId = author.getIdLong();
-            PAGINATOR_CACHE.put(paginatorMessageId, new Paginator(channel.getIdLong(), message.getIdLong(), authorId, totalPages, pagesConsumer));
+            PAGINATOR_CACHE.put(paginatorMessage.getIdLong(), new Paginator(channel.getIdLong(), message.getIdLong(), message.getAuthor().getIdLong(), totalPages, pagesConsumer));
 
             Utils.addReaction(paginatorMessage, Emojis.BACKWARDS);
             Utils.addReaction(paginatorMessage, Emojis.FORWARD);
             Utils.addReaction(paginatorMessage, Emojis.WASTEBASKET);
-
-            Spidey.getWaiter().waitForEvent(GuildMessageReactionAddEvent.class, ev -> ev.getMessageIdLong() == paginatorMessageId && ev.getUserIdLong() == authorId, ev -> {}, 1, TimeUnit.MINUTES,
-                    () -> removePaginator(paginatorMessageId));
         });
     }
 

@@ -18,14 +18,12 @@ public class AudioLoader implements AudioLoadResultHandler
     private final MusicPlayer musicPlayer;
     private final String query;
     private final CommandContext ctx;
-    private final boolean insertFirst;
 
-    public AudioLoader(MusicPlayer musicPlayer, String query, CommandContext ctx, boolean insertFirst)
+    public AudioLoader(MusicPlayer musicPlayer, String query, CommandContext ctx)
     {
         this.musicPlayer = musicPlayer;
         this.query = query;
         this.ctx = ctx;
-        this.insertFirst = insertFirst;
     }
 
     @Override
@@ -118,7 +116,7 @@ public class AudioLoader implements AudioLoadResultHandler
 
         MusicUtils.handleMarkers(track, guildId);
         track.setUserData(requester.getIdLong());
-        trackScheduler.queue(track, this.insertFirst);
+        trackScheduler.queue(track);
 
         if (playlist)
             return null;

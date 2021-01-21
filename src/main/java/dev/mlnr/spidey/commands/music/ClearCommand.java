@@ -35,7 +35,7 @@ public class ClearCommand extends Command
         var queue = trackScheduler.getQueue();
         if (queue.isEmpty())
         {
-            ctx.replyError(i18n.get("commands.queue.other.empty"));
+            ctx.replyError(i18n.get("music.messages.failure.queue_empty"));
             return;
         }
         queue.clear();

@@ -40,6 +40,7 @@
         "no_matches": "No matches found for **%s**.",
         "no_music": "There is no music playing.",
         "no_song": "There is no song playing.",
+        "queue_empty": "The queue is empty.",
         "connect": {
           "cant_play": "I can't play music as",
           "no_channel": "you're not connected to any channel",
@@ -360,7 +361,6 @@
       "description": "Lists the current queue",
       "usage": "queue",
       "other": {
-        "empty": "The queue is empty.",
         "text": {
           "one": "There is **1** track in the queue",
           "multiple": "There are **%d** tracks in the queue",
@@ -398,6 +398,14 @@
           "multiple": "There are **%d** segments",
           "video": "in this video!\n\n"
         }
+      }
+    },
+    "shuffle": {
+      "description": "Shuffles the queue",
+      "usage": "shuffle",
+      "other": {
+        "only_one": "There is only one song in the queue.",
+        "success": "The queue has been shuffled."
       }
     },
     "skip": {
