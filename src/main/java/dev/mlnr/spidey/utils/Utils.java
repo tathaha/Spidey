@@ -1,6 +1,8 @@
 package dev.mlnr.spidey.utils;
 
+import dev.mlnr.spidey.Spidey;
 import dev.mlnr.spidey.cache.GeneralCache;
+import dev.mlnr.spidey.cache.GuildSettingsCache;
 import dev.mlnr.spidey.cache.ResponseCache;
 import dev.mlnr.spidey.objects.guild.InviteData;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -10,7 +12,6 @@ import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import net.jodah.expiringmap.ExpirationPolicy;
 import net.jodah.expiringmap.ExpiringMap;
 
-import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.EnumSet;
@@ -86,10 +87,14 @@ public class Utils
         var channel = origin.getTextChannel();
         if (!channel.canTalk())
             return;
-        channel.sendMessage(String.format(":no_entry: %s", errMsg))
-                .delay(Duration.ofSeconds(7))
-                .flatMap(Message::delete)
-                .queue(success -> deleteMessage(origin));
+        channel.sendMessage(":no_entry: " + errMsg).queue(errorMessage ->
+        {
+            setResponse(origin, errorMessage);
+            var guild = channel.getGuild();
+            if (!guild.getSelfMember().hasPermission(Permission.MESSAGE_MANAGE) || !GuildSettingsCache.isErrorCleanupEnabled(guild.getIdLong()))
+                return;
+            Spidey.getScheduler().schedule(() -> channel.purgeMessages(origin, errorMessage), 10, TimeUnit.SECONDS);
+        });
     }
 
     public static void storeInvites(Guild guild)

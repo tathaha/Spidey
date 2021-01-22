@@ -70,7 +70,7 @@ public class FairQueueCommand extends Command
             GuildSettingsCache.setFairQueueThreshold(guildId, threshold);
         GuildSettingsCache.setFairQueueEnabled(guildId, enabled);
         ctx.reactLike();
-        ctx.reply(i18n.get("commands.fairqueue.other.done.text", enabled ? "enabled" : "disabled") +
+        ctx.reply(i18n.get("commands.fairqueue.other.done.text", enabled ? i18n.get("enabled") : i18n.get("disabled")) +
                 (threshold == -1 ? "." : " " + i18n.get("commands.fairqueue.other.done.threshold", threshold)));
     }
 }

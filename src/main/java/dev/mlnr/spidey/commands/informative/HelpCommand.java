@@ -82,6 +82,7 @@ public class HelpCommand extends Command
                     : i18n.get("command_failures.invalid.suggestion", similar)));
             return;
         }
+        invoke = command.getInvoke();
         var none = i18n.get("commands.help.other.command_info.info_none");
         var requiredPermission = command.getRequiredPermission();
         var aliases = command.getAliases();

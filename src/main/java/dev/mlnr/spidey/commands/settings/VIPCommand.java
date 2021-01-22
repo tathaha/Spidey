@@ -17,16 +17,15 @@ public class VIPCommand extends Command
     @Override
     public void execute(String[] args, CommandContext ctx)
     {
-        var i18n = ctx.getI18n();
         if (ctx.getAuthor().getIdLong() != 394607709741252621L)
         {
-            ctx.replyError(i18n.get("command_failures.only_dev"));
+            ctx.replyError(ctx.getI18n().get("command_failures.only_dev"));
             return;
         }
         var guildId = args.length == 0 ? ctx.getGuild().getIdLong() : Long.parseLong(args[0]);
         var vip = !GuildSettingsCache.isVip(guildId);
         GuildSettingsCache.setVip(guildId, vip);
         ctx.reactLike();
-        ctx.reply(i18n.get("commands.vip.other.done", guildId, vip ? "added" : "removed"));
+        ctx.reply("VIP for guild **" + guildId + "** has been **" + (vip ? "enabled" : "disabled") + "**.");
     }
 }

@@ -2,6 +2,8 @@
   "limit_exceeded": "Limit exceeded",
   "took_too_long": "Sorry, you took too long.",
   "internal_error": "Unfortunately, i couldn't %s due to an internal error: **%s**. Please report this message to the Developer.",
+  "enabled": "enabled",
+  "disabled": "disabled",
   "number": {
     "range": "Please enter a number from 1-%d.",
     "invalid": "Entered value is either negative or not a number."
@@ -487,6 +489,13 @@
       "description": "Sets/removes the DJ role",
       "usage": "djrole (@role, role id or name of the role or blank to reset)"
     },
+    "errorcleanup": {
+      "description": "Enables/disables automatic error message cleaning after 10 seconds",
+      "usage": "errorcleanup",
+      "other": {
+        "done": "Error cleaning has been **%s**."
+      }
+    },
     "fairqueue": {
       "description": "Enables/disables fair queue or sets the threshold",
       "usage": "fairqueue (threshold from 2 to 10 or blank to enable/disable fair queue)",
@@ -516,7 +525,7 @@
       "description": "Sets/removes the prefix for this server",
       "usage": "prefix (new prefix or blank to reset)",
       "other": {
-        "already_default": "The prefix for this server is already set to the default one!",
+        "default": "The prefix for this server is set to the default one. You can change it by using `s!prefix <new prefix>` (without brackets).",
         "reset": ":white_check_mark: The prefix for this server has been reset to `s!`!",
         "already_set": "The prefix for this server is already set to `%s`.",
         "longer": "The prefix cannot be longer than 10 characters.",
@@ -542,10 +551,7 @@
     },
     "vip": {
       "description": "Adds/removes a guild to/from VIP guilds",
-      "usage": "vip (guild id)",
-      "other": {
-        "done": "VIP for guild %d has been **%s**."
-      }
+      "usage": "vip (guild id)"
     },
     "editsnipe": {
       "description": "Snipes an edited message",
