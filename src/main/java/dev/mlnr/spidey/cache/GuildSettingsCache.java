@@ -43,6 +43,11 @@ public class GuildSettingsCache
         return getGuildSettings(guildId).isSnipingEnabled();
     }
 
+    public static boolean isErrorCleanupEnabled(long guildId)
+    {
+        return getGuildSettings(guildId).isErrorCleanupEnabled();
+    }
+
     public static boolean isVip(long guildId)
     {
         return getGuildSettings(guildId).isVip();
@@ -102,6 +107,11 @@ public class GuildSettingsCache
     public static void setSnipingEnabled(long guildId, boolean enabled)
     {
         getGuildSettings(guildId).setSnipingEnabled(enabled);
+    }
+
+    public static void setErrorCleanupEnabled(long guildId, boolean enabled)
+    {
+        getGuildSettings(guildId).setErrorCleanupEnabled(enabled);
     }
 
     public static void setVip(long guildId, boolean vip)

@@ -13,6 +13,7 @@ public class GuildSettings
     private I18n i18n;
 
     private boolean snipingEnabled;
+    private boolean errorCleanupEnabled;
     private boolean vip;
 
     private long djRoleId;
@@ -22,7 +23,7 @@ public class GuildSettings
     private boolean fairQueueEnabled;
     private int fairQueueThreshold;
 
-    public GuildSettings(long guildId, long logChannelId, long joinRoleId, String prefix, String language, boolean snipingEnabled, boolean vip, long djRoleId,
+    public GuildSettings(long guildId, long logChannelId, long joinRoleId, String prefix, String language, boolean snipingEnabled, boolean errorCleanupEnabled, boolean vip, long djRoleId,
                          boolean segmentSkippingEnabled, int defaultVolume, boolean fairQueueEnabled, int fairQueueThreshold)
     {
         this.guildId = guildId;
@@ -33,6 +34,7 @@ public class GuildSettings
         this.i18n = I18n.ofLanguage(language);
 
         this.snipingEnabled = snipingEnabled;
+        this.errorCleanupEnabled = errorCleanupEnabled;
         this.vip = vip;
 
         this.djRoleId = djRoleId;
@@ -68,6 +70,11 @@ public class GuildSettings
     public boolean isSnipingEnabled()
     {
         return this.snipingEnabled;
+    }
+
+    public boolean isErrorCleanupEnabled()
+    {
+        return this.errorCleanupEnabled;
     }
 
     public boolean isVip()
@@ -134,6 +141,12 @@ public class GuildSettings
     {
         this.snipingEnabled = enabled;
         DatabaseManager.setSnipingEnabled(guildId, enabled);
+    }
+
+    public void setErrorCleanupEnabled(boolean enabled)
+    {
+        this.errorCleanupEnabled = enabled;
+        DatabaseManager.setErrorCleanupEnabled(guildId, enabled);
     }
 
     public void setVip(boolean vip)
