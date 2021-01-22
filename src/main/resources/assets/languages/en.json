@@ -516,7 +516,7 @@
       "description": "Sets/removes the prefix for this server",
       "usage": "prefix (new prefix or blank to reset)",
       "other": {
-        "already_default": "The prefix for this server is already set to the default one!",
+        "default": "The prefix for this server is set to the default one. You can change it by using `s!prefix <new prefix>` (without brackets).",
         "reset": ":white_check_mark: The prefix for this server has been reset to `s!`!",
         "already_set": "The prefix for this server is already set to `%s`.",
         "longer": "The prefix cannot be longer than 10 characters.",

@@ -24,7 +24,7 @@ public class PrefixCommand extends Command
         if (args.length == 0)
         {
             if (currentPrefix.equals("s!"))
-                ctx.replyError(i18n.get("commands.prefix.other.already_default"));
+                ctx.replyError(i18n.get("commands.prefix.other.default"));
             else
             {
                 GuildSettingsCache.setPrefix(guildId, "s!");
