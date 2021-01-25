@@ -11,16 +11,14 @@ import java.awt.*;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
-public class GuildCommand extends Command
-{
-	public GuildCommand()
-	{
+public class GuildCommand extends Command {
+
+	public GuildCommand() {
 		super("guild", new String[]{"server"}, Category.INFORMATIVE, Permission.UNKNOWN, 0, 0);
 	}
 
 	@Override
-	public void execute(String[] args, CommandContext ctx)
-	{
+	public void execute(String[] args, CommandContext ctx) {
 		var eb = Utils.createEmbedBuilder(ctx.getAuthor());
 		var guild = ctx.getGuild();
 		var i18n = ctx.getI18n();
@@ -54,22 +52,20 @@ public class GuildCommand extends Command
 				? (vanityUrl == null ? i18n.get("commands.guild.fields.vanity_url.none") : vanityUrl)
 				: i18n.get("commands.guild.fields.vanity_url.not_eligible"), true);
 
-        eb.addField(i18n.get("commands.guild.fields.roles"), String.valueOf(guild.getRoleCache().size() - 1), true);
+		eb.addField(i18n.get("commands.guild.fields.roles"), String.valueOf(guild.getRoleCache().size() - 1), true);
 
 		var emoteCache = guild.getEmoteCache();
 		var emotes = emoteCache.applyStream(stream -> stream.filter(emote -> !emote.isManaged()).collect(Collectors.toList()));
-		if (!emotes.isEmpty())
-		{
+		if (!emotes.isEmpty()) {
 			var sb = new StringBuilder();
 			var ec = 0;
-			for (var emote : emotes)
-			{
+			for (var emote : emotes) {
 				ec++;
 				sb.append(emote.getAsMention()).append(ec == emotes.size() ? "" : " ");
 			}
 			var animated = emoteCache.applyStream(stream -> stream.filter(Emote::isAnimated).count());
 			eb.addField(i18n.get("commands.guild.fields.emotes", emotes.size(), animated),
-					sb.length() > 1024 ? i18n.get("limit_exceeded") : sb.toString(),false);
+					sb.length() > 1024 ? i18n.get("limit_exceeded") : sb.toString(), false);
 		}
 		ctx.reply(eb);
 	}

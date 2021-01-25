@@ -13,45 +13,36 @@ import net.jodah.expiringmap.ExpiringMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-public class AkinatorCache
-{
-    private static final Map<Long, AkinatorData> AKINATOR_CACHE = ExpiringMap.builder()
-            .expirationPolicy(ExpirationPolicy.ACCESSED)
-            .expiration(2, TimeUnit.MINUTES)
-            .build();
+public class AkinatorCache {
+	private final Map<Long, AkinatorData> akinatorMap = ExpiringMap.builder()
+			.expirationPolicy(ExpirationPolicy.ACCESSED)
+			.expiration(2, TimeUnit.MINUTES)
+			.build();
 
-    private AkinatorCache() {}
+	public void createAkinator(User user, AkinatorContext ctx) {
+		var i18n = ctx.getI18n();
+		var channel = ctx.getChannel();
+		try {
+			var akinator = new AkiwrapperBuilder().build();
+			akinatorMap.put(user.getIdLong(), new AkinatorData(akinator));
+			var embedBuilder = Utils.createEmbedBuilder(user).setAuthor(i18n.get("commands.akinator.other.of", user.getAsTag())).setColor(Utils.SPIDEY_COLOR);
+			embedBuilder.setDescription(i18n.get("commands.akinator.other.question", 1) + " " + akinator.getCurrentQuestion().getQuestion());
+			Utils.sendMessage(channel, embedBuilder.build());
+		}
+		catch (ServerNotFoundException | UnirestException ex) {
+			Utils.returnError(i18n.get("commands.akinator.other.couldnt_create"), ctx.getMessage());
+		}
+	}
 
-    public static void createAkinator(User user, AkinatorContext ctx)
-    {
-        var i18n = ctx.getI18n();
-        var channel = ctx.getChannel();
-        try
-        {
-            var akinator = new AkiwrapperBuilder().build();
-            AKINATOR_CACHE.put(user.getIdLong(), new AkinatorData(akinator));
-            var embedBuilder = Utils.createEmbedBuilder(user).setAuthor(i18n.get("commands.akinator.other.of", user.getAsTag())).setColor(Utils.SPIDEY_COLOR);
-            embedBuilder.setDescription(i18n.get("commands.akinator.other.question", 1) + " " + akinator.getCurrentQuestion().getQuestion());
-            Utils.sendMessage(channel, embedBuilder.build());
-        }
-        catch (ServerNotFoundException | UnirestException ex)
-        {
-            Utils.returnError(i18n.get("commands.akinator.other.couldnt_create"), ctx.getMessage());
-        }
-    }
+	public AkinatorData getAkinatorData(long userId) {
+		return akinatorMap.get(userId);
+	}
 
-    public static AkinatorData getAkinatorData(long userId)
-    {
-        return AKINATOR_CACHE.get(userId);
-    }
+	public boolean hasAkinator(long userId) {
+		return akinatorMap.containsKey(userId);
+	}
 
-    public static boolean hasAkinator(long userId)
-    {
-        return AKINATOR_CACHE.containsKey(userId);
-    }
-
-    public static void removeAkinator(long userId)
-    {
-        AKINATOR_CACHE.remove(userId);
-    }
+	public void removeAkinator(long userId) {
+		akinatorMap.remove(userId);
+	}
 }

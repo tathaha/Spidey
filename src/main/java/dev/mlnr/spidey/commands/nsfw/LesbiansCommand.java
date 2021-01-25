@@ -6,13 +6,12 @@ import dev.mlnr.spidey.objects.command.CommandContext;
 import net.dv8tion.jda.api.Permission;
 
 @SuppressWarnings("unused")
-public class LesbiansCommand extends Command
-{
-    public LesbiansCommand()
-    {
-        super("lesbians", new String[]{"lesbian"}, Category.NSFW, Permission.UNKNOWN, 0, 4);
-    }
+public class LesbiansCommand extends Command {
 
-    @Override
-    public void execute(String[] args, CommandContext ctx) {}
+	public LesbiansCommand() {
+		super("lesbians", new String[]{"lesbian"}, Category.NSFW, Permission.UNKNOWN, 0, 4);
+	}
+
+	@Override
+	public void execute(String[] args, CommandContext ctx) {}
 }

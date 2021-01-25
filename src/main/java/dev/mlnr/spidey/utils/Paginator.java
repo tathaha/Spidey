@@ -4,57 +4,48 @@ import net.dv8tion.jda.api.EmbedBuilder;
 
 import java.util.function.BiConsumer;
 
-public class Paginator
-{
-    private int currentPage;
+public class Paginator {
 
-    private final long invokeChannelId;
-    private final long invokeMessageId;
-    private final long authorId;
-    private final int totalPages;
-    private final BiConsumer<Integer, EmbedBuilder> pagesConsumer;
+	private final long invokeChannelId;
+	private final long invokeMessageId;
+	private final long authorId;
+	private final int totalPages;
+	private final BiConsumer<Integer, EmbedBuilder> pagesConsumer;
+	private int currentPage;
 
-    public Paginator(long invokeChannelId, long invokeMessageId, long authorId, int totalPages, BiConsumer<Integer, EmbedBuilder> pagesConsumer)
-    {
-        this.invokeChannelId = invokeChannelId;
-        this.invokeMessageId = invokeMessageId;
-        this.authorId = authorId;
-        this.totalPages = totalPages;
-        this.pagesConsumer = pagesConsumer;
-    }
+	public Paginator(long invokeChannelId, long invokeMessageId, long authorId, int totalPages, BiConsumer<Integer, EmbedBuilder> pagesConsumer) {
+		this.invokeChannelId = invokeChannelId;
+		this.invokeMessageId = invokeMessageId;
+		this.authorId = authorId;
+		this.totalPages = totalPages;
+		this.pagesConsumer = pagesConsumer;
+	}
 
-    public void modifyCurrentPage(int i)
-    {
-        this.currentPage += i;
-    }
+	public void modifyCurrentPage(int i) {
+		this.currentPage += i;
+	}
 
-    public int getCurrentPage()
-    {
-        return this.currentPage;
-    }
+	public int getCurrentPage() {
+		return this.currentPage;
+	}
 
-    public long getInvokeChannelId()
-    {
-        return this.invokeChannelId;
-    }
+	public long getInvokeChannelId() {
+		return this.invokeChannelId;
+	}
 
-    public long getInvokeMessageId()
-    {
-        return this.invokeMessageId;
-    }
+	public long getInvokeMessageId() {
+		return this.invokeMessageId;
+	}
 
-    public long getAuthorId()
-    {
-        return this.authorId;
-    }
+	public long getAuthorId() {
+		return this.authorId;
+	}
 
-    public int getTotalPages()
-    {
-        return this.totalPages;
-    }
+	public int getTotalPages() {
+		return this.totalPages;
+	}
 
-    public BiConsumer<Integer, EmbedBuilder> getPagesConsumer()
-    {
-        return this.pagesConsumer;
-    }
+	public BiConsumer<Integer, EmbedBuilder> getPagesConsumer() {
+		return this.pagesConsumer;
+	}
 }

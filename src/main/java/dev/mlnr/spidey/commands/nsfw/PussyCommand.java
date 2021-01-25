@@ -6,13 +6,12 @@ import dev.mlnr.spidey.objects.command.CommandContext;
 import net.dv8tion.jda.api.Permission;
 
 @SuppressWarnings("unused")
-public class PussyCommand extends Command
-{
-    public PussyCommand()
-    {
-        super("pussy", new String[]{"vagina"}, Category.NSFW, Permission.UNKNOWN, 0, 4);
-    }
+public class PussyCommand extends Command {
 
-    @Override
-    public void execute(String[] args, CommandContext ctx) {}
+	public PussyCommand() {
+		super("pussy", new String[]{"vagina"}, Category.NSFW, Permission.UNKNOWN, 0, 4);
+	}
+
+	@Override
+	public void execute(String[] args, CommandContext ctx) {}
 }

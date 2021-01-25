@@ -1,5 +1,7 @@
 package dev.mlnr.spidey.objects.command;
 
+import dev.mlnr.spidey.Spidey;
+import dev.mlnr.spidey.cache.Cache;
 import dev.mlnr.spidey.objects.I18n;
 import dev.mlnr.spidey.utils.ArgumentUtils;
 import dev.mlnr.spidey.utils.Emojis;
@@ -14,115 +16,109 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 
-public class CommandContext
-{
-    private final String[] args;
-    private final GuildMessageReceivedEvent event;
-    private final I18n i18n;
+public class CommandContext {
 
-    public CommandContext(String[] args, GuildMessageReceivedEvent event, I18n i18n)
-    {
-        this.args = args;
-        this.event = event;
-        this.i18n = i18n;
-    }
+	private final String[] args;
+	private final GuildMessageReceivedEvent event;
+	private final I18n i18n;
 
-    public Message getMessage()
-    {
-        return event.getMessage();
-    }
+	private final Spidey spidey;
+	private final Cache cache;
 
-    public User getAuthor()
-    {
-        return event.getAuthor();
-    }
+	public CommandContext(String[] args, GuildMessageReceivedEvent event, I18n i18n, Spidey spidey, Cache cache) {
+		this.args = args;
+		this.event = event;
+		this.i18n = i18n;
 
-    public Member getMember()
-    {
-        return event.getMember();
-    }
+		this.spidey = spidey;
+		this.cache = cache;
+	}
 
-    public TextChannel getTextChannel()
-    {
-        return event.getChannel();
-    }
+	public Message getMessage() {
+		return event.getMessage();
+	}
 
-    public Guild getGuild()
-    {
-        return event.getGuild();
-    }
+	public User getAuthor() {
+		return event.getAuthor();
+	}
 
-    public JDA getJDA()
-    {
-        return event.getJDA();
-    }
+	public Member getMember() {
+		return event.getMember();
+	}
 
-    public I18n getI18n()
-    {
-        return this.i18n;
-    }
+	public TextChannel getTextChannel() {
+		return event.getChannel();
+	}
 
-    public GuildMessageReceivedEvent getEvent()
-    {
-        return this.event;
-    }
+	public Guild getGuild() {
+		return event.getGuild();
+	}
 
-    // interaction methods
+	public JDA getJDA() {
+		return event.getJDA();
+	}
 
-    public void reply(EmbedBuilder embedBuilder)
-    {
-        Utils.sendMessage(getTextChannel(), embedBuilder.build(), getMessage());
-    }
+	public I18n getI18n() {
+		return this.i18n;
+	}
 
-    public void reply(String content)
-    {
-        reply(content, MessageAction.getDefaultMentions());
-    }
+	public GuildMessageReceivedEvent getEvent() {
+		return this.event;
+	}
 
-    public void reply(String content, Set<Message.MentionType> allowedMentions)
-    {
-        Utils.sendMessage(getTextChannel(), content, allowedMentions, getMessage());
-    }
+	public Spidey getSpidey() {
+		return spidey;
+	}
 
-    public void replyError(String error)
-    {
-        replyError(error, Emojis.CROSS);
-    }
+	public Cache getCache() {
+		return cache;
+	}
 
-    public void replyError(String error, String failureEmoji)
-    {
-        Utils.returnError(error, getMessage(), failureEmoji);
-    }
+	// interaction methods
 
-    public void reactLike()
-    {
-        Utils.addReaction(getMessage(), Emojis.LIKE);
-    }
+	public void reply(EmbedBuilder embedBuilder) {
+		Utils.sendMessage(getTextChannel(), embedBuilder.build(), getMessage());
+	}
 
-    // arg stuff
+	public void reply(String content) {
+		reply(content, MessageAction.getDefaultMentions());
+	}
 
-    public void getArgumentAsInt(int argIndex, IntConsumer consumer)
-    {
-        ArgumentUtils.parseArgumentAsInt(args[argIndex], this, consumer);
-    }
+	public void reply(String content, Set<Message.MentionType> allowedMentions) {
+		Utils.sendMessage(getTextChannel(), content, allowedMentions, getMessage());
+	}
 
-    public void getArgumentAsUnsignedInt(int argIndex, IntConsumer consumer)
-    {
-        ArgumentUtils.parseArgumentAsUnsignedInt(args[argIndex], this, consumer);
-    }
+	public void replyError(String error) {
+		replyError(error, Emojis.CROSS);
+	}
 
-    public void getArgumentAsChannel(int argIndex, Consumer<TextChannel> consumer)
-    {
-        ArgumentUtils.parseArgumentAsTextChannel(args[argIndex], this, consumer);
-    }
+	public void replyError(String error, String failureEmoji) {
+		Utils.returnError(error, getMessage(), failureEmoji);
+	}
 
-    public void getArgumentAsRole(int argIndex, Consumer<Role> consumer)
-    {
-        ArgumentUtils.parseArgumentAsRole(args[argIndex], this, consumer);
-    }
+	public void reactLike() {
+		Utils.addReaction(getMessage(), Emojis.LIKE);
+	}
 
-    public void getArgumentAsUser(int argIndex, Consumer<User> consumer)
-    {
-        ArgumentUtils.parseArgumentAsUser(args[argIndex], this, consumer);
-    }
+	// arg stuff
+
+	public void getArgumentAsInt(int argIndex, IntConsumer consumer) {
+		ArgumentUtils.parseArgumentAsInt(args[argIndex], this, consumer);
+	}
+
+	public void getArgumentAsUnsignedInt(int argIndex, IntConsumer consumer) {
+		ArgumentUtils.parseArgumentAsUnsignedInt(args[argIndex], this, consumer);
+	}
+
+	public void getArgumentAsChannel(int argIndex, Consumer<TextChannel> consumer) {
+		ArgumentUtils.parseArgumentAsTextChannel(args[argIndex], this, consumer);
+	}
+
+	public void getArgumentAsRole(int argIndex, Consumer<Role> consumer) {
+		ArgumentUtils.parseArgumentAsRole(args[argIndex], this, consumer);
+	}
+
+	public void getArgumentAsUser(int argIndex, Consumer<User> consumer) {
+		ArgumentUtils.parseArgumentAsUser(args[argIndex], this, consumer);
+	}
 }

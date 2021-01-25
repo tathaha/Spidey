@@ -2,106 +2,95 @@ package dev.mlnr.spidey.objects.music;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import dev.mlnr.spidey.Spidey;
 import dev.mlnr.spidey.cache.GuildSettingsCache;
 import dev.mlnr.spidey.cache.music.MusicPlayerCache;
 import dev.mlnr.spidey.handlers.music.AudioPlayerSendHandler;
+import dev.mlnr.spidey.utils.ConcurrentUtils;
 import dev.mlnr.spidey.utils.MusicUtils;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.audio.AudioSendHandler;
 
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-public class MusicPlayer
-{
-    private final TrackScheduler trackScheduler;
-    private final AudioPlayer audioPlayer;
+public class MusicPlayer {
 
-    private ScheduledFuture<?> leaveTask;
+	private final TrackScheduler trackScheduler;
+	private final AudioPlayer audioPlayer;
 
-    public MusicPlayer(long guildId)
-    {
-        this.audioPlayer = MusicUtils.getAudioPlayerManager().createPlayer();
-        audioPlayer.setVolume(GuildSettingsCache.getDefaultVolume(guildId));
-        this.trackScheduler = new TrackScheduler(this.audioPlayer, guildId);
-    }
+	private ScheduledFuture<?> leaveTask;
 
-    public TrackScheduler getTrackScheduler()
-    {
-        return this.trackScheduler;
-    }
+	public MusicPlayer(long guildId, JDA jda) {
+		this.audioPlayer = MusicUtils.getAudioPlayerManager().createPlayer();
 
-    // leave task
+		audioPlayer.setVolume(GuildSettingsCache.getInstance().getDefaultVolume(guildId));
+		this.trackScheduler = new TrackScheduler(this.audioPlayer, guildId, jda);
+	}
 
-    public void scheduleLeave()
-    {
-        cancelLeave();
-        leaveTask = Spidey.getScheduler().schedule(() -> MusicPlayerCache.disconnectFromChannel(trackScheduler.getGuild()), 2, TimeUnit.MINUTES);
-    }
+	public TrackScheduler getTrackScheduler() {
+		return this.trackScheduler;
+	}
 
-    public void cancelLeave()
-    {
-        if (leaveTask == null)
-            return;
-        leaveTask.cancel(true);
-        leaveTask = null;
-    }
+	// leave task
 
-    // AudioPlayer wrapper methods
+	public void scheduleLeave() {
+		cancelLeave();
+		leaveTask = ConcurrentUtils.getScheduler().schedule(() -> MusicPlayerCache.getInstance().disconnectFromChannel(trackScheduler.getGuild()), 2, TimeUnit.MINUTES);
+	}
 
-    public AudioTrack getPlayingTrack()
-    {
-        return audioPlayer.getPlayingTrack();
-    }
+	public void cancelLeave() {
+		if (leaveTask == null) {
+			return;
+		}
+		leaveTask.cancel(true);
+		leaveTask = null;
+	}
 
-    public int getVolume()
-    {
-        return audioPlayer.getVolume();
-    }
+	// AudioPlayer wrapper methods
 
-    public void setVolume(int volume)
-    {
-        audioPlayer.setVolume(volume);
-    }
+	public AudioTrack getPlayingTrack() {
+		return audioPlayer.getPlayingTrack();
+	}
 
-    public void pause()
-    {
-        audioPlayer.setPaused(true);
-    }
+	public int getVolume() {
+		return audioPlayer.getVolume();
+	}
 
-    public void unpause()
-    {
-        audioPlayer.setPaused(false);
-    }
+	public void setVolume(int volume) {
+		audioPlayer.setVolume(volume);
+	}
 
-    public boolean pauseOrUnpause()
-    {
-        var state = !isPaused();
-        audioPlayer.setPaused(state);
-        return state;
-    }
+	public void pause() {
+		audioPlayer.setPaused(true);
+	}
 
-    public boolean isPaused()
-    {
-        return audioPlayer.isPaused();
-    }
+	public void unpause() {
+		audioPlayer.setPaused(false);
+	}
 
-    public void destroyAudioPlayer()
-    {
-        audioPlayer.destroy();
-    }
+	public boolean pauseOrUnpause() {
+		var state = !isPaused();
+		audioPlayer.setPaused(state);
+		return state;
+	}
 
-    // track scheduler wrapper methods
+	public boolean isPaused() {
+		return audioPlayer.isPaused();
+	}
 
-    public void skip()
-    {
-        trackScheduler.nextTrack();
-    }
+	public void destroyAudioPlayer() {
+		audioPlayer.destroy();
+	}
 
-    // other
+	// track scheduler wrapper methods
 
-    public AudioSendHandler getAudioSendHandler()
-    {
-        return new AudioPlayerSendHandler(this.audioPlayer);
-    }
+	public void skip() {
+		trackScheduler.nextTrack();
+	}
+
+	// other
+
+	public AudioSendHandler getAudioSendHandler() {
+		return new AudioPlayerSendHandler(this.audioPlayer);
+	}
 }

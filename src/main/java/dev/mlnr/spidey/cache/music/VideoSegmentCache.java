@@ -7,23 +7,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class VideoSegmentCache
-{
-    private static final Map<String, List<VideoSegment>> SEGMENT_CACHE = new HashMap<>();
+public class VideoSegmentCache {
+	private final Map<String, List<VideoSegment>> segmentMap = new HashMap<>();
 
-    private VideoSegmentCache() {}
+	private static VideoSegmentCache videoSegmentCache;
 
-    public static List<VideoSegment> getVideoSegments(String videoId)
-    {
-        return getVideoSegments(videoId, false);
-    }
+	public static synchronized VideoSegmentCache getInstance() {
+		if (videoSegmentCache == null)
+			videoSegmentCache = new VideoSegmentCache();
+		return videoSegmentCache;
+	}
 
-    public static List<VideoSegment> getVideoSegments(String videoId, boolean forceRequest)
-    {
-        if (SEGMENT_CACHE.containsKey(videoId) && !forceRequest)
-            return SEGMENT_CACHE.get(videoId);
-        var segments = Requester.retrieveVideoSegments(videoId);
-        SEGMENT_CACHE.put(videoId, segments);
-        return segments;
-    }
+	public List<VideoSegment> getVideoSegments(String videoId) {
+		return getVideoSegments(videoId, false);
+	}
+
+	public List<VideoSegment> getVideoSegments(String videoId, boolean forceRequest) {
+		if (segmentMap.containsKey(videoId) && !forceRequest) {
+			return segmentMap.get(videoId);
+		}
+		var segments = Requester.retrieveVideoSegments(videoId);
+		segmentMap.put(videoId, segments);
+		return segments;
+	}
 }

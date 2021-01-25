@@ -1,32 +1,38 @@
 package dev.mlnr.spidey.objects.akinator;
 
+import dev.mlnr.spidey.cache.AkinatorCache;
 import dev.mlnr.spidey.cache.GuildSettingsCache;
 import dev.mlnr.spidey.objects.I18n;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
-public class AkinatorContext
-{
-    private final GuildMessageReceivedEvent event;
+public class AkinatorContext {
+	private final GuildMessageReceivedEvent event;
 
-    public AkinatorContext(GuildMessageReceivedEvent event)
-    {
-        this.event = event;
-    }
+	private final AkinatorCache akinatorCache;
+	private final GuildSettingsCache guildSettingsCache;
 
-    public Message getMessage()
-    {
-        return event.getMessage();
-    }
+	public AkinatorContext(GuildMessageReceivedEvent event, AkinatorCache akinatorCache, GuildSettingsCache guildSettingsCache) {
+		this.event = event;
 
-    public TextChannel getChannel()
-    {
-        return event.getChannel();
-    }
+		this.akinatorCache = akinatorCache;
+		this.guildSettingsCache = guildSettingsCache;
+	}
 
-    public I18n getI18n()
-    {
-        return GuildSettingsCache.getI18n(event.getGuild().getIdLong());
-    }
+	public Message getMessage() {
+		return event.getMessage();
+	}
+
+	public TextChannel getChannel() {
+		return event.getChannel();
+	}
+
+	public AkinatorCache getAkinatorCache() {
+		return akinatorCache;
+	}
+
+	public I18n getI18n() {
+		return guildSettingsCache.getI18n(event.getGuild().getIdLong());
+	}
 }

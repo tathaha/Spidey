@@ -1,23 +1,20 @@
 package dev.mlnr.spidey.objects.music;
 
-public class VideoSegment
-{
-    private final long segmentStart;
-    private final long segmentEnd;
+public class VideoSegment {
 
-    public VideoSegment(long segmentStart, long segmentEnd)
-    {
-        this.segmentStart = segmentStart;
-        this.segmentEnd = segmentEnd;
-    }
+	private final long segmentStart;
+	private final long segmentEnd;
 
-    public long getSegmentStart()
-    {
-        return this.segmentStart;
-    }
+	public VideoSegment(long segmentStart, long segmentEnd) {
+		this.segmentStart = segmentStart;
+		this.segmentEnd = segmentEnd;
+	}
 
-    public long getSegmentEnd()
-    {
-        return this.segmentEnd;
-    }
+	public long getSegmentStart() {
+		return this.segmentStart;
+	}
+
+	public long getSegmentEnd() {
+		return this.segmentEnd;
+	}
 }

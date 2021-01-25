@@ -1,6 +1,5 @@
 package dev.mlnr.spidey.commands.informative;
 
-import dev.mlnr.spidey.cache.GuildSettingsCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
@@ -10,18 +9,16 @@ import net.dv8tion.jda.api.Permission;
 import java.lang.management.ManagementFactory;
 
 @SuppressWarnings("unused")
-public class StatsCommand extends Command
-{
-	public StatsCommand()
-	{
+public class StatsCommand extends Command {
+
+	public StatsCommand() {
 		super("stats", new String[]{}, Category.INFORMATIVE, Permission.UNKNOWN, 0, 0);
 	}
 
 	@Override
-	public void execute(String[] args, CommandContext ctx)
-	{
+	public void execute(String[] args, CommandContext ctx) {
 		var eb = Utils.createEmbedBuilder(ctx.getAuthor());
-		var prefix = GuildSettingsCache.getPrefix(ctx.getGuild().getIdLong());
+		var prefix = ctx.getCache().getGuildSettingsCache().getPrefix(ctx.getGuild().getIdLong());
 		var jda = ctx.getJDA();
 		var runtime = Runtime.getRuntime();
 		var total = runtime.totalMemory();

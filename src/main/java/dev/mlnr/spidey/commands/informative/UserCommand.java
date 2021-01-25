@@ -11,26 +11,22 @@ import net.dv8tion.jda.api.entities.User;
 import static dev.mlnr.spidey.utils.Utils.formatDate;
 
 @SuppressWarnings("unused")
-public class UserCommand extends Command
-{
-	public UserCommand()
-	{
+public class UserCommand extends Command {
+
+	public UserCommand() {
 		super("user", new String[]{}, Category.INFORMATIVE, Permission.UNKNOWN, 1, 2);
 	}
 
 	@Override
-	public void execute(String[] args, CommandContext ctx)
-	{
-		if (args.length == 0)
-		{
+	public void execute(String[] args, CommandContext ctx) {
+		if (args.length == 0) {
 			respond(ctx, ctx.getAuthor(), ctx.getMember());
 			return;
 		}
 		ctx.getArgumentAsUser(0, user -> ctx.getGuild().retrieveMember(user).queue(member -> respond(ctx, user, member), failure -> respond(ctx, user, null)));
 	}
 
-	private void respond(CommandContext ctx, User user, Member member)
-	{
+	private void respond(CommandContext ctx, User user, Member member) {
 		var eb = Utils.createEmbedBuilder(ctx.getAuthor());
 		var i18n = ctx.getI18n();
 
@@ -39,28 +35,27 @@ public class UserCommand extends Command
 		eb.addField("ID", user.getId(), false);
 		eb.addField(i18n.get("commands.user.other.created"), formatDate(user.getTimeCreated()), true);
 
-		if (member == null)
-		{
+		if (member == null) {
 			ctx.reply(eb);
 			return;
 		}
 		var nick = member.getNickname();
-		if (nick != null)
+		if (nick != null) {
 			eb.addField(i18n.get("commands.user.other.nickname"), nick, false);
+		}
 
 		eb.addField(i18n.get("commands.user.other.joined"), formatDate(member.getTimeJoined()), false);
 
 		var boostingSince = member.getTimeBoosted();
-		if (boostingSince != null)
+		if (boostingSince != null) {
 			eb.addField(i18n.get("commands.user.other.boosting"), formatDate(boostingSince), false);
+		}
 
 		var roles = member.getRoles();
-		if (!roles.isEmpty())
-		{
+		if (!roles.isEmpty()) {
 			var sb = new StringBuilder();
 			var rc = 0;
-			for (var role : roles)
-			{
+			for (var role : roles) {
 				++rc;
 				sb.append(role.getName()).append(rc == roles.size() ? "" : ", ");
 			}
