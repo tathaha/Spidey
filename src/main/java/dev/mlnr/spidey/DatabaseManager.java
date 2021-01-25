@@ -1,36 +1,33 @@
 package dev.mlnr.spidey;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import dev.mlnr.spidey.objects.guild.GuildSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
-@SuppressWarnings("ConstantConditions")
 public class DatabaseManager
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseManager.class);
+    private static final HikariDataSource HIKARI_DATA_SOURCE;
 
     private DatabaseManager() {}
 
-    private static Connection initializeConnection()
+    static
     {
-        try
-        {
-            return DriverManager.getConnection("jdbc:postgresql:spidey", "sebo", System.getenv("db"));
-        }
-        catch (Exception ex)
-        {
-            LOGGER.error("There was an error establishing the connection to the database!", ex);
-        }
-        return null;
+        var hikariConfig = new HikariConfig();
+        hikariConfig.setDriverClassName("org.postgresql.Driver");
+        hikariConfig.setJdbcUrl("jdbc:postgresql:spidey");
+        hikariConfig.setUsername("sebo");
+        hikariConfig.setPassword(System.getenv("db"));
+        HIKARI_DATA_SOURCE = new HikariDataSource(hikariConfig);
     }
 
     public static GuildSettings retrieveGuildSettings(long guildId)
     {
-        try (var db = initializeConnection(); var ps = db.prepareStatement("SELECT * FROM guilds WHERE guild_id=?"))
+        try (var con = HIKARI_DATA_SOURCE.getConnection(); var ps = con.prepareStatement("SELECT * FROM guilds WHERE guild_id=?"))
         {
             ps.setLong(1, guildId);
             try (var rs = ps.executeQuery())
@@ -51,7 +48,7 @@ public class DatabaseManager
 
     public static void removeGuild(long guildId)
     {
-        try (var db = initializeConnection(); var ps = db.prepareStatement("DELETE FROM guilds WHERE guild_id=" + guildId))
+        try (var con = HIKARI_DATA_SOURCE.getConnection(); var ps = con.prepareStatement("DELETE FROM guilds WHERE guild_id=" + guildId))
         {
             ps.executeUpdate();
         }
@@ -66,7 +63,7 @@ public class DatabaseManager
     private static <T> void executeSetQuery(String property, long guildId, T value)
     {
         var query = "INSERT INTO guilds (guild_id, " + property + ") VALUES (?, ?) ON CONFLICT (guild_id) DO UPDATE SET " + property + "='" + value + "'";
-        try (var db = initializeConnection(); var ps = db.prepareStatement(query))
+        try (var con = HIKARI_DATA_SOURCE.getConnection(); var ps = con.prepareStatement(query))
         {
             ps.setLong(1, guildId);
             ps.setObject(2, value);
