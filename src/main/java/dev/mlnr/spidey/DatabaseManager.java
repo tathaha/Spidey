@@ -27,9 +27,9 @@ public class DatabaseManager {
 			try (var rs = ps.executeQuery()) {
 				return rs.next()
 						? new GuildSettings(guildId, rs.getLong("log_channel_id"), rs.getLong("join_role_id"), rs.getString("prefix"), rs.getString("language"),
-							rs.getBoolean("sniping_enabled"), rs.getBoolean("error_cleanup_enabled"), rs.getBoolean("vip"), rs.getLong("music_dj_role_id"),
-							rs.getBoolean("music_segment_skipping"), rs.getInt("music_default_volume"), rs.getBoolean("music_fair_queue_enabled"),
-							rs.getInt("music_fair_queue_threshold"), this)
+						    rs.getBoolean("sniping_enabled"), rs.getBoolean("error_cleanup_enabled"), rs.getBoolean("vip"), rs.getLong("music_dj_role_id"),
+						    rs.getBoolean("music_segment_skipping"), rs.getInt("music_default_volume"), rs.getBoolean("music_fair_queue_enabled"),
+						    rs.getInt("music_fair_queue_threshold"), this)
 						: new GuildSettings(guildId, 0, 0, "s!", "en", true, false, false, 0, false, 100, true, 3, this); // default settings
 			}
 		}
@@ -76,9 +76,9 @@ public class DatabaseManager {
 		executeSetQuery("prefix", guildId, prefix);
 	}
 
-//	public void setLanguage(long guildId, String language) {
-//		executeSetQuery("language", guildId, language);
-//	}
+	//	public void setLanguage(long guildId, String language) {
+	//		executeSetQuery("language", guildId, language);
+	//	}
 
 	public void setSnipingEnabled(long guildId, boolean enabled) {
 		executeSetQuery("sniping_enabled", guildId, enabled);
