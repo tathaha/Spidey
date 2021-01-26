@@ -6,27 +6,29 @@ import net.jodah.expiringmap.ExpiringMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-public class ResponseCache
-{
-    private static final Map<Long, Long> RESPONSE_CACHE = ExpiringMap.builder()
-            .expirationPolicy(ExpirationPolicy.CREATED)
-            .expiration(15, TimeUnit.MINUTES)
-            .build();
+public class ResponseCache {
+	private final Map<Long, Long> responseMap = ExpiringMap.builder()
+			.expirationPolicy(ExpirationPolicy.CREATED)
+			.expiration(15, TimeUnit.MINUTES)
+			.build();
+	
+	private static ResponseCache responseCache;
 
-    private ResponseCache() {}
+	public static synchronized ResponseCache getInstance() {
+		if (responseCache == null)
+			responseCache = new ResponseCache();
+		return responseCache;
+	}
 
-    public static Long getResponseMessageId(long invokeMessageId)
-    {
-        return RESPONSE_CACHE.get(invokeMessageId);
-    }
+	public Long getResponseMessageId(long invokeMessageId) {
+		return responseMap.get(invokeMessageId);
+	}
 
-    public static void setResponseMessageId(long invokeMessageId, long responseMessageId)
-    {
-        RESPONSE_CACHE.put(invokeMessageId, responseMessageId);
-    }
+	public void setResponseMessageId(long invokeMessageId, long responseMessageId) {
+		responseMap.put(invokeMessageId, responseMessageId);
+	}
 
-    public static void removeResponseMessageId(long invokeMessageId)
-    {
-        RESPONSE_CACHE.remove(invokeMessageId);
-    }
+	public void removeResponseMessageId(long invokeMessageId) {
+		responseMap.remove(invokeMessageId);
+	}
 }

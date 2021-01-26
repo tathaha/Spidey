@@ -1,12 +1,11 @@
 package dev.mlnr.spidey.cache;
 
-import dev.mlnr.spidey.Spidey;
 import dev.mlnr.spidey.utils.Emojis;
 import dev.mlnr.spidey.utils.Paginator;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.jodah.expiringmap.ExpirationPolicy;
 import net.jodah.expiringmap.ExpiringMap;
 
@@ -14,67 +13,59 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 
-public class PaginatorCache
-{
-    private static final Map<Long, Paginator> PAGINATOR_CACHE = ExpiringMap.builder()
-            .expirationPolicy(ExpirationPolicy.CREATED)
-            .expiration(3, TimeUnit.MINUTES)
-            .asyncExpirationListener((messageId, paginator) -> removePaginator((long) messageId, ((Paginator) paginator)))
-            .build();
+public class PaginatorCache {
+	private final Map<Long, Paginator> paginatorMap = ExpiringMap.builder()
+			.expirationPolicy(ExpirationPolicy.CREATED)
+			.expiration(3, TimeUnit.MINUTES)
+			.asyncExpirationListener((messageId, paginator) -> removePaginator((long) messageId, ((Paginator) paginator)))
+			.build();
 
-    private PaginatorCache() {}
+	private final JDA jda;
 
-    public static void createPaginator(Message message, int totalPages, BiConsumer<Integer, EmbedBuilder> pagesConsumer)
-    {
-        var channel = message.getTextChannel();
-        var author = message.getAuthor();
-        var embedBuilder = new EmbedBuilder().setColor(Utils.SPIDEY_COLOR);
-        embedBuilder.setFooter("Page 1/" + totalPages);
-        pagesConsumer.accept(0, embedBuilder);
+	public PaginatorCache(JDA jda) {
+		this.jda = jda;
+	}
 
-        channel.sendMessage(embedBuilder.build()).queue(paginatorMessage ->
-        {
-            var paginatorMessageId = paginatorMessage.getIdLong();
-            var authorId = author.getIdLong();
-            PAGINATOR_CACHE.put(paginatorMessageId, new Paginator(channel.getIdLong(), message.getIdLong(), authorId, totalPages, pagesConsumer));
+	public void createPaginator(Message message, int totalPages, BiConsumer<Integer, EmbedBuilder> pagesConsumer) {
+		var channel = message.getTextChannel();
+		var embedBuilder = new EmbedBuilder().setColor(Utils.SPIDEY_COLOR);
+		embedBuilder.setFooter("Page 1/" + totalPages);
+		pagesConsumer.accept(0, embedBuilder);
 
-            Utils.addReaction(paginatorMessage, Emojis.BACKWARDS);
-            Utils.addReaction(paginatorMessage, Emojis.FORWARD);
-            Utils.addReaction(paginatorMessage, Emojis.WASTEBASKET);
+		channel.sendMessage(embedBuilder.build()).queue(paginatorMessage -> {
+			paginatorMap.put(paginatorMessage.getIdLong(), new Paginator(channel.getIdLong(), message.getIdLong(), message.getAuthor().getIdLong(), totalPages, pagesConsumer));
 
-            Spidey.getWaiter().waitForEvent(GuildMessageReactionAddEvent.class, ev -> ev.getMessageIdLong() == paginatorMessageId && ev.getUserIdLong() == authorId, ev -> {}, 1, TimeUnit.MINUTES,
-                    () -> removePaginator(paginatorMessageId));
-        });
-    }
+			Utils.addReaction(paginatorMessage, Emojis.BACKWARDS);
+			Utils.addReaction(paginatorMessage, Emojis.FORWARD);
+			Utils.addReaction(paginatorMessage, Emojis.WASTEBASKET);
+		});
+	}
 
-    public static Paginator getPaginator(long messageId)
-    {
-        return PAGINATOR_CACHE.get(messageId);
-    }
+	public Paginator getPaginator(long messageId) {
+		return paginatorMap.get(messageId);
+	}
 
-    public static boolean isPaginator(long messageId)
-    {
-        return PAGINATOR_CACHE.containsKey(messageId);
-    }
+	public boolean isPaginator(long messageId) {
+		return paginatorMap.containsKey(messageId);
+	}
 
-    public static void removePaginator(long messageId)
-    {
-        removePaginator(messageId, null);
-    }
+	public void removePaginator(long messageId) {
+		removePaginator(messageId, null);
+	}
 
-    private static void removePaginator(long messageId, Paginator removedPaginator)
-    {
-        var paginator = removedPaginator;
-        if (paginator == null)
-        {
-            paginator = getPaginator(messageId);
-            if (paginator == null)
-                return;
-            PAGINATOR_CACHE.remove(messageId);
-        }
-        var channel = Spidey.getJDA().getTextChannelById(paginator.getInvokeChannelId());
-        if (channel == null)
-            return;
-        channel.purgeMessagesById(paginator.getInvokeMessageId(), messageId);
-    }
+	private void removePaginator(long messageId, Paginator removedPaginator) {
+		var paginator = removedPaginator;
+		if (paginator == null) {
+			paginator = getPaginator(messageId);
+			if (paginator == null) {
+				return;
+			}
+			paginatorMap.remove(messageId);
+		}
+		var channel = jda.getTextChannelById(paginator.getInvokeChannelId());
+		if (channel == null) {
+			return;
+		}
+		channel.purgeMessagesById(paginator.getInvokeMessageId(), messageId);
+	}
 }

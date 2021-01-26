@@ -2,94 +2,95 @@ package dev.mlnr.spidey.objects.music;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import dev.mlnr.spidey.Spidey;
+import dev.mlnr.spidey.cache.GuildSettingsCache;
 import dev.mlnr.spidey.cache.music.MusicPlayerCache;
 import dev.mlnr.spidey.handlers.music.AudioPlayerSendHandler;
+import dev.mlnr.spidey.utils.ConcurrentUtils;
 import dev.mlnr.spidey.utils.MusicUtils;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.audio.AudioSendHandler;
 
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-public class MusicPlayer
-{
-    private final TrackScheduler trackScheduler;
-    private final AudioPlayer audioPlayer;
+public class MusicPlayer {
 
-    private ScheduledFuture<?> leaveTask;
+	private final TrackScheduler trackScheduler;
+	private final AudioPlayer audioPlayer;
 
-    public MusicPlayer(long guildId)
-    {
-        this.audioPlayer = MusicUtils.getAudioPlayerManager().createPlayer();
-        this.trackScheduler = new TrackScheduler(this.audioPlayer, guildId);
-    }
+	private ScheduledFuture<?> leaveTask;
 
-    public TrackScheduler getTrackScheduler()
-    {
-        return this.trackScheduler;
-    }
+	public MusicPlayer(long guildId, JDA jda) {
+		this.audioPlayer = MusicUtils.getAudioPlayerManager().createPlayer();
 
-    // leave task
+		audioPlayer.setVolume(GuildSettingsCache.getInstance().getDefaultVolume(guildId));
+		this.trackScheduler = new TrackScheduler(this.audioPlayer, guildId, jda);
+	}
 
-    public void scheduleLeave()
-    {
-        cancelLeave();
-        leaveTask = Spidey.getScheduler().schedule(() -> MusicPlayerCache.disconnectFromChannel(trackScheduler.getGuild()), 2, TimeUnit.MINUTES);
-    }
+	public TrackScheduler getTrackScheduler() {
+		return this.trackScheduler;
+	}
 
-    public void cancelLeave()
-    {
-        if (leaveTask == null)
-            return;
-        leaveTask.cancel(true);
-        leaveTask = null;
-    }
+	// leave task
 
-    // AudioPlayer wrapper methods
+	public void scheduleLeave() {
+		cancelLeave();
+		leaveTask = ConcurrentUtils.getScheduler().schedule(() -> MusicPlayerCache.getInstance().disconnectFromChannel(trackScheduler.getGuild()), 2, TimeUnit.MINUTES);
+	}
 
-    public AudioTrack getPlayingTrack()
-    {
-        return audioPlayer.getPlayingTrack();
-    }
+	public void cancelLeave() {
+		if (leaveTask == null) {
+			return;
+		}
+		leaveTask.cancel(true);
+		leaveTask = null;
+	}
 
-    public void pause()
-    {
-        audioPlayer.setPaused(true);
-    }
+	// AudioPlayer wrapper methods
 
-    public void unpause()
-    {
-        audioPlayer.setPaused(false);
-    }
+	public AudioTrack getPlayingTrack() {
+		return audioPlayer.getPlayingTrack();
+	}
 
-    public boolean pauseOrUnpause()
-    {
-        var state = !isPaused();
-        audioPlayer.setPaused(state);
-        return state;
-    }
+	public int getVolume() {
+		return audioPlayer.getVolume();
+	}
 
-    public boolean isPaused()
-    {
-        return audioPlayer.isPaused();
-    }
+	public void setVolume(int volume) {
+		audioPlayer.setVolume(volume);
+	}
 
-    public void destroyAudioPlayer()
-    {
-        audioPlayer.destroy();
-    }
+	public void pause() {
+		audioPlayer.setPaused(true);
+	}
 
-    // track scheduler wrapper methods
+	public void unpause() {
+		audioPlayer.setPaused(false);
+	}
 
-    public void skip()
-    {
-        trackScheduler.nextTrack();
-    }
+	public boolean pauseOrUnpause() {
+		var state = !isPaused();
+		audioPlayer.setPaused(state);
+		return state;
+	}
 
-    // other
+	public boolean isPaused() {
+		return audioPlayer.isPaused();
+	}
 
-    public AudioSendHandler getAudioSendHandler()
-    {
-        return new AudioPlayerSendHandler(this.audioPlayer);
-    }
+	public void destroyAudioPlayer() {
+		audioPlayer.destroy();
+	}
+
+	// track scheduler wrapper methods
+
+	public void skip() {
+		trackScheduler.nextTrack();
+	}
+
+	// other
+
+	public AudioSendHandler getAudioSendHandler() {
+		return new AudioPlayerSendHandler(this.audioPlayer);
+	}
 }

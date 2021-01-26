@@ -1,6 +1,5 @@
 package dev.mlnr.spidey.commands.settings;
 
-import dev.mlnr.spidey.cache.GuildSettingsCache;
 import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
@@ -10,43 +9,38 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 @SuppressWarnings("unused")
-public class LogCommand extends Command
-{
-	public LogCommand()
-	{
-		super ("log", new String[]{}, Category.SETTINGS, Permission.MANAGE_SERVER, 1, 4);
+public class LogCommand extends Command {
+
+	public LogCommand() {
+		super("log", new String[]{}, Category.SETTINGS, Permission.MANAGE_SERVER, 1, 4);
 	}
 
 	@Override
-	public void execute(String[] args, CommandContext ctx)
-	{
+	public void execute(String[] args, CommandContext ctx) {
 		var guildId = ctx.getGuild().getIdLong();
-		if (args.length == 0)
-		{
+		if (args.length == 0) {
 			proceed(guildId, ctx.getTextChannel(), ctx);
 			return;
 		}
 		ctx.getArgumentAsChannel(0, channel -> proceed(guildId, channel, ctx));
 	}
 
-	private void proceed(long guildId, TextChannel channel, CommandContext ctx)
-	{
+	private void proceed(long guildId, TextChannel channel, CommandContext ctx) {
+		var guildSettingsCache = ctx.getCache().getGuildSettingsCache();
 		var channelId = channel.getIdLong();
 		var i18n = ctx.getI18n();
-		if (GuildSettingsCache.getLogChannelId(guildId) == channelId)
-		{
-			GuildSettingsCache.removeLogChannel(guildId);
+		if (guildSettingsCache.getLogChannelId(guildId) == channelId) {
+			guildSettingsCache.removeLogChannel(guildId);
 			ctx.reply(i18n.get("commands.log.other.reset"));
 			return;
 		}
-		if (!channel.canTalk())
-		{
+		if (!channel.canTalk()) {
 			var message = ctx.getMessage();
 			Utils.addReaction(message, Emojis.CROSS);
 			Utils.addReaction(message, "\uD83D\uDE4A");
 			return;
 		}
-		GuildSettingsCache.setLogChannelId(guildId, channelId);
+		guildSettingsCache.setLogChannelId(guildId, channelId);
 		ctx.reply(i18n.get("commands.log.other.set", channelId));
 	}
 }

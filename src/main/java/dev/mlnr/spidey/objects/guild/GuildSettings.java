@@ -3,176 +3,168 @@ package dev.mlnr.spidey.objects.guild;
 import dev.mlnr.spidey.DatabaseManager;
 import dev.mlnr.spidey.objects.I18n;
 
-public class GuildSettings
-{
-    private final long guildId;
+public class GuildSettings {
 
-    private long logChannelId;
-    private long joinRoleId;
-    private String prefix;
-    private I18n i18n;
+	private final long guildId;
 
-    private boolean snipingEnabled;
-    private boolean vip;
+	private long logChannelId;
+	private long joinRoleId;
+	private String prefix;
+	private final I18n i18n;
 
-    private long djRoleId;
-    private boolean segmentSkippingEnabled;
-    private int defaultVolume;
+	private boolean snipingEnabled;
+	private boolean errorCleanupEnabled;
+	private boolean vip;
 
-    private boolean fairQueueEnabled;
-    private int fairQueueThreshold;
+	private long djRoleId;
+	private boolean segmentSkippingEnabled;
+	private int defaultVolume;
 
-    public GuildSettings(long guildId, long logChannelId, long joinRoleId, String prefix, String language, boolean snipingEnabled, boolean vip, long djRoleId,
-                         boolean segmentSkippingEnabled, int defaultVolume, boolean fairQueueEnabled, int fairQueueThreshold)
-    {
-        this.guildId = guildId;
+	private boolean fairQueueEnabled;
+	private int fairQueueThreshold;
 
-        this.logChannelId = logChannelId;
-        this.joinRoleId = joinRoleId;
-        this.prefix = prefix;
-        this.i18n = I18n.ofLanguage(language);
+	private final DatabaseManager databaseManager;
 
-        this.snipingEnabled = snipingEnabled;
-        this.vip = vip;
+	public GuildSettings(long guildId, long logChannelId, long joinRoleId, String prefix, String language, boolean snipingEnabled, boolean errorCleanupEnabled, boolean vip, long djRoleId,
+	                     boolean segmentSkippingEnabled, int defaultVolume, boolean fairQueueEnabled, int fairQueueThreshold, DatabaseManager databaseManager) {
+		this.guildId = guildId;
 
-        this.djRoleId = djRoleId;
-        this.segmentSkippingEnabled = segmentSkippingEnabled;
-        this.defaultVolume = defaultVolume;
+		this.logChannelId = logChannelId;
+		this.joinRoleId = joinRoleId;
+		this.prefix = prefix;
+		this.i18n = I18n.ofLanguage(language);
 
-        this.fairQueueEnabled = fairQueueEnabled;
-        this.fairQueueThreshold = fairQueueThreshold;
-    }
+		this.snipingEnabled = snipingEnabled;
+		this.errorCleanupEnabled = errorCleanupEnabled;
+		this.vip = vip;
 
-    // getters
+		this.djRoleId = djRoleId;
+		this.segmentSkippingEnabled = segmentSkippingEnabled;
+		this.defaultVolume = defaultVolume;
 
-    public long getLogChannelId()
-    {
-        return this.logChannelId;
-    }
+		this.fairQueueEnabled = fairQueueEnabled;
+		this.fairQueueThreshold = fairQueueThreshold;
 
-    public long getJoinRoleId()
-    {
-        return this.joinRoleId;
-    }
+		this.databaseManager = databaseManager;
+	}
 
-    public String getPrefix()
-    {
-        return this.prefix;
-    }
+	// getters
 
-    public I18n getI18n()
-    {
-        return this.i18n;
-    }
+	public long getLogChannelId() {
+		return this.logChannelId;
+	}
 
-    public boolean isSnipingEnabled()
-    {
-        return this.snipingEnabled;
-    }
+	public void setLogChannelId(long logChannelId) {
+		this.logChannelId = logChannelId;
+		databaseManager.setLogChannelId(guildId, logChannelId);
+	}
 
-    public boolean isVip()
-    {
-        return this.vip;
-    }
+	public long getJoinRoleId() {
+		return this.joinRoleId;
+	}
 
-    // music getters
+	public void setJoinRoleId(long joinRoleId) {
+		this.joinRoleId = joinRoleId;
+		databaseManager.setJoinRoleId(guildId, joinRoleId);
+	}
 
-    public long getDjRoleId()
-    {
-        return this.djRoleId;
-    }
+	public String getPrefix() {
+		return this.prefix;
+	}
 
-    public boolean isSegmentSkippingEnabled()
-    {
-        return this.segmentSkippingEnabled;
-    }
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
+		databaseManager.setPrefix(guildId, prefix);
+	}
 
-    public int getDefaultVolume()
-    {
-        return this.defaultVolume;
-    }
+	public I18n getI18n() {
+		return this.i18n;
+	}
 
-    // fair queue getters
+	// music getters
 
-    public boolean isFairQueueEnabled()
-    {
-        return this.fairQueueEnabled;
-    }
+	public boolean isSnipingEnabled() {
+		return this.snipingEnabled;
+	}
 
-    public int getFairQueueThreshold()
-    {
-        return this.fairQueueThreshold;
-    }
+	public void setSnipingEnabled(boolean enabled) {
+		this.snipingEnabled = enabled;
+		databaseManager.setSnipingEnabled(guildId, enabled);
+	}
 
-    // setters
+	public boolean isErrorCleanupEnabled() {
+		return this.errorCleanupEnabled;
+	}
 
-    public void setLogChannelId(long logChannelId)
-    {
-        this.logChannelId = logChannelId;
-        DatabaseManager.setLogChannelId(guildId, logChannelId);
-    }
+	// fair queue getters
 
-    public void setJoinRoleId(long joinRoleId)
-    {
-        this.joinRoleId = joinRoleId;
-        DatabaseManager.setJoinRoleId(guildId, joinRoleId);
-    }
+	public void setErrorCleanupEnabled(boolean enabled) {
+		this.errorCleanupEnabled = enabled;
+		databaseManager.setErrorCleanupEnabled(guildId, enabled);
+	}
 
-    public void setPrefix(String prefix)
-    {
-        this.prefix = prefix;
-        DatabaseManager.setPrefix(guildId, prefix);
-    }
+	public boolean isVip() {
+		return this.vip;
+	}
 
-    public void setLanguage(String language)
-    {
-        this.i18n = I18n.ofLanguage(language);
-        DatabaseManager.setLanguage(guildId, language);
-    }
+	// setters
 
-    public void setSnipingEnabled(boolean enabled)
-    {
-        this.snipingEnabled = enabled;
-        DatabaseManager.setSnipingEnabled(guildId, enabled);
-    }
+	public void setVip(boolean vip) {
+		this.vip = vip;
+		databaseManager.setVip(guildId, vip);
+	}
 
-    public void setVip(boolean vip)
-    {
-        this.vip = vip;
-        DatabaseManager.setVip(guildId, vip);
-    }
+	public long getDjRoleId() {
+		return this.djRoleId;
+	}
 
-    // music setters
+	public void setDjRoleId(long djRoleId) {
+		this.djRoleId = djRoleId;
+		databaseManager.setDJRoleId(guildId, djRoleId);
+	}
 
-    public void setDjRoleId(long djRoleId)
-    {
-        this.djRoleId = djRoleId;
-        DatabaseManager.setDJRoleId(guildId, djRoleId);
-    }
+	public boolean isSegmentSkippingEnabled() {
+		return this.segmentSkippingEnabled;
+	}
 
-    public void setSegmentSkippingEnabled(boolean enabled)
-    {
-        this.segmentSkippingEnabled = enabled;
-        DatabaseManager.setSegmentSkippingEnabled(guildId, enabled);
-    }
+	public void setSegmentSkippingEnabled(boolean enabled) {
+		this.segmentSkippingEnabled = enabled;
+		databaseManager.setSegmentSkippingEnabled(guildId, enabled);
+	}
 
-    public void setDefaultVolume(int defaultVolume)
-    {
-        this.defaultVolume = defaultVolume;
-        DatabaseManager.setDefaultVolume(guildId, defaultVolume);
-    }
+	public int getDefaultVolume() {
+		return this.defaultVolume;
+	}
 
-    // fair queue setters
+	public void setDefaultVolume(int defaultVolume) {
+		this.defaultVolume = defaultVolume;
+		databaseManager.setDefaultVolume(guildId, defaultVolume);
+	}
 
-    public void setFairQueueEnabled(boolean enabled)
-    {
-        this.fairQueueEnabled = enabled;
-        DatabaseManager.setFairQueueEnabled(guildId, enabled);
-    }
+	// music setters
 
-    public void setFairQueueThreshold(int threshold)
-    {
-        this.fairQueueThreshold = threshold;
-        DatabaseManager.setFairQueueThreshold(guildId, threshold);
-    }
+	public boolean isFairQueueEnabled() {
+		return this.fairQueueEnabled;
+	}
+
+	public void setFairQueueEnabled(boolean enabled) {
+		this.fairQueueEnabled = enabled;
+		databaseManager.setFairQueueEnabled(guildId, enabled);
+	}
+
+	public int getFairQueueThreshold() {
+		return this.fairQueueThreshold;
+	}
+
+	// fair queue setters
+
+	public void setFairQueueThreshold(int threshold) {
+		this.fairQueueThreshold = threshold;
+		databaseManager.setFairQueueThreshold(guildId, threshold);
+	}
+
+//	public void setLanguage(String language) {
+//		this.i18n = I18n.ofLanguage(language);
+//		databaseManager.setLanguage(guildId, language);
+//	}
 }

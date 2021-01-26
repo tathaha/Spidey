@@ -18,86 +18,79 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class EventWaiter implements EventListener
-{
-    private final Map<Class<?>, Set<WaitingEvent<?>>> waitingEvents;
-    private final ScheduledExecutorService threadpool;
-    private final boolean shutdownAutomatically;
+public class EventWaiter implements EventListener {
 
-    public EventWaiter(ScheduledExecutorService threadpool, boolean shutdownAutomatically)
-    {
-        Checks.notNull(threadpool, "ScheduledExecutorService");
-        Checks.check(!threadpool.isShutdown(), "Cannot construct EventWaiter with a closed ScheduledExecutorService!");
+	private final Map<Class<?>, Set<WaitingEvent<?>>> waitingEvents;
+	private final ScheduledExecutorService threadpool;
+	private final boolean shutdownAutomatically;
 
-        this.waitingEvents = new HashMap<>();
-        this.threadpool = threadpool;
-        this.shutdownAutomatically = shutdownAutomatically;
-    }
+	public EventWaiter(ScheduledExecutorService threadpool, boolean shutdownAutomatically) {
+		Checks.notNull(threadpool, "ScheduledExecutorService");
+		Checks.check(!threadpool.isShutdown(), "Cannot construct EventWaiter with a closed ScheduledExecutorService!");
 
-    public boolean isShutdown()
-    {
-        return threadpool.isShutdown();
-    }
+		this.waitingEvents = new HashMap<>();
+		this.threadpool = threadpool;
+		this.shutdownAutomatically = shutdownAutomatically;
+	}
 
-    public <T extends Event> void waitForEvent(Class<T> classType, Predicate<T> condition, Consumer<T> action,
-                                               long timeout, TimeUnit unit, Runnable timeoutAction)
-    {
-        Checks.check(!isShutdown(), "Attempted to register a WaitingEvent while the EventWaiter's threadpool was already shut down!");
-        Checks.notNull(classType, "The provided class type");
-        Checks.notNull(condition, "The provided condition predicate");
-        Checks.notNull(action, "The provided action consumer");
+	public boolean isShutdown() {
+		return threadpool.isShutdown();
+	}
 
-        var we = new WaitingEvent<>(condition, action);
-        var set = waitingEvents.computeIfAbsent(classType, c -> new HashSet<>());
-        set.add(we);
+	public <T extends Event> void waitForEvent(Class<T> classType, Predicate<T> condition, Consumer<T> action,
+	                                           long timeout, TimeUnit unit, Runnable timeoutAction) {
+		Checks.check(!isShutdown(), "Attempted to register a WaitingEvent while the EventWaiter's threadpool was already shut down!");
+		Checks.notNull(classType, "The provided class type");
+		Checks.notNull(condition, "The provided condition predicate");
+		Checks.notNull(action, "The provided action consumer");
 
-        if (timeout > 0 && unit != null)
-        {
-            threadpool.schedule(() ->
-            {
-                if (set.remove(we) && timeoutAction != null)
-                    timeoutAction.run();
-            }, timeout, unit);
-        }
-    }
+		var we = new WaitingEvent<>(condition, action);
+		var set = waitingEvents.computeIfAbsent(classType, c -> new HashSet<>());
+		set.add(we);
 
-    @Override
-    @SubscribeEvent
-    @SuppressWarnings("unchecked")
-    public void onEvent(GenericEvent event)
-    {
-        Class<?> c = event.getClass();
+		if (timeout > 0 && unit != null) {
+			threadpool.schedule(() -> {
+				if (set.remove(we) && timeoutAction != null) {
+					timeoutAction.run();
+				}
+			}, timeout, unit);
+		}
+	}
 
-        while (c != null)
-        {
-            var set = waitingEvents.get(c);
-            if (set != null)
-                set.removeAll(Stream.of(set.toArray(new WaitingEvent[0])).filter(i -> i.attempt(event)).collect(Collectors.toSet()));
-            if (event instanceof ShutdownEvent && shutdownAutomatically)
-                threadpool.shutdown();
-            c = c.getSuperclass();
-        }
-    }
+	@Override
+	@SubscribeEvent
+	@SuppressWarnings("unchecked")
+	public void onEvent(GenericEvent event) {
+		Class<?> c = event.getClass();
 
-    private static class WaitingEvent<T extends GenericEvent>
-    {
-        final Predicate<T> condition;
-        final Consumer<T> action;
+		while (c != null) {
+			var set = waitingEvents.get(c);
+			if (set != null) {
+				set.removeAll(Stream.of(set.toArray(new WaitingEvent[0])).filter(i -> i.attempt(event)).collect(Collectors.toSet()));
+			}
+			if (event instanceof ShutdownEvent && shutdownAutomatically) {
+				threadpool.shutdown();
+			}
+			c = c.getSuperclass();
+		}
+	}
 
-        WaitingEvent(Predicate<T> condition, Consumer<T> action)
-        {
-            this.condition = condition;
-            this.action = action;
-        }
+	private static class WaitingEvent<T extends GenericEvent> {
 
-        boolean attempt(T event)
-        {
-            if (condition.test(event))
-            {
-                action.accept(event);
-                return true;
-            }
-            return false;
-        }
-    }
+		final Predicate<T> condition;
+		final Consumer<T> action;
+
+		WaitingEvent(Predicate<T> condition, Consumer<T> action) {
+			this.condition = condition;
+			this.action = action;
+		}
+
+		boolean attempt(T event) {
+			if (condition.test(event)) {
+				action.accept(event);
+				return true;
+			}
+			return false;
+		}
+	}
 }

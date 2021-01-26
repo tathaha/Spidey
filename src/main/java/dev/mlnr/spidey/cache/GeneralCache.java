@@ -6,22 +6,26 @@ import dev.mlnr.spidey.objects.guild.InviteData;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GeneralCache
-{
-    private static final Map<String, InviteData> INVITE_CACHE = new HashMap<>();
+public class GeneralCache {
+	private final Map<String, InviteData> inviteMap = new HashMap<>();
 
-    private GeneralCache() {}
+	private final GuildSettingsCache guildSettingsCache;
+	private final DatabaseManager databaseManager;
 
-    public static Map<String, InviteData> getInviteCache()
-    {
-        return INVITE_CACHE;
-    }
+	public GeneralCache(GuildSettingsCache guildSettingsCache, DatabaseManager databaseManager) {
+		this.guildSettingsCache = guildSettingsCache;
+		this.databaseManager = databaseManager;
+	}
 
-    public static void removeGuild(long guildId)
-    {
-        if (GuildSettingsCache.isVip(guildId))
-            return;
-        GuildSettingsCache.remove(guildId);
-        DatabaseManager.removeGuild(guildId);
-    }
+	public Map<String, InviteData> getInviteCache() {
+		return inviteMap;
+	}
+
+	public void removeGuild(long guildId) {
+		if (guildSettingsCache.isVip(guildId)) {
+			return;
+		}
+		guildSettingsCache.remove(guildId);
+		databaseManager.removeGuild(guildId);
+	}
 }

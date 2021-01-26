@@ -9,26 +9,22 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 
 @SuppressWarnings("unused")
-public class AvatarCommand extends Command
-{
-	public AvatarCommand()
-	{
+public class AvatarCommand extends Command {
+
+	public AvatarCommand() {
 		super("avatar", new String[]{"pfp", "av"}, Category.INFORMATIVE, Permission.UNKNOWN, 1, 2);
 	}
 
 	@Override
-	public void execute(String[] args, CommandContext ctx)
-	{
-		if (args.length == 0)
-		{
+	public void execute(String[] args, CommandContext ctx) {
+		if (args.length == 0) {
 			respond(ctx, ctx.getAuthor());
 			return;
 		}
 		ctx.getArgumentAsUser(0, user -> respond(ctx, user));
 	}
 
-	private void respond(CommandContext ctx, User user)
-	{
+	private void respond(CommandContext ctx, User user) {
 		var avatarUrl = user.getEffectiveAvatarUrl() + "?size=2048";
 		var eb = Utils.createEmbedBuilder(ctx.getAuthor());
 		eb.setAuthor(ctx.getI18n().get("commands.avatar.other.title") + " " + MarkdownSanitizer.escape(user.getAsTag()));

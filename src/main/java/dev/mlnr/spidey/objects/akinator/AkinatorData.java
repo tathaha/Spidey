@@ -6,57 +6,49 @@ import com.markozajc.akiwrapper.core.entities.Guess;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AkinatorData
-{
-    private final Akiwrapper akinator;
-    private final List<Long> declined;
-    private Guess currentGuess;
-    private boolean prompted;
+public class AkinatorData {
 
-    public AkinatorData(Akiwrapper akinator)
-    {
-        this.akinator = akinator;
-        this.declined = new ArrayList<>();
-    }
+	private final Akiwrapper akinator;
+	private final List<Long> declined;
+	private Guess currentGuess;
+	private boolean prompted;
 
-    public Akiwrapper getAkinator()
-    {
-        return this.akinator;
-    }
+	public AkinatorData(Akiwrapper akinator) {
+		this.akinator = akinator;
+		this.declined = new ArrayList<>();
+	}
 
-    // declined guesses
+	public Akiwrapper getAkinator() {
+		return this.akinator;
+	}
 
-    public void addDeclined(Guess guess)
-    {
-        declined.add(guess.getIdLong());
-    }
+	// declined guesses
 
-    public boolean isDeclined(Guess guess)
-    {
-        return declined.contains(guess.getIdLong());
-    }
+	public void addDeclined(Guess guess) {
+		declined.add(guess.getIdLong());
+	}
 
-    // current guess
+	public boolean isDeclined(Guess guess) {
+		return declined.contains(guess.getIdLong());
+	}
 
-    public Guess getCurrentGuess()
-    {
-        return this.currentGuess;
-    }
+	// current guess
 
-    public void setCurrentGuess(Guess guess)
-    {
-        this.currentGuess = guess;
-    }
+	public Guess getCurrentGuess() {
+		return this.currentGuess;
+	}
 
-    // prompted
+	public void setCurrentGuess(Guess guess) {
+		this.currentGuess = guess;
+	}
 
-    public boolean isPrompted()
-    {
-        return this.prompted;
-    }
+	// prompted
 
-    public void prompt()
-    {
-        this.prompted = true;
-    }
+	public boolean isPrompted() {
+		return this.prompted;
+	}
+
+	public void prompt() {
+		this.prompted = true;
+	}
 }

@@ -2,9 +2,11 @@
   "limit_exceeded": "Limit exceeded",
   "took_too_long": "Sorry, you took too long.",
   "internal_error": "Unfortunately, i couldn't %s due to an internal error: **%s**. Please report this message to the Developer.",
+  "enabled": "enabled",
+  "disabled": "disabled",
   "number": {
     "range": "Please enter a number from 1-%d.",
-    "negative": "Entered value is either negative or not a number."
+    "invalid": "Entered value is either negative or not a number."
   },
   "selection": {
     "type_number": "Type a number to select a %s or `%s` to cancel the selection.",
@@ -35,10 +37,12 @@
     "messages": {
       "failure": {
         "cant_interact": "You have to be a DJ/Server Manager to %s.",
+        "cant_interact_requester": "You have to be the requester of the song or a DJ/Server Manager to %s.",
         "no_query": "Please enter a search query.",
         "no_matches": "No matches found for **%s**.",
         "no_music": "There is no music playing.",
         "no_song": "There is no song playing.",
+        "queue_empty": "The queue is empty.",
         "connect": {
           "cant_play": "I can't play music as",
           "no_channel": "you're not connected to any channel",
@@ -349,10 +353,7 @@
     },
     "pause": {
       "description": "Pauses/unpauses the playback",
-      "usage": "pause/unpause",
-      "other": {
-        "requester": "You have to be the requester of the song or DJ to pause/unpause the playback."
-      }
+      "usage": "pause/unpause"
     },
     "play": {
       "description": "Plays/queues a song",
@@ -362,7 +363,6 @@
       "description": "Lists the current queue",
       "usage": "queue",
       "other": {
-        "empty": "The queue is empty.",
         "text": {
           "one": "There is **1** track in the queue",
           "multiple": "There are **%d** tracks in the queue",
@@ -402,6 +402,14 @@
         }
       }
     },
+    "shuffle": {
+      "description": "Shuffles the queue",
+      "usage": "shuffle",
+      "other": {
+        "only_one": "There is only one song in the queue.",
+        "success": "The queue has been shuffled."
+      }
+    },
     "skip": {
       "description": "Skips a song",
       "usage": "skip",
@@ -411,9 +419,18 @@
         "added": "You've voted to skip the current track. Votes:"
       }
     },
-    "disconnect": {
+    "stop": {
       "description": "Stops the playback and disconnects the bot",
       "usage": "stop"
+    },
+    "volume": {
+      "description": "Sets the volume of music",
+      "usage": "volume <(+-)volume>",
+      "other": {
+        "current": "Current volume is **%d%%**. You can change this by using `%svolume <volume>`.",
+        "set": "The volume has been set to **%d%%**.",
+        "already_set": "The volume is already set to **%d%%**."
+      }
     },
     "anal": {
       "description": "Sends a (NSFW) picture of an anal",
@@ -459,9 +476,25 @@
       "description": "Sends a (NSFW) picture of a pussy",
       "usage": "pussy"
     },
+    "defaultvolume": {
+      "description": "Sets the default music volume. This volume will be set when you start listening to music",
+      "usage": "defaultvolume <volume>",
+      "other": {
+        "current": "Current default music volume is **%d%%**. You can change this by using `%sdefaultvolume <volume>`.",
+        "set": "The default music volume has been set to **%d%%**.",
+        "already_set": "The default music volume is already set to **%d%%**."
+      }
+    },
     "djrole": {
       "description": "Sets/removes the DJ role",
       "usage": "djrole (@role, role id or name of the role or blank to reset)"
+    },
+    "errorcleanup": {
+      "description": "Enables/disables automatic error message cleaning after 10 seconds",
+      "usage": "errorcleanup",
+      "other": {
+        "done": "Error cleaning has been **%s**."
+      }
     },
     "fairqueue": {
       "description": "Enables/disables fair queue or sets the threshold",
@@ -492,7 +525,7 @@
       "description": "Sets/removes the prefix for this server",
       "usage": "prefix (new prefix or blank to reset)",
       "other": {
-        "already_default": "The prefix for this server is already set to the default one!",
+        "default": "The prefix for this server is set to the default one. You can change it by using `s!prefix <new prefix>` (without brackets).",
         "reset": ":white_check_mark: The prefix for this server has been reset to `s!`!",
         "already_set": "The prefix for this server is already set to `%s`.",
         "longer": "The prefix cannot be longer than 10 characters.",
@@ -518,10 +551,7 @@
     },
     "vip": {
       "description": "Adds/removes a guild to/from VIP guilds",
-      "usage": "vip (guild id)",
-      "other": {
-        "done": "VIP for guild %d has been **%s**."
-      }
+      "usage": "vip (guild id)"
     },
     "editsnipe": {
       "description": "Snipes an edited message",
