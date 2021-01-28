@@ -225,12 +225,10 @@ public class Events extends ListenerAdapter {
 		}
 		Utils.storeInvites(guild, cache.getGeneralCache());
 		Requester.updateStats(jda);
-		Utils.sendMessage(jda.getTextChannelById(785630223785787452L), "I've joined guild **" + guild.getName() + "** (**" + guildId + "**) with **" + guild.getMemberCount() + "** members");
-		guild.findMembers(member -> !member.getUser().isBot()).onSuccess(people -> {
-			if (people.size() >= 10000) {
-				cache.getGuildSettingsCache().setSnipingEnabled(guildId, false);
-			}
-		});
+		var memberCount = guild.getMemberCount();
+		Utils.sendMessage(jda.getTextChannelById(785630223785787452L), "I've joined guild **" + guild.getName() + "** (**" + guildId + "**) with **" + memberCount + "** members");
+		if (memberCount >= 10000)
+			cache.getGuildSettingsCache().setSnipingEnabled(guildId, false);
 	}
 
 	@Override
