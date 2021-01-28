@@ -71,7 +71,7 @@
     "removed": ":white_check_mark: The %s role has been removed.",
     "reset": ":white_check_mark: The %s role has been reset.",
     "cant_interact": "You cannot set the %s role to a role which you cannot interact with.",
-    "set": ":white_check_mark: The %s role has been set to role `%s`."
+    "set": ":white_check_mark: The %s role has been set to role %s."
   },
   "sniping": {
     "disabled": "Sniping messages for this server is disabled, which could be caused by manually disabling it or having more than 10000 people in this server. You can enable sniping by using `%ssniping`.",
