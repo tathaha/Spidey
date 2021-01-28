@@ -25,7 +25,7 @@ public class QueueCommand extends Command {
 		var trackScheduler = musicPlayer.getTrackScheduler();
 		var queue = trackScheduler.getQueueAsList();
 		if (queue.isEmpty()) {
-			ctx.replyError(i18n.get("commands.queue.other.empty"));
+			ctx.replyError(i18n.get("music.messages.failure.queue_empty"));
 			return;
 		}
 		StringUtils.createQueuePaginator(ctx.getMessage(), queue, i18n, ctx.getCache().getPaginatorCache());
