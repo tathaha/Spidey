@@ -243,10 +243,10 @@
       }
     },
     "legal": {
-      "description": "Shows you the ToS and Privacy Policy",
+      "description": "Shows you the Privacy Policy",
       "usage": "legal",
       "other": {
-        "text": "To see the Terms of Service and Privacy Policy, please visit the support guild: discord.gg/uJCw7B9fxZ"
+        "text": "To see the Privacy Policy, visit https://spidey.mlnr.dev/privacy or join the support guild to see side-by-side changes to the policy: discord.gg/uJCw7B9fxZ"
       }
     },
     "members": {
