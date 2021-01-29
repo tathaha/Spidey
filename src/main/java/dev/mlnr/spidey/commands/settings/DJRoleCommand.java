@@ -28,6 +28,10 @@ public class DJRoleCommand extends Command {
 			return;
 		}
 		ctx.getArgumentAsRole(0, role -> {
+			if (role.isPublicRole() || role.isManaged()) {
+				ctx.replyError(i18n.get("roles.invalid"));
+				return;
+			}
 			var roleId = role.getIdLong();
 			if (roleId == dbRole) {
 				guildSettingsCache.removeDJRole(guildId);
