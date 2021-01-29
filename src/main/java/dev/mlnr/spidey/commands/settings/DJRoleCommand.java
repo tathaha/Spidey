@@ -4,9 +4,6 @@ import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Message;
-
-import java.util.EnumSet;
 
 @SuppressWarnings("unused")
 public class DJRoleCommand extends Command {
@@ -42,7 +39,7 @@ public class DJRoleCommand extends Command {
 				return;
 			}
 			guildSettingsCache.setDJRoleId(guildId, roleId);
-			ctx.reply(i18n.get("roles.set", "DJ", role.getAsMention()), EnumSet.complementOf(EnumSet.of(Message.MentionType.ROLE)));
+			ctx.reply(i18n.get("roles.set", "DJ", role.getAsMention()));
 		});
 	}
 }

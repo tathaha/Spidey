@@ -7,19 +7,15 @@ import dev.mlnr.spidey.objects.guild.InviteData;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import net.jodah.expiringmap.ExpirationPolicy;
 import net.jodah.expiringmap.ExpiringMap;
 
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.EnumSet;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 public class Utils {
-
 	public static final Pattern TEXT_PATTERN = Pattern.compile("[a-zA-Z0-9-_]+");
 	public static final int SPIDEY_COLOR = 3288807;
 	private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("EE, d.LLL y | HH:mm:ss");
@@ -37,13 +33,12 @@ public class Utils {
 	}
 
 	public static void sendMessage(TextChannel channel, String toSend) {
-		sendMessage(channel, toSend, MessageAction.getDefaultMentions(), null);
+		sendMessage(channel, toSend, null);
 	}
 
-	public static void sendMessage(TextChannel channel, String toSend, Set<Message.MentionType> allowedMentions, Message invokeMessage) {
+	public static void sendMessage(TextChannel channel, String toSend, Message invokeMessage) {
 		if (channel.canTalk()) {
-			channel.sendMessage(toSend).allowedMentions(allowedMentions == null ? EnumSet.noneOf(Message.MentionType.class) : allowedMentions) // passing null to allowedMentions allows all mentions, nice logic JDA
-					.queue(response -> setResponse(invokeMessage, response));
+			channel.sendMessage(toSend).queue(response -> setResponse(invokeMessage, response));
 		}
 	}
 

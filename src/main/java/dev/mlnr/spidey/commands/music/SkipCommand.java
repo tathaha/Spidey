@@ -42,7 +42,7 @@ public class SkipCommand extends Command {
 		if (trackScheduler.hasSkipVoted(author)) {
 			trackScheduler.removeSkipVote(author);
 			ctx.reactLike();
-			ctx.reply(i18n.get("commands.skip.other.removed") + " [" + mention + "]", null);
+			ctx.reply(i18n.get("commands.skip.other.removed") + " [" + mention + "]");
 			return;
 		}
 		trackScheduler.addSkipVote(author);
@@ -50,7 +50,7 @@ public class SkipCommand extends Command {
 		var requiredSkipVotes = trackScheduler.getRequiredSkipVotes();
 		if (skipVotes < requiredSkipVotes) {
 			ctx.reactLike();
-			ctx.reply(i18n.get("commands.skip.other.added") + " **" + skipVotes + "**/**" + requiredSkipVotes + "** [" + mention + "]", null);
+			ctx.reply(i18n.get("commands.skip.other.added") + " **" + skipVotes + "**/**" + requiredSkipVotes + "** [" + mention + "]");
 			return;
 		}
 		musicPlayer.skip();

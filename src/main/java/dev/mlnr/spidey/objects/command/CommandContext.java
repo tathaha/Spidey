@@ -10,9 +10,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
-import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 
@@ -81,11 +79,7 @@ public class CommandContext {
 	}
 
 	public void reply(String content) {
-		reply(content, MessageAction.getDefaultMentions());
-	}
-
-	public void reply(String content, Set<Message.MentionType> allowedMentions) {
-		Utils.sendMessage(getTextChannel(), content, allowedMentions, getMessage());
+		Utils.sendMessage(getTextChannel(), content, getMessage());
 	}
 
 	public void replyError(String error) {
