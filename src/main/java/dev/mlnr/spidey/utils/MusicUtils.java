@@ -28,8 +28,7 @@ import static dev.mlnr.spidey.utils.MusicUtils.ConnectFailureReason.*;
 import static dev.mlnr.spidey.utils.MusicUtils.LoadFailureReason.*;
 
 public class MusicUtils {
-
-	public static final Pattern YOUTUBE_URL_PATTERN = Pattern.compile("^(https?://)?((www|m)\\.)?youtu(\\.be|be\\.com)/(playlist\\?list=([a-zA-Z0-9-_]+))?((watch\\?v=)?([a-zA-Z0-9-_]{11})(&list=([a-zA-Z0-9-_]+))?)?");
+	public static final Pattern YOUTUBE_URL_PATTERN = Pattern.compile("^(https?://)?((www\\.)?(music|m)\\.)?youtu(\\.be|be\\.com)/(playlist\\?list=([a-zA-Z0-9-_]+))?((watch\\?v=)?([a-zA-Z0-9-_]{11})(&list=([a-zA-Z0-9-_]+))?)?");
 
 	public static final int MAX_FAIR_QUEUE = 3;
 	public static final int MAX_QUEUE_SIZE = 150;
@@ -111,7 +110,7 @@ public class MusicUtils {
 	}
 
 	public static String getProgressBar(long position, long duration) {
-		var activeBlocks = (int)((float)position / duration * BLOCK_AMOUNT);
+		var activeBlocks = (int) ((float) position / duration * BLOCK_AMOUNT);
 		var progressBuilder = new StringBuilder();
 		for (var i = 0; i < BLOCK_AMOUNT; i++)
 			progressBuilder.append(i == activeBlocks ? BLOCK_ACTIVE : BLOCK_INACTIVE);
