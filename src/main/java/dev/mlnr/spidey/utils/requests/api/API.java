@@ -1,8 +1,7 @@
 package dev.mlnr.spidey.utils.requests.api;
 
 public enum API {
-	KSOFT_NSFW("https://api.ksoft.si/images/rand-reddit/%s?span=month", "Bearer " + System.getenv("ksoft")),
-	URBAN_DICTIONARY("http://api.urbandictionary.com/v0/define?term=%s", null);
+	KSOFT_NSFW("https://api.ksoft.si/images/rand-reddit/%s?span=month", "Bearer " + System.getenv("ksoft"));
 
 	private final String url;
 	private final String key;
@@ -22,7 +21,8 @@ public enum API {
 
 	public enum Stats {
 		TOP_GG("https://top.gg/api/bots/%s/stats", "server_count", System.getenv("topgg")),
-		BOTLIST_SPACE("https://api.botlist.space/v1/bots/%s", "server_count", System.getenv("botlistspace"));
+		BOTLIST_SPACE("https://api.botlist.space/v1/bots/%s", "server_count", System.getenv("botlistspace")),
+		DBOATS("https://discord.boats/api/bot/%s", "server_count", System.getenv("dboats"));
 
 		private final String url;
 		private final String statsParam;
