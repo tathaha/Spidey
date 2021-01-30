@@ -2,7 +2,7 @@
 
 Brief list of features:
 - customizable prefix
-- music (which is still in development, but the playback itself already works)
+- music
 - logging joins/leaves/boosts (with showing what invite link a user used to join)
 - adding a role to a user after joining
 
