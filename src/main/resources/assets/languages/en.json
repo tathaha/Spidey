@@ -358,7 +358,7 @@
     },
     "play": {
       "description": "Plays/queues a song",
-      "usage": "play <link or search term>"
+      "usage": "play <youtube (music) link or search term>"
     },
     "queue": {
       "description": "Lists the current queue",
