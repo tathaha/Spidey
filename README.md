@@ -18,10 +18,14 @@ Other:
 - uploading emotes from link
 - other miscellaneous commands, which you can discover by running `s!help`
 
-Click [here](https://spidey.mlnr.dev) to invite Spidey to your guild!
+# Click [here](https://spidey.mlnr.dev) to invite Spidey to your guild!
 
-Powered by [JDA](https://github.com/DV8FromTheWorld/JDA)
+## Vote for Spidey
 
-**Support guild**
+[![Spidey's Widget](https://api.botlist.space/widget/772446532560486410/6?rounded=true& "Spidey's Widget")](https://botlist.space/bot/772446532560486410)
+
+[![Discord Bots](https://top.gg/api/widget/772446532560486410.svg)](https://top.gg/bot/772446532560486410)
+
+## Support guild
 
 [![](https://discord.com/api/guilds/772435739664973825/embed.png?style=banner2)](https://discord.gg/uJCw7B9fxZ)
