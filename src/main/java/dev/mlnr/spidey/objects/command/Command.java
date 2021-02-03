@@ -1,17 +1,18 @@
 package dev.mlnr.spidey.objects.command;
 
+import dev.mlnr.spidey.objects.command.category.ICategory;
 import net.dv8tion.jda.api.Permission;
 
 public abstract class Command {
 
 	private final String invoke;
 	private final String[] aliases;
-	private final Category category;
+	private final ICategory category;
 	private final Permission requiredPermission;
 	private final int maxArgs;
 	private final int cooldown;
 
-	protected Command(String invoke, String[] aliases, Category category, Permission requiredPermission, int maxArgs, int cooldown) {
+	protected Command(String invoke, String[] aliases, ICategory category, Permission requiredPermission, int maxArgs, int cooldown) {
 		this.invoke = invoke;
 		this.aliases = aliases;
 		this.category = category;
@@ -30,7 +31,7 @@ public abstract class Command {
 		return this.aliases;
 	}
 
-	public Category getCategory() {
+	public ICategory getCategory() {
 		return this.category;
 	}
 

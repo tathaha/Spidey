@@ -1,15 +1,15 @@
-package dev.mlnr.spidey.commands.settings;
+package dev.mlnr.spidey.commands.settings.general;
 
-import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
+import dev.mlnr.spidey.objects.command.category.Category;
 import net.dv8tion.jda.api.Permission;
 
 @SuppressWarnings("unused")
 public class VIPCommand extends Command {
 
 	public VIPCommand() {
-		super("vip", new String[]{}, Category.SETTINGS, Permission.UNKNOWN, 0, 0);
+		super("vip", new String[]{}, Category.Settings.GENERAL, Permission.UNKNOWN, 0, 0);
 	}
 
 	@Override

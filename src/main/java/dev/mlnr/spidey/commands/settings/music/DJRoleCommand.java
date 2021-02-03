@@ -1,15 +1,15 @@
-package dev.mlnr.spidey.commands.settings;
+package dev.mlnr.spidey.commands.settings.music;
 
-import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
+import dev.mlnr.spidey.objects.command.category.Category;
 import net.dv8tion.jda.api.Permission;
 
 @SuppressWarnings("unused")
 public class DJRoleCommand extends Command {
 
 	public DJRoleCommand() {
-		super("djrole", new String[]{}, Category.SETTINGS, Permission.MANAGE_SERVER, 1, 4);
+		super("djrole", new String[]{}, Category.Settings.MUSIC, Permission.MANAGE_SERVER, 1, 4);
 	}
 
 	@Override

@@ -1,9 +1,9 @@
-package dev.mlnr.spidey.commands.settings;
+package dev.mlnr.spidey.commands.settings.music;
 
-import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
-import dev.mlnr.spidey.objects.guild.settings.GuildMusicSettings;
+import dev.mlnr.spidey.objects.command.category.Category;
+import dev.mlnr.spidey.objects.settings.guild.GuildMusicSettings;
 import dev.mlnr.spidey.utils.MusicUtils;
 import net.dv8tion.jda.api.Permission;
 
@@ -11,7 +11,7 @@ import net.dv8tion.jda.api.Permission;
 public class FairQueueCommand extends Command {
 
 	public FairQueueCommand() {
-		super("fairqueue", new String[]{"fq"}, Category.SETTINGS, Permission.UNKNOWN, 0, 4);
+		super("fairqueue", new String[]{"fq"}, Category.Settings.MUSIC, Permission.UNKNOWN, 0, 4);
 	}
 
 	@Override

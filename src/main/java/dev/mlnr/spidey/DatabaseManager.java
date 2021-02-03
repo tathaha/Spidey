@@ -2,9 +2,10 @@ package dev.mlnr.spidey;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import dev.mlnr.spidey.objects.guild.settings.GuildGeneralSettings;
-import dev.mlnr.spidey.objects.guild.settings.GuildMiscSettings;
-import dev.mlnr.spidey.objects.guild.settings.GuildMusicSettings;
+import dev.mlnr.spidey.objects.settings.guild.GuildFiltersSettings;
+import dev.mlnr.spidey.objects.settings.guild.GuildGeneralSettings;
+import dev.mlnr.spidey.objects.settings.guild.GuildMiscSettings;
+import dev.mlnr.spidey.objects.settings.guild.GuildMusicSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +22,21 @@ public class DatabaseManager {
 		hikariConfig.setUsername("sebo");
 		hikariConfig.setPassword(System.getenv("db"));
 		hikariDataSource = new HikariDataSource(hikariConfig);
+	}
+
+	public GuildFiltersSettings retrieveGuildFiltersSettings(long guildId) {
+		try (var con = hikariDataSource.getConnection(); var ps = con.prepareStatement("SELECT * FROM settings_filters WHERE guild_id=?")) {
+			ps.setLong(1, guildId);
+			try (var rs = ps.executeQuery()) {
+				return rs.next()
+						? new GuildFiltersSettings(guildId, rs.getBoolean("pinned_deleting_enabled"), this)
+						: new GuildFiltersSettings(guildId, false, this); // default settings
+			}
+		}
+		catch (SQLException ex) {
+			logger.error("There was an error while requesting the filters settings for guild {}!", guildId, ex);
+			return new GuildFiltersSettings(guildId, false, this); // default settings
+		}
 	}
 
 	public GuildGeneralSettings retrieveGuildGeneralSettings(long guildId) {
@@ -93,6 +109,10 @@ public class DatabaseManager {
 		}
 	}
 
+	private <T> void executeFiltersSetQuery(String property, long guildId, T value) {
+		executeSetQuery("settings_filters", property, guildId, value);
+	}
+
 	private <T> void executeGeneralSetQuery(String property, long guildId, T value) {
 		executeSetQuery("guilds", property, guildId, value);
 	}
@@ -103,6 +123,12 @@ public class DatabaseManager {
 
 	private <T> void executeMusicSetQuery(String property, long guildId, T value) {
 		executeSetQuery("settings_music", property, guildId, value);
+	}
+
+	// guild filters setters
+
+	public void setPinnedDeletingEnabled(long guildId, boolean enabled) {
+		executeFiltersSetQuery("pinned_deleting_enabled", guildId, enabled);
 	}
 
 	// guild general setters

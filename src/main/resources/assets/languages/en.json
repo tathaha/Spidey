@@ -197,7 +197,7 @@
       "usage": "help (command)",
       "other": {
         "text": "Spidey's commands",
-        "embed_content": "Prefix: **%s**\n%s\n\nTo see more info about a command, type `%shelp <command>`.",
+        "embed_content": "Prefix: **%s**\n%s\n\nTo see more info about a command, type `%shelp <command>`.\n",
         "viewing": "Viewing command info",
         "hidden": {
           "text": "\n**%d** commands were hidden as you don't have permissions to use them.",
@@ -520,6 +520,13 @@
       "other": {
         "reset": ":white_check_mark: The log channel has been reset!",
         "set": ":white_check_mark: The log channel has been set to channel <#%d>!"
+      }
+    },
+    "pinneddeleting": {
+      "description": "Enables/disables deleting \"Message was pinned\" messages",
+      "usage": "pinneddeleting",
+      "other": {
+        "done": "Deleting of \"Message was pinned\" messages has been **%s**."
       }
     },
     "prefix": {

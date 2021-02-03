@@ -1,9 +1,9 @@
 package dev.mlnr.spidey.commands.moderation;
 
 import dev.mlnr.spidey.objects.I18n;
-import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
+import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.utils.ConcurrentUtils;
 import dev.mlnr.spidey.utils.Emojis;
 import net.dv8tion.jda.api.Permission;

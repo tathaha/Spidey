@@ -14,6 +14,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.audit.ActionType;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.MessageType;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.channel.text.TextChannelDeleteEvent;
 import net.dv8tion.jda.api.events.guild.GuildBanEvent;
@@ -51,9 +52,16 @@ public class Events extends ListenerAdapter {
 	public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
 		var guild = event.getGuild();
 		var message = event.getMessage();
-		var guildId = guild.getIdLong();
 		var content = message.getContentRaw().trim();
-		var miscSettings = cache.getGuildSettingsCache().getMiscSettings(guildId);
+		var guildSettingsCache = cache.getGuildSettingsCache();
+		var guildId = guild.getIdLong();
+		var miscSettings = guildSettingsCache.getMiscSettings(guildId);
+
+		if (message.getType() == MessageType.CHANNEL_PINNED_ADD) {
+			if (guildSettingsCache.getFiltersSettings(guildId).isPinnedDeletingEnabled())
+				Utils.deleteMessage(message);
+			return;
+		}
 
 		if (!content.isEmpty() && miscSettings.isSnipingEnabled()) {
 			cache.getMessageCache().cacheMessage(message.getIdLong(), new MessageData(message));

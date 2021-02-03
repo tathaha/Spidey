@@ -1,10 +1,7 @@
 package dev.mlnr.spidey.cache;
 
 import dev.mlnr.spidey.Spidey;
-import dev.mlnr.spidey.objects.guild.settings.GuildGeneralSettings;
-import dev.mlnr.spidey.objects.guild.settings.GuildMiscSettings;
-import dev.mlnr.spidey.objects.guild.settings.GuildMusicSettings;
-import dev.mlnr.spidey.objects.guild.settings.IGuildSettings;
+import dev.mlnr.spidey.objects.settings.guild.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +25,10 @@ public class GuildSettingsCache {
 
 	public static synchronized GuildSettingsCache getInstance() {
 		return guildSettingsCache;
+	}
+
+	public GuildFiltersSettings getFiltersSettings(long guildId) {
+		return getSettings(GuildFiltersSettings.class, guildId);
 	}
 
 	public GuildGeneralSettings getGeneralSettings(long guildId) {
@@ -60,7 +61,9 @@ public class GuildSettingsCache {
 
 	private IGuildSettings parseSettingsFromType(Class<?> type, long guildId) {
 		var databaseManager = spidey.getDatabaseManager();
-		if (type == GuildGeneralSettings.class)
+		if (type == GuildFiltersSettings.class)
+			return databaseManager.retrieveGuildFiltersSettings(guildId);
+		else if (type == GuildGeneralSettings.class)
 			return databaseManager.retrieveGuildGeneralSettings(guildId);
 		else if (type == GuildMiscSettings.class)
 			return databaseManager.retrieveGuildMiscSettings(guildId, spidey);

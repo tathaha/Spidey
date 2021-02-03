@@ -1,15 +1,15 @@
-package dev.mlnr.spidey.commands.settings;
+package dev.mlnr.spidey.commands.settings.misc;
 
-import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
+import dev.mlnr.spidey.objects.command.category.Category;
 import net.dv8tion.jda.api.Permission;
 
 @SuppressWarnings("unused")
 public class PrefixCommand extends Command {
 
 	public PrefixCommand() {
-		super("prefix", new String[]{}, Category.SETTINGS, Permission.MANAGE_SERVER, 0, 4);
+		super("prefix", new String[]{}, Category.Settings.MISC, Permission.MANAGE_SERVER, 0, 4);
 	}
 
 	@Override

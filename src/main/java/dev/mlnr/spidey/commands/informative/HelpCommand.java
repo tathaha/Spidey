@@ -2,14 +2,18 @@ package dev.mlnr.spidey.commands.informative;
 
 import dev.mlnr.spidey.handlers.command.CommandHandler;
 import dev.mlnr.spidey.handlers.command.CooldownHandler;
-import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
+import dev.mlnr.spidey.objects.command.category.Category;
+import dev.mlnr.spidey.objects.command.category.ICategory;
 import dev.mlnr.spidey.utils.StringUtils;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 
 @SuppressWarnings("unused")
 public class HelpCommand extends Command {
@@ -27,8 +31,7 @@ public class HelpCommand extends Command {
 		var prefix = guildSettingsCache.getMiscSettings(guildId).getPrefix();
 		var i18n = ctx.getI18n();
 		var eb = Utils.createEmbedBuilder(author)
-				.setAuthor(i18n.get("commands.help.other.text"), "https://github.com/caneleex/Spidey",
-						ctx.getJDA().getSelfUser().getEffectiveAvatarUrl());
+				.setAuthor(i18n.get("commands.help.other.text"), "https://github.com/caneleex/Spidey", ctx.getJDA().getSelfUser().getEffectiveAvatarUrl());
 
 		if (args.length == 0) {
 			var commandsCopy = new HashMap<>(commandsMap);
@@ -37,14 +40,12 @@ public class HelpCommand extends Command {
 			var hidden = commandsMap.size() - commandsCopy.size();
 			var iter = entries.iterator();
 			var valueSet = new HashSet<>();
-			while (iter.hasNext()) {
-                if (!valueSet.add(iter.next().getValue())) {
-                    iter.remove();
-                }
+			while (iter.hasNext()) { // remove all duplicate commands to just show invokes, not aliases
+				if (!valueSet.add(iter.next().getValue())) {
+					iter.remove();
+				}
 			}
-			commandsCopy.remove("help");
-			commandsCopy.remove("eval");
-			var categories = new EnumMap<Category, List<Command>>(Category.class);
+			var categories = new HashMap<ICategory, List<Command>>();
 			var nsfwHidden = false;
 			commandsCopy.values().forEach(cmd -> categories.computeIfAbsent(cmd.getCategory(), k -> new ArrayList<>()).add(cmd));
 			if (!ctx.getTextChannel().isNSFW()) {
@@ -52,20 +53,37 @@ public class HelpCommand extends Command {
 				nsfwHidden = true;
 			}
 
-			var sb = new StringBuilder();
-			categories.forEach((category, commandz) -> {
-				sb.append("\n");
-				sb.append(category.getFriendlyName());
-				sb.append(" ").append("-").append(" ");
-				sb.append(listToString(commandz));
-			});
-			eb.setDescription(i18n.get("commands.help.other.embed_content", prefix, sb.toString(), prefix));
-            if (hidden > 0) {
-                eb.appendDescription(i18n.get("commands.help.other.hidden.text", hidden));
-            }
-            if (nsfwHidden) {
-                eb.appendDescription(i18n.get("commands.help.other.hidden.nsfw"));
-            }
+			var commandsStringBuilder = new StringBuilder();
+			var settingsBuilder = new StringBuilder();
+			settingsBuilder.append("\n\u2699\uFE0F Settings");
+
+			for (var entry : categories.entrySet()) {
+				var category = entry.getKey();
+				var categoryName = category.getFriendlyName();
+				var commandz = listToString(entry.getValue());
+
+				if (category instanceof Category.Settings) {
+					settingsBuilder.append("\n<:empty:806627051905089576>˪ ");
+					settingsBuilder.append(categoryName);
+					settingsBuilder.append(" ").append("-").append(" ");
+					settingsBuilder.append(commandz);
+					continue;
+				}
+				commandsStringBuilder.append("\n");
+				commandsStringBuilder.append(categoryName);
+				commandsStringBuilder.append(" ").append("-").append(" ");
+				commandsStringBuilder.append(commandz);
+			}
+
+			commandsStringBuilder.append(settingsBuilder);
+
+			eb.setDescription(i18n.get("commands.help.other.embed_content", prefix, commandsStringBuilder.toString(), prefix));
+			if (hidden > 0) {
+				eb.appendDescription(i18n.get("commands.help.other.hidden.text", hidden));
+			}
+			if (nsfwHidden) {
+				eb.appendDescription(i18n.get("commands.help.other.hidden.nsfw"));
+			}
 			ctx.reply(eb);
 			return;
 		}
@@ -112,9 +130,9 @@ public class HelpCommand extends Command {
 		for (var i = 0; i < commands.size(); i++) {
 			var cmd = commands.get(i);
 			builder.append("`").append(cmd.getInvoke()).append("`");
-            if (i != commands.size() - 1) {
-                builder.append(", ");
-            }
+			if (i != commands.size() - 1) {
+				builder.append(", ");
+			}
 		}
 		return builder.toString();
 	}

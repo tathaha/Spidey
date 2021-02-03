@@ -1,8 +1,8 @@
-package dev.mlnr.spidey.commands.settings;
+package dev.mlnr.spidey.commands.settings.music;
 
-import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
+import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.utils.MusicUtils;
 import net.dv8tion.jda.api.Permission;
 
@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.Permission;
 public class DefaultVolumeCommand extends Command {
 
 	public DefaultVolumeCommand() {
-		super("defaultvolume", new String[]{"defaultvol", "defvol"}, Category.SETTINGS, Permission.UNKNOWN, 0, 0);
+		super("defaultvolume", new String[]{"defaultvol", "defvol"}, Category.Settings.MUSIC, Permission.UNKNOWN, 0, 0);
 	}
 
 	@Override

@@ -1,8 +1,8 @@
-package dev.mlnr.spidey.commands.settings;
+package dev.mlnr.spidey.commands.settings.misc;
 
-import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
+import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.utils.Emojis;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.entities.TextChannel;
 public class LogCommand extends Command {
 
 	public LogCommand() {
-		super("log", new String[]{}, Category.SETTINGS, Permission.MANAGE_SERVER, 1, 4);
+		super("log", new String[]{}, Category.Settings.MISC, Permission.MANAGE_SERVER, 1, 4);
 	}
 
 	@Override

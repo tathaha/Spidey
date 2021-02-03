@@ -2,9 +2,9 @@ package dev.mlnr.spidey.handlers.command;
 
 import dev.mlnr.spidey.Spidey;
 import dev.mlnr.spidey.cache.Cache;
-import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
+import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.utils.KSoftAPIHelper;
 import dev.mlnr.spidey.utils.StringUtils;
 import dev.mlnr.spidey.utils.Utils;
