@@ -140,22 +140,22 @@ public class DatabaseManager {
 	// guild music setters
 
 	public void setDefaultVolume(long guildId, int defaultVolume) {
-		executeMusicSetQuery("music_default_volume", guildId, defaultVolume);
+		executeMusicSetQuery("default_volume", guildId, defaultVolume);
 	}
 
 	public void setDJRoleId(long guildId, long djRoleId) {
-		executeMusicSetQuery("music_dj_role_id", guildId, djRoleId);
+		executeMusicSetQuery("dj_role_id", guildId, djRoleId);
 	}
 
 	public void setFairQueueEnabled(long guildId, boolean enabled) {
-		executeMusicSetQuery("music_fair_queue_enabled", guildId, enabled);
+		executeMusicSetQuery("fair_queue_enabled", guildId, enabled);
 	}
 
 	public void setFairQueueThreshold(long guildId, int threshold) {
-		executeMusicSetQuery("music_fair_queue_threshold", guildId, threshold);
+		executeMusicSetQuery("fair_queue_threshold", guildId, threshold);
 	}
 
 	public void setSegmentSkippingEnabled(long guildId, boolean enabled) {
-		executeMusicSetQuery("music_segment_skipping", guildId, enabled);
+		executeMusicSetQuery("segment_skipping_enabled", guildId, enabled);
 	}
 }
