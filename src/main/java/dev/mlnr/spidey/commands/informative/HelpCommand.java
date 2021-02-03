@@ -24,7 +24,7 @@ public class HelpCommand extends Command {
 		var author = ctx.getAuthor();
 		var guildSettingsCache = ctx.getCache().getGuildSettingsCache();
 		var guildId = ctx.getGuild().getIdLong();
-		var prefix = guildSettingsCache.getPrefix(guildId);
+		var prefix = guildSettingsCache.getMiscSettings(guildId).getPrefix();
 		var i18n = ctx.getI18n();
 		var eb = Utils.createEmbedBuilder(author)
 				.setAuthor(i18n.get("commands.help.other.text"), "https://github.com/caneleex/Spidey",
@@ -82,7 +82,8 @@ public class HelpCommand extends Command {
 		var none = i18n.get("commands.help.other.command_info.info_none");
 		var requiredPermission = command.getRequiredPermission();
 		var aliases = command.getAliases();
-		var cooldown = CooldownHandler.getCooldown(command, guildSettingsCache.isVip(guildId));
+		var generalSettings = guildSettingsCache.getGeneralSettings(guildId);
+		var cooldown = CooldownHandler.getCooldown(command, generalSettings.isVip());
 
 		eb.setAuthor(i18n.get("commands.help.other.viewing") + " - " + invoke);
 		eb.addField(i18n.get("commands.help.other.command_info.description"),
@@ -99,7 +100,7 @@ public class HelpCommand extends Command {
 		eb.addField(i18n.get("commands.help.other.command_info.cooldown"), cooldown == 0 ? none : cooldown + " " +
 				i18n.get("commands.help.other.command_info.seconds"), false);
 
-		if (!guildSettingsCache.isVip(guildId)) {
+		if (!generalSettings.isVip()) {
 			eb.addBlankField(false);
 			eb.addField(i18n.get("commands.help.other.donate.title"), i18n.get("commands.help.other.donate.text"), false);
 		}

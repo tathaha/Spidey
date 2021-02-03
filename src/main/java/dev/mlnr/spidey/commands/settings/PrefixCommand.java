@@ -14,17 +14,15 @@ public class PrefixCommand extends Command {
 
 	@Override
 	public void execute(String[] args, CommandContext ctx) {
-		var guildSettingsCache = ctx.getCache().getGuildSettingsCache();
-		var guild = ctx.getGuild();
-		var guildId = guild.getIdLong();
-		var currentPrefix = guildSettingsCache.getPrefix(guildId);
+		var miscSettings = ctx.getCache().getGuildSettingsCache().getMiscSettings(ctx.getGuild().getIdLong());
+		var currentPrefix = miscSettings.getPrefix();
 		var i18n = ctx.getI18n();
 		if (args.length == 0) {
 			if (currentPrefix.equals("s!")) {
 				ctx.replyError(i18n.get("commands.prefix.other.default"));
 			}
 			else {
-				guildSettingsCache.setPrefix(guildId, "s!");
+				miscSettings.setPrefix("s!");
 				ctx.reply(i18n.get("commands.prefix.other.reset"));
 			}
 			return;
@@ -38,7 +36,7 @@ public class PrefixCommand extends Command {
 			ctx.replyError(i18n.get("commands.prefix.other.longer"));
 			return;
 		}
-		guildSettingsCache.setPrefix(guildId, newPrefix);
+		miscSettings.setPrefix(newPrefix);
 		ctx.reply(i18n.get("commands.prefix.other.changed", newPrefix));
 	}
 }

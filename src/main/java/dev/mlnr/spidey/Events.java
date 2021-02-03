@@ -53,20 +53,20 @@ public class Events extends ListenerAdapter {
 		var message = event.getMessage();
 		var guildId = guild.getIdLong();
 		var content = message.getContentRaw().trim();
-		var guildSettingsCache = cache.getGuildSettingsCache();
+		var miscSettings = cache.getGuildSettingsCache().getMiscSettings(guildId);
 
-		if (!content.isEmpty() && guildSettingsCache.isSnipingEnabled(guildId)) {
+		if (!content.isEmpty() && miscSettings.isSnipingEnabled()) {
 			cache.getMessageCache().cacheMessage(message.getIdLong(), new MessageData(message));
 		}
 
 		var author = event.getAuthor();
 		var akinatorCache = cache.getAkinatorCache();
 		if (akinatorCache.hasAkinator(author.getIdLong())) {
-			AkinatorHandler.handle(author, new AkinatorContext(event, akinatorCache, guildSettingsCache));
+			AkinatorHandler.handle(author, new AkinatorContext(event, akinatorCache, miscSettings.getI18n()));
 			return;
 		}
 
-		var prefix = guildSettingsCache.getPrefix(guildId);
+		var prefix = miscSettings.getPrefix();
 		if (!content.startsWith(prefix) || author.isBot() || event.isWebhookMessage()) {
 			return;
 		}
@@ -76,7 +76,7 @@ public class Events extends ListenerAdapter {
 	@Override
 	public void onGuildBan(GuildBanEvent event) {
 		var guild = event.getGuild();
-		var channel = cache.getGuildSettingsCache().getLogChannel(guild.getIdLong());
+		var channel = cache.getGuildSettingsCache().getMiscSettings(guild.getIdLong()).getLogChannel();
 		if (channel == null) {
 			return;
 		}
@@ -105,7 +105,7 @@ public class Events extends ListenerAdapter {
 	@Override
 	public void onGuildUnban(GuildUnbanEvent event) {
 		var guild = event.getGuild();
-		var channel = cache.getGuildSettingsCache().getLogChannel(guild.getIdLong());
+		var channel = cache.getGuildSettingsCache().getMiscSettings(guild.getIdLong()).getLogChannel();
 		if (channel == null) {
 			return;
 		}
@@ -131,7 +131,7 @@ public class Events extends ListenerAdapter {
 
 	@Override
 	public void onGuildMemberRemove(GuildMemberRemoveEvent event) {
-		var channel = cache.getGuildSettingsCache().getLogChannel(event.getGuild().getIdLong());
+		var channel = cache.getGuildSettingsCache().getMiscSettings(event.getGuild().getIdLong()).getLogChannel();
 		if (channel == null) {
 			return;
 		}
@@ -156,13 +156,12 @@ public class Events extends ListenerAdapter {
 	@Override
 	public void onGuildMemberJoin(GuildMemberJoinEvent event) {
 		var guild = event.getGuild();
-		var guildId = guild.getIdLong();
-		var guildSettingsCache = cache.getGuildSettingsCache();
-		var channel = guildSettingsCache.getLogChannel(guildId);
+		var miscSettings = cache.getGuildSettingsCache().getMiscSettings(guild.getIdLong());
+		var channel = miscSettings.getLogChannel();
 		if (channel == null) {
 			return;
 		}
-		var joinRole = guildSettingsCache.getJoinRole(guildId);
+		var joinRole = miscSettings.getJoinRole();
 		var selfMember = guild.getSelfMember();
 		var user = event.getUser();
 		var userId = user.getIdLong();
@@ -228,7 +227,7 @@ public class Events extends ListenerAdapter {
 		var memberCount = guild.getMemberCount();
 		Utils.sendMessage(jda.getTextChannelById(785630223785787452L), "I've joined guild **" + guild.getName() + "** (**" + guildId + "**) with **" + memberCount + "** members");
 		if (memberCount >= 10000)
-			cache.getGuildSettingsCache().setSnipingEnabled(guildId, false);
+			cache.getGuildSettingsCache().getMiscSettings(guildId).setSnipingEnabled(false);
 	}
 
 	@Override
@@ -247,10 +246,9 @@ public class Events extends ListenerAdapter {
 
 	@Override
 	public void onTextChannelDelete(TextChannelDeleteEvent event) {
-		var guildId = event.getGuild().getIdLong();
-		var guildSettingsCache = cache.getGuildSettingsCache();
-		if (event.getChannel().getIdLong() == guildSettingsCache.getLogChannelId(guildId)) {
-			guildSettingsCache.removeLogChannel(guildId);
+		var miscSettings = cache.getGuildSettingsCache().getMiscSettings(event.getGuild().getIdLong());
+		if (event.getChannel().getIdLong() == miscSettings.getLogChannelId()) {
+			miscSettings.removeLogChannel();
 		}
 	}
 
@@ -259,18 +257,20 @@ public class Events extends ListenerAdapter {
 		var roleId = event.getRole().getIdLong();
 		var guildId = event.getGuild().getIdLong();
 		var guildSettingsCache = cache.getGuildSettingsCache();
-		if (roleId == guildSettingsCache.getJoinRoleId(guildId)) {
-			guildSettingsCache.removeJoinRole(guildId);
+		var miscSettings = guildSettingsCache.getMiscSettings(guildId);
+		var musicSettings = guildSettingsCache.getMusicSettings(guildId);
+		if (roleId == miscSettings.getJoinRoleId()) {
+			miscSettings.removeJoinRole();
 		}
-		if (roleId == guildSettingsCache.getDJRoleId(guildId)) {
-			guildSettingsCache.removeDJRole(guildId);
+		if (roleId == musicSettings.getDJRoleId()) {
+			musicSettings.removeDJRole();
 		}
 	}
 
 	@Override
 	public void onGuildUpdateBoostTier(GuildUpdateBoostTierEvent event) {
 		var guild = event.getGuild();
-		var channel = cache.getGuildSettingsCache().getLogChannel(guild.getIdLong());
+		var channel = cache.getGuildSettingsCache().getMiscSettings(guild.getIdLong()).getLogChannel();
 		if (channel == null) {
 			return;
 		}
@@ -319,7 +319,7 @@ public class Events extends ListenerAdapter {
 			paginatorCache.removePaginator(messageId);
 		}
 
-		if (!cache.getGuildSettingsCache().isSnipingEnabled(event.getGuild().getIdLong())) {
+		if (!cache.getGuildSettingsCache().getMiscSettings(event.getGuild().getIdLong()).isSnipingEnabled()) {
 			return;
 		}
 		var messageCache = cache.getMessageCache();
@@ -331,7 +331,7 @@ public class Events extends ListenerAdapter {
 
 	@Override
 	public void onGuildMessageUpdate(GuildMessageUpdateEvent event) {
-		if (!cache.getGuildSettingsCache().isSnipingEnabled(event.getGuild().getIdLong())) {
+		if (!cache.getGuildSettingsCache().getMiscSettings(event.getGuild().getIdLong()).isSnipingEnabled()) {
 			return;
 		}
 		var messageCache = cache.getMessageCache();

@@ -36,7 +36,7 @@ public class PurgeCommand extends Command {
 			return;
 		}
 		if (args.length == 0) {
-			ctx.replyError(i18n.get("commands.purge.other.messages.failure.wrong_syntax", ctx.getCache().getGuildSettingsCache().getPrefix(guild.getIdLong())));
+			ctx.replyError(i18n.get("commands.purge.other.messages.failure.wrong_syntax", ctx.getCache().getGuildSettingsCache().getMiscSettings(guild.getIdLong()).getPrefix()));
 			return;
 		}
 		ctx.getArgumentAsUnsignedInt(0, amount -> {

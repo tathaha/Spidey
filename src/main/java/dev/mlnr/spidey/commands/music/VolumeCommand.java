@@ -34,7 +34,7 @@ public class VolumeCommand extends Command {
 		}
 		var currentVolume = musicPlayer.getVolume();
 		if (args.length == 0) {
-			ctx.reply(i18n.get("commands.volume.other.current", currentVolume, cache.getGuildSettingsCache().getPrefix(guild.getIdLong())));
+			ctx.reply(i18n.get("commands.volume.other.current", currentVolume, cache.getGuildSettingsCache().getMiscSettings(guild.getIdLong()).getPrefix()));
 			return;
 		}
 		ctx.getArgumentAsInt(0, parsedVolume -> {

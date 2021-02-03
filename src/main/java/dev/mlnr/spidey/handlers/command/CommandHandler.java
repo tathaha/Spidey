@@ -46,7 +46,7 @@ public class CommandHandler {
 		var content = message.getContentRaw().substring(prefix.length()).trim();
 		var guildSettingsCache = cache.getGuildSettingsCache();
 		var guildId = message.getGuild().getIdLong();
-		var i18n = guildSettingsCache.getI18n(guildId);
+		var i18n = guildSettingsCache.getMiscSettings(guildId).getI18n();
 		if (content.isEmpty()) {
 			Utils.returnError(i18n.get("command_failures.specify"), message);
 			return;
@@ -72,7 +72,7 @@ public class CommandHandler {
 			return;
 		}
 
-		var vip = guildSettingsCache.isVip(guildId);
+		var vip = guildSettingsCache.getGeneralSettings(guildId).isVip();
 
 		// NSFW COMMANDS HANDLING
 		var channel = message.getTextChannel();

@@ -20,10 +20,9 @@ public class SegmentSkippingCommand extends Command {
 			ctx.replyError(i18n.get("music.messages.failure.cant_interact", "enable/disable segment skipping"));
 			return;
 		}
-		var guildSettingsCache = ctx.getCache().getGuildSettingsCache();
-		var guildId = ctx.getGuild().getIdLong();
-		var enabled = !guildSettingsCache.isSegmentSkippingEnabled(guildId);
-		guildSettingsCache.setSegmentSkippingEnabled(guildId, enabled);
+		var musicSettings = ctx.getCache().getGuildSettingsCache().getMusicSettings(ctx.getGuild().getIdLong());
+		var enabled = !musicSettings.isSegmentSkippingEnabled();
+		musicSettings.setSegmentSkippingEnabled(enabled);
 		ctx.reactLike();
 		ctx.reply(i18n.get("commands.segmentskipping.other.done.text", enabled ? i18n.get("enabled") : i18n.get("disabled")) +
 				(enabled ? " " + i18n.get("commands.segmentskipping.other.done.warning") : ""));

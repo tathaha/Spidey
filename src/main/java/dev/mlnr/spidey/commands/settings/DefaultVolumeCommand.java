@@ -20,11 +20,12 @@ public class DefaultVolumeCommand extends Command {
 			ctx.replyError(i18n.get("music.messages.failure.cant_interact", "set the default music volume"));
 			return;
 		}
-		var guildSettingsCache = ctx.getCache().getGuildSettingsCache();
 		var guildId = ctx.getGuild().getIdLong();
-		var currentDefaultVolume = guildSettingsCache.getDefaultVolume(guildId);
+		var guildSettingsCache = ctx.getCache().getGuildSettingsCache();
+		var musicSettings = guildSettingsCache.getMusicSettings(guildId);
+		var currentDefaultVolume = musicSettings.getDefaultVolume();
 		if (args.length == 0) {
-			ctx.reply(i18n.get("commands.defaultvolume.other.current", currentDefaultVolume, guildSettingsCache.getPrefix(guildId)));
+			ctx.reply(i18n.get("commands.defaultvolume.other.current", currentDefaultVolume, guildSettingsCache.getMiscSettings(guildId).getPrefix()));
 			return;
 		}
 		ctx.getArgumentAsUnsignedInt(0, parsedVolume -> {
@@ -33,7 +34,7 @@ public class DefaultVolumeCommand extends Command {
 				ctx.replyError(i18n.get("commands.defaultvolume.other.already_set", newDefaultVolume));
 				return;
 			}
-			guildSettingsCache.setDefaultVolume(guildId, newDefaultVolume);
+			musicSettings.setDefaultVolume(newDefaultVolume);
 			ctx.reactLike();
 			ctx.reply(i18n.get("commands.defaultvolume.other.set", newDefaultVolume));
 		});

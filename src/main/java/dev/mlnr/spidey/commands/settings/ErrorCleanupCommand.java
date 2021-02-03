@@ -14,11 +14,10 @@ public class ErrorCleanupCommand extends Command {
 
 	@Override
 	public void execute(String[] args, CommandContext ctx) {
-		var guildSettingsCache = ctx.getCache().getGuildSettingsCache();
-		var guildId = ctx.getGuild().getIdLong();
-		var enabled = !guildSettingsCache.isErrorCleanupEnabled(guildId);
+		var miscSettings = ctx.getCache().getGuildSettingsCache().getMiscSettings(ctx.getGuild().getIdLong());
+		var enabled = !miscSettings.isErrorCleanupEnabled();
 		var i18n = ctx.getI18n();
-		guildSettingsCache.setErrorCleanupEnabled(guildId, enabled);
+		miscSettings.setErrorCleanupEnabled(enabled);
 		ctx.reactLike();
 		ctx.reply(i18n.get("commands.errorcleanup.other.done", enabled ? i18n.get("enabled") : i18n.get("disabled")));
 	}

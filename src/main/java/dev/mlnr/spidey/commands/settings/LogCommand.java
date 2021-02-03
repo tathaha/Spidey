@@ -26,11 +26,11 @@ public class LogCommand extends Command {
 	}
 
 	private void proceed(long guildId, TextChannel channel, CommandContext ctx) {
-		var guildSettingsCache = ctx.getCache().getGuildSettingsCache();
+		var miscSettings = ctx.getCache().getGuildSettingsCache().getMiscSettings(guildId);
 		var channelId = channel.getIdLong();
 		var i18n = ctx.getI18n();
-		if (guildSettingsCache.getLogChannelId(guildId) == channelId) {
-			guildSettingsCache.removeLogChannel(guildId);
+		if (miscSettings.getLogChannelId() == channelId) {
+			miscSettings.removeLogChannel();
 			ctx.reply(i18n.get("commands.log.other.reset"));
 			return;
 		}
@@ -40,7 +40,7 @@ public class LogCommand extends Command {
 			Utils.addReaction(message, "\uD83D\uDE4A");
 			return;
 		}
-		guildSettingsCache.setLogChannelId(guildId, channelId);
+		miscSettings.setLogChannelId(channelId);
 		ctx.reply(i18n.get("commands.log.other.set", channelId));
 	}
 }

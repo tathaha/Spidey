@@ -18,10 +18,10 @@ public class VIPCommand extends Command {
 			ctx.replyError(ctx.getI18n().get("command_failures.only_dev"));
 			return;
 		}
-		var guildSettingsCache = ctx.getCache().getGuildSettingsCache();
 		var guildId = args.length == 0 ? ctx.getGuild().getIdLong() : Long.parseLong(args[0]);
-		var vip = !guildSettingsCache.isVip(guildId);
-		guildSettingsCache.setVip(guildId, vip);
+		var generalSettings = ctx.getCache().getGuildSettingsCache().getGeneralSettings(guildId);
+		var vip = !generalSettings.isVip();
+		generalSettings.setVip(vip);
 		ctx.reactLike();
 		ctx.reply("VIP for guild **" + guildId + "** has been **" + (vip ? "enabled" : "disabled") + "**.");
 	}

@@ -18,11 +18,10 @@ public class EditSnipeCommand extends Command {
 	@Override
 	public void execute(String[] args, CommandContext ctx) {
 		var cache = ctx.getCache();
-		var guildSettingsCache = cache.getGuildSettingsCache();
-		var guildId = ctx.getGuild().getIdLong();
+		var miscSettings = cache.getGuildSettingsCache().getMiscSettings(ctx.getGuild().getIdLong());
 		var i18n = ctx.getI18n();
-		if (!guildSettingsCache.isSnipingEnabled(guildId)) {
-			ctx.replyError(i18n.get("sniping.disabled", guildSettingsCache.getPrefix(guildId)));
+		if (!miscSettings.isSnipingEnabled()) {
+			ctx.replyError(i18n.get("sniping.disabled", miscSettings.getPrefix()));
 			return;
 		}
 		var textChannel = ctx.getTextChannel();

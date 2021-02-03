@@ -105,7 +105,7 @@ public class MusicUtils {
 	}
 
 	public static boolean isDJ(Member member) {
-		var djRoleId = GuildSettingsCache.getInstance().getDJRoleId(member.getGuild().getIdLong());
+		var djRoleId = GuildSettingsCache.getInstance().getMusicSettings(member.getGuild().getIdLong()).getDJRoleId();
 		return djRoleId != 0 && member.getRoles().stream().anyMatch(role -> role.getIdLong() == djRoleId);
 	}
 
@@ -118,7 +118,7 @@ public class MusicUtils {
 	}
 
 	public static void handleMarkers(AudioTrack track, long guildId) {
-		if (!GuildSettingsCache.getInstance().isSegmentSkippingEnabled(guildId)) {
+		if (!GuildSettingsCache.getInstance().getMusicSettings(guildId).isSegmentSkippingEnabled()) {
 			return;
 		}
 		var segments = VideoSegmentCache.getInstance().getVideoSegments(track.getIdentifier());
@@ -129,7 +129,7 @@ public class MusicUtils {
 
 	public static long getLengthWithoutSegments(AudioTrack track, long guildId) {
 		var length = track.getInfo().length;
-		if (!GuildSettingsCache.getInstance().isSegmentSkippingEnabled(guildId)) {
+		if (!GuildSettingsCache.getInstance().getMusicSettings(guildId).isSegmentSkippingEnabled()) {
 			return length;
 		}
 		var segments = VideoSegmentCache.getInstance().getVideoSegments(track.getIdentifier());
@@ -155,7 +155,7 @@ public class MusicUtils {
 		if (fairQueueThreshold != -1 && queue.stream().filter(queued -> trackInfo.uri.equals(queued.getInfo().uri)).count() == fairQueueThreshold) {
 			return FAIR_QUEUE;
 		}
-		if (GuildSettingsCache.getInstance().isVip(guildId)) {
+		if (GuildSettingsCache.getInstance().getGeneralSettings(guildId).isVip()) {
 			return null;
 		}
 		if (queue.size() == MAX_QUEUE_SIZE) {
@@ -182,8 +182,8 @@ public class MusicUtils {
 	}
 
 	private static int getFairQueueThreshold(long guildId) {
-		var guildSettingsCache = GuildSettingsCache.getInstance();
-		return guildSettingsCache.isFairQueueEnabled(guildId) ? guildSettingsCache.getFairQueueThreshold(guildId) : -1;
+		var musicSettings = GuildSettingsCache.getInstance().getMusicSettings(guildId);
+		return musicSettings.isFairQueueEnabled() ? musicSettings.getFairQueueThreshold() : -1;
 	}
 
 	public static void loadQuery(MusicPlayer musicPlayer, String query, AudioLoadResultHandler loader) {
@@ -227,7 +227,7 @@ public class MusicUtils {
 				base += i18n.get("music.messages.failure.load.track_long", MAX_TRACK_LENGTH_HOURS);
 				break;
 			case FAIR_QUEUE:
-				base += i18n.get("music.messages.failure.load.fair_queue", MAX_FAIR_QUEUE, GuildSettingsCache.getInstance().getPrefix(ctx.getGuild().getIdLong()));
+				base += i18n.get("music.messages.failure.load.fair_queue", MAX_FAIR_QUEUE, GuildSettingsCache.getInstance().getMiscSettings(ctx.getGuild().getIdLong()).getPrefix());
 				break;
 		}
 		return base + ".";

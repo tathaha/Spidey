@@ -15,11 +15,11 @@ public class SnipingCommand extends Command {
 	@Override
 	public void execute(String[] args, CommandContext ctx) {
 		var cache = ctx.getCache();
-		var guildSettingsCache = cache.getGuildSettingsCache();
 		var guildId = ctx.getGuild().getIdLong();
-		var enabled = !guildSettingsCache.isSnipingEnabled(guildId);
+		var miscSettings = cache.getGuildSettingsCache().getMiscSettings(guildId);
+		var enabled = !miscSettings.isSnipingEnabled();
 		var i18n = ctx.getI18n();
-		guildSettingsCache.setSnipingEnabled(guildId, enabled);
+		miscSettings.setSnipingEnabled(enabled);
 		ctx.reactLike();
 		ctx.reply(i18n.get("commands.sniping.other.done", enabled ? i18n.get("enabled") : i18n.get("disabled")));
 		if (!enabled) {

@@ -18,7 +18,7 @@ public class StatsCommand extends Command {
 	@Override
 	public void execute(String[] args, CommandContext ctx) {
 		var eb = Utils.createEmbedBuilder(ctx.getAuthor());
-		var prefix = ctx.getCache().getGuildSettingsCache().getPrefix(ctx.getGuild().getIdLong());
+		var prefix = ctx.getCache().getGuildSettingsCache().getMiscSettings(ctx.getGuild().getIdLong()).getPrefix();
 		var jda = ctx.getJDA();
 		var runtime = Runtime.getRuntime();
 		var total = runtime.totalMemory();

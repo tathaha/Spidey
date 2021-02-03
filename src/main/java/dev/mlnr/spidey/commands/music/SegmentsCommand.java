@@ -39,7 +39,7 @@ public class SegmentsCommand extends Command {
 			}
 			segments = videoSegmentCache.getVideoSegments(videoId, true);
 		}
-		var updatePrompt = i18n.get("commands.segments.other.prompt", cache.getGuildSettingsCache().getPrefix(guild.getIdLong()));
+		var updatePrompt = i18n.get("commands.segments.other.prompt", cache.getGuildSettingsCache().getMiscSettings(guild.getIdLong()).getPrefix());
 		if (segments.isEmpty()) {
 			ctx.replyError(i18n.get("commands.segments.other.no_segs") + " " + updatePrompt);
 			return;

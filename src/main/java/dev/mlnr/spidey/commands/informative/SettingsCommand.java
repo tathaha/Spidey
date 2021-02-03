@@ -19,7 +19,8 @@ public class SettingsCommand extends Command {
 	public void execute(String[] args, CommandContext ctx) {
 		var guildSettingsCache = ctx.getCache().getGuildSettingsCache();
 		var guildId = ctx.getGuild().getIdLong();
-		var prefix = guildSettingsCache.getPrefix(guildId);
+		var miscSettings = guildSettingsCache.getMiscSettings(guildId);
+		var prefix = miscSettings.getPrefix();
 		var eb = Utils.createEmbedBuilder(ctx.getAuthor());
 		var i18n = ctx.getI18n();
 
@@ -28,15 +29,15 @@ public class SettingsCommand extends Command {
 		var setTemplate = " (" + i18n.get("commands.settings.other.set") + " " + prefix + "%s)";
 		var none = i18n.get("commands.settings.other.none");
 
-		var logChannel = guildSettingsCache.getLogChannel(guildId);
+		var logChannel = miscSettings.getLogChannel();
 		eb.addField(i18n.get("commands.settings.other.log"),
 				logChannel == null ? none + format(setTemplate, "log") : logChannel.getAsMention(), false);
 
-		var joinRole = guildSettingsCache.getJoinRole(guildId);
+		var joinRole = miscSettings.getJoinRole();
 		eb.addField(i18n.get("commands.settings.other.join"),
 				joinRole == null ? none + format(setTemplate, "joinrole") : joinRole.getAsMention(), false);
 
-		var djRole = guildSettingsCache.getDJRole(guildId);
+		var djRole = guildSettingsCache.getMusicSettings(guildId).getDJRole();
 		eb.addField(i18n.get("commands.settings.other.dj"),
 				djRole == null ? none + format(setTemplate, "djrole") : djRole.getAsMention(), false);
 
