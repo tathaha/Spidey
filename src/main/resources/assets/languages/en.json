@@ -27,6 +27,7 @@
     "only_nsfw": "You can use nsfw commands only in nsfw channels.",
     "no_perms": "You don't have the **%s** permission to run this command.",
     "only_dev": "This command can only be executed by the Developer.",
+    "wrong_syntax": "Wrong syntax. Use `%shelp %s` to see the correct syntax.",
     "invalid": {
       "message": "**%s** isn't a valid command.",
       "check_help": "Check `%shelp` for a list of commands.",
@@ -303,7 +304,6 @@
         "messages": {
           "failure": {
             "no_perms": "I don't have permission to purge messages or see the message history in this channel.",
-            "wrong_syntax": "Wrong syntax. Use `%shelp purge` to see the correct syntax.",
             "no_messages": {
               "text": "There are no messages to be deleted.",
               "user": "There are no messages by user **%s** to be deleted.",
@@ -520,6 +520,22 @@
       "other": {
         "reset": ":white_check_mark: The log channel has been reset!",
         "set": ":white_check_mark: The log channel has been set to channel <#%d>!"
+      }
+    },
+    "invitedeleting": {
+      "description": "Enables/disables deleting messages with foreign invite links",
+      "usage": "invitedeleting <add/remove> <user/role> <@user/role, user/role id or name/nickname of the role/user",
+      "other": {
+        "already_ignored": "%s %s is already ignored.",
+        "not_ignored": "%s %s is not ignored.",
+        "done": {
+          "text": "Deleting of foreign invite links has been **%s**.",
+          "ignored": {
+            "text": "Users with \"Manage Messages\" permission will be ignored.",
+            "added": ":white_check_mark: %s %s has been added to ignored.",
+            "removed": ":white_check_mark: %s %s has been removed from ignored."
+          }
+        }
       }
     },
     "pinneddeleting": {

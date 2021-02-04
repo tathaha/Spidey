@@ -10,6 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class DatabaseManager {
 	private static final Logger logger = LoggerFactory.getLogger(DatabaseManager.class);
@@ -29,13 +32,14 @@ public class DatabaseManager {
 			ps.setLong(1, guildId);
 			try (var rs = ps.executeQuery()) {
 				return rs.next()
-						? new GuildFiltersSettings(guildId, rs.getBoolean("pinned_deleting_enabled"), this)
-						: new GuildFiltersSettings(guildId, false, this); // default settings
+						? new GuildFiltersSettings(guildId, rs.getBoolean("pinned_deleting_enabled"), rs.getBoolean("invite_deleting_enabled"), retrieveInviteFilterIgnoredUsers(guildId),
+							retrieveInviteFilterIgnoredRoles(guildId), this)
+						: new GuildFiltersSettings(guildId, false, false, Collections.emptyList(), Collections.emptyList(), this); // default settings
 			}
 		}
 		catch (SQLException ex) {
 			logger.error("There was an error while requesting the filters settings for guild {}!", guildId, ex);
-			return new GuildFiltersSettings(guildId, false, this); // default settings
+			return new GuildFiltersSettings(guildId, false, false, Collections.emptyList(), Collections.emptyList(), this); // default settings
 		}
 	}
 
@@ -131,6 +135,10 @@ public class DatabaseManager {
 		executeFiltersSetQuery("pinned_deleting_enabled", guildId, enabled);
 	}
 
+	public void setInviteDeletingEnabled(long guildId, boolean enabled) {
+		executeFiltersSetQuery("invite_deleting_enabled", guildId, enabled);
+	}
+
 	// guild general setters
 
 	public void setVip(long guildId, boolean vip) {
@@ -183,5 +191,73 @@ public class DatabaseManager {
 
 	public void setSegmentSkippingEnabled(long guildId, boolean enabled) {
 		executeMusicSetQuery("segment_skipping_enabled", guildId, enabled);
+	}
+
+	// invite filter ignored lists
+
+	public List<Long> retrieveInviteFilterIgnoredList(String table, String property, long guildId) {
+		var query = "SELECT * FROM " + table + " WHERE guild_id=?";
+		try (var con = hikariDataSource.getConnection(); var ps = con.prepareStatement(query)) {
+			ps.setLong(1, guildId);
+			try (var rs = ps.executeQuery()) {
+				var ignored = new ArrayList<Long>();
+				while (rs.next()) {
+					ignored.add(rs.getLong(property));
+				}
+				return ignored;
+			}
+		}
+		catch (SQLException ex) {
+			logger.error("There was an error while retrieving the ignored {} list for invite filter for guild {}!", property, guildId, ex);
+			return Collections.emptyList();
+		}
+	}
+
+	public List<Long> retrieveInviteFilterIgnoredUsers(long guildId) {
+		return retrieveInviteFilterIgnoredList("invite_filter_ignored_users", "user_id", guildId);
+	}
+
+	public List<Long> retrieveInviteFilterIgnoredRoles(long guildId) {
+		return retrieveInviteFilterIgnoredList("invite_filter_ignored_roles", "role_id", guildId);
+	}
+
+	public void executeInviteFilterAddQuery(String table, String property, long guildId, long id) {
+		var query = "INSERT INTO " + table + " (guild_id, " + property + ") VALUES (?, ?)";
+		try (var con = hikariDataSource.getConnection(); var ps = con.prepareStatement(query)) {
+			ps.setLong(1, guildId);
+			ps.setLong(2, id);
+			ps.executeUpdate();
+		}
+		catch (SQLException ex) {
+			logger.error("There was an error while adding an ignored {} for invite filter for guild {}!", property, guildId, ex);
+		}
+	}
+
+	public void executeInviteFilterRemoveQuery(String table, String property, long guildId, long id) {
+		var query = "DELETE FROM " + table + " WHERE guild_id=? AND " + property + "=?";
+		try (var con = hikariDataSource.getConnection(); var ps = con.prepareStatement(query)) {
+			ps.setLong(1, guildId);
+			ps.setLong(2, id);
+			ps.executeUpdate();
+		}
+		catch (SQLException ex) {
+			logger.error("There was an error while removing an ignored {} for invite filter for guild {}!", property, guildId, ex);
+		}
+	}
+
+	public void addIgnoredUser(long guildId, long userId) {
+		executeInviteFilterAddQuery("invite_filter_ignored_users", "user_id", guildId, userId);
+	}
+
+	public void addIgnoredRole(long guildId, long roleId) {
+		executeInviteFilterAddQuery("invite_filter_ignored_roles", "role_id", guildId, roleId);
+	}
+
+	public void removeIgnoredUser(long guildId, long userId) {
+		executeInviteFilterRemoveQuery("invite_filter_ignored_users", "user_id", guildId, userId);
+	}
+
+	public void removeIgnoredRole(long guildId, long roleId) {
+		executeInviteFilterRemoveQuery("invite_filter_ignored_roles", "role_id", guildId, roleId);
 	}
 }

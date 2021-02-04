@@ -37,6 +37,8 @@ import net.dv8tion.jda.api.events.role.RoleDeleteEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.time.Instant;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static net.dv8tion.jda.api.utils.MarkdownSanitizer.escape;
 
@@ -50,21 +52,40 @@ public class Events extends ListenerAdapter {
 
 	@Override
 	public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
+		if (event.isWebhookMessage()) {
+			return;
+		}
 		var guild = event.getGuild();
 		var message = event.getMessage();
 		var content = message.getContentRaw().trim();
 		var guildSettingsCache = cache.getGuildSettingsCache();
 		var guildId = guild.getIdLong();
-		var miscSettings = guildSettingsCache.getMiscSettings(guildId);
+		var filtersSettings = guildSettingsCache.getFiltersSettings(guildId);
 
 		if (message.getType() == MessageType.CHANNEL_PINNED_ADD) {
-			if (guildSettingsCache.getFiltersSettings(guildId).isPinnedDeletingEnabled())
+			if (filtersSettings.isPinnedDeletingEnabled())
 				Utils.deleteMessage(message);
 			return;
 		}
 
-		if (!content.isEmpty() && miscSettings.isSnipingEnabled()) {
+		if (content.isEmpty()) {
+			return;
+		}
+
+		var miscSettings = guildSettingsCache.getMiscSettings(guildId);
+
+		if (miscSettings.isSnipingEnabled()) {
 			cache.getMessageCache().cacheMessage(message.getIdLong(), new MessageData(message));
+		}
+
+		var member = event.getMember();
+		if (filtersSettings.isInviteDeletingEnabled() && !filtersSettings.isIgnored(member) && guild.getSelfMember().hasPermission(event.getChannel(), Permission.MESSAGE_MANAGE)
+				&& !member.hasPermission(Permission.MESSAGE_MANAGE)) {
+			var invitesForGuild = cache.getGeneralCache().getInviteCache().entrySet().stream().filter(entry -> entry.getValue().getGuildId() == guildId).map(Map.Entry::getKey).collect(Collectors.toList());
+			if (!invitesForGuild.isEmpty() && message.getInvites().stream().anyMatch(code -> !invitesForGuild.contains(code))) {
+				Utils.deleteMessage(message);
+				return;
+			}
 		}
 
 		var author = event.getAuthor();
@@ -75,7 +96,7 @@ public class Events extends ListenerAdapter {
 		}
 
 		var prefix = miscSettings.getPrefix();
-		if (!content.startsWith(prefix) || author.isBot() || event.isWebhookMessage()) {
+		if (!content.startsWith(prefix) || author.isBot()) {
 			return;
 		}
 		CommandHandler.handle(event, prefix, spidey, cache);
