@@ -3,6 +3,8 @@
 Brief list of features:
 - customizable prefix
 - music
+- localization support
+- chat filters
 - logging joins/leaves/boosts (with showing what invite link a user used to join)
 - adding a role to a user after joining
 
