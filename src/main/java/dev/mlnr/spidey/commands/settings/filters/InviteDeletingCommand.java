@@ -4,10 +4,13 @@ import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.objects.settings.guild.GuildFiltersSettings;
+import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.IMentionable;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
+
+import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
 public class InviteDeletingCommand extends Command {
@@ -30,7 +33,16 @@ public class InviteDeletingCommand extends Command {
 					(enabled ? " " + i18n.get("commands.invitedeleting.other.done.ignored.text") : ""));
 			return;
 		}
-		var wrongSyntax = i18n.get("command_failures.wrong_syntax", guildSettingsCache.getMiscSettings(guildId).getPrefix(), "invitedeleting");
+		var prefix = guildSettingsCache.getMiscSettings(guildId).getPrefix();
+		if (!filtersSettings.isInviteDeletingEnabled()) {
+			ctx.replyError(i18n.get("commands.invitedeleting.other.disabled", prefix));
+			return;
+		}
+		var wrongSyntax = i18n.get("command_failures.wrong_syntax", prefix, "invitedeleting");
+		if (args[0].equalsIgnoreCase("list")) {
+			listIgnored(args, ctx, filtersSettings);
+			return;
+		}
 		if (args.length != 3) {
 			ctx.replyError(wrongSyntax);
 			return;
@@ -93,5 +105,45 @@ public class InviteDeletingCommand extends Command {
 		else {
 			ctx.replyError(i18n.get("command_failures.wrong_syntax", ctx.getCache().getGuildSettingsCache().getMiscSettings(ctx.getGuild().getIdLong()).getPrefix(), "invitedeleting"));
 		}
+	}
+
+	private void listIgnored(String[] args, CommandContext ctx, GuildFiltersSettings filtersSettings) {
+		var embedBuilder = Utils.createEmbedBuilder(ctx.getAuthor());
+		var i18n = ctx.getI18n();
+		var wrongSyntax = i18n.get("command_failures.wrong_syntax", ctx.getCache().getGuildSettingsCache().getMiscSettings(ctx.getGuild().getIdLong()).getPrefix(), "invitedeleting");
+		if (args.length == 1) {
+			embedBuilder.setAuthor(i18n.get("commands.invitedeleting.other.listing.all"));
+			var ignoredUsers = filtersSettings.getIgnoredUsers();
+			var ignoredRoles = filtersSettings.getIgnoredRoles();
+			embedBuilder.appendDescription(i18n.get("commands.invitedeleting.other.listing.ignored.users")).appendDescription(":");
+			embedBuilder.appendDescription(ignoredUsers.isEmpty()
+					? " " + i18n.get("commands.invitedeleting.other.listing.none")
+					: "\n" + ignoredUsers.stream().map(userId -> "<@" + userId + ">").collect(Collectors.joining("\n")));
+			embedBuilder.appendDescription(i18n.get("commands.invitedeleting.other.listing.ignored.roles")).appendDescription(":");
+			embedBuilder.appendDescription(ignoredRoles.isEmpty()
+					? " " + i18n.get("commands.invitedeleting.other.listing.none")
+					: "\n" + ignoredRoles.stream().map(roleId -> "<@&" + roleId + ">").collect(Collectors.joining("\n")));
+		}
+		else if (args.length == 2) {
+			if (args[1].equalsIgnoreCase("user")) {
+				var ignoredUsers = filtersSettings.getIgnoredUsers();
+				embedBuilder.setAuthor(i18n.get("commands.invitedeleting.other.listing.users"));
+				embedBuilder.appendDescription(ignoredUsers.isEmpty() ? " None" : ignoredUsers.stream().map(userId -> "<@" + userId + ">").collect(Collectors.joining("\n")));
+			}
+			else if (args[1].equalsIgnoreCase("role")) {
+				var ignoredRoles = filtersSettings.getIgnoredRoles();
+				embedBuilder.setAuthor(i18n.get("commands.invitedeleting.other.listing.roles"));
+				embedBuilder.appendDescription(ignoredRoles.isEmpty() ? " None" : ignoredRoles.stream().map(roleId -> "<@&" + roleId + ">").collect(Collectors.joining("\n")));
+			}
+			else {
+				ctx.replyError(wrongSyntax);
+				return;
+			}
+		}
+		else {
+			ctx.replyError(wrongSyntax);
+			return;
+		}
+		ctx.reply(embedBuilder);
 	}
 }

@@ -288,11 +288,15 @@ public class Events extends ListenerAdapter {
 		var guildSettingsCache = cache.getGuildSettingsCache();
 		var miscSettings = guildSettingsCache.getMiscSettings(guildId);
 		var musicSettings = guildSettingsCache.getMusicSettings(guildId);
+		var filterSettings = guildSettingsCache.getFiltersSettings(guildId);
 		if (roleId == miscSettings.getJoinRoleId()) {
 			miscSettings.removeJoinRole();
 		}
 		if (roleId == musicSettings.getDJRoleId()) {
 			musicSettings.removeDJRole();
+		}
+		if (filterSettings.isRoleIgnored(roleId)) {
+			filterSettings.removeIgnoredRole(roleId);
 		}
 	}
 

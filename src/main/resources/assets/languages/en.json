@@ -524,10 +524,21 @@
     },
     "invitedeleting": {
       "description": "Enables/disables deleting messages with foreign invite links",
-      "usage": "invitedeleting <add/remove> <user/role> <@user/role, user/role id or name/nickname of the role/user",
+      "usage": "invitedeleting <add/remove/list> <user/role> <@user/role, user/role id or name/nickname of the role/user",
       "other": {
+        "disabled": "Deleting foreign invites is disabled. You can enable it by using `%sinvitedeleting`.",
         "already_ignored": "%s %s is already ignored.",
         "not_ignored": "%s %s is not ignored.",
+        "listing": {
+          "all": "Listing all ignored users/roles",
+          "users": "Listing all ignored users",
+          "roles": "Listing all ignored roles",
+          "none": "None",
+          "ignored": {
+            "users": "**Ignored users**",
+            "roles": "\n\n**Ignored roles**"
+          }
+        },
         "done": {
           "text": "Deleting of foreign invite links has been **%s**.",
           "ignored": {
