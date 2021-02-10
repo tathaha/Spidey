@@ -17,10 +17,7 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.MessageType;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.channel.text.TextChannelDeleteEvent;
-import net.dv8tion.jda.api.events.guild.GuildBanEvent;
-import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
-import net.dv8tion.jda.api.events.guild.GuildLeaveEvent;
-import net.dv8tion.jda.api.events.guild.GuildUnbanEvent;
+import net.dv8tion.jda.api.events.guild.*;
 import net.dv8tion.jda.api.events.guild.invite.GuildInviteCreateEvent;
 import net.dv8tion.jda.api.events.guild.invite.GuildInviteDeleteEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
@@ -251,7 +248,6 @@ public class Events extends ListenerAdapter {
 		if (defaultChannel != null) {
 			Utils.sendMessage(defaultChannel, "Hey! I'm **Spidey**. Thanks for inviting me. To start, check `s!info`.");
 		}
-		spidey.getDatabaseManager().registerGuild(guildId);
 		Utils.storeInvites(guild, cache.getGeneralCache());
 		Requester.updateStats(jda);
 		var memberCount = guild.getMemberCount();
@@ -325,6 +321,11 @@ public class Events extends ListenerAdapter {
 	@Override
 	public void onGuildInviteDelete(GuildInviteDeleteEvent event) {
 		cache.getGeneralCache().getInviteCache().remove(event.getCode());
+	}
+
+	@Override
+	public void onGuildReady(GuildReadyEvent event) {
+		spidey.getDatabaseManager().registerGuild(event.getGuild().getIdLong());
 	}
 
 	@Override
