@@ -1,11 +1,9 @@
 package dev.mlnr.spidey.cache;
 
 import com.markozajc.akiwrapper.AkiwrapperBuilder;
-import com.markozajc.akiwrapper.core.exceptions.ServerNotFoundException;
 import dev.mlnr.spidey.objects.akinator.AkinatorContext;
 import dev.mlnr.spidey.objects.akinator.AkinatorData;
 import dev.mlnr.spidey.utils.Utils;
-import kong.unirest.UnirestException;
 import net.dv8tion.jda.api.entities.User;
 import net.jodah.expiringmap.ExpirationPolicy;
 import net.jodah.expiringmap.ExpiringMap;
@@ -29,7 +27,7 @@ public class AkinatorCache {
 			embedBuilder.setDescription(i18n.get("commands.akinator.other.question", 1) + " " + akinator.getCurrentQuestion().getQuestion());
 			Utils.sendMessage(channel, embedBuilder.build());
 		}
-		catch (ServerNotFoundException | UnirestException ex) {
+		catch (Exception ex) {
 			Utils.returnError(i18n.get("commands.akinator.other.couldnt_create"), ctx.getMessage());
 		}
 	}
