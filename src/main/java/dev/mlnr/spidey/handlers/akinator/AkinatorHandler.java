@@ -111,23 +111,22 @@ public class AkinatorHandler {
 	private static void newGuess(AkinatorData akinatorData, EmbedBuilder embedBuilder, AkinatorContext ctx) {
 		var guesses = akinatorData.getAkinator().getGuesses().stream().filter(guess -> !akinatorData.isDeclined(guess)).collect(Collectors.toList());
 		var newGuess = getGuess(akinatorData);
-		if (newGuess != null) {
-			akinatorData.setCurrentGuess(newGuess);
-			sendGuess(newGuess, embedBuilder, ctx);
-			return;
-		}
-		if (!guesses.isEmpty()) {
+		if (newGuess == null) {
+			if (guesses.isEmpty()) {
+				akinatorData.setCurrentGuess(null);
+				return;
+			}
 			newGuess = guesses.get(0);
-			sendGuess(newGuess, embedBuilder, ctx);
-			akinatorData.setCurrentGuess(newGuess);
-			return;
 		}
-		akinatorData.setCurrentGuess(null);
+		akinatorData.setCurrentGuess(newGuess);
+		sendGuess(newGuess, embedBuilder, ctx);
 	}
 
 	private static void sendGuess(Guess guess, EmbedBuilder embedBuilder, AkinatorContext ctx) {
 		embedBuilder.setDescription(ctx.getI18n().get("commands.akinator.other.guess", guess.getProbability() * 100, guess.getName()));
-		embedBuilder.setImage(guess.getImage().toString());
+		var image = guess.getImage();
+		if (image != null)
+			embedBuilder.setImage(image.toString());
 		sendMessage(ctx.getChannel(), embedBuilder.build());
 	}
 

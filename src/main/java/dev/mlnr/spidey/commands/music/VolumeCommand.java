@@ -1,8 +1,8 @@
 package dev.mlnr.spidey.commands.music;
 
-import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
+import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.utils.MusicUtils;
 import net.dv8tion.jda.api.Permission;
 
@@ -34,7 +34,7 @@ public class VolumeCommand extends Command {
 		}
 		var currentVolume = musicPlayer.getVolume();
 		if (args.length == 0) {
-			ctx.reply(i18n.get("commands.volume.other.current", currentVolume, cache.getGuildSettingsCache().getPrefix(guild.getIdLong())));
+			ctx.reply(i18n.get("commands.volume.other.current", currentVolume, cache.getGuildSettingsCache().getMiscSettings(guild.getIdLong()).getPrefix()));
 			return;
 		}
 		ctx.getArgumentAsInt(0, parsedVolume -> {

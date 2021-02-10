@@ -12,17 +12,15 @@ import java.util.Map;
 
 public class I18n {
 
-	private static final Map<String, I18n> LANGUAGE_MAP;
+	private static final Map<String, I18n> LANGUAGE_MAP = new HashMap<>();
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(I18n.class);
 
 	static {
-		var tmp = new HashMap<String, I18n>();
-
 		try (var langs = I18n.class.getResourceAsStream("/assets/languages/langs.txt")) {
 			for (var langCode : IOUtils.toString(langs, StandardCharsets.UTF_8).split("\n")) {
 				try (var langJsonStream = I18n.class.getResourceAsStream("/assets/languages/" + langCode + ".json")) {
-					tmp.put(langCode, new I18n(DataObject.fromJson(langJsonStream)));
+					LANGUAGE_MAP.put(langCode, new I18n(DataObject.fromJson(langJsonStream)));
 				}
 			}
 		}
@@ -30,7 +28,6 @@ public class I18n {
 			LOGGER.error("There was an error while loading languages, exiting", ex);
 			System.exit(1);
 		}
-		LANGUAGE_MAP = tmp;
 	}
 
 	private final DataObject data;

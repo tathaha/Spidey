@@ -1,8 +1,9 @@
-package dev.mlnr.spidey.commands.settings;
+package dev.mlnr.spidey.commands.settings.music;
 
-import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
+import dev.mlnr.spidey.objects.command.category.Category;
+import dev.mlnr.spidey.objects.settings.guild.GuildMusicSettings;
 import dev.mlnr.spidey.utils.MusicUtils;
 import net.dv8tion.jda.api.Permission;
 
@@ -10,7 +11,7 @@ import net.dv8tion.jda.api.Permission;
 public class FairQueueCommand extends Command {
 
 	public FairQueueCommand() {
-		super("fairqueue", new String[]{"fq"}, Category.SETTINGS, Permission.UNKNOWN, 0, 4);
+		super("fairqueue", new String[]{"fq"}, Category.Settings.MUSIC, Permission.UNKNOWN, 0, 4);
 	}
 
 	@Override
@@ -20,44 +21,42 @@ public class FairQueueCommand extends Command {
 			ctx.replyError(i18n.get("music.messages.failure.cant_interact", "enable/disable the fair queue or to set the threshold"));
 			return;
 		}
-		var guildSettingsCache = ctx.getCache().getGuildSettingsCache();
-		var guildId = ctx.getGuild().getIdLong();
+		var musicSettings = ctx.getCache().getGuildSettingsCache().getMusicSettings(ctx.getGuild().getIdLong());
 		if (args.length == 0) {
-			manageFairQueue(guildId, ctx, !guildSettingsCache.isFairQueueEnabled(guildId));
+			manageFairQueue(musicSettings, ctx, !musicSettings.isFairQueueEnabled());
 			return;
 		}
 		ctx.getArgumentAsUnsignedInt(0, threshold -> {
 			if (threshold == 0) {
-				manageFairQueue(guildId, ctx, false);
+				manageFairQueue(musicSettings, ctx, false);
 				return;
 			}
 			if (threshold < 2 || threshold > 10) {
 				ctx.replyError(i18n.get("commands.fairqueue.other.threshold_number"));
 				return;
 			}
-			if (threshold == guildSettingsCache.getFairQueueThreshold(guildId)) {
+			if (threshold == musicSettings.getFairQueueThreshold()) {
 				ctx.replyError(i18n.get("commands.fairqueue.other.already_set", threshold));
 				return;
 			}
-			manageFairQueue(guildId, ctx, true, threshold);
+			manageFairQueue(musicSettings, ctx, true, threshold);
 		});
 	}
 
-	private void manageFairQueue(long guildId, CommandContext ctx, boolean enabled) {
-		manageFairQueue(guildId, ctx, enabled, -1);
+	private void manageFairQueue(GuildMusicSettings musicSettings, CommandContext ctx, boolean enabled) {
+		manageFairQueue(musicSettings, ctx, enabled, -1);
 	}
 
-	private void manageFairQueue(long guildId, CommandContext ctx, boolean enabled, int threshold) {
-		var guildSettingsCache = ctx.getCache().getGuildSettingsCache();
+	private void manageFairQueue(GuildMusicSettings musicSettings, CommandContext ctx, boolean enabled, int threshold) {
 		var i18n = ctx.getI18n();
-		if (!enabled && !guildSettingsCache.isFairQueueEnabled(guildId)) {
+		if (!enabled && !musicSettings.isFairQueueEnabled()) {
 			ctx.replyError(i18n.get("commands.fairqueue.other.already_disabled"));
 			return;
 		}
 		if (threshold != -1) {
-			guildSettingsCache.setFairQueueThreshold(guildId, threshold);
+			musicSettings.setFairQueueThreshold(threshold);
 		}
-		guildSettingsCache.setFairQueueEnabled(guildId, enabled);
+		musicSettings.setFairQueueEnabled(enabled);
 		ctx.reactLike();
 		ctx.reply(i18n.get("commands.fairqueue.other.done.text", enabled ? i18n.get("enabled") : i18n.get("disabled")) +
 				(threshold == -1 ? "." : " " + i18n.get("commands.fairqueue.other.done.threshold", threshold)));

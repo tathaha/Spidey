@@ -1,9 +1,9 @@
 package dev.mlnr.spidey.commands.moderation;
 
 import dev.mlnr.spidey.objects.I18n;
-import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
+import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.utils.ConcurrentUtils;
 import dev.mlnr.spidey.utils.Emojis;
 import net.dv8tion.jda.api.Permission;
@@ -36,7 +36,7 @@ public class PurgeCommand extends Command {
 			return;
 		}
 		if (args.length == 0) {
-			ctx.replyError(i18n.get("commands.purge.other.messages.failure.wrong_syntax", ctx.getCache().getGuildSettingsCache().getPrefix(guild.getIdLong())));
+			ctx.replyError(i18n.get("command_failures.wrong_syntax", ctx.getCache().getGuildSettingsCache().getMiscSettings(guild.getIdLong()).getPrefix(), "purge"));
 			return;
 		}
 		ctx.getArgumentAsUnsignedInt(0, amount -> {

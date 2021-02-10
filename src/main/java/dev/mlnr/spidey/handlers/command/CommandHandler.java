@@ -2,9 +2,9 @@ package dev.mlnr.spidey.handlers.command;
 
 import dev.mlnr.spidey.Spidey;
 import dev.mlnr.spidey.cache.Cache;
-import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
+import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.utils.KSoftAPIHelper;
 import dev.mlnr.spidey.utils.StringUtils;
 import dev.mlnr.spidey.utils.Utils;
@@ -46,7 +46,7 @@ public class CommandHandler {
 		var content = message.getContentRaw().substring(prefix.length()).trim();
 		var guildSettingsCache = cache.getGuildSettingsCache();
 		var guildId = message.getGuild().getIdLong();
-		var i18n = guildSettingsCache.getI18n(guildId);
+		var i18n = guildSettingsCache.getMiscSettings(guildId).getI18n();
 		if (content.isEmpty()) {
 			Utils.returnError(i18n.get("command_failures.specify"), message);
 			return;
@@ -72,7 +72,7 @@ public class CommandHandler {
 			return;
 		}
 
-		var vip = guildSettingsCache.isVip(guildId);
+		var vip = guildSettingsCache.getGeneralSettings(guildId).isVip();
 
 		// NSFW COMMANDS HANDLING
 		var channel = message.getTextChannel();

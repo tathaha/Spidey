@@ -23,7 +23,7 @@ public class MusicPlayer {
 	public MusicPlayer(long guildId, JDA jda) {
 		this.audioPlayer = MusicUtils.getAudioPlayerManager().createPlayer();
 
-		audioPlayer.setVolume(GuildSettingsCache.getInstance().getDefaultVolume(guildId));
+		audioPlayer.setVolume(GuildSettingsCache.getInstance().getMusicSettings(guildId).getDefaultVolume());
 		this.trackScheduler = new TrackScheduler(this.audioPlayer, guildId, jda);
 	}
 

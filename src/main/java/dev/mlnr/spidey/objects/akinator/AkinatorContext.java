@@ -1,7 +1,6 @@
 package dev.mlnr.spidey.objects.akinator;
 
 import dev.mlnr.spidey.cache.AkinatorCache;
-import dev.mlnr.spidey.cache.GuildSettingsCache;
 import dev.mlnr.spidey.objects.I18n;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -11,13 +10,13 @@ public class AkinatorContext {
 	private final GuildMessageReceivedEvent event;
 
 	private final AkinatorCache akinatorCache;
-	private final GuildSettingsCache guildSettingsCache;
+	private final I18n i18n;
 
-	public AkinatorContext(GuildMessageReceivedEvent event, AkinatorCache akinatorCache, GuildSettingsCache guildSettingsCache) {
+	public AkinatorContext(GuildMessageReceivedEvent event, AkinatorCache akinatorCache, I18n i18n) {
 		this.event = event;
 
 		this.akinatorCache = akinatorCache;
-		this.guildSettingsCache = guildSettingsCache;
+		this.i18n = i18n;
 	}
 
 	public Message getMessage() {
@@ -33,6 +32,6 @@ public class AkinatorContext {
 	}
 
 	public I18n getI18n() {
-		return guildSettingsCache.getI18n(event.getGuild().getIdLong());
+		return i18n;
 	}
 }

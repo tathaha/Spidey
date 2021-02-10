@@ -1,8 +1,8 @@
 package dev.mlnr.spidey.commands.utility;
 
-import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
+import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
 
@@ -18,11 +18,10 @@ public class EditSnipeCommand extends Command {
 	@Override
 	public void execute(String[] args, CommandContext ctx) {
 		var cache = ctx.getCache();
-		var guildSettingsCache = cache.getGuildSettingsCache();
-		var guildId = ctx.getGuild().getIdLong();
+		var miscSettings = cache.getGuildSettingsCache().getMiscSettings(ctx.getGuild().getIdLong());
 		var i18n = ctx.getI18n();
-		if (!guildSettingsCache.isSnipingEnabled(guildId)) {
-			ctx.replyError(i18n.get("sniping.disabled", guildSettingsCache.getPrefix(guildId)));
+		if (!miscSettings.isSnipingEnabled()) {
+			ctx.replyError(i18n.get("sniping.disabled", miscSettings.getPrefix()));
 			return;
 		}
 		var textChannel = ctx.getTextChannel();

@@ -78,7 +78,7 @@ public class Utils {
 		channel.sendMessage(":no_entry: " + errMsg).queue(errorMessage -> {
 			setResponse(origin, errorMessage);
 			var guild = channel.getGuild();
-			if (!guild.getSelfMember().hasPermission(Permission.MESSAGE_MANAGE) || !GuildSettingsCache.getInstance().isErrorCleanupEnabled(guild.getIdLong())) {
+			if (!guild.getSelfMember().hasPermission(Permission.MESSAGE_MANAGE) || !GuildSettingsCache.getInstance().getMiscSettings(guild.getIdLong()).isErrorCleanupEnabled()) {
 				return;
 			}
 			ConcurrentUtils.getScheduler().schedule(() -> channel.purgeMessages(origin, errorMessage), 10, TimeUnit.SECONDS);

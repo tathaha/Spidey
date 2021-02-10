@@ -14,6 +14,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.audit.ActionType;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.MessageType;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.channel.text.TextChannelDeleteEvent;
 import net.dv8tion.jda.api.events.guild.GuildBanEvent;
@@ -36,6 +37,8 @@ import net.dv8tion.jda.api.events.role.RoleDeleteEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.time.Instant;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static net.dv8tion.jda.api.utils.MarkdownSanitizer.escape;
 
@@ -49,25 +52,51 @@ public class Events extends ListenerAdapter {
 
 	@Override
 	public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
+		if (event.isWebhookMessage()) {
+			return;
+		}
 		var guild = event.getGuild();
 		var message = event.getMessage();
-		var guildId = guild.getIdLong();
 		var content = message.getContentRaw().trim();
 		var guildSettingsCache = cache.getGuildSettingsCache();
+		var guildId = guild.getIdLong();
+		var filtersSettings = guildSettingsCache.getFiltersSettings(guildId);
 
-		if (!content.isEmpty() && guildSettingsCache.isSnipingEnabled(guildId)) {
+		if (message.getType() == MessageType.CHANNEL_PINNED_ADD) {
+			if (filtersSettings.isPinnedDeletingEnabled())
+				Utils.deleteMessage(message);
+			return;
+		}
+
+		if (content.isEmpty()) {
+			return;
+		}
+
+		var miscSettings = guildSettingsCache.getMiscSettings(guildId);
+
+		if (miscSettings.isSnipingEnabled()) {
 			cache.getMessageCache().cacheMessage(message.getIdLong(), new MessageData(message));
+		}
+
+		var member = event.getMember();
+		if (filtersSettings.isInviteDeletingEnabled() && !filtersSettings.isIgnored(member) && guild.getSelfMember().hasPermission(event.getChannel(), Permission.MESSAGE_MANAGE)
+				&& !member.hasPermission(Permission.MESSAGE_MANAGE)) {
+			var invitesForGuild = cache.getGeneralCache().getInviteCache().entrySet().stream().filter(entry -> entry.getValue().getGuildId() == guildId).map(Map.Entry::getKey).collect(Collectors.toList());
+			if (!invitesForGuild.isEmpty() && message.getInvites().stream().anyMatch(code -> !invitesForGuild.contains(code))) {
+				Utils.deleteMessage(message);
+				return;
+			}
 		}
 
 		var author = event.getAuthor();
 		var akinatorCache = cache.getAkinatorCache();
 		if (akinatorCache.hasAkinator(author.getIdLong())) {
-			AkinatorHandler.handle(author, new AkinatorContext(event, akinatorCache, guildSettingsCache));
+			AkinatorHandler.handle(author, new AkinatorContext(event, akinatorCache, miscSettings.getI18n()));
 			return;
 		}
 
-		var prefix = guildSettingsCache.getPrefix(guildId);
-		if (!content.startsWith(prefix) || author.isBot() || event.isWebhookMessage()) {
+		var prefix = miscSettings.getPrefix();
+		if (!content.startsWith(prefix) || author.isBot()) {
 			return;
 		}
 		CommandHandler.handle(event, prefix, spidey, cache);
@@ -76,7 +105,7 @@ public class Events extends ListenerAdapter {
 	@Override
 	public void onGuildBan(GuildBanEvent event) {
 		var guild = event.getGuild();
-		var channel = cache.getGuildSettingsCache().getLogChannel(guild.getIdLong());
+		var channel = cache.getGuildSettingsCache().getMiscSettings(guild.getIdLong()).getLogChannel();
 		if (channel == null) {
 			return;
 		}
@@ -105,7 +134,7 @@ public class Events extends ListenerAdapter {
 	@Override
 	public void onGuildUnban(GuildUnbanEvent event) {
 		var guild = event.getGuild();
-		var channel = cache.getGuildSettingsCache().getLogChannel(guild.getIdLong());
+		var channel = cache.getGuildSettingsCache().getMiscSettings(guild.getIdLong()).getLogChannel();
 		if (channel == null) {
 			return;
 		}
@@ -131,7 +160,7 @@ public class Events extends ListenerAdapter {
 
 	@Override
 	public void onGuildMemberRemove(GuildMemberRemoveEvent event) {
-		var channel = cache.getGuildSettingsCache().getLogChannel(event.getGuild().getIdLong());
+		var channel = cache.getGuildSettingsCache().getMiscSettings(event.getGuild().getIdLong()).getLogChannel();
 		if (channel == null) {
 			return;
 		}
@@ -156,13 +185,12 @@ public class Events extends ListenerAdapter {
 	@Override
 	public void onGuildMemberJoin(GuildMemberJoinEvent event) {
 		var guild = event.getGuild();
-		var guildId = guild.getIdLong();
-		var guildSettingsCache = cache.getGuildSettingsCache();
-		var channel = guildSettingsCache.getLogChannel(guildId);
+		var miscSettings = cache.getGuildSettingsCache().getMiscSettings(guild.getIdLong());
+		var channel = miscSettings.getLogChannel();
 		if (channel == null) {
 			return;
 		}
-		var joinRole = guildSettingsCache.getJoinRole(guildId);
+		var joinRole = miscSettings.getJoinRole();
 		var selfMember = guild.getSelfMember();
 		var user = event.getUser();
 		var userId = user.getIdLong();
@@ -228,7 +256,7 @@ public class Events extends ListenerAdapter {
 		var memberCount = guild.getMemberCount();
 		Utils.sendMessage(jda.getTextChannelById(785630223785787452L), "I've joined guild **" + guild.getName() + "** (**" + guildId + "**) with **" + memberCount + "** members");
 		if (memberCount >= 10000)
-			cache.getGuildSettingsCache().setSnipingEnabled(guildId, false);
+			cache.getGuildSettingsCache().getMiscSettings(guildId).setSnipingEnabled(false);
 	}
 
 	@Override
@@ -247,10 +275,9 @@ public class Events extends ListenerAdapter {
 
 	@Override
 	public void onTextChannelDelete(TextChannelDeleteEvent event) {
-		var guildId = event.getGuild().getIdLong();
-		var guildSettingsCache = cache.getGuildSettingsCache();
-		if (event.getChannel().getIdLong() == guildSettingsCache.getLogChannelId(guildId)) {
-			guildSettingsCache.removeLogChannel(guildId);
+		var miscSettings = cache.getGuildSettingsCache().getMiscSettings(event.getGuild().getIdLong());
+		if (event.getChannel().getIdLong() == miscSettings.getLogChannelId()) {
+			miscSettings.removeLogChannel();
 		}
 	}
 
@@ -259,18 +286,24 @@ public class Events extends ListenerAdapter {
 		var roleId = event.getRole().getIdLong();
 		var guildId = event.getGuild().getIdLong();
 		var guildSettingsCache = cache.getGuildSettingsCache();
-		if (roleId == guildSettingsCache.getJoinRoleId(guildId)) {
-			guildSettingsCache.removeJoinRole(guildId);
+		var miscSettings = guildSettingsCache.getMiscSettings(guildId);
+		var musicSettings = guildSettingsCache.getMusicSettings(guildId);
+		var filterSettings = guildSettingsCache.getFiltersSettings(guildId);
+		if (roleId == miscSettings.getJoinRoleId()) {
+			miscSettings.removeJoinRole();
 		}
-		if (roleId == guildSettingsCache.getDJRoleId(guildId)) {
-			guildSettingsCache.removeDJRole(guildId);
+		if (roleId == musicSettings.getDJRoleId()) {
+			musicSettings.removeDJRole();
+		}
+		if (filterSettings.isRoleIgnored(roleId)) {
+			filterSettings.removeIgnoredRole(roleId);
 		}
 	}
 
 	@Override
 	public void onGuildUpdateBoostTier(GuildUpdateBoostTierEvent event) {
 		var guild = event.getGuild();
-		var channel = cache.getGuildSettingsCache().getLogChannel(guild.getIdLong());
+		var channel = cache.getGuildSettingsCache().getMiscSettings(guild.getIdLong()).getLogChannel();
 		if (channel == null) {
 			return;
 		}
@@ -319,7 +352,7 @@ public class Events extends ListenerAdapter {
 			paginatorCache.removePaginator(messageId);
 		}
 
-		if (!cache.getGuildSettingsCache().isSnipingEnabled(event.getGuild().getIdLong())) {
+		if (!cache.getGuildSettingsCache().getMiscSettings(event.getGuild().getIdLong()).isSnipingEnabled()) {
 			return;
 		}
 		var messageCache = cache.getMessageCache();
@@ -331,7 +364,7 @@ public class Events extends ListenerAdapter {
 
 	@Override
 	public void onGuildMessageUpdate(GuildMessageUpdateEvent event) {
-		if (!cache.getGuildSettingsCache().isSnipingEnabled(event.getGuild().getIdLong())) {
+		if (!cache.getGuildSettingsCache().getMiscSettings(event.getGuild().getIdLong()).isSnipingEnabled()) {
 			return;
 		}
 		var messageCache = cache.getMessageCache();

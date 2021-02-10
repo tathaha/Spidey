@@ -1,30 +1,28 @@
-package dev.mlnr.spidey.commands.settings;
+package dev.mlnr.spidey.commands.settings.misc;
 
-import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
+import dev.mlnr.spidey.objects.command.category.Category;
 import net.dv8tion.jda.api.Permission;
 
 @SuppressWarnings("unused")
 public class PrefixCommand extends Command {
 
 	public PrefixCommand() {
-		super("prefix", new String[]{}, Category.SETTINGS, Permission.MANAGE_SERVER, 0, 4);
+		super("prefix", new String[]{}, Category.Settings.MISC, Permission.MANAGE_SERVER, 0, 4);
 	}
 
 	@Override
 	public void execute(String[] args, CommandContext ctx) {
-		var guildSettingsCache = ctx.getCache().getGuildSettingsCache();
-		var guild = ctx.getGuild();
-		var guildId = guild.getIdLong();
-		var currentPrefix = guildSettingsCache.getPrefix(guildId);
+		var miscSettings = ctx.getCache().getGuildSettingsCache().getMiscSettings(ctx.getGuild().getIdLong());
+		var currentPrefix = miscSettings.getPrefix();
 		var i18n = ctx.getI18n();
 		if (args.length == 0) {
 			if (currentPrefix.equals("s!")) {
 				ctx.replyError(i18n.get("commands.prefix.other.default"));
 			}
 			else {
-				guildSettingsCache.setPrefix(guildId, "s!");
+				miscSettings.setPrefix("s!");
 				ctx.reply(i18n.get("commands.prefix.other.reset"));
 			}
 			return;
@@ -38,7 +36,7 @@ public class PrefixCommand extends Command {
 			ctx.replyError(i18n.get("commands.prefix.other.longer"));
 			return;
 		}
-		guildSettingsCache.setPrefix(guildId, newPrefix);
+		miscSettings.setPrefix(newPrefix);
 		ctx.reply(i18n.get("commands.prefix.other.changed", newPrefix));
 	}
 }

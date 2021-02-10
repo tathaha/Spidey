@@ -22,7 +22,7 @@ public class GeneralCache {
 	}
 
 	public void removeGuild(long guildId) {
-		if (guildSettingsCache.isVip(guildId)) {
+		if (guildSettingsCache.getGeneralSettings(guildId).isVip()) {
 			return;
 		}
 		guildSettingsCache.remove(guildId);

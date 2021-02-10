@@ -1,8 +1,8 @@
 package dev.mlnr.spidey.commands.music;
 
-import dev.mlnr.spidey.objects.command.Category;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
+import dev.mlnr.spidey.objects.command.category.Category;
 import net.dv8tion.jda.api.Permission;
 
 import static dev.mlnr.spidey.utils.MusicUtils.formatDuration;
@@ -39,7 +39,7 @@ public class SegmentsCommand extends Command {
 			}
 			segments = videoSegmentCache.getVideoSegments(videoId, true);
 		}
-		var updatePrompt = i18n.get("commands.segments.other.prompt", cache.getGuildSettingsCache().getPrefix(guild.getIdLong()));
+		var updatePrompt = i18n.get("commands.segments.other.prompt", cache.getGuildSettingsCache().getMiscSettings(guild.getIdLong()).getPrefix());
 		if (segments.isEmpty()) {
 			ctx.replyError(i18n.get("commands.segments.other.no_segs") + " " + updatePrompt);
 			return;
