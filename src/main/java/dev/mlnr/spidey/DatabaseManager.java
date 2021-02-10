@@ -88,6 +88,16 @@ public class DatabaseManager {
 		}
 	}
 
+	public void registerGuild(long guildId) {
+		try (var con = hikariDataSource.getConnection(); var ps = con.prepareStatement("INSERT INTO guilds (guild_id) VALUES (?) ON CONFLICT DO NOTHING")) {
+			ps.setLong(1, guildId);
+			ps.executeUpdate();
+		}
+		catch (SQLException ex) {
+			logger.error("There was an error while adding the entry for guild {}!", guildId, ex);
+		}
+	}
+
 	public void removeGuild(long guildId) {
 		try (var con = hikariDataSource.getConnection(); var ps = con.prepareStatement("DELETE FROM guilds WHERE guild_id=" + guildId)) {
 			ps.executeUpdate();

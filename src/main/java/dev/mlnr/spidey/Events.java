@@ -251,6 +251,7 @@ public class Events extends ListenerAdapter {
 		if (defaultChannel != null) {
 			Utils.sendMessage(defaultChannel, "Hey! I'm **Spidey**. Thanks for inviting me. To start, check `s!info`.");
 		}
+		spidey.getDatabaseManager().registerGuild(guildId);
 		Utils.storeInvites(guild, cache.getGeneralCache());
 		Requester.updateStats(jda);
 		var memberCount = guild.getMemberCount();
