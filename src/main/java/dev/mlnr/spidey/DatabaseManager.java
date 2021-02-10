@@ -47,6 +47,7 @@ public class DatabaseManager {
 		try (var con = hikariDataSource.getConnection(); var ps = con.prepareStatement("SELECT * FROM guilds WHERE guild_id=?")) {
 			ps.setLong(1, guildId);
 			try (var rs = ps.executeQuery()) {
+				rs.next();
 				return new GuildGeneralSettings(guildId, rs.getBoolean("vip"), this);
 			}
 		}
