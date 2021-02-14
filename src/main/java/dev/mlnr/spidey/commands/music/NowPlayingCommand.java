@@ -52,7 +52,7 @@ public class NowPlayingCommand extends Command {
 
 		progressBuilder.setAuthor(pausedBuilder.toString(), trackInfo.uri);
 		progressBuilder.setThumbnail("https://i.ytimg.com/vi/" + trackInfo.identifier + "/maxresdefault.jpg");
-		progressBuilder.setColor(paused ? Color.ORANGE : Color.GREEN);
+		progressBuilder.setColor(paused ? Color.ORANGE.getRGB() : Utils.SPIDEY_COLOR);
 		progressBuilder.setDescription(stream ? i18n.get("commands.nowplaying.other.livestream") : MusicUtils.getProgressBar(position, originalLength));
 		progressBuilder.addField(i18n.get("commands.nowplaying.other.requested"), "<@" + MusicUtils.getRequesterId(playingTrack) + ">", true);
 
