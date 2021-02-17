@@ -28,7 +28,7 @@ public class CommandHandler {
 	static {
 		try (var result = new ClassGraph().acceptPackages("dev.mlnr.spidey.commands").scan()) {
 			for (var cls : result.getAllClasses()) {
-				var cmd = (Command)cls.loadClass().getDeclaredConstructor().newInstance();
+				var cmd = (Command) cls.loadClass().getDeclaredConstructor().newInstance();
 				COMMANDS.put(cmd.getInvoke(), cmd);
 				for (var alias : cmd.getAliases())
 					COMMANDS.put(alias, cmd);

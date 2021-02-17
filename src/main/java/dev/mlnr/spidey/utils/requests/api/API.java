@@ -22,7 +22,8 @@ public enum API {
 	public enum Stats {
 		TOP_GG("https://top.gg/api/bots/%s/stats", "server_count", System.getenv("topgg")),
 		BOTLIST_SPACE("https://api.botlist.space/v1/bots/%s", "server_count", System.getenv("botlistspace")),
-		DBOATS("https://discord.boats/api/bot/%s", "server_count", System.getenv("dboats"));
+		DBOATS("https://discord.boats/api/bot/%s", "server_count", System.getenv("dboats")),
+		DSERVICES("https://api.discordservices.net/bot/%s/stats", "servers", System.getenv("dservices"));
 
 		private final String url;
 		private final String statsParam;
