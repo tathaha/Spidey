@@ -10,7 +10,6 @@ import java.awt.*;
 import java.time.Instant;
 
 public class KSoftAPIHelper {
-
 	private KSoftAPIHelper() {}
 
 	public static MessageEmbed getNsfwImage(String query, Member author) {

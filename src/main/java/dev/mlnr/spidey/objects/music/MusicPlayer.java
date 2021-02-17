@@ -14,7 +14,6 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 public class MusicPlayer {
-
 	private final TrackScheduler trackScheduler;
 	private final AudioPlayer audioPlayer;
 

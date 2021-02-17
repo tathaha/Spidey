@@ -21,7 +21,6 @@ import static dev.mlnr.spidey.handlers.command.CooldownHandler.cooldown;
 import static dev.mlnr.spidey.handlers.command.CooldownHandler.isOnCooldown;
 
 public class CommandHandler {
-
 	private static final Map<String, Command> COMMANDS = new HashMap<>();
 	private static final Logger LOGGER = LoggerFactory.getLogger(CommandHandler.class);
 

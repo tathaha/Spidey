@@ -12,7 +12,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class ArgumentUtils {
-
 	private static final Pattern ID_REGEX = Pattern.compile("(\\d{17,18})");
 
 	private ArgumentUtils() {}

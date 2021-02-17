@@ -1,7 +1,6 @@
 package dev.mlnr.spidey.objects.music;
 
 public class VideoSegment {
-
 	private final long segmentStart;
 	private final long segmentEnd;
 

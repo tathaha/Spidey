@@ -19,7 +19,6 @@ import java.util.function.IntConsumer;
 import static java.lang.Math.min;
 
 public class StringUtils {
-
 	private StringUtils() {}
 
 	public static String getSimilarCommand(String command) {
@@ -38,7 +37,7 @@ public class StringUtils {
         if (longerLength == 0) {
             return 1.0;
         }
-		return (longerLength - editDistance(longer, shorter)) / (double)longerLength;
+		return (longerLength - editDistance(longer, shorter)) / (double) longerLength;
 	}
 
 	private static int editDistance(String s1, String s2) {

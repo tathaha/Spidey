@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AkinatorData {
-
 	private final Akiwrapper akinator;
 	private final List<Long> declined;
 	private Guess currentGuess;

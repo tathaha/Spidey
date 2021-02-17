@@ -15,7 +15,6 @@ import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 
 public class CommandContext {
-
 	private final String[] args;
 	private final GuildMessageReceivedEvent event;
 	private final I18n i18n;
