@@ -14,7 +14,6 @@ import static dev.mlnr.spidey.utils.MusicUtils.createMusicResponseBuilder;
 import static dev.mlnr.spidey.utils.MusicUtils.formatLength;
 
 public class AudioLoader implements AudioLoadResultHandler {
-
 	private final MusicPlayer musicPlayer;
 	private final String query;
 	private final CommandContext ctx;

@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class I18n {
-
 	private static final Map<String, I18n> LANGUAGE_MAP = new HashMap<>();
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(I18n.class);
