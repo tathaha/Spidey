@@ -25,7 +25,7 @@ public enum API {
 		DBOATS("https://discord.boats/api/bot/%s", "server_count", System.getenv("dboats")),
 		DSERVICES("https://api.discordservices.net/bot/%s/stats", "servers", System.getenv("dservices")),
 		DBOTS_GG("https://discord.bots.gg/api/v1/bots/%s/stats", "guildCount", System.getenv("dbotsgg")),
-		DBL("https://discordbotlist.com/api/v1/bots/%s/stats", "guilds", "dbl");
+		DBL("https://discordbotlist.com/api/v1/bots/%s/stats", "guilds", System.getenv("dbl"));
 
 		private final String url;
 		private final String statsParam;
