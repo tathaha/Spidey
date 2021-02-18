@@ -49,6 +49,9 @@ public class Events extends ListenerAdapter {
 
 	@Override
 	public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
+		if (cache == null) {
+			return; // well, somehow an event was received before jda has fully loaded, just ignore that as the rest requires the cache
+		}
 		if (event.isWebhookMessage()) {
 			return;
 		}
