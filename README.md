@@ -5,7 +5,7 @@ Brief list of features:
 - music
 - localization support
 - chat filters
-- logging joins/leaves/boosts (with showing what invite link a user used to join)
+- logging joins/leaves (with showing what invite link a user used to join)
 - adding a role to a user after joining
 
 Music deserves its own section:
