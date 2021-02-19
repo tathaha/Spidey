@@ -371,6 +371,14 @@
         }
       }
     },
+    "remove": {
+      "description": "Removes a song from the queue based on its position",
+      "usage": "remove <position>",
+      "other": {
+        "outofbounds": "Provided position is bigger than queue's size.",
+        "removed": "Track `%s` has been removed from the queue."
+      }
+    },
     "repeat": {
       "description": "Sets/resets the repeat mode",
       "usage": "repeat (song/queue or blank to reset)",
