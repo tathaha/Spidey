@@ -79,7 +79,8 @@ public class Events extends ListenerAdapter {
 		}
 
 		var member = event.getMember();
-		if (filtersSettings.isInviteDeletingEnabled() && !filtersSettings.isIgnored(member) && guild.getSelfMember().hasPermission(event.getChannel(), Permission.MESSAGE_MANAGE)
+		var channel = event.getChannel();
+		if (filtersSettings.isInviteDeletingEnabled() && !filtersSettings.isIgnored(member) && guild.getSelfMember().hasPermission(channel, Permission.MESSAGE_MANAGE)
 				&& !member.hasPermission(Permission.MESSAGE_MANAGE)) {
 			var invitesForGuild = cache.getGeneralCache().getInviteCache().entrySet().stream().filter(entry -> entry.getValue().getGuildId() == guildId).map(Map.Entry::getKey).collect(Collectors.toList());
 			if (!invitesForGuild.isEmpty() && message.getInvites().stream().anyMatch(code -> !invitesForGuild.contains(code))) {
@@ -90,7 +91,8 @@ public class Events extends ListenerAdapter {
 
 		var author = event.getAuthor();
 		var akinatorCache = cache.getAkinatorCache();
-		if (akinatorCache.hasAkinator(author.getIdLong())) {
+		var akinatorData = akinatorCache.getAkinatorData(author.getIdLong());
+		if (akinatorData != null && akinatorData.getChannelId() == channel.getIdLong()) {
 			AkinatorHandler.handle(author, new AkinatorContext(event, akinatorCache, miscSettings.getI18n()));
 			return;
 		}

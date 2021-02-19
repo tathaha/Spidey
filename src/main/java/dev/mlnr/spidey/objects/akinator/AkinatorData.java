@@ -12,9 +12,13 @@ public class AkinatorData {
 	private Guess currentGuess;
 	private boolean prompted;
 
-	public AkinatorData(Akiwrapper akinator) {
+	private final long channelId;
+
+	public AkinatorData(Akiwrapper akinator, long channelId) {
 		this.akinator = akinator;
 		this.declined = new ArrayList<>();
+
+		this.channelId = channelId;
 	}
 
 	public Akiwrapper getAkinator() {
@@ -49,5 +53,11 @@ public class AkinatorData {
 
 	public void prompt() {
 		this.prompted = true;
+	}
+
+	// channel id
+
+	public long getChannelId() {
+		return this.channelId;
 	}
 }
