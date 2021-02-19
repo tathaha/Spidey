@@ -26,7 +26,7 @@ public class RemoveCommand extends Command {
 			ctx.replyError(i18n.get("music.messages.failure.queue_empty"));
 			return;
 		}
-		ctx.getArgumentAsInt(0, trackPosition -> {
+		ctx.getArgumentAsUnsignedInt(0, trackPosition -> {
 			var size = queue.size();
 			if (trackPosition == 0 || trackPosition > size) {
 				ctx.replyError(i18n.get("number.range", size));
@@ -35,7 +35,7 @@ public class RemoveCommand extends Command {
 			var actualPosition = trackPosition - 1;
 			var selectedTrack = queue.get(actualPosition);
 			if (!MusicUtils.canInteract(ctx.getMember(), selectedTrack)) {
-				ctx.replyError(i18n.get("music.messages.failure.cant_interact_requester", "remove a song from the queue"));
+				ctx.replyError(i18n.get("music.messages.failure.cant_interact_requester", "remove someone else's song from the queue"));
 				return;
 			}
 			queue.remove(actualPosition);
