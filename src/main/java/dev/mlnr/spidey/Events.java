@@ -9,7 +9,6 @@ import dev.mlnr.spidey.objects.messages.MessageData;
 import dev.mlnr.spidey.utils.Emojis;
 import dev.mlnr.spidey.utils.MusicUtils;
 import dev.mlnr.spidey.utils.Utils;
-import dev.mlnr.spidey.utils.requests.Requester;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.audit.ActionType;
@@ -255,7 +254,6 @@ public class Events extends ListenerAdapter {
 		}
 		Utils.storeInvites(guild, cache.getGeneralCache());
 		spidey.getDatabaseManager().registerGuild(guildId);
-		Requester.updateStats(jda);
 		var memberCount = guild.getMemberCount();
 		Utils.sendMessage(jda.getTextChannelById(785630223785787452L), "I've joined guild **" + guild.getName() + "** (**" + guildId + "**) with **" + memberCount + "** members");
 		if (memberCount >= 10000)
@@ -272,7 +270,6 @@ public class Events extends ListenerAdapter {
 		cache.getMessageCache().pruneCache(guildId);
 		cache.getMusicPlayerCache().destroyMusicPlayer(guild);
 		generalCache.removeGuild(guildId);
-		Requester.updateStats(jda);
 		Utils.sendMessage(jda.getTextChannelById(785630223785787452L), "I've been kicked out of guild **" + guild.getName() + "** (**" + guildId + "**) with **" + guild.getMemberCount() + "** members");
 	}
 
@@ -339,9 +336,6 @@ public class Events extends ListenerAdapter {
 		var jda = event.getJDA();
 		cache = new Cache(spidey, jda);
 		jda.getPresence().setActivity(Activity.listening("s!help"));
-		if (jda.getSelfUser().getIdLong() == 772446532560486410L) { // only update stats if it's the production bot
-			Requester.updateStats(jda);
-		}
 		jda.getGuildCache().forEachUnordered(guild -> Utils.storeInvites(guild, cache.getGeneralCache()));
 	}
 
