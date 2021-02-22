@@ -11,6 +11,9 @@ application {
 repositories {
     mavenCentral() // this is just to receive dependabot prs from mvnrepository
     jcenter()
+    maven {
+        url 'https://jitpack.io'
+    }
 }
 
 dependencies {
@@ -24,6 +27,7 @@ dependencies {
     implementation group: 'net.jodah', name: 'expiringmap', version: '0.5.9'
     implementation group: 'com.github.markozajc', name: 'akiwrapper', version: '1.5.1'
     implementation group: 'com.zaxxer', name: 'HikariCP', version: '4.0.2'
+    implementation group: 'com.github.caneleex', name: 'BotListHandler', version: '1.0.7'
     implementation("net.dv8tion:JDA:4.2.0_228") {
         exclude group: 'club.minnced', module: 'opus-java'
     }

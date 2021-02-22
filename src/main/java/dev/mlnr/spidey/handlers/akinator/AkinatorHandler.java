@@ -15,7 +15,6 @@ import static dev.mlnr.spidey.utils.Utils.returnError;
 import static dev.mlnr.spidey.utils.Utils.sendMessage;
 
 public class AkinatorHandler {
-
 	private AkinatorHandler() {}
 
 	public static void handle(User user, AkinatorContext ctx) {

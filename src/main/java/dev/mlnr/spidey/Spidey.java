@@ -1,6 +1,9 @@
 package dev.mlnr.spidey;
 
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory;
+import dev.mlnr.blh.api.BLHBuilder;
+import dev.mlnr.blh.api.BLHEventListener;
+import dev.mlnr.blh.api.BotList;
 import dev.mlnr.spidey.utils.ConcurrentUtils;
 import net.dv8tion.jda.api.GatewayEncoding;
 import net.dv8tion.jda.api.JDA;
@@ -28,6 +31,16 @@ public class Spidey {
 	private final DatabaseManager databaseManager = new DatabaseManager();
 
 	public Spidey() throws LoginException, InterruptedException {
+		var blh = new BLHBuilder().setDevModePredicate(jdaO -> jdaO.getSelfUser().getIdLong() != 772446532560486410L)
+				.setUnavailableEventsEnabled(false)
+				.addBotList(BotList.TOP_GG, System.getenv("topgg"))
+				.addBotList(BotList.BOTLIST_SPACE, System.getenv("botlistspace"))
+				.addBotList(BotList.DBOATS, System.getenv("dboats"))
+				.addBotList(BotList.DSERVICES, System.getenv("dservices"))
+				.addBotList(BotList.DBOTS_GG, System.getenv("dbotsgg"))
+				.addBotList(BotList.DBL, System.getenv("dbl"))
+				.build();
+
 		jda = JDABuilder.create(System.getenv("Spidey"),
 				GUILD_BANS,
 				GUILD_INVITES,
@@ -44,7 +57,7 @@ public class Spidey {
 			)
 			.setMemberCachePolicy(MemberCachePolicy.VOICE)
 			.setChunkingFilter(ChunkingFilter.NONE)
-			.addEventListeners(new Events(this), ConcurrentUtils.getEventWaiter())
+			.addEventListeners(new Events(this), ConcurrentUtils.getEventWaiter(), new BLHEventListener(blh))
 			.setActivity(Activity.watching("myself load"))
 			.setStatus(OnlineStatus.DO_NOT_DISTURB)
 			.setGatewayEncoding(GatewayEncoding.ETF)

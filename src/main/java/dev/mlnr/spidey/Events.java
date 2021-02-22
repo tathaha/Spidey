@@ -9,7 +9,6 @@ import dev.mlnr.spidey.objects.messages.MessageData;
 import dev.mlnr.spidey.utils.Emojis;
 import dev.mlnr.spidey.utils.MusicUtils;
 import dev.mlnr.spidey.utils.Utils;
-import dev.mlnr.spidey.utils.requests.Requester;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.audit.ActionType;
@@ -17,10 +16,7 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.MessageType;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.channel.text.TextChannelDeleteEvent;
-import net.dv8tion.jda.api.events.guild.GuildBanEvent;
-import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
-import net.dv8tion.jda.api.events.guild.GuildLeaveEvent;
-import net.dv8tion.jda.api.events.guild.GuildUnbanEvent;
+import net.dv8tion.jda.api.events.guild.*;
 import net.dv8tion.jda.api.events.guild.invite.GuildInviteCreateEvent;
 import net.dv8tion.jda.api.events.guild.invite.GuildInviteDeleteEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
@@ -52,6 +48,9 @@ public class Events extends ListenerAdapter {
 
 	@Override
 	public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
+		if (cache == null) {
+			return; // well, somehow an event was received before jda has fully loaded, just ignore that as the rest requires the cache
+		}
 		if (event.isWebhookMessage()) {
 			return;
 		}
@@ -79,7 +78,8 @@ public class Events extends ListenerAdapter {
 		}
 
 		var member = event.getMember();
-		if (filtersSettings.isInviteDeletingEnabled() && !filtersSettings.isIgnored(member) && guild.getSelfMember().hasPermission(event.getChannel(), Permission.MESSAGE_MANAGE)
+		var channel = event.getChannel();
+		if (filtersSettings.isInviteDeletingEnabled() && !filtersSettings.isIgnored(member) && guild.getSelfMember().hasPermission(channel, Permission.MESSAGE_MANAGE)
 				&& !member.hasPermission(Permission.MESSAGE_MANAGE)) {
 			var invitesForGuild = cache.getGeneralCache().getInviteCache().entrySet().stream().filter(entry -> entry.getValue().getGuildId() == guildId).map(Map.Entry::getKey).collect(Collectors.toList());
 			if (!invitesForGuild.isEmpty() && message.getInvites().stream().anyMatch(code -> !invitesForGuild.contains(code))) {
@@ -90,7 +90,8 @@ public class Events extends ListenerAdapter {
 
 		var author = event.getAuthor();
 		var akinatorCache = cache.getAkinatorCache();
-		if (akinatorCache.hasAkinator(author.getIdLong())) {
+		var akinatorData = akinatorCache.getAkinatorData(author.getIdLong());
+		if (akinatorData != null && akinatorData.getChannelId() == channel.getIdLong()) {
 			AkinatorHandler.handle(author, new AkinatorContext(event, akinatorCache, miscSettings.getI18n()));
 			return;
 		}
@@ -252,7 +253,7 @@ public class Events extends ListenerAdapter {
 			Utils.sendMessage(defaultChannel, "Hey! I'm **Spidey**. Thanks for inviting me. To start, check `s!info`.");
 		}
 		Utils.storeInvites(guild, cache.getGeneralCache());
-		Requester.updateStats(jda);
+		spidey.getDatabaseManager().registerGuild(guildId);
 		var memberCount = guild.getMemberCount();
 		Utils.sendMessage(jda.getTextChannelById(785630223785787452L), "I've joined guild **" + guild.getName() + "** (**" + guildId + "**) with **" + memberCount + "** members");
 		if (memberCount >= 10000)
@@ -269,7 +270,6 @@ public class Events extends ListenerAdapter {
 		cache.getMessageCache().pruneCache(guildId);
 		cache.getMusicPlayerCache().destroyMusicPlayer(guild);
 		generalCache.removeGuild(guildId);
-		Requester.updateStats(jda);
 		Utils.sendMessage(jda.getTextChannelById(785630223785787452L), "I've been kicked out of guild **" + guild.getName() + "** (**" + guildId + "**) with **" + guild.getMemberCount() + "** members");
 	}
 
@@ -327,13 +327,15 @@ public class Events extends ListenerAdapter {
 	}
 
 	@Override
+	public void onGuildReady(GuildReadyEvent event) {
+		spidey.getDatabaseManager().registerGuild(event.getGuild().getIdLong());
+	}
+
+	@Override
 	public void onReady(ReadyEvent event) {
 		var jda = event.getJDA();
 		cache = new Cache(spidey, jda);
 		jda.getPresence().setActivity(Activity.listening("s!help"));
-		if (jda.getSelfUser().getIdLong() == 772446532560486410L) { // only update stats if it's the production bot
-			Requester.updateStats(jda);
-		}
 		jda.getGuildCache().forEachUnordered(guild -> Utils.storeInvites(guild, cache.getGeneralCache()));
 	}
 

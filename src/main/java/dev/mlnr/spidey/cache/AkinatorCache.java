@@ -22,7 +22,7 @@ public class AkinatorCache {
 		var channel = ctx.getChannel();
 		try {
 			var akinator = new AkiwrapperBuilder().build();
-			akinatorMap.put(user.getIdLong(), new AkinatorData(akinator));
+			akinatorMap.put(user.getIdLong(), new AkinatorData(akinator, channel.getIdLong()));
 			var embedBuilder = Utils.createEmbedBuilder(user).setAuthor(i18n.get("commands.akinator.other.of", user.getAsTag())).setColor(Utils.SPIDEY_COLOR);
 			embedBuilder.setDescription(i18n.get("commands.akinator.other.question", 1) + " " + akinator.getCurrentQuestion().getQuestion());
 			Utils.sendMessage(channel, embedBuilder.build());
@@ -34,10 +34,6 @@ public class AkinatorCache {
 
 	public AkinatorData getAkinatorData(long userId) {
 		return akinatorMap.get(userId);
-	}
-
-	public boolean hasAkinator(long userId) {
-		return akinatorMap.containsKey(userId);
 	}
 
 	public void removeAkinator(long userId) {

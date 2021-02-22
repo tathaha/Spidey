@@ -21,14 +21,13 @@ import static dev.mlnr.spidey.handlers.command.CooldownHandler.cooldown;
 import static dev.mlnr.spidey.handlers.command.CooldownHandler.isOnCooldown;
 
 public class CommandHandler {
-
 	private static final Map<String, Command> COMMANDS = new HashMap<>();
 	private static final Logger LOGGER = LoggerFactory.getLogger(CommandHandler.class);
 
 	static {
 		try (var result = new ClassGraph().acceptPackages("dev.mlnr.spidey.commands").scan()) {
 			for (var cls : result.getAllClasses()) {
-				var cmd = (Command)cls.loadClass().getDeclaredConstructor().newInstance();
+				var cmd = (Command) cls.loadClass().getDeclaredConstructor().newInstance();
 				COMMANDS.put(cmd.getInvoke(), cmd);
 				for (var alias : cmd.getAliases())
 					COMMANDS.put(alias, cmd);

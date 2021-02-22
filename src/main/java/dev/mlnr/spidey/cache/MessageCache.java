@@ -10,7 +10,6 @@ import java.util.concurrent.TimeUnit;
 import static dev.mlnr.spidey.utils.Utils.createDefaultExpiringMap;
 
 public class MessageCache {
-
 	private final Map<Long, MessageData> messageDataMap = ExpiringMap.builder()
 			.maxSize(10000)
 			.expirationPolicy(ExpirationPolicy.CREATED)

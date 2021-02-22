@@ -3,7 +3,6 @@ package dev.mlnr.spidey.objects.guild;
 import net.dv8tion.jda.api.entities.Invite;
 
 public class InviteData {
-
 	private final long guildId;
 	private int uses;
 

@@ -17,7 +17,6 @@ import java.util.Queue;
 import static dev.mlnr.spidey.utils.MusicUtils.handleMarkers;
 
 public class TrackScheduler extends AudioEventAdapter {
-
 	private final AudioPlayer audioPlayer;
 	private final long guildId;
 
@@ -99,7 +98,7 @@ public class TrackScheduler extends AudioEventAdapter {
 		var listeners = MusicUtils.getConnectedChannel(getGuild()).getMembers().stream()
 				.filter(member -> !member.getUser().isBot() && !member.getVoiceState().isDeafened())
 				.count();
-		return (int)Math.ceil(listeners * 0.55);
+		return (int) Math.ceil(listeners * 0.55);
 	}
 
 	public int getSkipVotes() {

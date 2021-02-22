@@ -64,7 +64,7 @@ public class UploadEmoteCommand extends Command {
 		}
 		var image = new ByteArrayOutputStream();
 		try {
-			var con = (HttpURLConnection)new URL(args[0]).openConnection(); // TODO execute the request using Requester class
+			var con = (HttpURLConnection) new URL(args[0]).openConnection(); // TODO execute the request using Requester class
 			con.setRequestProperty("User-Agent", "dev.mlnr.spidey");
 			try (var stream = con.getInputStream()) {
 				var chunk = new byte[4096];

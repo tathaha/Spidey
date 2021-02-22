@@ -5,7 +5,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import java.util.function.BiConsumer;
 
 public class Paginator {
-
 	private final long invokeChannelId;
 	private final long invokeMessageId;
 	private final long authorId;

@@ -47,7 +47,9 @@ public class DatabaseManager {
 		try (var con = hikariDataSource.getConnection(); var ps = con.prepareStatement("SELECT * FROM guilds WHERE guild_id=?")) {
 			ps.setLong(1, guildId);
 			try (var rs = ps.executeQuery()) {
-				return new GuildGeneralSettings(guildId, rs.getBoolean("vip"), this);
+				return rs.next()
+						? new GuildGeneralSettings(guildId, rs.getBoolean("vip"), this)
+						: new GuildGeneralSettings(guildId, false, this); // default settings
 			}
 		}
 		catch (SQLException ex) {
@@ -85,6 +87,16 @@ public class DatabaseManager {
 		catch (SQLException ex) {
 			logger.error("There was an error while requesting the music settings for guild {}! Using default settings.", guildId, ex);
 			return new GuildMusicSettings(guildId, 100, 0, false, true, 3, spidey); // default settings
+		}
+	}
+
+	public void registerGuild(long guildId) {
+		try (var con = hikariDataSource.getConnection(); var ps = con.prepareStatement("INSERT INTO guilds (guild_id) VALUES (?) ON CONFLICT DO NOTHING")) {
+			ps.setLong(1, guildId);
+			ps.executeUpdate();
+		}
+		catch (SQLException ex) {
+			logger.error("There was an error while adding the entry for guild {}!", guildId, ex);
 		}
 	}
 

@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CooldownHandler {
-
 	private static final Map<Command, Map<Long, Long>> COOLDOWN_MAP = new HashMap<>(); // K = Command, V = Map<userId, Timestamp>
 
 	private CooldownHandler() {}

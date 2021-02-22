@@ -43,6 +43,7 @@ public class EvalCommand extends Command {
 		SCRIPT_ENGINE.put("channel", channel);
 		SCRIPT_ENGINE.put("jda", jda);
 		SCRIPT_ENGINE.put("api", jda);
+		SCRIPT_ENGINE.put("cache", ctx.getCache());
 		var eb = Utils.createEmbedBuilder(author);
 		var toEval = new StringBuilder();
 		DEFAULT_IMPORTS.forEach(imp -> toEval.append("import ").append(imp).append(".*; "));
