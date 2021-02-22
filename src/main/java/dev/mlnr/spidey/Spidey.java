@@ -31,7 +31,9 @@ public class Spidey {
 	private final DatabaseManager databaseManager = new DatabaseManager();
 
 	public Spidey() throws LoginException, InterruptedException {
-		var blh = new BLHBuilder().addBotList(BotList.TOP_GG, System.getenv("topgg"))
+		var blh = new BLHBuilder().setDevModePredicate(jdaO -> jdaO.getSelfUser().getIdLong() != 772446532560486410L)
+				.setUnavailableEventsEnabled(false)
+				.addBotList(BotList.TOP_GG, System.getenv("topgg"))
 				.addBotList(BotList.BOTLIST_SPACE, System.getenv("botlistspace"))
 				.addBotList(BotList.DBOATS, System.getenv("dboats"))
 				.addBotList(BotList.DSERVICES, System.getenv("dservices"))
