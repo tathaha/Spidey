@@ -56,8 +56,12 @@ public class ArgumentUtils {
 		var embedBuilder = Utils.createEmbedBuilder(author);
 
 		if (type.getPattern().matcher(argument).matches()) {
-			var mentionable = message.getMentions(type).get(0);
-			consumer.accept(mentionable);
+			var mentions = message.getMentions(type);
+			if (mentions.isEmpty()) {
+				ctx.replyError(notFound);
+				return;
+			}
+			consumer.accept(mentions.get(0));
 			return;
 		}
 
