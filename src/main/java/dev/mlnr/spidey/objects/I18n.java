@@ -13,7 +13,7 @@ import java.util.Map;
 public class I18n {
 	private static final Map<String, I18n> LANGUAGE_MAP = new HashMap<>();
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(I18n.class);
+	private static final Logger logger = LoggerFactory.getLogger(I18n.class);
 
 	static {
 		try (var langs = I18n.class.getResourceAsStream("/assets/languages/langs.txt")) {
@@ -24,7 +24,7 @@ public class I18n {
 			}
 		}
 		catch (IOException ex) {
-			LOGGER.error("There was an error while loading languages, exiting", ex);
+			logger.error("There was an error while loading languages, exiting", ex);
 			System.exit(1);
 		}
 	}

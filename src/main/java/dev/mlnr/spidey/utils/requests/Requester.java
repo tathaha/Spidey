@@ -16,7 +16,7 @@ import java.util.List;
 import static java.lang.Float.parseFloat;
 
 public class Requester {
-	private static final Logger LOGGER = LoggerFactory.getLogger(Requester.class);
+	private static final Logger logger = LoggerFactory.getLogger(Requester.class);
 	private static final OkHttpClient HTTP_CLIENT = new OkHttpClient();
 	private static final Request.Builder REQUEST_BUILDER = new Request.Builder().header("user-agent", "dev.mlnr.spidey");
 
@@ -34,7 +34,7 @@ public class Requester {
 			return DataObject.fromJson(body.string());
 		}
 		catch (Exception ex) {
-			LOGGER.error("There was an error while executing a request for url {}:", url, ex);
+			logger.error("There was an error while executing a request for url {}:", url, ex);
 		}
 		return DataObject.empty();
 	}
@@ -56,7 +56,7 @@ public class Requester {
 			return segments;
 		}
 		catch (Exception ex) {
-			LOGGER.error("There was an error while executing a segments request:", ex);
+			logger.error("There was an error while executing a segments request:", ex);
 		}
 		return Collections.emptyList();
 	}

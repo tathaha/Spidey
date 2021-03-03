@@ -22,7 +22,7 @@ import static dev.mlnr.spidey.handlers.command.CooldownHandler.isOnCooldown;
 
 public class CommandHandler {
 	private static final Map<String, Command> COMMANDS = new HashMap<>();
-	private static final Logger LOGGER = LoggerFactory.getLogger(CommandHandler.class);
+	private static final Logger logger = LoggerFactory.getLogger(CommandHandler.class);
 
 	static {
 		try (var result = new ClassGraph().acceptPackages("dev.mlnr.spidey.commands").scan()) {
@@ -34,7 +34,7 @@ public class CommandHandler {
 			}
 		}
 		catch (Exception e) {
-			LOGGER.error("There was an error while registering the commands!", e);
+			logger.error("There was an error while registering the commands!", e);
 		}
 	}
 
