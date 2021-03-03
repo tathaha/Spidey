@@ -32,6 +32,7 @@ public class Spidey {
 
 	public Spidey() throws LoginException, InterruptedException {
 		var blh = new BLHBuilder().setDevModePredicate(jdaO -> jdaO.getSelfUser().getIdLong() != 772446532560486410L)
+				.setSuccessLoggingEnabled(false)
 				.setUnavailableEventsEnabled(false)
 				.addBotList(BotList.TOP_GG, System.getenv("topgg"))
 				.addBotList(BotList.BOTLIST_SPACE, System.getenv("botlistspace"))
