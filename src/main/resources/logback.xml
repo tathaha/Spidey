@@ -22,6 +22,8 @@
         </encoder>
     </appender>
 
+    <logger name="com.sedmelluq.lava.common.natives.NativeLibraryLoader" level="WARN"/>
+
     <root level="INFO">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="Sentry" />
