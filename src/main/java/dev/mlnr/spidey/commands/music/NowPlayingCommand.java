@@ -29,7 +29,7 @@ public class NowPlayingCommand extends Command {
 		}
 		var playingTrack = musicPlayer.getPlayingTrack();
 		if (playingTrack == null) {
-			ctx.replyError(i18n.get("music.messages.failure.no_song"));
+			ctx.reply(i18n.get("music.messages.failure.no_song"));
 			return;
 		}
 		var guildId = guild.getIdLong();
