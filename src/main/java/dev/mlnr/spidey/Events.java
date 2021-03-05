@@ -97,7 +97,7 @@ public class Events extends ListenerAdapter {
 		}
 
 		var prefix = miscSettings.getPrefix();
-		if (!content.startsWith(prefix) || author.isBot()) {
+		if (!content.startsWith(prefix) || !guildSettingsCache.getChannelsSettings(guildId).isChannelWhitelisted(channel) || author.isBot()) {
 			return;
 		}
 		CommandHandler.handle(event, prefix, spidey, cache);
@@ -275,9 +275,20 @@ public class Events extends ListenerAdapter {
 
 	@Override
 	public void onTextChannelDelete(TextChannelDeleteEvent event) {
-		var miscSettings = cache.getGuildSettingsCache().getMiscSettings(event.getGuild().getIdLong());
-		if (event.getChannel().getIdLong() == miscSettings.getLogChannelId()) {
+		var guildSettingsCache = cache.getGuildSettingsCache();
+		var guildId = event.getGuild().getIdLong();
+		var channel = event.getChannel();
+
+		var miscSettings = guildSettingsCache.getMiscSettings(guildId);
+		var channelsSettings = guildSettingsCache.getChannelsSettings(guildId);
+		if (channel.getIdLong() == miscSettings.getLogChannelId()) {
 			miscSettings.removeLogChannel();
+		}
+		if (channelsSettings.isChannelWhitelisted(channel, true)) {
+			channelsSettings.removeWhitelistedChannel(channel);
+		}
+		else if (channelsSettings.isChannelBlacklisted(channel)) {
+			channelsSettings.removeBlacklistedChannel(channel);
 		}
 	}
 

@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'application'
     id 'com.github.johnrengelman.shadow' version '6.1.0'
+    id 'nu.studer.jooq' version '5.2'
 }
 
 application {
@@ -26,6 +27,8 @@ dependencies {
     // database
     implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.19'
     implementation group: 'com.zaxxer', name: 'HikariCP', version: '4.0.2'
+    implementation group: 'org.jooq', name: 'jooq', version: '3.14.8'
+    jooqGenerator group: 'org.postgresql', name: 'postgresql', version: '42.2.19'
 
     // eval
     implementation group: 'org.codehaus.groovy', name: 'groovy-jsr223', version: '3.0.7'
@@ -48,6 +51,42 @@ dependencies {
     // music
     implementation group: 'com.sedmelluq', name: 'lavaplayer', version: '1.3.72'
     implementation group: 'com.sedmelluq', name: 'jda-nas', version: '1.1.0'
+}
+
+jooq {
+    version = '3.14.8'
+    configurations {
+        main {
+            generateSchemaSourceOnCompilation = false
+            generationTool {
+                logging = org.jooq.meta.jaxb.Logging.WARN
+                jdbc {
+                    driver = 'org.postgresql.Driver'
+                    url = 'jdbc:postgresql://localhost:5432/spidey'
+                    user = 'sebo'
+                    password = DB_PASSWORD
+                }
+                generator {
+                    name = 'org.jooq.codegen.DefaultGenerator'
+                    database {
+                        name = 'org.jooq.meta.postgres.PostgresDatabase'
+                        inputSchema = 'public'
+                        includes = '.*'
+                        excludes = ''
+                    }
+                    generate {
+                        records = true
+                        fluentSetters = true
+                    }
+                    target {
+                        packageName = 'dev.mlnr.spidey.jooq'
+                        directory = "src/main/jooq"
+                    }
+                    strategy.name = "org.jooq.codegen.DefaultGeneratorStrategy"
+                }
+            }
+        }
+    }
 }
 
 group = 'dev.mlnr'

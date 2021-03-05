@@ -6,14 +6,20 @@ import net.dv8tion.jda.api.entities.Role;
 public class GuildMusicSettings implements IGuildSettings {
 	private final long guildId;
 
-	private int defaultVolume;
+	private int defaultVolume = 100;
 	private long djRoleId;
 	private boolean segmentSkippingEnabled;
 
 	private boolean fairQueueEnabled;
-	private int fairQueueThreshold;
+	private int fairQueueThreshold = 3;
 
 	private final Spidey spidey;
+
+	public GuildMusicSettings(long guildId, Spidey spidey) {
+		this.guildId = guildId;
+
+		this.spidey = spidey;
+	}
 
 	public GuildMusicSettings(long guildId, int defaultVolume, long djRoleId, boolean segmentSkippingEnabled, boolean fairQueueEnabled, int fairQueueThreshold, Spidey spidey) {
 		this.guildId = guildId;

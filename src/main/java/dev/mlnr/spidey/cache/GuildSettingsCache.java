@@ -27,6 +27,10 @@ public class GuildSettingsCache {
 		return guildSettingsCache;
 	}
 
+	public GuildChannelsSettings getChannelsSettings(long guildId) {
+		return getSettings(GuildChannelsSettings.class, guildId);
+	}
+
 	public GuildFiltersSettings getFiltersSettings(long guildId) {
 		return getSettings(GuildFiltersSettings.class, guildId);
 	}
@@ -61,7 +65,9 @@ public class GuildSettingsCache {
 
 	private IGuildSettings parseSettingsFromType(Class<?> type, long guildId) {
 		var databaseManager = spidey.getDatabaseManager();
-		if (type == GuildFiltersSettings.class)
+		if (type == GuildChannelsSettings.class)
+			return databaseManager.retrieveGuildChannelsSettings(guildId, databaseManager);
+		else if (type == GuildFiltersSettings.class)
 			return databaseManager.retrieveGuildFiltersSettings(guildId);
 		else if (type == GuildGeneralSettings.class)
 			return databaseManager.retrieveGuildGeneralSettings(guildId);
