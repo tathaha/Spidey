@@ -9,6 +9,12 @@ public class GuildGeneralSettings implements IGuildSettings {
 
 	private final DatabaseManager databaseManager;
 
+	public GuildGeneralSettings(long guildId, DatabaseManager databaseManager) {
+		this.guildId = guildId;
+
+		this.databaseManager = databaseManager;
+	}
+
 	public GuildGeneralSettings(long guildId, boolean vip, DatabaseManager databaseManager) {
 		this.guildId = guildId;
 

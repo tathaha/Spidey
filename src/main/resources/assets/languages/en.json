@@ -484,6 +484,46 @@
       "description": "Sends a (NSFW) picture of a pussy",
       "usage": "pussy"
     },
+    "blacklist": {
+      "description": "Adds/removes a channel to/from blacklist. Spidey will only respond to commands that are not blacklisted.",
+      "usage": "blacklist <add/remove/list> <channel>",
+      "other": {
+        "channels": {
+          "text": "Blacklisted channels",
+          "none": "There are currently no blacklisted channels.",
+          "add_remove": "Add/remove channels by using `%sblacklist <add/remove>`.",
+          "state": {
+            "already_blacklisted": "Channel %s is already blacklisted.",
+            "not_blacklisted": "Channel %s isn't blacklisted.",
+            "add": {
+              "success": "Channel %s has been added to the blacklist.",
+              "whitelisted": "Channel %s is blacklisted. If you want, remove it from the whitelist by using `%swhitelist`."
+            },
+            "removed": "Channel %s has been removed from the whitelist."
+          }
+        }
+      }
+    },
+    "whitelist": {
+      "description": "Adds/removes a channel to/from whitelist. Spidey will only respond to commands in whitelisted channels",
+      "usage": "whitelist <add/remove/list> <channel>",
+      "other": {
+        "channels": {
+          "text": "Whitelisted channels",
+          "none": "There are currently no whitelisted channels.",
+          "add_remove": "Add/remove channels by using `%swhitelist <add/remove>`.",
+          "state": {
+            "already_whitelisted": "Channel %s is already whitelisted.",
+            "not_whitelisted": "Channel %s isn't whitelisted.",
+            "add": {
+              "success": "Channel %s has been added to the whitelist.",
+              "blacklisted": "Channel %s is blacklisted. If you want, remove it from the blacklist by using `%sblacklist`."
+            },
+            "removed": "Channel %s has been removed from the whitelist."
+          }
+        }
+      }
+    },
     "defaultvolume": {
       "description": "Sets the default music volume. This volume will be set when you start listening to music",
       "usage": "defaultvolume <volume>",
