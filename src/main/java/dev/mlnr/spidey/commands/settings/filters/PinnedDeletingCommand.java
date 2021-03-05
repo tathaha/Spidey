@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.Permission;
 public class PinnedDeletingCommand extends Command {
 
 	public PinnedDeletingCommand() {
-		super("pinneddeleting", new String[]{"pinneddel", "pindel"}, Category.Settings.FILTERS, Permission.MANAGE_SERVER, 0, 0);
+		super("pinneddeleting", new String[]{"pinneddel", "pindel", "pinfilter", "pinnedfilter"}, Category.Settings.FILTERS, Permission.MANAGE_SERVER, 0, 0);
 	}
 
 	@Override

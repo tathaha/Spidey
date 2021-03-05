@@ -2,21 +2,27 @@ package dev.mlnr.spidey;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import dev.mlnr.spidey.objects.settings.guild.GuildFiltersSettings;
-import dev.mlnr.spidey.objects.settings.guild.GuildGeneralSettings;
-import dev.mlnr.spidey.objects.settings.guild.GuildMiscSettings;
-import dev.mlnr.spidey.objects.settings.guild.GuildMusicSettings;
+import dev.mlnr.spidey.jooq.tables.records.GuildsRecord;
+import dev.mlnr.spidey.jooq.tables.records.SettingsFiltersRecord;
+import dev.mlnr.spidey.jooq.tables.records.SettingsMiscRecord;
+import dev.mlnr.spidey.jooq.tables.records.SettingsMusicRecord;
+import dev.mlnr.spidey.objects.settings.guild.*;
+import org.jooq.*;
+import org.jooq.exception.DataAccessException;
+import org.jooq.impl.DSL;
+import org.jooq.impl.DefaultConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
+
+import static dev.mlnr.spidey.jooq.Tables.*;
 
 public class DatabaseManager {
 	private static final Logger logger = LoggerFactory.getLogger(DatabaseManager.class);
-	private final HikariDataSource hikariDataSource;
+	private final Configuration configuration;
 
 	public DatabaseManager() {
 		var hikariConfig = new HikariConfig();
@@ -24,250 +30,313 @@ public class DatabaseManager {
 		hikariConfig.setJdbcUrl("jdbc:postgresql:spidey");
 		hikariConfig.setUsername("sebo");
 		hikariConfig.setPassword(System.getenv("db"));
-		hikariDataSource = new HikariDataSource(hikariConfig);
+
+		var defaultConfig = new DefaultConfiguration();
+		defaultConfig.setDataSource(new HikariDataSource(hikariConfig));
+		defaultConfig.setSQLDialect(SQLDialect.POSTGRES);
+		this.configuration = defaultConfig;
+	}
+
+	// getting settings
+
+	public IGuildSettings retrieveGuildSettings(Table<? extends Record> table, long guildId, Function<Record, IGuildSettings> defaultSettingsTransformer,
+	                                  Function<Record, IGuildSettings> transformer) {
+		try (var selectStep = getCtx().selectFrom(table)) {
+			try {
+				var result = selectStep.where(table.field("guild_id", Long.class).eq(guildId)).fetch();
+				if (result.isEmpty()) {
+					return defaultSettingsTransformer.apply(null);
+				}
+				return transformer.apply(result.get(0));
+			}
+			catch (DataAccessException ex) {
+				logger.error("There was an error while fetching the {} for guild {}", table.getName(), guildId, ex);
+			}
+		}
+		return defaultSettingsTransformer.apply(null);
+	}
+
+	public GuildChannelsSettings retrieveGuildChannelsSettings(long guildId, DatabaseManager databaseManager) {
+		return new GuildChannelsSettings(guildId, retrieveWhitelistedChannels(guildId), retrieveBlacklistedChannels(guildId), databaseManager);
 	}
 
 	public GuildFiltersSettings retrieveGuildFiltersSettings(long guildId) {
-		try (var con = hikariDataSource.getConnection(); var ps = con.prepareStatement("SELECT * FROM settings_filters WHERE guild_id=?")) {
-			ps.setLong(1, guildId);
-			try (var rs = ps.executeQuery()) {
-				return rs.next()
-						? new GuildFiltersSettings(guildId, rs.getBoolean("pinned_deleting_enabled"), rs.getBoolean("invite_deleting_enabled"), retrieveInviteFilterIgnoredUsers(guildId),
-							retrieveInviteFilterIgnoredRoles(guildId), this)
-						: new GuildFiltersSettings(guildId, false, false, Collections.emptyList(), Collections.emptyList(), this); // default settings
-			}
-		}
-		catch (SQLException ex) {
-			logger.error("There was an error while requesting the filters settings for guild {}!", guildId, ex);
-			return new GuildFiltersSettings(guildId, false, false, Collections.emptyList(), Collections.emptyList(), this); // default settings
-		}
+		return (GuildFiltersSettings) retrieveGuildSettings(SETTINGS_FILTERS, guildId,
+				defaultRecord -> new GuildFiltersSettings(guildId, this),
+				settingsRecord ->
+		{
+			var casted = (SettingsFiltersRecord) settingsRecord;
+			return new GuildFiltersSettings(guildId, casted.getPinnedDeletingEnabled(), casted.getInviteDeletingEnabled(),
+					retrieveInviteFilterIgnoredUsers(guildId), retrieveInviteFilterIgnoredRoles(guildId), this);
+		});
 	}
 
 	public GuildGeneralSettings retrieveGuildGeneralSettings(long guildId) {
-		try (var con = hikariDataSource.getConnection(); var ps = con.prepareStatement("SELECT * FROM guilds WHERE guild_id=?")) {
-			ps.setLong(1, guildId);
-			try (var rs = ps.executeQuery()) {
-				return rs.next()
-						? new GuildGeneralSettings(guildId, rs.getBoolean("vip"), this)
-						: new GuildGeneralSettings(guildId, false, this); // default settings
-			}
-		}
-		catch (SQLException ex) {
-			logger.error("There was an error while requesting the general settings for guild {}!", guildId, ex);
-			return new GuildGeneralSettings(guildId, false, this); // default settings
-		}
+		return (GuildGeneralSettings) retrieveGuildSettings(GUILDS, guildId,
+				defaultRecord -> new GuildGeneralSettings(guildId, this),
+				settingsRecord ->
+		{
+			var casted = (GuildsRecord) settingsRecord;
+			return new GuildGeneralSettings(guildId, casted.getVip(), this);
+		});
 	}
 
 	public GuildMiscSettings retrieveGuildMiscSettings(long guildId, Spidey spidey) {
-		try (var con = hikariDataSource.getConnection(); var ps = con.prepareStatement("SELECT * FROM settings_misc WHERE guild_id=?")) {
-			ps.setLong(1, guildId);
-			try (var rs = ps.executeQuery()) {
-				return rs.next()
-						? new GuildMiscSettings(guildId, rs.getLong("log_channel_id"), rs.getLong("join_role_id"), rs.getString("prefix"), rs.getString("language"),
-							rs.getBoolean("sniping_enabled"), rs.getBoolean("error_cleanup_enabled"), spidey)
-						: new GuildMiscSettings(guildId, 0, 0, "s!", "en", true, false, spidey); // default settings
-			}
-		}
-		catch (SQLException ex) {
-			logger.error("There was an error while requesting the misc settings for guild {}! Using default settings.", guildId, ex);
-			return new GuildMiscSettings(guildId, 0, 0, "s!", "en", true, false, spidey); // default settings
-		}
+		return (GuildMiscSettings) retrieveGuildSettings(SETTINGS_MISC, guildId,
+				defaultRecord -> new GuildMiscSettings(guildId, spidey),
+				settingsRecord ->
+		{
+			var casted = (SettingsMiscRecord) settingsRecord;
+			return new GuildMiscSettings(guildId, casted.getLogChannelId(), casted.getJoinRoleId(), casted.getPrefix(), casted.getLanguage(),
+					casted.getSnipingEnabled(), casted.getErrorCleanupEnabled(), spidey);
+		});
 	}
 
 	public GuildMusicSettings retrieveGuildMusicSettings(long guildId, Spidey spidey) {
-		try (var con = hikariDataSource.getConnection(); var ps = con.prepareStatement("SELECT * FROM settings_music WHERE guild_id=?")) {
-			ps.setLong(1, guildId);
-			try (var rs = ps.executeQuery()) {
-				return rs.next()
-						? new GuildMusicSettings(guildId, rs.getInt("default_volume"), rs.getLong("dj_role_id"), rs.getBoolean("segment_skipping_enabled"),
-							rs.getBoolean("fair_queue_enabled"), rs.getInt("fair_queue_threshold"), spidey)
-						: new GuildMusicSettings(guildId, 100, 0, false, true, 3, spidey); // default settings
-			}
-		}
-		catch (SQLException ex) {
-			logger.error("There was an error while requesting the music settings for guild {}! Using default settings.", guildId, ex);
-			return new GuildMusicSettings(guildId, 100, 0, false, true, 3, spidey); // default settings
-		}
+		return (GuildMusicSettings) retrieveGuildSettings(SETTINGS_MUSIC, guildId,
+				defaultRecord -> new GuildMusicSettings(guildId, spidey),
+				settingsRecord ->
+		{
+			var casted = (SettingsMusicRecord) settingsRecord;
+			return new GuildMusicSettings(guildId, casted.getDefaultVolume(), casted.getDjRoleId(), casted.getSegmentSkippingEnabled(),
+					casted.getFairQueueEnabled(), casted.getFairQueueThreshold(), spidey);
+		});
 	}
 
+	// registering/removing guild
+
 	public void registerGuild(long guildId) {
-		try (var con = hikariDataSource.getConnection(); var ps = con.prepareStatement("INSERT INTO guilds (guild_id) VALUES (?) ON CONFLICT DO NOTHING")) {
-			ps.setLong(1, guildId);
-			ps.executeUpdate();
-		}
-		catch (SQLException ex) {
-			logger.error("There was an error while adding the entry for guild {}!", guildId, ex);
+		try (var valueStep = getCtx().insertInto(GUILDS).columns(GUILDS.GUILD_ID).values(guildId)) {
+			try {
+				valueStep.onConflictDoNothing().execute();
+			}
+			catch (DataAccessException ex) {
+				logger.error("There was an error while registering guild {}", guildId, ex);
+			}
 		}
 	}
 
 	public void removeGuild(long guildId) {
-		try (var con = hikariDataSource.getConnection(); var ps = con.prepareStatement("DELETE FROM guilds WHERE guild_id=" + guildId)) {
-			ps.executeUpdate();
-		}
-		catch (SQLException ex) {
-			logger.error("There was an error while removing the entry for guild {}!", guildId, ex);
-		}
-	}
-
-	// helper methods
-
-	private <T> void executeSetQuery(String table, String property, long guildId, T value) {
-		var query = "INSERT INTO " + table + " (guild_id, " + property + ") VALUES (?, ?) ON CONFLICT (guild_id) DO UPDATE SET " + property + "='" + value + "'";
-		try (var con = hikariDataSource.getConnection(); var ps = con.prepareStatement(query)) {
-			ps.setLong(1, guildId);
-			ps.setObject(2, value);
-			ps.executeUpdate();
-		}
-		catch (SQLException ex) {
-			logger.error("There was an error while setting the {} property for guild {}!", property, guildId, ex);
+		try (var deleteStep = getCtx().deleteFrom(GUILDS)) {
+			try {
+				deleteStep.where(GUILDS.GUILD_ID.eq(guildId)).execute();
+			}
+			catch (DataAccessException ex) {
+				logger.error("There was an error while removing the entry for guild {}", guildId, ex);
+			}
 		}
 	}
 
-	private <T> void executeFiltersSetQuery(String property, long guildId, T value) {
-		executeSetQuery("settings_filters", property, guildId, value);
+	// helper set methods
+
+	public <T> void executeSetQuery(Table<? extends Record> table, Field<T> column, T value, long guildId) {
+		try (var insertStep = getCtx().insertInto(table).columns(GUILDS.GUILD_ID, column)) {
+			try (var setStep = insertStep.values(guildId, value).onDuplicateKeyUpdate().set(column, value)) {
+				try {
+					setStep.execute();
+				}
+				catch (DataAccessException ex) {
+					logger.error("There was an error while setting the {} column in table {} for guild {}", column.getName(), table.getName(), guildId, ex);
+				}
+			}
+		}
 	}
 
-	private <T> void executeGeneralSetQuery(String property, long guildId, T value) {
-		executeSetQuery("guilds", property, guildId, value);
+	public <T> void executeFiltersSetQuery(Field<T> column, T value, long guildId) {
+		executeSetQuery(SETTINGS_FILTERS, column, value, guildId);
 	}
 
-	private <T> void executeMiscSetQuery(String property, long guildId, T value) {
-		executeSetQuery("settings_misc", property, guildId, value);
+	public <T> void executeGeneralSetQuery(Field<T> column, T value, long guildId) {
+		executeSetQuery(GUILDS, column, value, guildId);
 	}
 
-	private <T> void executeMusicSetQuery(String property, long guildId, T value) {
-		executeSetQuery("settings_music", property, guildId, value);
+	public <T> void executeMiscSetQuery(Field<T> column, T value, long guildId) {
+		executeSetQuery(SETTINGS_MISC, column, value, guildId);
+	}
+
+	public <T> void executeMusicSetQuery(Field<T> column, T value, long guildId) {
+		executeSetQuery(SETTINGS_MUSIC, column, value, guildId);
 	}
 
 	// guild filters setters
 
 	public void setPinnedDeletingEnabled(long guildId, boolean enabled) {
-		executeFiltersSetQuery("pinned_deleting_enabled", guildId, enabled);
+		executeFiltersSetQuery(SETTINGS_FILTERS.PINNED_DELETING_ENABLED, enabled, guildId);
 	}
 
 	public void setInviteDeletingEnabled(long guildId, boolean enabled) {
-		executeFiltersSetQuery("invite_deleting_enabled", guildId, enabled);
+		executeFiltersSetQuery(SETTINGS_FILTERS.INVITE_DELETING_ENABLED, enabled, guildId);
 	}
 
 	// guild general setters
 
 	public void setVip(long guildId, boolean vip) {
-		executeGeneralSetQuery("vip", guildId, vip);
+		executeGeneralSetQuery(GUILDS.VIP, vip, guildId);
 	}
 
 	// guild misc setters
 
 	public void setLogChannelId(long guildId, long channelId) {
-		executeMiscSetQuery("log_channel_id", guildId, channelId);
+		executeMiscSetQuery(SETTINGS_MISC.LOG_CHANNEL_ID, channelId, guildId);
 	}
 
 	public void setJoinRoleId(long guildId, long roleId) {
-		executeMiscSetQuery("join_role_id", guildId, roleId);
+		executeMiscSetQuery(SETTINGS_MISC.JOIN_ROLE_ID, roleId, guildId);
 	}
 
 	public void setPrefix(long guildId, String prefix) {
-		executeMiscSetQuery("prefix", guildId, prefix);
+		executeMiscSetQuery(SETTINGS_MISC.PREFIX, prefix, guildId);
 	}
 
 	//	public void setLanguage(long guildId, String language) {
-	//		executeMiscSetQuery("language", guildId, language);
+	//		executeMiscSetQuery(SETTINGS_MISC.LANGUAGE, language, guildId);
 	//	}
 
 	public void setSnipingEnabled(long guildId, boolean enabled) {
-		executeMiscSetQuery("sniping_enabled", guildId, enabled);
+		executeMiscSetQuery(SETTINGS_MISC.SNIPING_ENABLED, enabled, guildId);
 	}
 
 	public void setErrorCleanupEnabled(long guildId, boolean enabled) {
-		executeMiscSetQuery("error_cleanup_enabled", guildId, enabled);
+		executeMiscSetQuery(SETTINGS_MISC.ERROR_CLEANUP_ENABLED, enabled, guildId);
 	}
 
 	// guild music setters
 
 	public void setDefaultVolume(long guildId, int defaultVolume) {
-		executeMusicSetQuery("default_volume", guildId, defaultVolume);
+		executeMusicSetQuery(SETTINGS_MUSIC.DEFAULT_VOLUME, defaultVolume, guildId);
 	}
 
 	public void setDJRoleId(long guildId, long djRoleId) {
-		executeMusicSetQuery("dj_role_id", guildId, djRoleId);
+		executeMusicSetQuery(SETTINGS_MUSIC.DJ_ROLE_ID, djRoleId, guildId);
 	}
 
 	public void setFairQueueEnabled(long guildId, boolean enabled) {
-		executeMusicSetQuery("fair_queue_enabled", guildId, enabled);
+		executeMusicSetQuery(SETTINGS_MUSIC.FAIR_QUEUE_ENABLED, enabled, guildId);
 	}
 
 	public void setFairQueueThreshold(long guildId, int threshold) {
-		executeMusicSetQuery("fair_queue_threshold", guildId, threshold);
+		executeMusicSetQuery(SETTINGS_MUSIC.FAIR_QUEUE_THRESHOLD, threshold, guildId);
 	}
 
 	public void setSegmentSkippingEnabled(long guildId, boolean enabled) {
-		executeMusicSetQuery("segment_skipping_enabled", guildId, enabled);
+		executeMusicSetQuery(SETTINGS_MUSIC.SEGMENT_SKIPPING_ENABLED, enabled, guildId);
+	}
+
+	// helper insert/delete methods
+
+	public <T> void insert(Table<? extends Record> table, Field<T> column, T value, long guildId) {
+		try (var insertStep = getCtx().insertInto(table).columns(GUILDS.GUILD_ID, column)) {
+			try {
+				insertStep.values(guildId, value).execute();
+			}
+			catch (DataAccessException ex) {
+				logger.error("There was an error while inserting to column {} in table {} for guild {}", column.getName(), table.getName(), guildId, ex);
+			}
+		}
+	}
+
+	public <T> void delete(Table<? extends Record> table, Field<T> column, T value, long guildId) {
+		try (var deleteStep = getCtx().deleteFrom(table)) {
+			try {
+				deleteStep.where(table.field("guild_id", Long.class).eq(guildId)).and(column.eq(value)).execute();
+			}
+			catch (DataAccessException ex) {
+				logger.error("There was an error while deleting from column {} in table {} for guild {}", column.getName(), table.getName(), guildId, ex);
+			}
+		}
+	}
+
+	// list retrieving
+
+	public <T> List<Long> retrieveLongList(Table<? extends Record> table, Field<T> column, long guildId) {
+		try (var selectStep = getCtx().select(column)) {
+			try {
+				var result = selectStep.from(table).where(table.field("guild_id", Long.class).eq(guildId)).fetch();
+				return result.getValues(column, Long.class);
+			}
+			catch (DataAccessException ex) {
+				logger.error("There was an error while fetching the {} list from table {} for guild {}", column.getName(), table.getName(),
+						guildId, ex);
+				return Collections.emptyList();
+			}
+		}
 	}
 
 	// invite filter ignored lists
 
-	public List<Long> retrieveInviteFilterIgnoredList(String table, String property, long guildId) {
-		var query = "SELECT * FROM " + table + " WHERE guild_id=?";
-		try (var con = hikariDataSource.getConnection(); var ps = con.prepareStatement(query)) {
-			ps.setLong(1, guildId);
-			try (var rs = ps.executeQuery()) {
-				var ignored = new ArrayList<Long>();
-				while (rs.next()) {
-					ignored.add(rs.getLong(property));
-				}
-				return ignored;
-			}
-		}
-		catch (SQLException ex) {
-			logger.error("There was an error while retrieving the ignored {} list for invite filter for guild {}!", property, guildId, ex);
-			return Collections.emptyList();
-		}
+	public <T> List<Long> retrieveInviteFilterIgnoredList(Table<? extends Record> table, Field<T> column, long guildId) {
+		return retrieveLongList(table, column, guildId);
 	}
 
 	public List<Long> retrieveInviteFilterIgnoredUsers(long guildId) {
-		return retrieveInviteFilterIgnoredList("invite_filter_ignored_users", "user_id", guildId);
+		return retrieveInviteFilterIgnoredList(INVITE_FILTER_IGNORED_USERS, INVITE_FILTER_IGNORED_USERS.USER_ID, guildId);
 	}
 
 	public List<Long> retrieveInviteFilterIgnoredRoles(long guildId) {
-		return retrieveInviteFilterIgnoredList("invite_filter_ignored_roles", "role_id", guildId);
+		return retrieveInviteFilterIgnoredList(INVITE_FILTER_IGNORED_ROLES, INVITE_FILTER_IGNORED_ROLES.ROLE_ID, guildId);
 	}
 
-	public void executeInviteFilterAddQuery(String table, String property, long guildId, long id) {
-		var query = "INSERT INTO " + table + " (guild_id, " + property + ") VALUES (?, ?)";
-		try (var con = hikariDataSource.getConnection(); var ps = con.prepareStatement(query)) {
-			ps.setLong(1, guildId);
-			ps.setLong(2, id);
-			ps.executeUpdate();
-		}
-		catch (SQLException ex) {
-			logger.error("There was an error while adding an ignored {} for invite filter for guild {}!", property, guildId, ex);
-		}
+	public void executeInviteFilterAddQuery(Table<? extends Record> table, Field<Long> column, long id, long guildId) {
+		insert(table, column, id, guildId);
 	}
 
-	public void executeInviteFilterRemoveQuery(String table, String property, long guildId, long id) {
-		var query = "DELETE FROM " + table + " WHERE guild_id=? AND " + property + "=?";
-		try (var con = hikariDataSource.getConnection(); var ps = con.prepareStatement(query)) {
-			ps.setLong(1, guildId);
-			ps.setLong(2, id);
-			ps.executeUpdate();
-		}
-		catch (SQLException ex) {
-			logger.error("There was an error while removing an ignored {} for invite filter for guild {}!", property, guildId, ex);
-		}
+	public void executeInviteFilterDeleteQuery(Table<? extends Record> table, Field<Long> column, long id, long guildId) {
+		delete(table, column, id, guildId);
 	}
 
 	public void addIgnoredUser(long guildId, long userId) {
-		executeInviteFilterAddQuery("invite_filter_ignored_users", "user_id", guildId, userId);
+		executeInviteFilterAddQuery(INVITE_FILTER_IGNORED_USERS, INVITE_FILTER_IGNORED_USERS.USER_ID, userId, guildId);
 	}
 
 	public void addIgnoredRole(long guildId, long roleId) {
-		executeInviteFilterAddQuery("invite_filter_ignored_roles", "role_id", guildId, roleId);
+		executeInviteFilterAddQuery(INVITE_FILTER_IGNORED_ROLES, INVITE_FILTER_IGNORED_ROLES.ROLE_ID, roleId, guildId);
 	}
 
 	public void removeIgnoredUser(long guildId, long userId) {
-		executeInviteFilterRemoveQuery("invite_filter_ignored_users", "user_id", guildId, userId);
+		executeInviteFilterDeleteQuery(INVITE_FILTER_IGNORED_USERS, INVITE_FILTER_IGNORED_USERS.USER_ID, userId, guildId);
 	}
 
 	public void removeIgnoredRole(long guildId, long roleId) {
-		executeInviteFilterRemoveQuery("invite_filter_ignored_roles", "role_id", guildId, roleId);
+		executeInviteFilterDeleteQuery(INVITE_FILTER_IGNORED_ROLES, INVITE_FILTER_IGNORED_ROLES.ROLE_ID, roleId, guildId);
+	}
+
+	// whitelisted/blacklisted channels
+
+	public List<Long> retrieveWhitelistedChannels(long guildId) {
+		return retrieveLongList(SETTINGS_WHITELISTED_CHANNELS, SETTINGS_WHITELISTED_CHANNELS.CHANNEL_ID, guildId);
+	}
+
+	public List<Long> retrieveBlacklistedChannels(long guildId) {
+		return retrieveLongList(SETTINGS_BLACKLISTED_CHANNELS, SETTINGS_BLACKLISTED_CHANNELS.CHANNEL_ID, guildId);
+	}
+
+	public void executeChannelsAddQuery(Table<? extends Record> table, Field<Long> column, long id, long guildId) {
+		insert(table, column, id, guildId);
+	}
+
+	public void executeChannelsDeleteQuery(Table<? extends Record> table, Field<Long> column, long id, long guildId) {
+		delete(table, column, id, guildId);
+	}
+
+	public void addWhitelistedChannel(long guildId, long channelId) {
+		executeChannelsAddQuery(SETTINGS_WHITELISTED_CHANNELS, SETTINGS_WHITELISTED_CHANNELS.CHANNEL_ID, channelId, guildId);
+	}
+
+	public void addBlacklistedChannel(long guildId, long channelId) {
+		executeChannelsAddQuery(SETTINGS_BLACKLISTED_CHANNELS, SETTINGS_BLACKLISTED_CHANNELS.CHANNEL_ID, channelId, guildId);
+	}
+
+	public void removeWhitelistedChannel(long guildId, long channelId) {
+		executeChannelsDeleteQuery(SETTINGS_WHITELISTED_CHANNELS, SETTINGS_WHITELISTED_CHANNELS.CHANNEL_ID, channelId, guildId);
+	}
+
+	public void removeBlacklistedChannel(long guildId, long channelId) {
+		executeChannelsDeleteQuery(SETTINGS_BLACKLISTED_CHANNELS, SETTINGS_BLACKLISTED_CHANNELS.CHANNEL_ID, channelId, guildId);
+	}
+
+	// jooq
+
+	public DSLContext getCtx() {
+		return DSL.using(this.configuration);
 	}
 }

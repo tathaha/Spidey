@@ -10,13 +10,21 @@ public class GuildMiscSettings implements IGuildSettings {
 
 	private long logChannelId;
 	private long joinRoleId;
-	private String prefix;
+	private String prefix = "s!";
 	private final I18n i18n;
 
-	private boolean snipingEnabled;
+	private boolean snipingEnabled = true;
 	private boolean errorCleanupEnabled;
 
 	private final Spidey spidey;
+
+	public GuildMiscSettings(long guildId, Spidey spidey) {
+		this.guildId = guildId;
+
+		this.i18n = I18n.ofLanguage("en");
+
+		this.spidey = spidey;
+	}
 
 	public GuildMiscSettings(long guildId, long logChannelId, long joinRoleId, String prefix, String language, boolean snipingEnabled, boolean errorCleanupEnabled, Spidey spidey) {
 		this.guildId = guildId;

@@ -3,6 +3,7 @@ package dev.mlnr.spidey.objects.settings.guild;
 import dev.mlnr.spidey.DatabaseManager;
 import net.dv8tion.jda.api.entities.Member;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GuildFiltersSettings implements IGuildSettings {
@@ -17,6 +18,15 @@ public class GuildFiltersSettings implements IGuildSettings {
 	private final List<Long> ignoredRoles;
 
 	private final DatabaseManager databaseManager;
+
+	public GuildFiltersSettings(long guildId, DatabaseManager databaseManager) {
+		this.guildId = guildId;
+
+		this.ignoredUsers = new ArrayList<>();
+		this.ignoredRoles = new ArrayList<>();
+
+		this.databaseManager = databaseManager;
+	}
 
 	public GuildFiltersSettings(long guildId, boolean pinnedDeletingEnabled, boolean inviteDeletingEnabled, List<Long> ignoredUsers, List<Long> ignoredRoles, DatabaseManager databaseManager) {
 		this.guildId = guildId;
