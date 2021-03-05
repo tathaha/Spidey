@@ -122,7 +122,7 @@ public class DatabaseManager {
 				deleteStep.where(GUILDS.GUILD_ID.eq(guildId)).execute();
 			}
 			catch (DataAccessException ex) {
-				logger.error("There was an error while removing the entry for guild {}!", guildId, ex);
+				logger.error("There was an error while removing the entry for guild {}", guildId, ex);
 			}
 		}
 	}
