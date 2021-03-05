@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class InviteDeletingCommand extends Command {
 
 	public InviteDeletingCommand() {
-		super("invitedeleting", new String[]{"invitedel", "invdel"}, Category.Settings.FILTERS, Permission.MANAGE_SERVER, 3, 0);
+		super("invitedeleting", new String[]{"invitedel", "invdel", "invitefilter"}, Category.Settings.FILTERS, Permission.MANAGE_SERVER, 3, 0);
 	}
 
 	@Override
