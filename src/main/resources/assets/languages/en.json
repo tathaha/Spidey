@@ -388,6 +388,14 @@
         "doesnt_exist": "There is no such repeat mode."
       }
     },
+    "savesong": {
+      "description": "Sends the current playing song into your private messages",
+      "usage": "savesong",
+      "other": {
+        "open_dms": "Please open your DMs so i can send you the current song.",
+        "sent": "I sent the current playing song into your DMs."
+      }
+    },
     "search": {
       "description": "Searches a query on YouTube",
       "usage": "search <query>",
