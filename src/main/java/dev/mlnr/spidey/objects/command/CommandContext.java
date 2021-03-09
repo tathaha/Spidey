@@ -1,6 +1,5 @@
 package dev.mlnr.spidey.objects.command;
 
-import dev.mlnr.spidey.Spidey;
 import dev.mlnr.spidey.cache.Cache;
 import dev.mlnr.spidey.objects.I18n;
 import dev.mlnr.spidey.utils.ArgumentUtils;
@@ -19,15 +18,13 @@ public class CommandContext {
 	private final GuildMessageReceivedEvent event;
 	private final I18n i18n;
 
-	private final Spidey spidey;
 	private final Cache cache;
 
-	public CommandContext(String[] args, GuildMessageReceivedEvent event, I18n i18n, Spidey spidey, Cache cache) {
+	public CommandContext(String[] args, GuildMessageReceivedEvent event, I18n i18n, Cache cache) {
 		this.args = args;
 		this.event = event;
 		this.i18n = i18n;
 
-		this.spidey = spidey;
 		this.cache = cache;
 	}
 
@@ -61,10 +58,6 @@ public class CommandContext {
 
 	public GuildMessageReceivedEvent getEvent() {
 		return this.event;
-	}
-
-	public Spidey getSpidey() {
-		return spidey;
 	}
 
 	public Cache getCache() {

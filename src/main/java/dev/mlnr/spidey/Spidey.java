@@ -4,6 +4,7 @@ import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory;
 import dev.mlnr.blh.api.BLHBuilder;
 import dev.mlnr.blh.api.BLHEventListener;
 import dev.mlnr.blh.api.BotList;
+import dev.mlnr.spidey.events.ReadyEvents;
 import dev.mlnr.spidey.utils.ConcurrentUtils;
 import net.dv8tion.jda.api.GatewayEncoding;
 import net.dv8tion.jda.api.JDA;
@@ -58,7 +59,7 @@ public class Spidey {
 			)
 			.setMemberCachePolicy(MemberCachePolicy.VOICE)
 			.setChunkingFilter(ChunkingFilter.NONE)
-			.addEventListeners(new Events(this), ConcurrentUtils.getEventWaiter(), new BLHEventListener(blh))
+			.addEventListeners(new ReadyEvents(this), ConcurrentUtils.getEventWaiter(), new BLHEventListener(blh))
 			.setActivity(Activity.watching("myself load"))
 			.setStatus(OnlineStatus.DO_NOT_DISTURB)
 			.setGatewayEncoding(GatewayEncoding.ETF)

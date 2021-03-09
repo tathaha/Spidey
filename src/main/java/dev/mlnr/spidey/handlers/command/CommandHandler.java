@@ -1,6 +1,5 @@
 package dev.mlnr.spidey.handlers.command;
 
-import dev.mlnr.spidey.Spidey;
 import dev.mlnr.spidey.cache.Cache;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
@@ -40,7 +39,7 @@ public class CommandHandler {
 
 	private CommandHandler() {}
 
-	public static void handle(GuildMessageReceivedEvent event, String prefix, Spidey spidey, Cache cache) {
+	public static void handle(GuildMessageReceivedEvent event, String prefix, Cache cache) {
 		var message = event.getMessage();
 		var content = message.getContentRaw().substring(prefix.length()).trim();
 		var guildSettingsCache = cache.getGuildSettingsCache();
@@ -90,7 +89,7 @@ public class CommandHandler {
 		var maxArgs = cmd.getMaxArgs();
 		var tmp = content.split("\\s+", maxArgs > 0 ? maxArgs + 1 : 0);
 		var args = Arrays.copyOfRange(tmp, 1, tmp.length);
-		cmd.execute(args, new CommandContext(args, event, i18n, spidey, cache));
+		cmd.execute(args, new CommandContext(args, event, i18n, cache));
 		cooldown(userId, cmd, vip);
 	}
 
