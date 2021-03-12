@@ -1,7 +1,7 @@
 package dev.mlnr.spidey.cache;
 
+import dev.mlnr.spidey.objects.Paginator;
 import dev.mlnr.spidey.utils.Emojis;
-import dev.mlnr.spidey.utils.Paginator;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;

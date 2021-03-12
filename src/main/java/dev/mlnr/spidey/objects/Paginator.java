@@ -1,4 +1,4 @@
-package dev.mlnr.spidey.utils;
+package dev.mlnr.spidey.objects;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 

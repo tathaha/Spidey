@@ -49,10 +49,10 @@ public class PaginatorEvent extends ListenerAdapter {
 				paginator.modifyCurrentPage(-1);
 				break;
 			case Emojis.FORWARD:
-				if (currentPage + 1 == totalPages) {
+				var nextPage = currentPage + 1;
+				if (nextPage == totalPages) {
 					return;
 				}
-				var nextPage = currentPage + 1;
 				pagesConsumer.accept(nextPage, newPageBuilder);
 				newPageBuilder.setFooter("Page " + (nextPage + 1) + "/" + totalPages);
 				paginator.modifyCurrentPage(+1);
