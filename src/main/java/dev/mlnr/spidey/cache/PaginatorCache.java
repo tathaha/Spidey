@@ -26,14 +26,16 @@ public class PaginatorCache {
 		this.jda = jda;
 	}
 
-	public void createPaginator(Message message, int totalPages, BiConsumer<Integer, EmbedBuilder> pagesConsumer) {
-		var channel = message.getTextChannel();
+	public void createPaginator(Message invokeMessage, int totalPages, BiConsumer<Integer, EmbedBuilder> pagesConsumer) {
+		var channel = invokeMessage.getTextChannel();
 		var embedBuilder = new EmbedBuilder().setColor(Utils.SPIDEY_COLOR);
 		embedBuilder.setFooter("Page 1/" + totalPages);
 		pagesConsumer.accept(0, embedBuilder);
 
 		channel.sendMessage(embedBuilder.build()).queue(paginatorMessage -> {
-			paginatorMap.put(paginatorMessage.getIdLong(), new Paginator(channel.getIdLong(), message.getIdLong(), message.getAuthor().getIdLong(), totalPages, pagesConsumer));
+			var paginatorMessageId = paginatorMessage.getIdLong();
+			var paginator = new Paginator(channel.getIdLong(), paginatorMessageId, invokeMessage.getIdLong(), invokeMessage.getAuthor().getIdLong(), totalPages, pagesConsumer, this);
+			paginatorMap.put(paginatorMessageId, paginator);
 
 			Utils.addReaction(paginatorMessage, Emojis.BACKWARDS);
 			Utils.addReaction(paginatorMessage, Emojis.FORWARD);

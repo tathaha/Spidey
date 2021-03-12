@@ -1,8 +1,8 @@
 package dev.mlnr.spidey.events;
 
 import dev.mlnr.spidey.cache.Cache;
+import dev.mlnr.spidey.objects.Paginator;
 import dev.mlnr.spidey.utils.Emojis;
-import dev.mlnr.spidey.utils.MusicUtils;
 import net.dv8tion.jda.api.events.message.guild.react.GenericGuildMessageReactionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -28,38 +28,20 @@ public class PaginatorEvent extends ListenerAdapter {
 		if (!reactionEmote.isEmoji()) {
 			return;
 		}
-		var emoji = reactionEmote.getEmoji();
-		var channel = event.getChannel();
-		var currentPage = paginator.getCurrentPage();
-		var pagesConsumer = paginator.getPagesConsumer();
-		var newPageBuilder = MusicUtils.createMusicResponseBuilder();
-		var totalPages = paginator.getTotalPages();
-
-		switch (emoji) {
-			case Emojis.WASTEBASKET:
-				paginatorCache.removePaginator(messageId);
-				return;
+		Paginator.Action move;
+		switch (reactionEmote.getEmoji()) {
 			case Emojis.BACKWARDS:
-				if (currentPage == 0) {
-					return;
-				}
-				var previousPage = currentPage - 1;
-				pagesConsumer.accept(previousPage, newPageBuilder);
-				newPageBuilder.setFooter("Page " + (previousPage + 1) + "/" + totalPages);
-				paginator.modifyCurrentPage(-1);
+				move = Paginator.Action.BACKWARDS;
 				break;
 			case Emojis.FORWARD:
-				var nextPage = currentPage + 1;
-				if (nextPage == totalPages) {
-					return;
-				}
-				pagesConsumer.accept(nextPage, newPageBuilder);
-				newPageBuilder.setFooter("Page " + (nextPage + 1) + "/" + totalPages);
-				paginator.modifyCurrentPage(+1);
+				move = Paginator.Action.FORWARD;
+				break;
+			case Emojis.WASTEBASKET:
+				move = Paginator.Action.REMOVE;
 				break;
 			default:
 				return;
 		}
-		channel.editMessageById(messageId, newPageBuilder.build()).queue();
+		paginator.switchPage(move, event.getChannel());
 	}
 }
