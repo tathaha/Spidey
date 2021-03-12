@@ -218,19 +218,19 @@ public class MusicUtils {
 
 	public static String formatLoadError(LoadFailureReason loadFailureReason, CommandContext ctx) {
 		var i18n = ctx.getI18n();
-		var base = i18n.get("music.messages.failure.load.cant_load") + " ";
+		var message = i18n.get("music.messages.failure.load.cant_load") + " ";
 		switch (loadFailureReason) {
 			case QUEUE_FULL:
-				base += i18n.get("music.messages.failure.load.queue_full", MAX_QUEUE_SIZE);
+				message += i18n.get("music.messages.failure.load.queue_full", MAX_QUEUE_SIZE);
 				break;
 			case TRACK_LONG:
-				base += i18n.get("music.messages.failure.load.track_long", MAX_TRACK_LENGTH_HOURS);
+				message += i18n.get("music.messages.failure.load.track_long", MAX_TRACK_LENGTH_HOURS);
 				break;
 			case FAIR_QUEUE:
-				base += i18n.get("music.messages.failure.load.fair_queue", MAX_FAIR_QUEUE, GuildSettingsCache.getInstance().getMiscSettings(ctx.getGuild().getIdLong()).getPrefix());
+				message += i18n.get("music.messages.failure.load.fair_queue", MAX_FAIR_QUEUE, GuildSettingsCache.getInstance().getMiscSettings(ctx.getGuild().getIdLong()).getPrefix());
 				break;
 		}
-		return base + ".";
+		return message;
 	}
 
 	public enum ConnectFailureReason {
