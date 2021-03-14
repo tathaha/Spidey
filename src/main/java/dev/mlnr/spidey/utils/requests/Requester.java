@@ -1,5 +1,6 @@
 package dev.mlnr.spidey.utils.requests;
 
+import dev.mlnr.spidey.objects.games.VoiceGameType;
 import dev.mlnr.spidey.objects.music.VideoSegment;
 import dev.mlnr.spidey.utils.requests.api.API;
 import net.dv8tion.jda.api.utils.data.DataArray;
@@ -64,8 +65,8 @@ public class Requester {
 		return Collections.emptyList();
 	}
 
-	public static void launchYouTubeTogetherSession(String channelId, Consumer<String> inviteConsumer, Consumer<Throwable> errorConsumer) {
-		var payload = DataObject.empty().put("max_age", 0).put("target_type", 2).put("target_application_id", "755600276941176913");
+	public static void launchYouTubeTogetherSession(String channelId, VoiceGameType voiceGame, Consumer<String> inviteConsumer, Consumer<Throwable> errorConsumer) {
+		var payload = DataObject.empty().put("max_age", 0).put("target_type", 2).put("target_application_id", voiceGame.getApplicationId());
 		var requestBody = RequestBody.create(MediaType.parse("application/json"), payload.toString());
 		var requestBuilder = new Request.Builder()
 				.header("Authorization", "Bot " + System.getenv("Spidey"))
@@ -76,7 +77,7 @@ public class Requester {
 			inviteConsumer.accept(json.getString("code"));
 		}
 		catch (Exception ex) {
-			logger.error("There was an exception while launching a YouTube Together session for channel {}", channelId, ex);
+			logger.error("There was an exception while creating an invite for {} for channel {}", voiceGame.getFriendlyName(), channelId, ex);
 			errorConsumer.accept(ex);
 		}
 	}
