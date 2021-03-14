@@ -3,7 +3,7 @@
 Brief list of features:
 - customizable prefix
 - music
-- ability to launch a YouTube Together session in a voice channel (`s!yt2gether`)
+- ability to launch a game session in a voice channel, such as YouTube Together (`s!voicegame`)
 - localization support
 - chat filters
 - logging joins/leaves (with showing what invite link a user used to join)
