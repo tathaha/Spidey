@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.utils.requests;
 
-import dev.mlnr.spidey.objects.activities.VoiceGameType;
+import dev.mlnr.spidey.objects.games.VoiceGameType;
 import dev.mlnr.spidey.objects.music.VideoSegment;
 import dev.mlnr.spidey.utils.requests.api.API;
 import net.dv8tion.jda.api.utils.data.DataArray;
@@ -77,7 +77,7 @@ public class Requester {
 			inviteConsumer.accept(json.getString("code"));
 		}
 		catch (Exception ex) {
-			logger.error("There was an exception while launching a {} session for channel {}", voiceGame.getFriendlyName(), channelId, ex);
+			logger.error("There was an exception while creating an invite for {} for channel {}", voiceGame.getFriendlyName(), channelId, ex);
 			errorConsumer.accept(ex);
 		}
 	}

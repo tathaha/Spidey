@@ -1,4 +1,4 @@
-package dev.mlnr.spidey.objects.activities;
+package dev.mlnr.spidey.objects.games;
 
 public enum VoiceGameType {
 	YOUTUBE_TOGETHER(755600276941176913L, "YouTube Together", new String[]{"youtubetogether", "yt2gether", "yttogether", "youtube2gether"}),

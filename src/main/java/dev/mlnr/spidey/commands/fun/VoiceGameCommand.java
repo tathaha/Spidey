@@ -1,9 +1,9 @@
 package dev.mlnr.spidey.commands.fun;
 
-import dev.mlnr.spidey.objects.activities.VoiceGameType;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
+import dev.mlnr.spidey.objects.games.VoiceGameType;
 import dev.mlnr.spidey.utils.Utils;
 import dev.mlnr.spidey.utils.requests.Requester;
 import net.dv8tion.jda.api.Permission;
