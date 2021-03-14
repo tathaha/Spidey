@@ -148,6 +148,15 @@
         }
       }
     },
+    "youtubetogether": {
+      "description": "Launches a YouTube Together session in your voice channel",
+      "usage": "youtubetogether",
+      "other": {
+        "not_in_voice": "You're not in a voice channel.",
+        "no_perms": "I don't have the **Create Invite** permission for your channel to create a session.",
+        "click": "Click [here](https://discord.gg/%s) to join a YouTube Together session."
+      }
+    },
     "avatar": {
       "description": "Shows your/entered user's avatar",
       "usage": "avatar (@user, user id or username/nickname)",
