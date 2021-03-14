@@ -150,7 +150,7 @@
     },
     "voicegame": {
       "description": "Creates an invite for a game in your voice channel",
-      "usage": "voicegame <game name>",
+      "usage": "voicegame <game name or blank to list available games>",
       "other": {
         "not_in_voice": "You're not in a voice channel.",
         "no_perms": "I don't have the **Create Invite** permission for your channel to create a session.",
