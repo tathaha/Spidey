@@ -41,7 +41,7 @@ public class I18n {
 
 	public String get(String key, Object... args) {
 		if (!key.contains(".")) {
-			return data.getString(key);
+			return applyArguments(data.getString(key), args);
 		}
 		var object = data;
 		var parts = key.split("\\.");
@@ -49,6 +49,11 @@ public class I18n {
 			object = object.getObject(parts[i]);
 
 		var string = object.getString(parts[parts.length - 1]);
+		string = applyArguments(string, args);
+		return string;
+	}
+
+	private String applyArguments(String string, Object... args) {
 		if (args.length != 0) {
 			string = String.format(string, args);
 		}
