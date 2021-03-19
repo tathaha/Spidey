@@ -5,7 +5,10 @@ import dev.mlnr.blh.api.BLHBuilder;
 import dev.mlnr.blh.api.BLHEventListener;
 import dev.mlnr.blh.api.BotList;
 import dev.mlnr.spidey.events.ReadyEvents;
+import dev.mlnr.spidey.handlers.command.CommandHandler;
+import dev.mlnr.spidey.objects.I18n;
 import dev.mlnr.spidey.utils.ConcurrentUtils;
+import dev.mlnr.spidey.utils.MusicUtils;
 import net.dv8tion.jda.api.GatewayEncoding;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -32,6 +35,13 @@ public class Spidey {
 	private final DatabaseManager databaseManager = new DatabaseManager();
 
 	public Spidey() throws LoginException, InterruptedException {
+		I18n.loadLanguages();
+		CommandHandler.loadCommands();
+		MusicUtils.registerSources();
+
+		RestAction.setDefaultFailure(null);
+		MessageAction.setDefaultMentions(EnumSet.noneOf(Message.MentionType.class));
+
 		var blh = new BLHBuilder().setDevModePredicate(jdaO -> jdaO.getSelfUser().getIdLong() != 772446532560486410L)
 				.setSuccessLoggingEnabled(false)
 				.setUnavailableEventsEnabled(false)
@@ -66,8 +76,6 @@ public class Spidey {
 			.setAudioSendFactory(new NativeAudioSendFactory())
 			.build()
 			.awaitReady();
-		RestAction.setDefaultFailure(null);
-		MessageAction.setDefaultMentions(EnumSet.noneOf(Message.MentionType.class));
 	}
 
 	public static void main(String[] args) {

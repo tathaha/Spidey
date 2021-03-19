@@ -40,12 +40,12 @@ public class MusicUtils {
 	private static final String BLOCK_INACTIVE = "\u25AC";
 	private static final String BLOCK_ACTIVE = "\uD83D\uDD18";
 
-	static {
+	private MusicUtils() {}
+
+	public static void registerSources() {
 		AUDIO_PLAYER_MANAGER.registerSourceManager(new YoutubeAudioSourceManager());
 		AudioSourceManagers.registerRemoteSources(AUDIO_PLAYER_MANAGER);
 	}
-
-	private MusicUtils() {}
 
 	private static ConnectFailureReason checkVoiceChannel(CommandContext ctx) {
 		var guild = ctx.getGuild();

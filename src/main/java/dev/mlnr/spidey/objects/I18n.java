@@ -15,7 +15,7 @@ public class I18n {
 
 	private static final Logger logger = LoggerFactory.getLogger(I18n.class);
 
-	static {
+	public static void loadLanguages() {
 		try (var langs = I18n.class.getResourceAsStream("/assets/languages/langs.txt")) {
 			for (var langCode : IOUtils.toString(langs, StandardCharsets.UTF_8).split("\n")) {
 				try (var langJsonStream = I18n.class.getResourceAsStream("/assets/languages/" + langCode + ".json")) {

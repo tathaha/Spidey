@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import static dev.mlnr.spidey.handlers.command.CooldownHandler.cooldown;
 import static dev.mlnr.spidey.handlers.command.CooldownHandler.isOnCooldown;
@@ -22,20 +23,7 @@ import static dev.mlnr.spidey.handlers.command.CooldownHandler.isOnCooldown;
 public class CommandHandler {
 	private static final Map<String, Command> COMMANDS = new HashMap<>();
 	private static final Logger logger = LoggerFactory.getLogger(CommandHandler.class);
-
-	static {
-		try (var result = new ClassGraph().acceptPackages("dev.mlnr.spidey.commands").scan()) {
-			for (var cls : result.getAllClasses()) {
-				var cmd = (Command) cls.loadClass().getDeclaredConstructor().newInstance();
-				COMMANDS.put(cmd.getInvoke(), cmd);
-				for (var alias : cmd.getAliases())
-					COMMANDS.put(alias, cmd);
-			}
-		}
-		catch (Exception e) {
-			logger.error("There was an error while registering the commands!", e);
-		}
-	}
+	private static final Pattern SPACES_REGEX = Pattern.compile("\\s+");
 
 	private CommandHandler() {}
 
@@ -87,10 +75,26 @@ public class CommandHandler {
 		//
 
 		var maxArgs = cmd.getMaxArgs();
-		var tmp = content.split("\\s+", maxArgs > 0 ? maxArgs + 1 : 0);
+		var tmp = SPACES_REGEX.split(content, maxArgs > 0 ? maxArgs + 1 : 0);
 		var args = Arrays.copyOfRange(tmp, 1, tmp.length);
 		cmd.execute(args, new CommandContext(args, event, i18n, cache));
 		cooldown(userId, cmd, vip);
+	}
+
+	public static void loadCommands() {
+		try (var result = new ClassGraph().acceptPackages("dev.mlnr.spidey.commands").scan()) {
+			for (var cls : result.getAllClasses()) {
+				var cmd = (Command) cls.loadClass().getDeclaredConstructor().newInstance();
+				COMMANDS.put(cmd.getInvoke(), cmd);
+				for (var alias : cmd.getAliases()) {
+					COMMANDS.put(alias, cmd);
+				}
+			}
+		}
+		catch (Exception e) {
+			logger.error("There was an error while registering the commands, exiting", e);
+			System.exit(1);
+		}
 	}
 
 	public static Map<String, Command> getCommands() {
