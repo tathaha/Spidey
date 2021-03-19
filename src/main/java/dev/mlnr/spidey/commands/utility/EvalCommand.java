@@ -32,7 +32,7 @@ public class EvalCommand extends Command {
 		var channel = ctx.getTextChannel();
 		var message = ctx.getMessage();
 		if (author.getIdLong() != 394607709741252621L) {
-			ctx.replyError(ctx.getI18n().get("command_failures.only_dev"));
+			ctx.replyErrorLocalized("command_failures.only_dev");
 			return;
 		}
 		SCRIPT_ENGINE.put("guild", channel.getGuild());

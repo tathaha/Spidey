@@ -19,16 +19,15 @@ public class SnipeCommand extends Command {
 	public void execute(String[] args, CommandContext ctx) {
 		var cache = ctx.getCache();
 		var miscSettings = cache.getGuildSettingsCache().getMiscSettings(ctx.getGuild().getIdLong());
-		var i18n = ctx.getI18n();
 		if (!miscSettings.isSnipingEnabled()) {
-			ctx.replyError(i18n.get("sniping.disabled", miscSettings.getPrefix()));
+			ctx.replyErrorLocalized("sniping.disabled", miscSettings.getPrefix());
 			return;
 		}
 		var textChannel = ctx.getTextChannel();
 		var channelId = textChannel.getIdLong();
 		var lastDeletedMessage = cache.getMessageCache().getLastDeletedMessage(channelId);
 		if (lastDeletedMessage == null) {
-			ctx.replyError(i18n.get("sniping.no_message", "deleted"));
+			ctx.replyErrorLocalized("sniping.no_message", "deleted");
 			return;
 		}
 		var eb = Utils.createEmbedBuilder(ctx.getAuthor());

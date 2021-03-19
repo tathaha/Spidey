@@ -18,14 +18,14 @@ public class StopCommand extends Command {
 	public void execute(String[] args, CommandContext ctx) {
 		var i18n = ctx.getI18n();
 		if (!MusicUtils.canInteract(ctx.getMember())) {
-			ctx.replyError(i18n.get("music.messages.failure.cant_interact", "stop the playback"));
+			ctx.replyErrorLocalized("music.messages.failure.cant_interact", "stop the playback");
 			return;
 		}
 		var guild = ctx.getGuild();
 		var musicPlayerCache = ctx.getCache().getMusicPlayerCache();
 		var musicPlayer = musicPlayerCache.getMusicPlayer(guild);
 		if (musicPlayer == null) {
-			ctx.replyError(i18n.get("music.messages.failure.no_music"));
+			ctx.replyErrorLocalized("music.messages.failure.no_music");
 			return;
 		}
 		musicPlayerCache.disconnectFromChannel(guild);

@@ -35,7 +35,7 @@ public class InviteDeletingCommand extends Command {
 		}
 		var prefix = guildSettingsCache.getMiscSettings(guildId).getPrefix();
 		if (!filtersSettings.isInviteDeletingEnabled()) {
-			ctx.replyError(i18n.get("commands.invitedeleting.other.disabled", prefix));
+			ctx.replyErrorLocalized("commands.invitedeleting.other.disabled", prefix);
 			return;
 		}
 		var wrongSyntax = i18n.get("command_failures.wrong_syntax", prefix, "invitedeleting");
@@ -65,20 +65,20 @@ public class InviteDeletingCommand extends Command {
 		if (args[0].equalsIgnoreCase("add")) {
 			if (entity instanceof User) {
 				if (filtersSettings.isUserIgnored(id)) {
-					ctx.replyError(i18n.get("commands.invitedeleting.other.already_ignored", "User", mention));
+					ctx.replyErrorLocalized("commands.invitedeleting.other.already_ignored", "User", mention);
 				}
 				else {
 					filtersSettings.addIgnoredUser(id);
-					ctx.reply(i18n.get("commands.invitedeleting.other.done.ignored.added", "User", mention));
+					ctx.replyLocalized("commands.invitedeleting.other.done.ignored.added", "User", mention);
 				}
 			}
 			else if (entity instanceof Role) {
 				if (filtersSettings.isRoleIgnored(id)) {
-					ctx.replyError(i18n.get("commands.invitedeleting.other.already_ignored", "Role", mention));
+					ctx.replyErrorLocalized("commands.invitedeleting.other.already_ignored", "Role", mention);
 				}
 				else {
 					filtersSettings.addIgnoredRole(id);
-					ctx.reply(i18n.get("commands.invitedeleting.other.done.ignored.added", "Role", mention));
+					ctx.replyLocalized("commands.invitedeleting.other.done.ignored.added", "Role", mention);
 				}
 			}
 		}
@@ -86,31 +86,33 @@ public class InviteDeletingCommand extends Command {
 			if (entity instanceof User) {
 				if (filtersSettings.isUserIgnored(id)) {
 					filtersSettings.removeIgnoredUser(id);
-					ctx.reply(i18n.get("commands.invitedeleting.other.done.ignored.removed", "User", mention));
+					ctx.replyLocalized("commands.invitedeleting.other.done.ignored.removed", "User", mention);
 				}
 				else {
-					ctx.replyError(i18n.get("commands.invitedeleting.other.not_ignored", "User", mention));
+					ctx.replyErrorLocalized("commands.invitedeleting.other.not_ignored", "User", mention);
 				}
 			}
 			else if (entity instanceof Role) {
 				if (filtersSettings.isRoleIgnored(id)) {
 					filtersSettings.removeIgnoredRole(id);
-					ctx.reply(i18n.get("commands.invitedeleting.other.done.ignored.removed", "Role", mention));
+					ctx.replyLocalized("commands.invitedeleting.other.done.ignored.removed", "Role", mention);
 				}
 				else {
-					ctx.replyError(i18n.get("commands.invitedeleting.other.not_ignored", "Role", mention));
+					ctx.replyErrorLocalized("commands.invitedeleting.other.not_ignored", "Role", mention);
 				}
 			}
 		}
 		else {
-			ctx.replyError(i18n.get("command_failures.wrong_syntax", ctx.getCache().getGuildSettingsCache().getMiscSettings(ctx.getGuild().getIdLong()).getPrefix(), "invitedeleting"));
+			var prefix = ctx.getCache().getGuildSettingsCache().getMiscSettings(ctx.getGuild().getIdLong()).getPrefix();
+			ctx.replyErrorLocalized("command_failures.wrong_syntax", prefix, "invitedeleting");
 		}
 	}
 
 	private void listIgnored(String[] args, CommandContext ctx, GuildFiltersSettings filtersSettings) {
 		var embedBuilder = Utils.createEmbedBuilder(ctx.getAuthor());
 		var i18n = ctx.getI18n();
-		var wrongSyntax = i18n.get("command_failures.wrong_syntax", ctx.getCache().getGuildSettingsCache().getMiscSettings(ctx.getGuild().getIdLong()).getPrefix(), "invitedeleting");
+		var prefix = ctx.getCache().getGuildSettingsCache().getMiscSettings(ctx.getGuild().getIdLong()).getPrefix();
+		var wrongSyntax = i18n.get("command_failures.wrong_syntax", prefix, "invitedeleting");
 		if (args.length == 1) {
 			embedBuilder.setAuthor(i18n.get("commands.invitedeleting.other.listing.all"));
 			var ignoredUsers = filtersSettings.getIgnoredUsers();

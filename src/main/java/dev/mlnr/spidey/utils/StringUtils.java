@@ -98,11 +98,11 @@ public class StringUtils {
 							choice = Integer.parseUnsignedInt(content);
 						}
 						catch (NumberFormatException ex) {
-							ctx.replyError(i18n.get("number.invalid"));
+							ctx.replyErrorLocalized("number.invalid");
 							return;
 						}
 						if (choice == 0 || choice > size) {
-							ctx.replyError(i18n.get("number.range", size));
+							ctx.replyErrorLocalized("number.range", size);
 							return;
 						}
 						choiceConsumer.accept(choice - 1);
@@ -110,7 +110,7 @@ public class StringUtils {
 					}, 1, TimeUnit.MINUTES,
 					() -> {
 						channel.purgeMessages(message, selectionMessage);
-						ctx.replyError("took_too_long");
+						ctx.replyErrorLocalized("took_too_long");
 					});
 		});
 	}

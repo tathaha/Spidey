@@ -17,29 +17,28 @@ public class ShuffleCommand extends Command {
 
 	@Override
 	public void execute(String[] args, CommandContext ctx) {
-		var i18n = ctx.getI18n();
 		if (!MusicUtils.canInteract(ctx.getMember())) {
-			ctx.replyError(i18n.get("music.messages.failure.cant_interact", "shuffle the queue"));
+			ctx.replyErrorLocalized("music.messages.failure.cant_interact", "shuffle the queue");
 			return;
 		}
 		var guild = ctx.getGuild();
 		var musicPlayer = ctx.getCache().getMusicPlayerCache().getMusicPlayer(guild);
 		if (musicPlayer == null) {
-			ctx.replyError(i18n.get("music.messages.failure.no_music"));
+			ctx.replyErrorLocalized("music.messages.failure.no_music");
 			return;
 		}
 		var trackScheduler = musicPlayer.getTrackScheduler();
 		var queue = trackScheduler.getQueueAsList();
 		if (queue.isEmpty()) {
-			ctx.replyError(i18n.get("music.messages.failure.queue_empty"));
+			ctx.replyErrorLocalized("music.messages.failure.queue_empty");
 			return;
 		}
 		if (queue.size() == 1) {
-			ctx.replyError(i18n.get("commands.shuffle.other.only_one"));
+			ctx.replyErrorLocalized("commands.shuffle.other.only_one");
 			return;
 		}
 		Collections.shuffle(queue);
 		ctx.reactLike();
-		ctx.reply(i18n.get("commands.shuffle.other.success"));
+		ctx.replyLocalized("commands.shuffle.other.success");
 	}
 }

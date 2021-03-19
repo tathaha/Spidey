@@ -16,9 +16,8 @@ public class FairQueueCommand extends Command {
 
 	@Override
 	public void execute(String[] args, CommandContext ctx) {
-		var i18n = ctx.getI18n();
 		if (!MusicUtils.canInteract(ctx.getMember())) {
-			ctx.replyError(i18n.get("music.messages.failure.cant_interact", "enable/disable the fair queue or to set the threshold"));
+			ctx.replyErrorLocalized("music.messages.failure.cant_interact", "enable/disable the fair queue or to set the threshold");
 			return;
 		}
 		var musicSettings = ctx.getCache().getGuildSettingsCache().getMusicSettings(ctx.getGuild().getIdLong());
@@ -32,11 +31,11 @@ public class FairQueueCommand extends Command {
 				return;
 			}
 			if (threshold < 2 || threshold > 10) {
-				ctx.replyError(i18n.get("commands.fairqueue.other.threshold_number"));
+				ctx.replyErrorLocalized("commands.fairqueue.other.threshold_number");
 				return;
 			}
 			if (threshold == musicSettings.getFairQueueThreshold()) {
-				ctx.replyError(i18n.get("commands.fairqueue.other.already_set", threshold));
+				ctx.replyErrorLocalized("commands.fairqueue.other.already_set", threshold);
 				return;
 			}
 			manageFairQueue(musicSettings, ctx, true, threshold);
@@ -50,7 +49,7 @@ public class FairQueueCommand extends Command {
 	private void manageFairQueue(GuildMusicSettings musicSettings, CommandContext ctx, boolean enabled, int threshold) {
 		var i18n = ctx.getI18n();
 		if (!enabled && !musicSettings.isFairQueueEnabled()) {
-			ctx.replyError(i18n.get("commands.fairqueue.other.already_disabled"));
+			ctx.replyErrorLocalized("commands.fairqueue.other.already_disabled");
 			return;
 		}
 		if (threshold != -1) {

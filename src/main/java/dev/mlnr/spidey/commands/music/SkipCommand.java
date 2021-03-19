@@ -19,12 +19,12 @@ public class SkipCommand extends Command {
 		var musicPlayer = ctx.getCache().getMusicPlayerCache().getMusicPlayer(ctx.getGuild());
 		var i18n = ctx.getI18n();
 		if (musicPlayer == null) {
-			ctx.replyError(i18n.get("music.messages.failure.no_music"));
+			ctx.replyErrorLocalized("music.messages.failure.no_music");
 			return;
 		}
 		var playingTrack = musicPlayer.getPlayingTrack();
 		if (playingTrack == null) {
-			ctx.replyError(i18n.get("music.messages.failure.no_song"));
+			ctx.replyErrorLocalized("music.messages.failure.no_song");
 			return;
 		}
 		if (MusicUtils.canInteract(ctx.getMember(), playingTrack)) {

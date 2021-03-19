@@ -27,11 +27,11 @@ public class UploadEmoteCommand extends Command {
 		var guild = ctx.getGuild();
 		var i18n = ctx.getI18n();
 		if (!guild.getSelfMember().hasPermission(getRequiredPermission())) {
-			ctx.replyError(i18n.get("commands.uploademote.other.no_perms"));
+			ctx.replyErrorLocalized("commands.uploademote.other.no_perms");
 			return;
 		}
 		if (args.length == 0) {
-			ctx.replyError(i18n.get("commands.uploademote.other.provide_url"));
+			ctx.replyErrorLocalized("commands.uploademote.other.provide_url");
 			return;
 		}
 		var name = "";
@@ -45,7 +45,7 @@ public class UploadEmoteCommand extends Command {
 				var tmp = args[0].substring(tmpIndex, index); // possible name, if it doesn't throw, check for the extension
 				var ext = args[0].substring(index + 1);
 				if (Icon.IconType.fromExtension(ext) == Icon.IconType.UNKNOWN) {
-					ctx.replyError(i18n.get("commands.uploademote.other.provide_format"));
+					ctx.replyErrorLocalized("commands.uploademote.other.provide_format");
 					return;
 				}
 				name = tmp;
@@ -55,11 +55,11 @@ public class UploadEmoteCommand extends Command {
 			}
 		}
 		if (!(name.length() >= 2 && name.length() <= 32)) {
-			ctx.replyError(i18n.get("commands.uploademote.other.name_length"));
+			ctx.replyErrorLocalized("commands.uploademote.other.name_length");
 			return;
 		}
 		else if (!Utils.TEXT_PATTERN.matcher(name).matches()) {
-			ctx.replyError(i18n.get("commands.uploademote.other.valid_format"));
+			ctx.replyErrorLocalized("commands.uploademote.other.valid_format");
 			return;
 		}
 		var image = new ByteArrayOutputStream();
@@ -78,16 +78,16 @@ public class UploadEmoteCommand extends Command {
 			}
 		}
 		catch (MalformedURLException ex) {
-			ctx.replyError(i18n.get("commands.uploademote.other.provide_url"));
+			ctx.replyErrorLocalized("commands.uploademote.other.provide_url");
 			return;
 		}
 		catch (IOException ex) {
-			ctx.replyError(i18n.get("internal_error", "upload the emote", ex.getMessage()));
+			ctx.replyErrorLocalized("internal_error", "upload the emote", ex.getMessage());
 			return;
 		}
 		var byteArray = image.toByteArray();
 		if (byteArray.length > 256000) {
-			ctx.replyError(i18n.get("commands.uploademote.other.size"));
+			ctx.replyErrorLocalized("commands.uploademote.other.size");
 			return;
 		}
 		var maxEmotes = guild.getMaxEmotes();
@@ -96,14 +96,14 @@ public class UploadEmoteCommand extends Command {
 				.collect(Collectors.partitioningBy(Emote::isAnimated))
 				.get(animated).size());
 		if (maxEmotes == used) {
-			ctx.replyError(i18n.get("commands.uploademote.other.maximum_size"));
+			ctx.replyErrorLocalized("commands.uploademote.other.maximum_size");
 			return;
 		}
 		guild.createEmote(name, Icon.from(byteArray)).queue(emote -> {
 			var left = maxEmotes - used - 1;
-			ctx.reply(i18n.get("commands.uploademote.other.success.text", emote.getAsMention(),
+			ctx.replyLocalized("commands.uploademote.other.success.text", emote.getAsMention(),
 					animated ? i18n.get("commands.uploademote.other.success.animated") : i18n.get("commands.uploademote.other.success.emote"),
-					(left == 0 ? i18n.get("commands.uploademote.other.success.none") : left)));
-		}, failure -> ctx.replyError(i18n.get("internal_error", "upload the emote", failure.getMessage())));
+					(left == 0 ? i18n.get("commands.uploademote.other.success.none") : left));
+		}, failure -> ctx.replyErrorLocalized("internal_error", "upload the emote", failure.getMessage()));
 	}
 }

@@ -28,10 +28,9 @@ public class LogCommand extends Command {
 	private void proceed(long guildId, TextChannel channel, CommandContext ctx) {
 		var miscSettings = ctx.getCache().getGuildSettingsCache().getMiscSettings(guildId);
 		var channelId = channel.getIdLong();
-		var i18n = ctx.getI18n();
 		if (miscSettings.getLogChannelId() == channelId) {
 			miscSettings.removeLogChannel();
-			ctx.reply(i18n.get("commands.log.other.reset"));
+			ctx.replyLocalized("commands.log.other.reset");
 			return;
 		}
 		if (!channel.canTalk()) {
@@ -41,6 +40,6 @@ public class LogCommand extends Command {
 			return;
 		}
 		miscSettings.setLogChannelId(channelId);
-		ctx.reply(i18n.get("commands.log.other.set", channelId));
+		ctx.replyLocalized("commands.log.other.set", channelId);
 	}
 }

@@ -19,14 +19,13 @@ public class SaveSongCommand extends Command {
 	public void execute(String[] args, CommandContext ctx) {
 		var guild = ctx.getGuild();
 		var musicPlayer = ctx.getCache().getMusicPlayerCache().getMusicPlayer(guild);
-		var i18n = ctx.getI18n();
 		if (musicPlayer == null) {
-			ctx.replyError(i18n.get("music.messages.failure.no_music"));
+			ctx.replyErrorLocalized("music.messages.failure.no_music");
 			return;
 		}
 		var playingTrack = musicPlayer.getPlayingTrack();
 		if (playingTrack == null) {
-			ctx.replyError(i18n.get("music.messages.failure.no_song"));
+			ctx.replyErrorLocalized("music.messages.failure.no_song");
 			return;
 		}
 		var user = ctx.getAuthor();
@@ -45,10 +44,10 @@ public class SaveSongCommand extends Command {
 				.thenCompose(privateChannel -> privateChannel.sendMessage(embedBuilder.build()).submit())
 				.whenComplete((ignored, throwable) -> {
 					if (throwable != null) {
-						ctx.replyError(i18n.get("commands.savesong.other.open_dms"));
+						ctx.replyErrorLocalized("commands.savesong.other.open_dms");
 						return;
 					}
-					ctx.reply(i18n.get("commands.savesong.other.sent"));
+					ctx.replyLocalized("commands.savesong.other.sent");
 					ctx.reactLike();
 				});
 	}

@@ -193,7 +193,7 @@ public class MusicUtils {
 	public static MusicPlayer checkQueryInput(String[] args, CommandContext ctx) {
 		var i18n = ctx.getI18n();
 		if (args.length == 0) {
-			ctx.replyError(i18n.get("music.messages.failure.no_query"));
+			ctx.replyErrorLocalized("music.messages.failure.no_query");
 			return null;
 		}
 		var connectionFailure = checkVoiceChannel(ctx);

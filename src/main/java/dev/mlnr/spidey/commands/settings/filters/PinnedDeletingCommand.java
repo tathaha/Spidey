@@ -19,6 +19,6 @@ public class PinnedDeletingCommand extends Command {
 		var i18n = ctx.getI18n();
 		miscSettings.setPinnedDeletingEnabled(enabled);
 		ctx.reactLike();
-		ctx.reply(i18n.get("commands.pinneddeleting.other.done", enabled ? i18n.get("enabled") : i18n.get("disabled")));
+		ctx.replyLocalized("commands.pinneddeleting.other.done", enabled ? i18n.get("enabled") : i18n.get("disabled"));
 	}
 }

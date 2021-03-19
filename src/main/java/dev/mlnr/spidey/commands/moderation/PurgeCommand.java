@@ -30,18 +30,18 @@ public class PurgeCommand extends Command {
 	@Override
 	public void execute(String[] args, CommandContext ctx) {
 		var guild = ctx.getGuild();
-		var i18n = ctx.getI18n();
 		if (!guild.getSelfMember().hasPermission(ctx.getTextChannel(), getRequiredPermission(), Permission.MESSAGE_HISTORY)) {
-			ctx.replyError(i18n.get("commands.purge.other.messages.failure.no_perms"));
+			ctx.replyErrorLocalized("commands.purge.other.messages.failure.no_perms");
 			return;
 		}
 		if (args.length == 0) {
-			ctx.replyError(i18n.get("command_failures.wrong_syntax", ctx.getCache().getGuildSettingsCache().getMiscSettings(guild.getIdLong()).getPrefix(), "purge"));
+			var prefix = ctx.getCache().getGuildSettingsCache().getMiscSettings(guild.getIdLong()).getPrefix();
+			ctx.replyErrorLocalized("command_failures.wrong_syntax", prefix, "purge");
 			return;
 		}
 		ctx.getArgumentAsUnsignedInt(0, amount -> {
 			if (amount < 1 || amount > 100) {
-				ctx.replyError(i18n.get("number.range", 100));
+				ctx.replyErrorLocalized("number.range", 100);
 				return;
 			}
 			if (args.length == 1) {
@@ -58,12 +58,12 @@ public class PurgeCommand extends Command {
 		var i18n = ctx.getI18n();
 		message.delete().queue(ignored -> channel.getIterableHistory().cache(false).limit(target == null ? limit : 100).queue(messages -> {
 			if (messages.isEmpty()) {
-				ctx.replyError(i18n.get("commands.purge.other.messages.failure.no_messages.text"));
+				ctx.replyErrorLocalized("commands.purge.other.messages.failure.no_messages.text");
 				return;
 			}
 			var msgs = target == null ? messages : messages.stream().filter(msg -> msg.getAuthor().equals(target)).limit(limit).collect(Collectors.toList());
 			if (msgs.isEmpty()) {
-				ctx.replyError(i18n.get("commands.purge.other.messages.failure.no_messages.user", target.getAsTag()));
+				ctx.replyErrorLocalized("commands.purge.other.messages.failure.no_messages.user", target.getAsTag());
 				return;
 			}
 			var pinned = msgs.stream().filter(Message::isPinned).collect(Collectors.toList());
@@ -101,7 +101,7 @@ public class PurgeCommand extends Command {
 									msgs.removeAll(pinned);
 									deleteMessage(sentMessage);
 									if (msgs.isEmpty()) {
-										ctx.replyError(i18n.get("commands.purge.other.messages.failure.no_messages.unpinned"));
+										ctx.replyErrorLocalized("commands.purge.other.messages.failure.no_messages.unpinned");
 										return;
 									}
 									break;
@@ -110,10 +110,10 @@ public class PurgeCommand extends Command {
 							proceed(msgs, target, ctx);
 						}, 1, TimeUnit.MINUTES, () -> {
 							deleteMessage(sentMessage);
-							ctx.replyError(i18n.get("took_too_long"));
+							ctx.replyErrorLocalized("took_too_long");
 						});
 			});
-		}, throwable -> ctx.replyError(i18n.get("internal_error", "purge messages", throwable.getMessage()))));
+		}, throwable -> ctx.replyErrorLocalized("internal_error", "purge messages", throwable.getMessage())));
 	}
 
 	private void proceed(List<Message> toDelete, User user, CommandContext ctx) {
@@ -122,7 +122,7 @@ public class PurgeCommand extends Command {
 		future.whenCompleteAsync((ignored, throwable) -> {
 			var i18n = ctx.getI18n();
 			if (throwable != null) {
-				ctx.replyError(i18n.get("internal_error", "purge messages", throwable.getMessage()));
+				ctx.replyErrorLocalized("internal_error", "purge messages", throwable.getMessage());
 				return;
 			}
 			channel.sendMessage(generateSuccessMessage(toDelete.size(), user, i18n))

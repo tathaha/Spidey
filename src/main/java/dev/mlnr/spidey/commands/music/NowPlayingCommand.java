@@ -24,12 +24,12 @@ public class NowPlayingCommand extends Command {
 		var musicPlayer = ctx.getCache().getMusicPlayerCache().getMusicPlayer(guild);
 		var i18n = ctx.getI18n();
 		if (musicPlayer == null) {
-			ctx.replyError(i18n.get("music.messages.failure.no_music"));
+			ctx.replyErrorLocalized("music.messages.failure.no_music");
 			return;
 		}
 		var playingTrack = musicPlayer.getPlayingTrack();
 		if (playingTrack == null) {
-			ctx.reply(i18n.get("music.messages.failure.no_song"));
+			ctx.replyLocalized("music.messages.failure.no_song");
 			return;
 		}
 		var guildId = guild.getIdLong();

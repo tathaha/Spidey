@@ -19,6 +19,6 @@ public class ErrorCleanupCommand extends Command {
 		var i18n = ctx.getI18n();
 		miscSettings.setErrorCleanupEnabled(enabled);
 		ctx.reactLike();
-		ctx.reply(i18n.get("commands.errorcleanup.other.done", enabled ? i18n.get("enabled") : i18n.get("disabled")));
+		ctx.replyLocalized("commands.errorcleanup.other.done", enabled ? i18n.get("enabled") : i18n.get("disabled"));
 	}
 }

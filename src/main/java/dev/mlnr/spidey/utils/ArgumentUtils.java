@@ -21,7 +21,7 @@ public class ArgumentUtils {
 			consumer.accept(Integer.parseInt(argument));
 		}
 		catch (NumberFormatException ex) {
-			ctx.replyError(ctx.getI18n().get("number.invalid"));
+			ctx.replyErrorLocalized("number.invalid");
 		}
 	}
 
@@ -30,7 +30,7 @@ public class ArgumentUtils {
 			consumer.accept(Integer.parseUnsignedInt(argument));
 		}
 		catch (NumberFormatException ex) {
-			ctx.replyError(ctx.getI18n().get("number.invalid"));
+			ctx.replyErrorLocalized("number.invalid");
 		}
 	}
 
@@ -114,7 +114,7 @@ public class ArgumentUtils {
 			}
 			var mentionables = type == Message.MentionType.CHANNEL ? guild.getTextChannelsByName(argument, true) : guild.getRolesByName(argument, true);
 			if (mentionables.isEmpty()) {
-				ctx.replyError(i18n.get("argument_parser.not_found.name", i18n.get("argument_parser.not_found." + typeName).toLowerCase()));
+				ctx.replyErrorLocalized("argument_parser.not_found.name", i18n.get("argument_parser.not_found." + typeName).toLowerCase());
 				return;
 			}
 			if (mentionables.size() == 1) {

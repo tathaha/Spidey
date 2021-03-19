@@ -19,13 +19,13 @@ public class QueueCommand extends Command {
 		var musicPlayer = ctx.getCache().getMusicPlayerCache().getMusicPlayer(guild);
 		var i18n = ctx.getI18n();
 		if (musicPlayer == null) {
-			ctx.replyError(i18n.get("music.messages.failure.no_music"));
+			ctx.replyErrorLocalized("music.messages.failure.no_music");
 			return;
 		}
 		var trackScheduler = musicPlayer.getTrackScheduler();
 		var queue = trackScheduler.getQueueAsList();
 		if (queue.isEmpty()) {
-			ctx.reply(i18n.get("music.messages.failure.queue_empty"));
+			ctx.replyLocalized("music.messages.failure.queue_empty");
 			return;
 		}
 		StringUtils.createQueuePaginator(ctx.getMessage(), queue, i18n, ctx.getCache().getPaginatorCache());

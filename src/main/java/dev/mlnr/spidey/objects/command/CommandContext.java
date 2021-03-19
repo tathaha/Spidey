@@ -74,8 +74,16 @@ public class CommandContext {
 		Utils.sendMessage(getTextChannel(), content, getMessage());
 	}
 
+	public void replyLocalized(String key, Object... args) {
+		reply(i18n.get(key, args));
+	}
+
 	public void replyError(String error) {
 		replyError(error, Emojis.CROSS);
+	}
+
+	public void replyErrorLocalized(String key, Object... args) {
+		replyError(i18n.get(key, args));
 	}
 
 	public void replyError(String error, String failureEmoji) {

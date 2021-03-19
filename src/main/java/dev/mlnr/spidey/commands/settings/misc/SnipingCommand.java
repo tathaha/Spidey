@@ -21,7 +21,7 @@ public class SnipingCommand extends Command {
 		var i18n = ctx.getI18n();
 		miscSettings.setSnipingEnabled(enabled);
 		ctx.reactLike();
-		ctx.reply(i18n.get("commands.sniping.other.done", enabled ? i18n.get("enabled") : i18n.get("disabled")));
+		ctx.replyLocalized("commands.sniping.other.done", enabled ? i18n.get("enabled") : i18n.get("disabled"));
 		if (!enabled) {
 			cache.getMessageCache().pruneCache(guildId);
 		}

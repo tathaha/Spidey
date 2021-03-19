@@ -19,16 +19,15 @@ public class EditSnipeCommand extends Command {
 	public void execute(String[] args, CommandContext ctx) {
 		var cache = ctx.getCache();
 		var miscSettings = cache.getGuildSettingsCache().getMiscSettings(ctx.getGuild().getIdLong());
-		var i18n = ctx.getI18n();
 		if (!miscSettings.isSnipingEnabled()) {
-			ctx.replyError(i18n.get("sniping.disabled", miscSettings.getPrefix()));
+			ctx.replyErrorLocalized("sniping.disabled", miscSettings.getPrefix());
 			return;
 		}
 		var textChannel = ctx.getTextChannel();
 		var channelId = textChannel.getIdLong();
 		var lastEditedMessage = cache.getMessageCache().getLastEditedMessage(channelId);
 		if (lastEditedMessage == null) {
-			ctx.replyError(i18n.get("sniping.no_message", "edited"));
+			ctx.replyErrorLocalized("sniping.no_message", "edited");
 			return;
 		}
 		var eb = Utils.createEmbedBuilder(ctx.getAuthor());

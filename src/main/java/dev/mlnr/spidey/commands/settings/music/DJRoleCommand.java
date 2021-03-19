@@ -19,30 +19,30 @@ public class DJRoleCommand extends Command {
 		var i18n = ctx.getI18n();
 		if (args.length == 0) {
 			if (dbRole == 0) {
-				ctx.replyError(i18n.get("roles.not_set", "DJ"));
+				ctx.replyErrorLocalized("roles.not_set", "DJ");
 				return;
 			}
 			musicSettings.removeDJRole();
-			ctx.reply(i18n.get("roles.removed", "DJ"));
+			ctx.replyLocalized("roles.removed", "DJ");
 			return;
 		}
 		ctx.getArgumentAsRole(0, role -> {
 			if (role.isPublicRole() || role.isManaged()) {
-				ctx.replyError(i18n.get("roles.invalid"));
+				ctx.replyErrorLocalized("roles.invalid");
 				return;
 			}
 			var roleId = role.getIdLong();
 			if (roleId == dbRole) {
 				musicSettings.removeDJRole();
-				ctx.reply(i18n.get("roles.reset", "DJ"));
+				ctx.replyLocalized("roles.reset", "DJ");
 				return;
 			}
 			if (!ctx.getMember().canInteract(role)) {
-				ctx.replyError(i18n.get("roles.cant_interact", "DJ"));
+				ctx.replyErrorLocalized("roles.cant_interact", "DJ");
 				return;
 			}
 			musicSettings.setDJRoleId(roleId);
-			ctx.reply(i18n.get("roles.set", "DJ", role.getAsMention()));
+			ctx.replyLocalized("roles.set", "DJ", role.getAsMention());
 		});
 	}
 }

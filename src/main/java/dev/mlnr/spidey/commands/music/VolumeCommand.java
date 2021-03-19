@@ -20,7 +20,7 @@ public class VolumeCommand extends Command {
 		var guild = ctx.getGuild();
 		var musicPlayer = cache.getMusicPlayerCache().getMusicPlayer(guild);
 		if (musicPlayer == null) {
-			ctx.replyError(i18n.get("music.messages.failure.no_music"));
+			ctx.replyErrorLocalized("music.messages.failure.no_music");
 			return;
 		}
 		var playingTrack = musicPlayer.getPlayingTrack();
@@ -34,7 +34,8 @@ public class VolumeCommand extends Command {
 		}
 		var currentVolume = musicPlayer.getVolume();
 		if (args.length == 0) {
-			ctx.reply(i18n.get("commands.volume.other.current", currentVolume, cache.getGuildSettingsCache().getMiscSettings(guild.getIdLong()).getPrefix()));
+			var prefix = cache.getGuildSettingsCache().getMiscSettings(guild.getIdLong()).getPrefix();
+			ctx.replyLocalized("commands.volume.other.current", currentVolume, prefix);
 			return;
 		}
 		ctx.getArgumentAsInt(0, parsedVolume -> {
@@ -45,7 +46,7 @@ public class VolumeCommand extends Command {
 				}
 				musicPlayer.setVolume(newVolume);
 				ctx.reactLike();
-				ctx.reply(i18n.get("commands.volume.other.set", newVolume));
+				ctx.replyLocalized("commands.volume.other.set", newVolume);
 				return;
 			}
 			var newVolume = Math.min(Math.max(currentVolume + parsedVolume, 0), 150);
@@ -54,13 +55,13 @@ public class VolumeCommand extends Command {
 			}
 			musicPlayer.setVolume(newVolume);
 			ctx.reactLike();
-			ctx.reply(i18n.get("commands.volume.other.set", newVolume));
+			ctx.replyLocalized("commands.volume.other.set", newVolume);
 		});
 	}
 
 	private boolean checkNewVolume(CommandContext ctx, int newVolume, int currentVolume) {
 		if (newVolume == currentVolume) {
-			ctx.replyError(ctx.getI18n().get("commands.volume.other.already_set", newVolume));
+			ctx.replyErrorLocalized("commands.volume.other.already_set", newVolume);
 			return false;
 		}
 		return true;

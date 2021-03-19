@@ -19,24 +19,24 @@ public class PrefixCommand extends Command {
 		var i18n = ctx.getI18n();
 		if (args.length == 0) {
 			if (currentPrefix.equals("s!")) {
-				ctx.replyError(i18n.get("commands.prefix.other.default"));
+				ctx.replyErrorLocalized("commands.prefix.other.default");
 			}
 			else {
 				miscSettings.setPrefix("s!");
-				ctx.reply(i18n.get("commands.prefix.other.reset"));
+				ctx.replyLocalized("commands.prefix.other.reset");
 			}
 			return;
 		}
 		var newPrefix = args[0];
 		if (currentPrefix.equals(newPrefix)) {
-			ctx.replyError(i18n.get("commands.prefix.other.already_set", newPrefix));
+			ctx.replyErrorLocalized("commands.prefix.other.already_set", newPrefix);
 			return;
 		}
 		if (newPrefix.length() > 10) {
-			ctx.replyError(i18n.get("commands.prefix.other.longer"));
+			ctx.replyErrorLocalized("commands.prefix.other.longer");
 			return;
 		}
 		miscSettings.setPrefix(newPrefix);
-		ctx.reply(i18n.get("commands.prefix.other.changed", newPrefix));
+		ctx.replyLocalized("commands.prefix.other.changed", newPrefix);
 	}
 }

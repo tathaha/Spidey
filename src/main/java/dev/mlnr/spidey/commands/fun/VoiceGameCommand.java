@@ -32,7 +32,7 @@ public class VoiceGameCommand extends Command {
 			return;
 		}
 		if (!ctx.getGuild().getSelfMember().hasPermission(channel, Permission.CREATE_INSTANT_INVITE)) {
-			ctx.replyError(i18n.get("commands.voicegame.other.no_perms"));
+			ctx.replyErrorLocalized("commands.voicegame.other.no_perms");
 			return;
 		}
 		var embedBuilder = Utils.createEmbedBuilder(ctx.getAuthor());
@@ -50,13 +50,13 @@ public class VoiceGameCommand extends Command {
 		}
 		var voiceGame = VoiceGameType.from(args[0]);
 		if (voiceGame == null) {
-			ctx.replyError(i18n.get("commands.voicegame.other.no_game"));
+			ctx.replyErrorLocalized("commands.voicegame.other.no_game");
 			return;
 		}
 		Requester.launchYouTubeTogetherSession(channel.getId(), voiceGame, code -> {
 			embedBuilder.setColor(16711680);
 			embedBuilder.setDescription(i18n.get("commands.voicegame.other.click", code, voiceGame.getFriendlyName()));
 			ctx.reply(embedBuilder);
-		}, error -> ctx.replyError(i18n.get("internal_error", i18n.get("commands.voicegame.other.create"), error.getMessage())));
+		}, error -> ctx.replyErrorLocalized("internal_error", i18n.get("commands.voicegame.other.create"), error.getMessage()));
 	}
 }

@@ -15,7 +15,7 @@ public class VIPCommand extends Command {
 	@Override
 	public void execute(String[] args, CommandContext ctx) {
 		if (ctx.getAuthor().getIdLong() != 394607709741252621L) {
-			ctx.replyError(ctx.getI18n().get("command_failures.only_dev"));
+			ctx.replyErrorLocalized("command_failures.only_dev");
 			return;
 		}
 		var guildId = args.length == 0 ? ctx.getGuild().getIdLong() : Long.parseLong(args[0]);

@@ -21,12 +21,12 @@ public class SegmentsCommand extends Command {
 		var musicPlayer = cache.getMusicPlayerCache().getMusicPlayer(guild);
 		var i18n = ctx.getI18n();
 		if (musicPlayer == null) {
-			ctx.replyError(i18n.get("music.messages.failure.no_music"));
+			ctx.replyErrorLocalized("music.messages.failure.no_music");
 			return;
 		}
 		var playingTrack = musicPlayer.getPlayingTrack();
 		if (playingTrack == null) {
-			ctx.replyError(i18n.get("music.messages.failure.no_song"));
+			ctx.replyErrorLocalized("music.messages.failure.no_song");
 			return;
 		}
 		var videoSegmentCache = cache.getVideoSegmentCache();
@@ -34,7 +34,7 @@ public class SegmentsCommand extends Command {
 		var segments = videoSegmentCache.getVideoSegments(videoId);
 		if (args.length > 0) {
 			if (!(args[0].toLowerCase().startsWith("rel") || args[0].equalsIgnoreCase("force"))) {
-				ctx.replyError(i18n.get("commands.segments.other.args"));
+				ctx.replyErrorLocalized("commands.segments.other.args");
 				return;
 			}
 			segments = videoSegmentCache.getVideoSegments(videoId, true);

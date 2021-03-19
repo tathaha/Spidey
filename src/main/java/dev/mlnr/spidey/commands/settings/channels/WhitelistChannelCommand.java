@@ -39,23 +39,23 @@ public class WhitelistChannelCommand extends Command {
 			var mention = channel.getAsMention();
 			if (args[0].equalsIgnoreCase("add")) {
 				if (channelsSettings.isChannelWhitelisted(channel, true)) {
-					ctx.replyError(i18n.get("commands.whitelist.other.channels.state.already_whitelisted", mention));
+					ctx.replyErrorLocalized("commands.whitelist.other.channels.state.already_whitelisted", mention);
 					return;
 				}
 				if (channelsSettings.isChannelBlacklisted(channel)) {
-					ctx.replyError(i18n.get("commands.whitelist.other.channels.state.add.blacklisted", mention, prefix));
+					ctx.replyErrorLocalized("commands.whitelist.other.channels.state.add.blacklisted", mention, prefix);
 					return;
 				}
 				channelsSettings.addWhitelistedChannel(channel);
-				ctx.reply(i18n.get("commands.whitelist.other.channels.state.add.success", mention));
+				ctx.replyLocalized("commands.whitelist.other.channels.state.add.success", mention);
 			}
 			else if (args[0].equalsIgnoreCase("remove")) {
 				if (!channelsSettings.isChannelWhitelisted(channel, true)) {
-					ctx.replyError(i18n.get("commands.whitelist.other.channels.state.not_whitelisted", mention));
+					ctx.replyErrorLocalized("commands.whitelist.other.channels.state.not_whitelisted", mention);
 					return;
 				}
 				channelsSettings.removeWhitelistedChannel(channel);
-				ctx.reply(i18n.get("commands.whitelist.other.channels.state.removed", mention));
+				ctx.replyLocalized("commands.whitelist.other.channels.state.removed", mention);
 			}
 			else {
 				ctx.replyError(wrongSyntax);

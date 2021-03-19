@@ -88,10 +88,6 @@ public class TrackScheduler extends AudioEventAdapter {
 		return jda.getGuildById(this.guildId);
 	}
 
-	public long getGuildId() {
-		return this.guildId;
-	}
-
 	// skip voting
 
 	public int getRequiredSkipVotes() {
