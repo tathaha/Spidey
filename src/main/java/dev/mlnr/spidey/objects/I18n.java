@@ -49,14 +49,10 @@ public class I18n {
 			object = object.getObject(parts[i]);
 
 		var string = object.getString(parts[parts.length - 1]);
-		string = applyArguments(string, args);
-		return string;
+		return applyArguments(string, args);
 	}
 
 	private String applyArguments(String string, Object... args) {
-		if (args.length != 0) {
-			string = String.format(string, args);
-		}
-		return string;
+		return args.length == 0 ? string : String.format(string, args);
 	}
 }
