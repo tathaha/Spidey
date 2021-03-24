@@ -22,6 +22,10 @@ public class VoiceEvent extends ListenerAdapter {
 		var connectedChannel = MusicUtils.getConnectedChannel(guild);
 		var musicPlayer = musicPlayerCache.getMusicPlayer(guild);
 
+		if (musicPlayer == null) {
+			return;
+		}
+
 		// "join"
 		if (event instanceof GuildVoiceJoinEvent || event instanceof GuildVoiceMoveEvent) {
 			if (!member.getUser().isBot() && event.getChannelJoined().equals(connectedChannel)) {
