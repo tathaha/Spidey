@@ -22,10 +22,23 @@
         </encoder>
     </appender>
 
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <prudent>true</prudent>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/Spidey/%d{dd-MM-yyyy}.log</fileNamePattern>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%d{HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
     <logger name="com.sedmelluq.lava.common.natives.NativeLibraryLoader" level="WARN"/>
 
     <root level="INFO">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="Sentry" />
+        <appender-ref ref="FILE" />
     </root>
 </configuration> 
