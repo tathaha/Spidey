@@ -126,28 +126,6 @@
         }
       }
     },
-    "howgay": {
-      "description": "Shows you what's your or entered user's gay rate",
-      "usage": "howgay (@user, user id or username/nickname)",
-      "other": {
-        "title": "gay rate machine",
-        "person": {
-          "second": "you are",
-          "third": "is"
-        }
-      }
-    },
-    "penis": {
-      "description": "Shows you what's your or entered user's penis",
-      "usage": "penis (@user, user id or username/nickname)",
-      "other": {
-        "title": "penis size machine",
-        "person": {
-          "second": "your penis",
-          "third": "%s's penis"
-        }
-      }
-    },
     "voicegame": {
       "description": "Creates an invite for a game in your voice channel",
       "usage": "voicegame <game name or blank to list available games>",

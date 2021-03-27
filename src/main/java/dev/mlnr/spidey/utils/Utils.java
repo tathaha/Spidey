@@ -95,12 +95,6 @@ public class Utils {
 		return DATE_FORMATTER.format(date);
 	}
 
-	public static int getColorHex(int value, int max) {
-		var r = ((255 * value) / max);
-		var g = (255 * (max - value)) / max;
-		return ((r & 0x0ff) << 16) | ((g & 0x0ff) << 8);
-	}
-
 	public static <K, V> ExpiringMap<K, V> createDefaultExpiringMap() {
 		return ExpiringMap.builder()
 				.expirationPolicy(ExpirationPolicy.ACCESSED)
