@@ -83,7 +83,7 @@ public class Spidey {
 			new Spidey();
 		}
 		catch (Exception e) {
-			logger.error("There was an error while building JDA!", e);
+			logger.error("There was an error while building JDA", e);
 		}
 	}
 
