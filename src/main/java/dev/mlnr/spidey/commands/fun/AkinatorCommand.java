@@ -16,7 +16,6 @@ public class AkinatorCommand extends Command {
 	@Override
 	public void execute(String[] args, CommandContext ctx) {
 		var akinatorCache = ctx.getCache().getAkinatorCache();
-		var guildId = ctx.getGuild().getIdLong();
-		akinatorCache.createAkinator(ctx.getAuthor(), new AkinatorContext(ctx.getEvent(), akinatorCache, ctx.getCache().getGuildSettingsCache().getMiscSettings(guildId).getI18n()));
+		akinatorCache.createAkinator(ctx.getAuthor(), new AkinatorContext(ctx.getEvent(), akinatorCache, ctx.getI18n()));
 	}
 }
