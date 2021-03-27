@@ -16,7 +16,6 @@ public class PrefixCommand extends Command {
 	public void execute(String[] args, CommandContext ctx) {
 		var miscSettings = ctx.getCache().getGuildSettingsCache().getMiscSettings(ctx.getGuild().getIdLong());
 		var currentPrefix = miscSettings.getPrefix();
-		var i18n = ctx.getI18n();
 		if (args.length == 0) {
 			if (currentPrefix.equals("s!")) {
 				ctx.replyErrorLocalized("commands.prefix.other.default");

@@ -16,7 +16,6 @@ public class DJRoleCommand extends Command {
 	public void execute(String[] args, CommandContext ctx) {
 		var musicSettings = ctx.getCache().getGuildSettingsCache().getMusicSettings(ctx.getGuild().getIdLong());
 		var dbRole = musicSettings.getDJRoleId();
-		var i18n = ctx.getI18n();
 		if (args.length == 0) {
 			if (dbRole == 0) {
 				ctx.replyErrorLocalized("roles.not_set", "DJ");
