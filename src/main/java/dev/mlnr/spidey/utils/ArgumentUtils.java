@@ -70,10 +70,9 @@ public class ArgumentUtils {
 			}
 			createMentionableSelection(embedBuilder, textChannels, ctx, "channel", channel -> channel.getAsMention() + " - ID: " + channel.getIdLong(),
 					choice -> consumer.accept(textChannels.get(choice)));
+			return;
 		}
-		else {
-			ctx.reply(notFound);
-		}
+		ctx.reply(notFound);
 	}
 
 	public static void parseArgumentAsRole(String argument, CommandContext ctx, Consumer<Role> consumer) {
@@ -111,10 +110,9 @@ public class ArgumentUtils {
 			}
 			createMentionableSelection(embedBuilder, roles, ctx, "role", role -> role.getAsMention() + " - ID: " + role.getIdLong(),
 					choice -> consumer.accept(roles.get(choice)));
+			return;
 		}
-		else {
-			ctx.reply(notFound);
-		}
+		ctx.reply(notFound);
 	}
 
 	public static void parseArgumentAsUser(String argument, CommandContext ctx, Consumer<User> consumer) {
@@ -151,7 +149,7 @@ public class ArgumentUtils {
 				consumer.accept(author);
 				return;
 			}
-			message.getGuild().retrieveMembersByPrefix(argument, 10).onSuccess(members -> {
+			ctx.getGuild().retrieveMembersByPrefix(argument, 10).onSuccess(members -> {
 				if (members.isEmpty()) {
 					ctx.replyError(notFound);
 					return;
@@ -163,10 +161,9 @@ public class ArgumentUtils {
 				createMentionableSelection(embedBuilder, members.stream().map(Member::getUser).collect(Collectors.toList()), ctx, "user",
 						mentionable -> mentionable.getAsMention() + " - **" + ((User) mentionable).getAsTag() + "**", choice -> consumer.accept(members.get(choice).getUser()));
 			});
+			return;
 		}
-		else {
-			ctx.reply(notFound);
-		}
+		ctx.reply(notFound);
 	}
 
 	private static void createMentionableSelection(EmbedBuilder selectionBuilder, List<? extends IMentionable> mentionables, CommandContext ctx, String type,
