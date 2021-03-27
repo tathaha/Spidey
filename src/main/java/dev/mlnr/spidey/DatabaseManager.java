@@ -43,7 +43,7 @@ public class DatabaseManager {
 	                                  Function<Record, IGuildSettings> transformer) {
 		try (var selectStep = getCtx().selectFrom(table)) {
 			try {
-				var result = selectStep.where(table.field("guild_id", Long.class).eq(guildId)).fetch();
+				var result = selectStep.where(guildIdEquals(table, guildId)).fetch();
 				if (result.isEmpty()) {
 					return defaultSettingsTransformer.apply(null);
 				}
@@ -238,7 +238,7 @@ public class DatabaseManager {
 	public <T> void delete(Table<? extends Record> table, Field<T> column, T value, long guildId) {
 		try (var deleteStep = getCtx().deleteFrom(table)) {
 			try {
-				deleteStep.where(table.field("guild_id", Long.class).eq(guildId)).and(column.eq(value)).execute();
+				deleteStep.where(guildIdEquals(table, guildId)).and(column.eq(value)).execute();
 			}
 			catch (DataAccessException ex) {
 				logger.error("There was an error while deleting from column {} in table {} for guild {}", column.getName(), table.getName(), guildId, ex);
@@ -251,7 +251,7 @@ public class DatabaseManager {
 	public <T> List<Long> retrieveLongList(Table<? extends Record> table, Field<T> column, long guildId) {
 		try (var selectStep = getCtx().select(column)) {
 			try {
-				var result = selectStep.from(table).where(table.field("guild_id", Long.class).eq(guildId)).fetch();
+				var result = selectStep.from(table).where(guildIdEquals(table, guildId)).fetch();
 				return result.getValues(column, Long.class);
 			}
 			catch (DataAccessException ex) {
@@ -338,5 +338,11 @@ public class DatabaseManager {
 
 	public DSLContext getCtx() {
 		return DSL.using(this.configuration);
+	}
+
+	// helper methods
+
+	private Condition guildIdEquals(Table<? extends Record> table, long guildId) {
+		return table.field("guild_id", Long.class).eq(guildId);
 	}
 }
