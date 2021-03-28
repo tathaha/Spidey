@@ -22,7 +22,7 @@ public class LogCommand extends Command {
 			proceed(guildId, ctx.getTextChannel(), ctx);
 			return;
 		}
-		ctx.getArgumentAsChannel(0, channel -> proceed(guildId, channel, ctx));
+		ctx.getArgumentAsTextChannel(0, channel -> proceed(guildId, channel, ctx));
 	}
 
 	private void proceed(long guildId, TextChannel channel, CommandContext ctx) {

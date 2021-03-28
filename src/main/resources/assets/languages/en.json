@@ -13,12 +13,15 @@
     "cancel": "cancel"
   },
   "argument_parser": {
+    "types": {
+      "user": "User",
+      "role": "Role",
+      "text_channel": "Text Channel",
+      "voice_channel": "Voice Channel"
+    },
     "not_found": {
       "text": "not found.",
-      "channel": "Channel",
-      "role": "Role",
-      "user": "User",
-      "name": "No %ss with given name found."
+      "given_name": "No %ss with given name found."
     }
   },
   "command_failures": {

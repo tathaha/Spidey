@@ -35,7 +35,7 @@ public class BlacklistChannelCommand extends Command {
 			ctx.replyError(wrongSyntax);
 			return;
 		}
-		ctx.getArgumentAsChannel(1, channel -> {
+		ctx.getArgumentAsTextChannel(1, channel -> {
 			var mention = channel.getAsMention();
 			if (args[0].equalsIgnoreCase("add")) {
 				if (channelsSettings.isChannelBlacklisted(channel)) {

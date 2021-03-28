@@ -104,15 +104,19 @@ public class CommandContext {
 		ArgumentUtils.parseArgumentAsUnsignedInt(args[argIndex], this, consumer);
 	}
 
-	public void getArgumentAsChannel(int argIndex, Consumer<TextChannel> consumer) {
-		ArgumentUtils.parseArgumentAsTextChannel(args[argIndex], this, consumer);
+	public void getArgumentAsUser(int argIndex, Consumer<User> consumer) {
+		ArgumentUtils.parseArgumentAsUser(args[argIndex], this, consumer);
 	}
 
 	public void getArgumentAsRole(int argIndex, Consumer<Role> consumer) {
 		ArgumentUtils.parseArgumentAsRole(args[argIndex], this, consumer);
 	}
 
-	public void getArgumentAsUser(int argIndex, Consumer<User> consumer) {
-		ArgumentUtils.parseArgumentAsUser(args[argIndex], this, consumer);
+	public void getArgumentAsTextChannel(int argIndex, Consumer<TextChannel> consumer) {
+		ArgumentUtils.parseArgumentAsTextChannel(args[argIndex], this, consumer);
+	}
+
+	public void getArgumentAsVoiceChannel(int argIndex, Consumer<VoiceChannel> consumer) {
+		ArgumentUtils.parseArgumentAsVoiceChannel(args[argIndex], this, consumer);
 	}
 }
