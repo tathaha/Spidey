@@ -52,8 +52,7 @@ public class ArgumentUtils {
 
 	private static void parseArgumentAsEntity(String argument, CommandContext ctx, ArgumentType argumentType, Consumer<Object> entityConsumer) {
 		var i18n = ctx.getI18n();
-		var typeName = argumentType.name().toLowerCase();
-		var typeLocalized = i18n.get("argument_parser.not_found.types." + typeName);
+		var typeLocalized = i18n.get("argument_parser.not_found.types." + argumentType.name().toLowerCase());
 		var entityNotFound = typeLocalized + " " + i18n.get("argument_parser.not_found.text");
 		var author = ctx.getAuthor();
 		var guild = ctx.getGuild();
