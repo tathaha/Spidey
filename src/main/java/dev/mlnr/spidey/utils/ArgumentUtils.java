@@ -169,7 +169,7 @@ public class ArgumentUtils {
 	}
 
 	private static <T> void createEntitySelection(EmbedBuilder selectionBuilder, List<T> entities, CommandContext ctx, String type,
-	                                               Function<T, String> mapper, IntConsumer choiceConsumer) {
+	                                              Function<T, String> mapper, IntConsumer choiceConsumer) {
 		StringUtils.createSelection(selectionBuilder, entities, ctx, type, mapper, ConcurrentUtils.getEventWaiter(), choiceConsumer);
 	}
 
