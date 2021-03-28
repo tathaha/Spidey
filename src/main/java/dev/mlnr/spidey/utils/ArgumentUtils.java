@@ -115,11 +115,8 @@ public class ArgumentUtils {
 					else {
 						var users = members.stream().map(Member::getUser).collect(Collectors.toList());
 						createEntitySelection(embedBuilder, users, ctx, typeLocalized,
-								o -> {
-									var user = (User) o;
-									return user.getAsMention() + " - **" + user.getAsTag() + "**";
-								},
-								choice -> entityConsumer.accept(members.get(choice).getUser()));
+								user -> user.getAsMention() + " - **" + user.getAsTag() + "**",
+								choice -> entityConsumer.accept(users.get(choice)));
 					}
 				});
 			}
@@ -133,10 +130,7 @@ public class ArgumentUtils {
 				}
 				else {
 					createEntitySelection(embedBuilder, roles, ctx, typeLocalized,
-							o -> {
-								var role = (Role) o;
-								return role.getAsMention() + " - ID: " + role.getIdLong();
-							},
+							role -> role.getAsMention() + " - ID: " + role.getIdLong(),
 							choice -> entityConsumer.accept(roles.get(choice)));
 				}
 			}
@@ -150,10 +144,7 @@ public class ArgumentUtils {
 				}
 				else {
 					createEntitySelection(embedBuilder, textChannels, ctx, typeLocalized,
-							o -> {
-								var textChannel = (TextChannel) o;
-								return textChannel.getAsMention() + " - ID: " + textChannel.getIdLong();
-							},
+							textChannel -> textChannel.getAsMention() + " - ID: " + textChannel.getIdLong(),
 							choice -> entityConsumer.accept(textChannels.get(choice)));
 				}
 			}
@@ -167,10 +158,7 @@ public class ArgumentUtils {
 				}
 				else {
 					createEntitySelection(embedBuilder, voiceChannels, ctx, typeLocalized,
-							o -> {
-								var voiceChannel = (VoiceChannel) o;
-								return voiceChannel.getName() + " - ID: " + voiceChannel.getIdLong();
-							},
+							voiceChannel -> voiceChannel.getName() + " - ID: " + voiceChannel.getIdLong(),
 							choice -> entityConsumer.accept(voiceChannels.get(choice)));
 				}
 			}
@@ -181,8 +169,8 @@ public class ArgumentUtils {
 	}
 
 	private static <T> void createEntitySelection(EmbedBuilder selectionBuilder, List<T> entities, CommandContext ctx, String type,
-	                                               Function<Object, String> mapper, IntConsumer choiceConsumer) {
-		StringUtils.createSelection(selectionBuilder, entities, ctx, type, mapper::apply, ConcurrentUtils.getEventWaiter(), choiceConsumer);
+	                                               Function<T, String> mapper, IntConsumer choiceConsumer) {
+		StringUtils.createSelection(selectionBuilder, entities, ctx, type, mapper, ConcurrentUtils.getEventWaiter(), choiceConsumer);
 	}
 
 	public enum ArgumentType {
