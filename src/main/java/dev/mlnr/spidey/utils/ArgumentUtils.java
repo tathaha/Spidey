@@ -52,10 +52,13 @@ public class ArgumentUtils {
 
 	private static void parseArgumentAsEntity(String argument, CommandContext ctx, ArgumentType argumentType, Consumer<Object> entityConsumer) {
 		var i18n = ctx.getI18n();
-		var typeLocalized = i18n.get("argument_parser.not_found.types." + argumentType.name().toLowerCase());
+		var typeLocalized = i18n.get("argument_parser.types." + argumentType.name().toLowerCase());
 		var entityNotFound = typeLocalized + " " + i18n.get("argument_parser.not_found.text");
+		var idMatcher = ID_REGEX.matcher(argument);
 		var author = ctx.getAuthor();
 		var guild = ctx.getGuild();
+		var typeLocalizedLowercase = typeLocalized.toLowerCase();
+		var givenNameNotFound = i18n.get("argument_parser.not_found.given_name", typeLocalizedLowercase);
 		var embedBuilder = Utils.createEmbedBuilder(author);
 
 		if (argumentType.isMentionable() && argumentType.getMentionRegex().matcher(argument).matches()) {
@@ -66,101 +69,107 @@ public class ArgumentUtils {
 			}
 			entityConsumer.accept(mentions.get(0));
 		}
-		else if (ID_REGEX.matcher(argument).matches()) {
-			var entityId = Long.parseLong(argument);
-			var jda = ctx.getJDA();
-			var selfUser = jda.getSelfUser();
+		else if (idMatcher.find()) {
+			var entityId = Long.parseLong(idMatcher.group());
 
-			if (argumentType == ArgumentType.USER) {
-				if (entityId == author.getIdLong()) {
-					entityConsumer.accept(author);
-				}
-				else if (entityId == selfUser.getIdLong()) {
-					entityConsumer.accept(selfUser);
-				}
-				else {
-					jda.retrieveUserById(entityId).queue(entityConsumer, failure -> ctx.replyError(entityNotFound));
-				}
-			}
-			else if (argumentType == ArgumentType.ROLE) {
-				var role = guild.getRoleById(entityId);
-				if (role == null) {
-					ctx.replyError(entityNotFound);
-					return;
-				}
-				entityConsumer.accept(role);
-			}
-			else if (argumentType == ArgumentType.TEXT_CHANNEL || argumentType == ArgumentType.VOICE_CHANNEL) {
-				var channel = argumentType == ArgumentType.TEXT_CHANNEL ? guild.getTextChannelById(entityId) : guild.getVoiceChannelById(entityId);
-				if (channel == null) {
-					ctx.replyError(entityNotFound);
-					return;
-				}
-				entityConsumer.accept(channel);
+			switch (argumentType) {
+				case USER:
+					var jda = ctx.getJDA();
+					var selfUser = jda.getSelfUser();
+
+					if (entityId == author.getIdLong()) {
+						entityConsumer.accept(author);
+					}
+					else if (entityId == selfUser.getIdLong()) {
+						entityConsumer.accept(selfUser);
+					}
+					else {
+						jda.retrieveUserById(entityId).queue(entityConsumer, failure -> ctx.replyError(entityNotFound));
+					}
+					break;
+				case ROLE:
+					var role = guild.getRoleById(entityId);
+					if (role == null) {
+						ctx.replyError(entityNotFound);
+						return;
+					}
+					entityConsumer.accept(role);
+					break;
+				case TEXT_CHANNEL:
+				case VOICE_CHANNEL:
+					var channel = argumentType == ArgumentType.TEXT_CHANNEL ? guild.getTextChannelById(entityId) : guild.getVoiceChannelById(entityId);
+					if (channel == null) {
+						ctx.replyError(entityNotFound);
+						return;
+					}
+					entityConsumer.accept(channel);
+					break;
 			}
 		}
 		else if (argument.length() >= 2 && argument.length() <= 32) {
-			if (argumentType == ArgumentType.USER) {
-				if (argument.equalsIgnoreCase(ctx.getMember().getEffectiveName())) {
-					entityConsumer.accept(author);
-					return;
-				}
-				guild.retrieveMembersByPrefix(argument, 10).onSuccess(members -> {
-					if (members.isEmpty()) {
-						ctx.replyError(entityNotFound);
+			switch (argumentType) {
+				case USER:
+					if (argument.equalsIgnoreCase(ctx.getMember().getEffectiveName())) {
+						entityConsumer.accept(author);
+						return;
 					}
-					else if (members.size() == 1) {
-						entityConsumer.accept(members.get(0).getUser());
+					guild.retrieveMembersByPrefix(argument, 10).onSuccess(members -> {
+						if (members.isEmpty()) {
+							ctx.replyError(givenNameNotFound);
+						}
+						else if (members.size() == 1) {
+							entityConsumer.accept(members.get(0).getUser());
+						}
+						else {
+							var users = members.stream().map(Member::getUser).collect(Collectors.toList());
+							createEntitySelection(embedBuilder, users, ctx, typeLocalizedLowercase,
+									user -> user.getAsMention() + " - **" + user.getAsTag() + "**",
+									choice -> entityConsumer.accept(users.get(choice)));
+						}
+					});
+					break;
+				case ROLE:
+					var roles = guild.getRolesByName(argument, true);
+					if (roles.isEmpty()) {
+						ctx.replyError(givenNameNotFound);
+					}
+					else if (roles.size() == 1) {
+						entityConsumer.accept(roles.get(0));
 					}
 					else {
-						var users = members.stream().map(Member::getUser).collect(Collectors.toList());
-						createEntitySelection(embedBuilder, users, ctx, typeLocalized,
-								user -> user.getAsMention() + " - **" + user.getAsTag() + "**",
-								choice -> entityConsumer.accept(users.get(choice)));
+						createEntitySelection(embedBuilder, roles, ctx, typeLocalized,
+								role -> role.getAsMention() + " - ID: " + role.getIdLong(),
+								choice -> entityConsumer.accept(roles.get(choice)));
 					}
-				});
-			}
-			else if (argumentType == ArgumentType.ROLE) {
-				var roles = guild.getRolesByName(argument, true);
-				if (roles.isEmpty()) {
-					ctx.replyErrorLocalized("argument_parser.not_found.given_name", typeLocalized.toLowerCase());
-				}
-				else if (roles.size() == 1) {
-					entityConsumer.accept(roles.get(0));
-				}
-				else {
-					createEntitySelection(embedBuilder, roles, ctx, typeLocalized,
-							role -> role.getAsMention() + " - ID: " + role.getIdLong(),
-							choice -> entityConsumer.accept(roles.get(choice)));
-				}
-			}
-			else if (argumentType == ArgumentType.TEXT_CHANNEL) {
-				var textChannels = guild.getTextChannelsByName(argument, true);
-				if (textChannels.isEmpty()) {
-					ctx.replyErrorLocalized("argument_parser.not_found.given_name", typeLocalized.toLowerCase());
-				}
-				else if (textChannels.size() == 1) {
-					entityConsumer.accept(textChannels.get(0));
-				}
-				else {
-					createEntitySelection(embedBuilder, textChannels, ctx, typeLocalized,
-							textChannel -> textChannel.getAsMention() + " - ID: " + textChannel.getIdLong(),
-							choice -> entityConsumer.accept(textChannels.get(choice)));
-				}
-			}
-			else if (argumentType == ArgumentType.VOICE_CHANNEL) {
-				var voiceChannels = guild.getVoiceChannelsByName(argument, true);
-				if (voiceChannels.isEmpty()) {
-					ctx.replyErrorLocalized("argument_parser.not_found.given_name", typeLocalized.toLowerCase());
-				}
-				else if (voiceChannels.size() == 1) {
-					entityConsumer.accept(voiceChannels.get(0));
-				}
-				else {
-					createEntitySelection(embedBuilder, voiceChannels, ctx, typeLocalized,
-							voiceChannel -> voiceChannel.getName() + " - ID: " + voiceChannel.getIdLong(),
-							choice -> entityConsumer.accept(voiceChannels.get(choice)));
-				}
+					break;
+				case TEXT_CHANNEL:
+					var textChannels = guild.getTextChannelsByName(argument, true);
+					if (textChannels.isEmpty()) {
+						ctx.replyError(givenNameNotFound);
+					}
+					else if (textChannels.size() == 1) {
+						entityConsumer.accept(textChannels.get(0));
+					}
+					else {
+						createEntitySelection(embedBuilder, textChannels, ctx, typeLocalizedLowercase,
+								textChannel -> textChannel.getAsMention() + " - ID: " + textChannel.getIdLong(),
+								choice -> entityConsumer.accept(textChannels.get(choice)));
+					}
+					break;
+				case VOICE_CHANNEL:
+					var voiceChannels = guild.getVoiceChannelsByName(argument, true);
+					if (voiceChannels.isEmpty()) {
+						ctx.replyError(givenNameNotFound);
+					}
+					else if (voiceChannels.size() == 1) {
+						entityConsumer.accept(voiceChannels.get(0));
+					}
+					else {
+						createEntitySelection(embedBuilder, voiceChannels, ctx, typeLocalizedLowercase,
+								voiceChannel -> voiceChannel.getName() + " - ID: " + voiceChannel.getIdLong(),
+								choice -> entityConsumer.accept(voiceChannels.get(choice)));
+					}
+					break;
 			}
 		}
 		else {
