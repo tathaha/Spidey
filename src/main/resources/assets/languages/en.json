@@ -681,7 +681,7 @@
     "unban": {
       "footer": "User unban",
       "user": {
-        "without": "%s **%s** has been `unbanned`",
+        "without": "✅ **%s** has been `unbanned`",
         "with": " by **%s**."
       }
     },

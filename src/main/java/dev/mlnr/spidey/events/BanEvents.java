@@ -1,7 +1,6 @@
 package dev.mlnr.spidey.events;
 
 import dev.mlnr.spidey.cache.Cache;
-import dev.mlnr.spidey.utils.Emojis;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
@@ -69,7 +68,7 @@ public class BanEvents extends ListenerAdapter {
 		var eb = new EmbedBuilder();
 		var i18n = miscSettings.getI18n();
 
-		eb.setDescription(i18n.get("events.unban.user.without", Emojis.CHECK, escapedTag));
+		eb.setDescription(i18n.get("events.unban.user.without", escapedTag));
 		eb.setColor(7844437);
 		eb.setFooter(i18n.get("events.unban.footer"), user.getEffectiveAvatarUrl());
 		eb.setTimestamp(Instant.now());
