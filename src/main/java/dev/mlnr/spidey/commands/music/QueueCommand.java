@@ -17,7 +17,6 @@ public class QueueCommand extends Command {
 	public void execute(String[] args, CommandContext ctx) {
 		var guild = ctx.getGuild();
 		var musicPlayer = ctx.getCache().getMusicPlayerCache().getMusicPlayer(guild);
-		var i18n = ctx.getI18n();
 		if (musicPlayer == null) {
 			ctx.replyErrorLocalized("music.messages.failure.no_music");
 			return;
@@ -28,6 +27,6 @@ public class QueueCommand extends Command {
 			ctx.replyLocalized("music.messages.failure.queue_empty");
 			return;
 		}
-		StringUtils.createQueuePaginator(ctx.getMessage(), queue, i18n, ctx.getCache().getPaginatorCache());
+		StringUtils.createQueuePaginator(ctx, queue);
 	}
 }

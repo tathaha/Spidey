@@ -40,25 +40,29 @@ public class MemberEvents extends ListenerAdapter {
 		var escapedTag = escape(user.getAsTag());
 		var avatarUrl = user.getEffectiveAvatarUrl();
 		var eb = new EmbedBuilder();
-		eb.setTimestamp(Instant.now());
+		var i18n = miscSettings.getI18n();
+
 		if (user.isBot()) {
-			eb.setFooter("Bot add", avatarUrl);
+			eb.setFooter(i18n.get("events.member_join.bot.footer"), avatarUrl);
 			eb.setColor(5614830);
+
 			if (!selfMember.hasPermission(Permission.VIEW_AUDIT_LOGS)) {
-				eb.setDescription("\uD83E\uDD16 Bot **" + escapedTag + "** (" + userId + ") has been `added` to this server.");
+				eb.setDescription(i18n.get("events.member_join.bot.user.without", escapedTag, userId));
 				Utils.sendMessage(channel, eb.build());
 				return;
 			}
 			guild.retrieveAuditLogs().type(ActionType.BOT_ADD).queue(botsAdded -> {
 				var last = botsAdded.get(0);
-				eb.setDescription("\uD83E\uDD16 **" + escape(last.getUser().getAsTag()) + "** has `added` bot **" + escapedTag + "** (" + userId + ") to this server.");
+				eb.setDescription(i18n.get("events.member_join.bot.user.with", escape(last.getUser().getAsTag()), escapedTag, userId));
 				Utils.sendMessage(channel, eb.build());
 			});
 			return;
 		}
 		eb.setColor(7844437);
-		eb.setFooter("User join", avatarUrl);
-		eb.setDescription("\uD83D\uDCE5 **" + escapedTag + "** (" + userId + ") has `joined` the server");
+		eb.setTimestamp(Instant.now());
+		eb.setFooter(i18n.get("events.member_join.user.footer"), avatarUrl);
+		eb.setDescription(i18n.get("events.member_join.user.invite.without", escapedTag, userId));
+
 		if (!selfMember.hasPermission(Permission.MANAGE_SERVER)) {
 			eb.appendDescription(".");
 			Utils.sendMessage(channel, eb.build());
@@ -71,7 +75,7 @@ public class MemberEvents extends ListenerAdapter {
 					continue;
 				}
 				inviteData.incrementUses();
-				eb.appendDescription(" with invite **" + invite.getUrl() + "** (**" + escape(invite.getInviter().getAsTag()) + "**).");
+				eb.appendDescription(i18n.get("events.member_join.user.invite.with", invite.getUrl(), escape(invite.getInviter().getAsTag())));
 				Utils.sendMessage(channel, eb.build());
 				return;
 			}
@@ -82,7 +86,8 @@ public class MemberEvents extends ListenerAdapter {
 
 	@Override
 	public void onGuildMemberRemove(GuildMemberRemoveEvent event) {
-		var channel = cache.getGuildSettingsCache().getMiscSettings(event.getGuild().getIdLong()).getLogChannel();
+		var miscSettings = cache.getGuildSettingsCache().getMiscSettings(event.getGuild().getIdLong());
+		var channel = miscSettings.getLogChannel();
 		if (channel == null) {
 			return;
 		}
@@ -91,16 +96,19 @@ public class MemberEvents extends ListenerAdapter {
 		var avatarUrl = user.getEffectiveAvatarUrl();
 		var userId = user.getIdLong();
 		var eb = new EmbedBuilder();
+		var i18n = miscSettings.getI18n();
+
 		eb.setColor(14495300);
 		eb.setTimestamp(Instant.now());
+
 		if (user.isBot()) {
-			eb.setDescription("\uD83E\uDD16 Bot **" + escapedTag + "** (" + userId + ") has been `removed` from this server.");
-			eb.setFooter("Bot remove", avatarUrl);
+			eb.setDescription(i18n.get("events.member_remove.bot.text", escapedTag, userId));
+			eb.setFooter(i18n.get("events.member_remove.bot.footer"), avatarUrl);
 			Utils.sendMessage(channel, eb.build());
 			return;
 		}
-		eb.setDescription("\uD83D\uDCE4 **" + escapedTag + "** (" + userId + ") has `left` the server.");
-		eb.setFooter("User leave", avatarUrl);
+		eb.setDescription(i18n.get("events.member_remove.user.text", escapedTag, userId));
+		eb.setFooter(i18n.get("events.member_remove.user.footer"), avatarUrl);
 		Utils.sendMessage(channel, eb.build());
 	}
 }

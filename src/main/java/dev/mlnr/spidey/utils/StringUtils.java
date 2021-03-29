@@ -1,12 +1,9 @@
 package dev.mlnr.spidey.utils;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import dev.mlnr.spidey.cache.PaginatorCache;
 import dev.mlnr.spidey.handlers.command.CommandHandler;
-import dev.mlnr.spidey.objects.I18n;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.apache.commons.collections4.ListUtils;
 
@@ -115,7 +112,7 @@ public class StringUtils {
 		});
 	}
 
-	public static void createQueuePaginator(Message message, List<AudioTrack> queue, I18n i18n, PaginatorCache paginatorCache) {
+	public static void createQueuePaginator(CommandContext ctx, List<AudioTrack> queue) {
 		var tracksChunks = ListUtils.partition(queue, 10);
 		var descriptions = new HashMap<Integer, StringBuilder>();
 
@@ -133,9 +130,11 @@ public class StringUtils {
 
 		var length = queue.stream().mapToLong(track -> track.getInfo().length).sum();
 		var size = queue.size();
+		var i18n = ctx.getI18n();
 		var pluralized = size == 1 ? i18n.get("commands.queue.other.text.one") : i18n.get("commands.queue.other.text.multiple", size);
-		paginatorCache.createPaginator(message, descriptions.size(), (page, embedBuilder) -> {
-			embedBuilder.setAuthor("Queue for " + message.getGuild().getName());
+
+		ctx.getCache().getPaginatorCache().createPaginator(ctx, descriptions.size(), (page, embedBuilder) -> {
+			embedBuilder.setAuthor(i18n.get("paginator.queue", ctx.getGuild().getName()));
 			embedBuilder.setDescription(descriptions.get(page));
 			embedBuilder.appendDescription("\n\n").appendDescription(pluralized).appendDescription(" ")
 					.appendDescription(i18n.get("commands.queue.other.text.length", MusicUtils.formatDuration(length)));

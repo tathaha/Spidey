@@ -53,16 +53,19 @@ public class GuildEvents extends ListenerAdapter {
 	@Override
 	public void onGuildUpdateBoostTier(GuildUpdateBoostTierEvent event) {
 		var guild = event.getGuild();
-		var channel = cache.getGuildSettingsCache().getMiscSettings(guild.getIdLong()).getLogChannel();
+		var miscSettings = cache.getGuildSettingsCache().getMiscSettings(guild.getIdLong());
+		var channel = miscSettings.getLogChannel();
 		if (channel == null) {
 			return;
 		}
 		var eb = new EmbedBuilder();
-		eb.setAuthor("GUILD BOOST TIER HAS CHANGED");
+		var i18n = miscSettings.getI18n();
+
+		eb.setAuthor(i18n.get("events.boost_tier_change.author"));
 		eb.setColor(16023551);
 		eb.setTimestamp(Instant.now());
-		eb.addField("Boost tier", "**" + event.getNewBoostTier().getKey() + "**", true);
-		eb.addField("Boosts", "**" + guild.getBoostCount() + "**", true);
+		eb.addField(i18n.get("events.boost_tier_change.fields.tier"), "**" + event.getNewBoostTier().getKey() + "**", true);
+		eb.addField(i18n.get("events.boost_tier_change.fields.boosts"), "**" + guild.getBoostCount() + "**", true);
 		Utils.sendMessage(channel, eb.build());
 	}
 }

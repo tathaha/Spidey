@@ -16,9 +16,10 @@ public class Paginator {
 	private final BiConsumer<Integer, EmbedBuilder> pagesConsumer;
 	private int currentPage;
 
+	private final I18n i18n;
 	private final PaginatorCache paginatorCache;
 
-	public Paginator(long invokeChannelId, long paginatorMessageId, long invokeMessageId, long authorId, int totalPages, BiConsumer<Integer, EmbedBuilder> pagesConsumer, PaginatorCache paginatorCache) {
+	public Paginator(long invokeChannelId, long paginatorMessageId, long invokeMessageId, long authorId, int totalPages, BiConsumer<Integer, EmbedBuilder> pagesConsumer, I18n i18n, PaginatorCache paginatorCache) {
 		this.invokeChannelId = invokeChannelId;
 		this.paginatorMessageId = paginatorMessageId;
 		this.invokeMessageId = invokeMessageId;
@@ -26,6 +27,7 @@ public class Paginator {
 		this.totalPages = totalPages;
 		this.pagesConsumer = pagesConsumer;
 
+		this.i18n = i18n;
 		this.paginatorCache = paginatorCache;
 	}
 
@@ -41,7 +43,7 @@ public class Paginator {
 				}
 				var previousPage = currentPage - 1;
 				pagesConsumer.accept(previousPage, newPageBuilder);
-				newPageBuilder.setFooter("Page " + (previousPage + 1) + "/" + totalPages);
+				newPageBuilder.setFooter(i18n.get("paginator.page", previousPage + 1, totalPages));
 				currentPage--;
 				break;
 			case FORWARD:
@@ -50,7 +52,7 @@ public class Paginator {
 					return;
 				}
 				pagesConsumer.accept(nextPage, newPageBuilder);
-				newPageBuilder.setFooter("Page " + (nextPage + 1) + "/" + totalPages);
+				newPageBuilder.setFooter(i18n.get("paginator.page", nextPage + 1, totalPages));
 				currentPage++;
 				break;
 		}

@@ -668,5 +668,59 @@
         }
       }
     }
+  },
+  "events": {
+    "ban": {
+      "footer": "User ban",
+      "reason": {
+        "without": "\uD83D\uDD28 **%s** has been `banned`",
+        "with": " by **%s** for **%s**.",
+        "unknown": "unknown reason"
+      }
+    },
+    "unban": {
+      "footer": "User unban",
+      "user": {
+        "without": "%s **%s** has been `unbanned`",
+        "with": " by **%s**."
+      }
+    },
+    "boost_tier_change": {
+      "author": "GUILD BOOST TIER HAS CHANGED",
+      "fields": {
+        "tier": "Boost tier",
+        "boosts": "Boosts"
+      }
+    },
+    "member_join": {
+      "bot": {
+        "footer": "Bot add",
+        "user": {
+          "without": "\uD83E\uDD16 Bot **%s** (%d) has been `added` to this server.",
+          "with": "\uD83E\uDD16 **%s** has `added` bot **%s** (%d) to this server."
+        }
+      },
+      "user": {
+        "footer": "User join",
+        "invite": {
+          "without": "\uD83D\uDCE5 **%s** (%d) has `joined` the server",
+          "with": " with invite **%s** (**%s**)."
+        }
+      }
+    },
+    "member_remove": {
+      "bot": {
+        "footer": "Bot remove",
+        "text": "\uD83E\uDD16 Bot **%s** (%d) has been `removed` from this server."
+      },
+      "user": {
+        "footer": "User leave",
+        "text": "\uD83D\uDCE4 **%s** (%d) has `left` the server."
+      }
+    }
+  },
+  "paginator": {
+    "queue": "Queue for %s",
+    "page": "Page %d/%d"
   }
 }

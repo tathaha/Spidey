@@ -1,11 +1,11 @@
 package dev.mlnr.spidey.cache;
 
 import dev.mlnr.spidey.objects.Paginator;
+import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.utils.Emojis;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.Message;
 import net.jodah.expiringmap.ExpirationPolicy;
 import net.jodah.expiringmap.ExpiringMap;
 
@@ -26,15 +26,18 @@ public class PaginatorCache {
 		this.jda = jda;
 	}
 
-	public void createPaginator(Message invokeMessage, int totalPages, BiConsumer<Integer, EmbedBuilder> pagesConsumer) {
+	public void createPaginator(CommandContext ctx, int totalPages, BiConsumer<Integer, EmbedBuilder> pagesConsumer) {
+		var invokeMessage = ctx.getMessage();
 		var channel = invokeMessage.getTextChannel();
 		var embedBuilder = new EmbedBuilder().setColor(Utils.SPIDEY_COLOR);
-		embedBuilder.setFooter("Page 1/" + totalPages);
+		var i18n = ctx.getI18n();
+
+		embedBuilder.setFooter(i18n.get("paginator.page", 1, totalPages));
 		pagesConsumer.accept(0, embedBuilder);
 
 		channel.sendMessage(embedBuilder.build()).queue(paginatorMessage -> {
 			var paginatorMessageId = paginatorMessage.getIdLong();
-			var paginator = new Paginator(channel.getIdLong(), paginatorMessageId, invokeMessage.getIdLong(), invokeMessage.getAuthor().getIdLong(), totalPages, pagesConsumer, this);
+			var paginator = new Paginator(channel.getIdLong(), paginatorMessageId, invokeMessage.getIdLong(), invokeMessage.getAuthor().getIdLong(), totalPages, pagesConsumer, i18n, this);
 			paginatorMap.put(paginatorMessageId, paginator);
 
 			Utils.addReaction(paginatorMessage, Emojis.BACKWARDS);

@@ -24,17 +24,20 @@ public class BanEvents extends ListenerAdapter {
 	@Override
 	public void onGuildBan(GuildBanEvent event) {
 		var guild = event.getGuild();
-		var channel = cache.getGuildSettingsCache().getMiscSettings(guild.getIdLong()).getLogChannel();
+		var miscSettings = cache.getGuildSettingsCache().getMiscSettings(guild.getIdLong());
+		var channel = miscSettings.getLogChannel();
 		if (channel == null) {
 			return;
 		}
 		var user = event.getUser();
-		var escapedTag = escape(user.getAsTag());
 		var eb = new EmbedBuilder();
-		eb.setDescription("\uD83D\uDD28 **" + escapedTag + "** has been `banned`");
+		var i18n = miscSettings.getI18n();
+
+		eb.setDescription(i18n.get("events.ban.reason.without", escape(user.getAsTag())));
 		eb.setColor(14495300);
-		eb.setFooter("User ban", user.getEffectiveAvatarUrl());
+		eb.setFooter(i18n.get("events.ban.footer"), user.getEffectiveAvatarUrl());
 		eb.setTimestamp(Instant.now());
+
 		if (!guild.getSelfMember().hasPermission(Permission.VIEW_AUDIT_LOGS)) {
 			eb.appendDescription(".");
 			Utils.sendMessage(channel, eb.build());
@@ -44,11 +47,11 @@ public class BanEvents extends ListenerAdapter {
 			if (bans.isEmpty()) {
 				return;
 			}
-			var last = bans.get(0);
-			var bannerTag = escape(last.getUser().getAsTag());
-			var reason = last.getReason();
-			reason = reason == null || reason.isEmpty() ? "unknown reason" : reason.trim();
-			eb.appendDescription(" by **" + bannerTag + "** for **" + reason + "**.");
+			var ban = bans.get(0);
+			var bannerTag = escape(ban.getUser().getAsTag());
+			var reason = ban.getReason();
+			reason = (reason == null || reason.isEmpty()) ? i18n.get("events.ban.reason.unknown") : reason.trim();
+			eb.appendDescription(i18n.get("events.ban.reason.with", bannerTag, reason));
 			Utils.sendMessage(channel, eb.build());
 		});
 	}
@@ -56,17 +59,21 @@ public class BanEvents extends ListenerAdapter {
 	@Override
 	public void onGuildUnban(GuildUnbanEvent event) {
 		var guild = event.getGuild();
-		var channel = cache.getGuildSettingsCache().getMiscSettings(guild.getIdLong()).getLogChannel();
+		var miscSettings = cache.getGuildSettingsCache().getMiscSettings(guild.getIdLong());
+		var channel = miscSettings.getLogChannel();
 		if (channel == null) {
 			return;
 		}
 		var user = event.getUser();
 		var escapedTag = escape(user.getAsTag());
 		var eb = new EmbedBuilder();
-		eb.setDescription(Emojis.CHECK + " **" + escapedTag + "** has been `unbanned`");
+		var i18n = miscSettings.getI18n();
+
+		eb.setDescription(i18n.get("events.unban.user.without", Emojis.CHECK, escapedTag));
 		eb.setColor(7844437);
-		eb.setFooter("User unban", user.getEffectiveAvatarUrl());
+		eb.setFooter(i18n.get("events.unban.footer"), user.getEffectiveAvatarUrl());
 		eb.setTimestamp(Instant.now());
+
 		if (!guild.getSelfMember().hasPermission(Permission.VIEW_AUDIT_LOGS)) {
 			eb.appendDescription(".");
 			Utils.sendMessage(channel, eb.build());
@@ -78,12 +85,7 @@ public class BanEvents extends ListenerAdapter {
 			}
 			var last = unbans.get(0);
 			var unbanner = last.getUser();
-			if (unbanner == null) {
-				eb.appendDescription(".");
-			}
-			else {
-				eb.appendDescription(" by **" + unbanner.getAsTag() + "**.");
-			}
+			eb.appendDescription(i18n.get("events.unban.user.with", unbanner.getAsTag()));
 			Utils.sendMessage(channel, eb.build());
 		});
 	}
