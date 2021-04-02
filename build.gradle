@@ -22,7 +22,7 @@ repositories {
 
 dependencies {
     // akinator wrapper
-    implementation group: 'com.github.markozajc', name: 'akiwrapper', version: '1.5.1'
+    implementation group: 'com.github.markozajc', name: 'akiwrapper', version: '1.5.1.1'
 
     // bot list handler
     implementation group: 'com.github.caneleex', name: 'BotListHandler', version: '1.0.12'
