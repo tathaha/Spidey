@@ -87,7 +87,11 @@ public class Utils {
 
 	public static void storeInvites(Guild guild, GeneralCache generalCache) {
 		if (guild.getSelfMember().hasPermission(Permission.MANAGE_SERVER)) {
-			guild.retrieveInvites().queue(invites -> invites.forEach(invite -> generalCache.getInviteCache().put(invite.getCode(), new InviteData(invite))));
+			guild.retrieveInvites().queue(invites -> invites.forEach(invite -> {
+				if (invite.getType() == Invite.InviteType.GUILD) {
+					generalCache.getInviteCache().put(invite.getCode(), new InviteData(invite));
+				}
+			}));
 		}
 	}
 
