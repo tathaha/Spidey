@@ -7,7 +7,8 @@ public class InviteData {
 	private int uses;
 
 	public InviteData(Invite invite) {
-		this.guildId = invite.getGuild().getIdLong();
+		var guild = invite.getGuild();
+		this.guildId = guild == null ? -1 : guild.getIdLong(); // TODO remove this once jda releases support for stage channels
 		this.uses = invite.getUses();
 	}
 
