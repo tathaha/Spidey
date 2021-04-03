@@ -15,7 +15,7 @@ public class InviteEvents extends ListenerAdapter {
 
 	@Override
 	public void onGuildInviteCreate(GuildInviteCreateEvent event) {
-		cache.getGeneralCache().getInviteCache().put(event.getCode(), new InviteData(event.getInvite()));
+		cache.getGeneralCache().getInviteCache().put(event.getCode(), new InviteData(event.getInvite(), event.getGuild()));
 	}
 
 	@Override

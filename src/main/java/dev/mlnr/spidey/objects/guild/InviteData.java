@@ -1,14 +1,14 @@
 package dev.mlnr.spidey.objects.guild;
 
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Invite;
 
 public class InviteData {
 	private final long guildId;
 	private int uses;
 
-	public InviteData(Invite invite) {
-		var guild = invite.getGuild();
-		this.guildId = guild == null ? -1 : guild.getIdLong(); // TODO remove this once jda releases support for stage channels
+	public InviteData(Invite invite, Guild guild) {
+		this.guildId = guild.getIdLong();
 		this.uses = invite.getUses();
 	}
 
