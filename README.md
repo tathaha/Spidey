@@ -16,12 +16,12 @@ Music deserves its own section:
 - DJ role (allows to stop the entire playback, enable/disable segment skipping, enable/disable fair queue, set the fair queue threshold or set the default music volume)
 
 Other:
-- (edit)snipe commands to snipe deleted/edited messages, which are cached only for 10 minutes from the moment of creation (enabled by default for guilds with less than 10k people)
+- (edit)snipe commands to snipe deleted/edited messages, which are cached only for 10 minutes from the moment of creation (enabled by default for servers with less than 10k people)
 - nsfw commands (locked to nsfw channels)
 - uploading emotes from link
 - other miscellaneous commands, which you can discover by running `s!help`
 
-# Click [here](https://spidey.mlnr.dev) to invite Spidey to your guild!
+# Click [here](https://spidey.mlnr.dev) to invite Spidey to your server!
 
 ## Vote for Spidey
 
@@ -29,6 +29,6 @@ Other:
 
 [![Discord Bots](https://top.gg/api/widget/772446532560486410.svg)](https://top.gg/bot/772446532560486410)
 
-## Support guild
+## Support server
 
 [![](https://discord.com/api/guilds/772435739664973825/embed.png?style=banner2)](https://discord.gg/uJCw7B9fxZ)
