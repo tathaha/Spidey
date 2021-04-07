@@ -53,7 +53,7 @@ public class VoiceGameCommand extends Command {
 			ctx.replyErrorLocalized("commands.voicegame.other.no_game");
 			return;
 		}
-		Requester.launchYouTubeTogetherSession(channel.getId(), voiceGame, code -> {
+		Requester.launchVoiceGameSession(channel.getId(), voiceGame, code -> {
 			embedBuilder.setColor(16711680);
 			embedBuilder.setDescription(i18n.get("commands.voicegame.other.click", code, voiceGame.getFriendlyName()));
 			ctx.reply(embedBuilder);

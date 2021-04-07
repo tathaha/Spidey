@@ -65,7 +65,7 @@ public class Requester {
 		return Collections.emptyList();
 	}
 
-	public static void launchYouTubeTogetherSession(String channelId, VoiceGameType voiceGame, Consumer<String> inviteConsumer, Consumer<Throwable> errorConsumer) {
+	public static void launchVoiceGameSession(String channelId, VoiceGameType voiceGame, Consumer<String> inviteConsumer, Consumer<Throwable> errorConsumer) {
 		var payload = DataObject.empty().put("max_age", 0).put("target_type", 2).put("target_application_id", voiceGame.getApplicationId());
 		var requestBody = RequestBody.create(MediaType.parse("application/json"), payload.toString());
 		var requestBuilder = new Request.Builder()

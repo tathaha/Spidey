@@ -40,7 +40,7 @@ public class DatabaseManager {
 	// getting settings
 
 	public IGuildSettings retrieveGuildSettings(Table<? extends Record> table, long guildId, Function<Record, IGuildSettings> defaultSettingsTransformer,
-	                                  Function<Record, IGuildSettings> transformer) {
+	                                            Function<Record, IGuildSettings> transformer) {
 		try (var selectStep = getCtx().selectFrom(table)) {
 			try {
 				var result = selectStep.where(guildIdEquals(table, guildId)).fetch();
