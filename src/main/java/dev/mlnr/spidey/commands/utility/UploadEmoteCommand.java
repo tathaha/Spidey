@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class UploadEmoteCommand extends Command {
 
 	public UploadEmoteCommand() {
-		super("uploademote", new String[]{}, Category.UTILITY, Permission.MANAGE_EMOTES, 0, 4);
+		super("uploademote", new String[]{"upemote}, Category.UTILITY, Permission.MANAGE_EMOTES, 0, 4);
 	}
 
 	@Override
