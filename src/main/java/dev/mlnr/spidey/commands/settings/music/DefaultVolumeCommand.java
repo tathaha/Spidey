@@ -14,10 +14,10 @@ public class DefaultVolumeCommand extends Command {
 	}
 
 	@Override
-	public void execute(String[] args, CommandContext ctx) {
+	public boolean execute(String[] args, CommandContext ctx) {
 		if (!MusicUtils.canInteract(ctx.getMember())) {
 			ctx.replyErrorLocalized("music.messages.failure.cant_interact", "set the default music volume");
-			return;
+			return false;
 		}
 		var guildId = ctx.getGuild().getIdLong();
 		var guildSettingsCache = ctx.getCache().getGuildSettingsCache();
@@ -26,7 +26,7 @@ public class DefaultVolumeCommand extends Command {
 		if (args.length == 0) {
 			var prefix = guildSettingsCache.getMiscSettings(guildId).getPrefix();
 			ctx.replyLocalized("commands.defaultvolume.other.current", currentDefaultVolume, prefix);
-			return;
+			return false;
 		}
 		ctx.getArgumentAsUnsignedInt(0, parsedVolume -> {
 			var newDefaultVolume = Math.min(parsedVolume, 150);
@@ -38,5 +38,6 @@ public class DefaultVolumeCommand extends Command {
 			ctx.reactLike();
 			ctx.replyLocalized("commands.defaultvolume.other.set", newDefaultVolume);
 		});
+		return true;
 	}
 }

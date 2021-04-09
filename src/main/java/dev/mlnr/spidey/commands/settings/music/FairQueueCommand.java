@@ -15,15 +15,15 @@ public class FairQueueCommand extends Command {
 	}
 
 	@Override
-	public void execute(String[] args, CommandContext ctx) {
+	public boolean execute(String[] args, CommandContext ctx) {
 		if (!MusicUtils.canInteract(ctx.getMember())) {
 			ctx.replyErrorLocalized("music.messages.failure.cant_interact", "enable/disable the fair queue or to set the threshold");
-			return;
+			return false;
 		}
 		var musicSettings = ctx.getCache().getGuildSettingsCache().getMusicSettings(ctx.getGuild().getIdLong());
 		if (args.length == 0) {
 			manageFairQueue(musicSettings, ctx, !musicSettings.isFairQueueEnabled());
-			return;
+			return true;
 		}
 		ctx.getArgumentAsUnsignedInt(0, threshold -> {
 			if (threshold == 0) {
@@ -40,6 +40,7 @@ public class FairQueueCommand extends Command {
 			}
 			manageFairQueue(musicSettings, ctx, true, threshold);
 		});
+		return true;
 	}
 
 	private void manageFairQueue(GuildMusicSettings musicSettings, CommandContext ctx, boolean enabled) {

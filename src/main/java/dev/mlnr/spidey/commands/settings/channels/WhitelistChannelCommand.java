@@ -16,7 +16,7 @@ public class WhitelistChannelCommand extends Command {
 	}
 
 	@Override
-	public void execute(String[] args, CommandContext ctx) {
+	public boolean execute(String[] args, CommandContext ctx) {
 		var guildSettingsCache = ctx.getCache().getGuildSettingsCache();
 		var guildId = ctx.getGuild().getIdLong();
 		var i18n = ctx.getI18n();
@@ -24,16 +24,16 @@ public class WhitelistChannelCommand extends Command {
 		var wrongSyntax = i18n.get("command_failures.wrong_syntax", prefix, "whitelist");
 		if (args.length == 0) {
 			ctx.replyError(wrongSyntax);
-			return;
+			return false;
 		}
 		var channelsSettings = guildSettingsCache.getChannelsSettings(guildId);
 		if (args[0].equalsIgnoreCase("list")) {
 			listWhitelistedChannels(ctx, prefix, channelsSettings);
-			return;
+			return true;
 		}
 		if (args.length == 1) {
 			ctx.replyError(wrongSyntax);
-			return;
+			return false;
 		}
 		ctx.getArgumentAsTextChannel(1, channel -> {
 			var mention = channel.getAsMention();
@@ -61,6 +61,7 @@ public class WhitelistChannelCommand extends Command {
 				ctx.replyError(wrongSyntax);
 			}
 		});
+		return true;
 	}
 
 	private void listWhitelistedChannels(CommandContext ctx, String prefix, GuildChannelsSettings channelsSettings) {

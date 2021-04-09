@@ -16,7 +16,7 @@ public class BlacklistChannelCommand extends Command {
 	}
 
 	@Override
-	public void execute(String[] args, CommandContext ctx) {
+	public boolean execute(String[] args, CommandContext ctx) {
 		var guildSettingsCache = ctx.getCache().getGuildSettingsCache();
 		var guildId = ctx.getGuild().getIdLong();
 		var i18n = ctx.getI18n();
@@ -24,16 +24,16 @@ public class BlacklistChannelCommand extends Command {
 		var wrongSyntax = i18n.get("command_failures.wrong_syntax", prefix, "blacklist");
 		if (args.length == 0) {
 			ctx.replyError(wrongSyntax);
-			return;
+			return false;
 		}
 		var channelsSettings = guildSettingsCache.getChannelsSettings(guildId);
 		if (args[0].equalsIgnoreCase("list")) {
 			listBlacklistedChannels(ctx, prefix, channelsSettings);
-			return;
+			return true;
 		}
 		if (args.length == 1) {
 			ctx.replyError(wrongSyntax);
-			return;
+			return false;
 		}
 		ctx.getArgumentAsTextChannel(1, channel -> {
 			var mention = channel.getAsMention();
@@ -61,6 +61,7 @@ public class BlacklistChannelCommand extends Command {
 				ctx.replyError(wrongSyntax);
 			}
 		});
+		return true;
 	}
 
 	private void listBlacklistedChannels(CommandContext ctx, String prefix, GuildChannelsSettings channelsSettings) {

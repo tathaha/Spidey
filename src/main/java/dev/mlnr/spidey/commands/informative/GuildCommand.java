@@ -18,7 +18,7 @@ public class GuildCommand extends Command {
 	}
 
 	@Override
-	public void execute(String[] args, CommandContext ctx) {
+	public boolean execute(String[] args, CommandContext ctx) {
 		var eb = Utils.createEmbedBuilder(ctx.getAuthor());
 		var guild = ctx.getGuild();
 		var i18n = ctx.getI18n();
@@ -68,5 +68,6 @@ public class GuildCommand extends Command {
 					sb.length() > 1024 ? i18n.get("limit_exceeded") : sb.toString(), false);
 		}
 		ctx.reply(eb);
+		return true;
 	}
 }

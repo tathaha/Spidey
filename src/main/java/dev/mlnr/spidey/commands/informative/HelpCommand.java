@@ -23,7 +23,7 @@ public class HelpCommand extends Command {
 	}
 
 	@Override
-	public void execute(String[] args, CommandContext ctx) {
+	public boolean execute(String[] args, CommandContext ctx) {
 		var commandsMap = CommandHandler.getCommands();
 		var author = ctx.getAuthor();
 		var guildSettingsCache = ctx.getCache().getGuildSettingsCache();
@@ -85,7 +85,7 @@ public class HelpCommand extends Command {
 				eb.appendDescription(i18n.get("commands.help.other.hidden.nsfw"));
 			}
 			ctx.reply(eb);
-			return;
+			return true;
 		}
 		var invoke = args[0].toLowerCase();
 		var command = commandsMap.get(invoke);
@@ -94,7 +94,7 @@ public class HelpCommand extends Command {
 			ctx.replyError(i18n.get("command_failures.invalid.message", invoke) + " " + (similar == null
 					? i18n.get("command_failures.invalid.check_help", prefix)
 					: i18n.get("command_failures.invalid.suggestion", similar)));
-			return;
+			return false;
 		}
 		invoke = command.getInvoke();
 		var none = i18n.get("commands.help.other.command_info.info_none");
@@ -123,6 +123,7 @@ public class HelpCommand extends Command {
 			eb.addField(i18n.get("commands.help.other.donate.title"), i18n.get("commands.help.other.donate.text"), false);
 		}
 		ctx.reply(eb);
+		return true;
 	}
 
 	private String listToString(List<Command> commands) {

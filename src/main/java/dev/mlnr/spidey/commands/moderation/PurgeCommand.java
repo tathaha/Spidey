@@ -28,16 +28,16 @@ public class PurgeCommand extends Command {
 	}
 
 	@Override
-	public void execute(String[] args, CommandContext ctx) {
+	public boolean execute(String[] args, CommandContext ctx) {
 		var guild = ctx.getGuild();
 		if (!guild.getSelfMember().hasPermission(ctx.getTextChannel(), getRequiredPermission(), Permission.MESSAGE_HISTORY)) {
 			ctx.replyErrorLocalized("commands.purge.other.messages.failure.no_perms");
-			return;
+			return false;
 		}
 		if (args.length == 0) {
 			var prefix = ctx.getCache().getGuildSettingsCache().getMiscSettings(guild.getIdLong()).getPrefix();
 			ctx.replyErrorLocalized("command_failures.wrong_syntax", prefix, "purge");
-			return;
+			return false;
 		}
 		ctx.getArgumentAsUnsignedInt(0, amount -> {
 			if (amount < 1 || amount > 100) {
@@ -50,6 +50,7 @@ public class PurgeCommand extends Command {
 			}
 			ctx.getArgumentAsUser(1, user -> respond(ctx, user, amount));
 		});
+		return true;
 	}
 
 	private void respond(CommandContext ctx, User target, int limit) {

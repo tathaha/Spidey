@@ -15,26 +15,26 @@ public class SkipCommand extends Command {
 	}
 
 	@Override
-	public void execute(String[] args, CommandContext ctx) {
+	public boolean execute(String[] args, CommandContext ctx) {
 		var musicPlayer = ctx.getCache().getMusicPlayerCache().getMusicPlayer(ctx.getGuild());
 		var i18n = ctx.getI18n();
 		if (musicPlayer == null) {
 			ctx.replyErrorLocalized("music.messages.failure.no_music");
-			return;
+			return false;
 		}
 		var playingTrack = musicPlayer.getPlayingTrack();
 		if (playingTrack == null) {
 			ctx.replyErrorLocalized("music.messages.failure.no_song");
-			return;
+			return false;
 		}
 		if (MusicUtils.canInteract(ctx.getMember(), playingTrack)) {
 			musicPlayer.skip();
 			ctx.reactLike();
-			return;
+			return true;
 		}
 		if (!MusicUtils.isMemberConnected(ctx)) {
 			ctx.replyError(i18n.get("commands.skip.other.same_channel"), Emojis.DISLIKE);
-			return;
+			return false;
 		}
 		var trackScheduler = musicPlayer.getTrackScheduler();
 		var author = ctx.getAuthor();
@@ -43,7 +43,7 @@ public class SkipCommand extends Command {
 			trackScheduler.removeSkipVote(author);
 			ctx.reactLike();
 			ctx.reply(i18n.get("commands.skip.other.removed") + " [" + mention + "]");
-			return;
+			return true;
 		}
 		trackScheduler.addSkipVote(author);
 		var skipVotes = trackScheduler.getSkipVotes();
@@ -51,9 +51,10 @@ public class SkipCommand extends Command {
 		if (skipVotes < requiredSkipVotes) {
 			ctx.reactLike();
 			ctx.reply(i18n.get("commands.skip.other.added") + " **" + skipVotes + "**/**" + requiredSkipVotes + "** [" + mention + "]");
-			return;
+			return true;
 		}
 		musicPlayer.skip();
 		ctx.reactLike();
+		return true;
 	}
 }

@@ -16,17 +16,17 @@ public class SaveSongCommand extends Command {
 	}
 
 	@Override
-	public void execute(String[] args, CommandContext ctx) {
+	public boolean execute(String[] args, CommandContext ctx) {
 		var guild = ctx.getGuild();
 		var musicPlayer = ctx.getCache().getMusicPlayerCache().getMusicPlayer(guild);
 		if (musicPlayer == null) {
 			ctx.replyErrorLocalized("music.messages.failure.no_music");
-			return;
+			return false;
 		}
 		var playingTrack = musicPlayer.getPlayingTrack();
 		if (playingTrack == null) {
 			ctx.replyErrorLocalized("music.messages.failure.no_song");
-			return;
+			return false;
 		}
 		var user = ctx.getAuthor();
 		var embedBuilder = Utils.createEmbedBuilder(user).setColor(Utils.SPIDEY_COLOR);
@@ -50,5 +50,6 @@ public class SaveSongCommand extends Command {
 					ctx.replyLocalized("commands.savesong.other.sent");
 					ctx.reactLike();
 				});
+		return true;
 	}
 }

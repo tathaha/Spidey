@@ -16,23 +16,24 @@ public class PauseCommand extends Command {
 	}
 
 	@Override
-	public void execute(String[] args, CommandContext ctx) {
+	public boolean execute(String[] args, CommandContext ctx) {
 		var guild = ctx.getGuild();
 		var musicPlayer = ctx.getCache().getMusicPlayerCache().getMusicPlayer(guild);
 		if (musicPlayer == null) {
 			ctx.replyErrorLocalized("music.messages.failure.no_music");
-			return;
+			return false;
 		}
 		var playingTrack = musicPlayer.getPlayingTrack();
 		if (playingTrack == null) {
 			ctx.replyErrorLocalized("music.messages.failure.no_song");
-			return;
+			return false;
 		}
 		if (!MusicUtils.canInteract(ctx.getMember(), playingTrack)) {
 			ctx.replyErrorLocalized("music.messages.failure.cant_interact_requester", "pause the playback");
-			return;
+			return false;
 		}
 		var paused = musicPlayer.pauseOrUnpause();
 		Utils.addReaction(ctx.getMessage(), paused ? "\u23F8\uFE0F" : Emojis.FORWARD);
+		return true;
 	}
 }

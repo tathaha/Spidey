@@ -16,13 +16,14 @@ public class LogCommand extends Command {
 	}
 
 	@Override
-	public void execute(String[] args, CommandContext ctx) {
+	public boolean execute(String[] args, CommandContext ctx) {
 		var guildId = ctx.getGuild().getIdLong();
 		if (args.length == 0) {
 			proceed(guildId, ctx.getTextChannel(), ctx);
-			return;
+			return true;
 		}
 		ctx.getArgumentAsTextChannel(0, channel -> proceed(guildId, channel, ctx));
+		return true;
 	}
 
 	private void proceed(long guildId, TextChannel channel, CommandContext ctx) {

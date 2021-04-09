@@ -16,7 +16,7 @@ public class MembersCommand extends Command {
 	}
 
 	@Override
-	public void execute(String[] args, CommandContext ctx) {
+	public boolean execute(String[] args, CommandContext ctx) {
 		ctx.getGuild().loadMembers().onSuccess(members -> {
 			var total = members.size();
 			var bots = members.stream().filter(member -> member.getUser().isBot()).count();
@@ -30,5 +30,6 @@ public class MembersCommand extends Command {
 			eb.addField(i18n.get("commands.members.other.bots"), "**" + bots + "**", true);
 			ctx.reply(eb);
 		});
+		return true;
 	}
 }

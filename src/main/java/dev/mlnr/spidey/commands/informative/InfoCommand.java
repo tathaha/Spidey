@@ -15,7 +15,7 @@ public class InfoCommand extends Command {
 	}
 
 	@Override
-	public void execute(String[] args, CommandContext ctx) {
+	public boolean execute(String[] args, CommandContext ctx) {
 		var eb = Utils.createEmbedBuilder(ctx.getAuthor());
 		var avatar = ctx.getJDA().getSelfUser().getEffectiveAvatarUrl();
 		var i18n = ctx.getI18n();
@@ -30,5 +30,6 @@ public class InfoCommand extends Command {
 				"\n[`GitHub`](https://github.com/caneleex/Spidey)", false);
 		eb.addField(i18n.get("commands.info.fields.support.title"), i18n.get("commands.info.fields.support.text"), false);
 		ctx.reply(eb);
+		return true;
 	}
 }

@@ -13,18 +13,18 @@ public class RemoveCommand extends Command {
 	}
 
 	@Override
-	public void execute(String[] args, CommandContext ctx) {
+	public boolean execute(String[] args, CommandContext ctx) {
 		var guild = ctx.getGuild();
 		var musicPlayer = ctx.getCache().getMusicPlayerCache().getMusicPlayer(guild);
 		if (musicPlayer == null) {
 			ctx.replyErrorLocalized("music.messages.failure.no_music");
-			return;
+			return false;
 		}
 		var trackScheduler = musicPlayer.getTrackScheduler();
 		var queue = trackScheduler.getQueueAsList();
 		if (queue.isEmpty()) {
 			ctx.replyErrorLocalized("music.messages.failure.queue_empty");
-			return;
+			return false;
 		}
 		ctx.getArgumentAsUnsignedInt(0, trackPosition -> {
 			var size = queue.size();
@@ -42,5 +42,6 @@ public class RemoveCommand extends Command {
 			ctx.reactLike();
 			ctx.replyLocalized("commands.remove.other.removed", selectedTrack.getInfo().title);
 		});
+		return true;
 	}
 }

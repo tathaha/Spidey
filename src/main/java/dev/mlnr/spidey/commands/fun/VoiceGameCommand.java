@@ -18,22 +18,22 @@ public class VoiceGameCommand extends Command {
 	}
 
 	@Override
-	public void execute(String[] args, CommandContext ctx) {
+	public boolean execute(String[] args, CommandContext ctx) {
 		var voiceState = ctx.getMember().getVoiceState();
 		var i18n = ctx.getI18n();
 		var notInVoice = i18n.get("commands.voicegame.other.not_in_voice");
 		if (voiceState == null) {
 			ctx.replyError(notInVoice);
-			return;
+			return false;
 		}
 		var channel = voiceState.getChannel();
 		if (channel == null) {
 			ctx.replyError(notInVoice);
-			return;
+			return false;
 		}
 		if (!ctx.getGuild().getSelfMember().hasPermission(channel, Permission.CREATE_INSTANT_INVITE)) {
 			ctx.replyErrorLocalized("commands.voicegame.other.no_perms");
-			return;
+			return false;
 		}
 		var embedBuilder = Utils.createEmbedBuilder(ctx.getAuthor());
 		if (args.length == 0) {
@@ -46,17 +46,18 @@ public class VoiceGameCommand extends Command {
 			var prefix = ctx.getCache().getGuildSettingsCache().getMiscSettings(ctx.getGuild().getIdLong()).getPrefix();
 			availableGamesBuilder.append("\n").append(i18n.get("commands.voicegame.other.pick", prefix));
 			ctx.reply(embedBuilder);
-			return;
+			return false;
 		}
 		var voiceGame = VoiceGameType.from(args[0]);
 		if (voiceGame == null) {
 			ctx.replyErrorLocalized("commands.voicegame.other.no_game");
-			return;
+			return false;
 		}
 		Requester.launchVoiceGameSession(channel.getId(), voiceGame, code -> {
 			embedBuilder.setColor(16711680);
 			embedBuilder.setDescription(i18n.get("commands.voicegame.other.click", code, voiceGame.getFriendlyName()));
 			ctx.reply(embedBuilder);
 		}, error -> ctx.replyErrorLocalized("internal_error", i18n.get("commands.voicegame.other.create"), error.getMessage()));
+		return true;
 	}
 }

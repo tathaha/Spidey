@@ -77,8 +77,10 @@ public class CommandHandler {
 		var maxArgs = cmd.getMaxArgs();
 		var tmp = SPACES_REGEX.split(content, maxArgs > 0 ? maxArgs + 1 : 0);
 		var args = Arrays.copyOfRange(tmp, 1, tmp.length);
-		cmd.execute(args, new CommandContext(args, event, i18n, cache));
-		cooldown(userId, cmd, vip);
+
+		if (cmd.execute(args, new CommandContext(args, event, i18n, cache))) {
+			cooldown(userId, cmd, vip);
+		}
 	}
 
 	public static void loadCommands() {

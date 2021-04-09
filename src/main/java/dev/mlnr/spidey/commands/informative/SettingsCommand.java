@@ -16,7 +16,7 @@ public class SettingsCommand extends Command {
 	}
 
 	@Override
-	public void execute(String[] args, CommandContext ctx) {
+	public boolean execute(String[] args, CommandContext ctx) {
 		var guildSettingsCache = ctx.getCache().getGuildSettingsCache();
 		var guildId = ctx.getGuild().getIdLong();
 		var miscSettings = guildSettingsCache.getMiscSettings(guildId);
@@ -44,5 +44,6 @@ public class SettingsCommand extends Command {
 		eb.addField("Prefix", prefix + (prefix.equals("s!") ? " (" + i18n.get("commands.settings.other.prefix") + ")" : ""), false);
 
 		ctx.reply(eb);
+		return true;
 	}
 }

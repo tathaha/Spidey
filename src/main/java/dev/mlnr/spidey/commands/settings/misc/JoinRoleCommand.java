@@ -13,17 +13,17 @@ public class JoinRoleCommand extends Command {
 	}
 
 	@Override
-	public void execute(String[] args, CommandContext ctx) {
+	public boolean execute(String[] args, CommandContext ctx) {
 		var miscSettings = ctx.getCache().getGuildSettingsCache().getMiscSettings(ctx.getGuild().getIdLong());
 		var dbRole = miscSettings.getJoinRoleId();
 		if (args.length == 0) {
 			if (dbRole == 0) {
 				ctx.replyErrorLocalized("roles.not_set", "join");
-				return;
+				return false;
 			}
 			miscSettings.removeJoinRole();
 			ctx.replyLocalized("roles.removed", "join");
-			return;
+			return true;
 		}
 		ctx.getArgumentAsRole(0, role -> {
 			if (role.isPublicRole() || role.isManaged()) {
@@ -43,5 +43,6 @@ public class JoinRoleCommand extends Command {
 			miscSettings.setJoinRoleId(roleId);
 			ctx.replyLocalized("roles.set", "join", role.getAsMention());
 		});
+		return true;
 	}
 }

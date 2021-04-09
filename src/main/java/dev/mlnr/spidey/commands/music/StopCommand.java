@@ -15,19 +15,20 @@ public class StopCommand extends Command {
 	}
 
 	@Override
-	public void execute(String[] args, CommandContext ctx) {
+	public boolean execute(String[] args, CommandContext ctx) {
 		if (!MusicUtils.canInteract(ctx.getMember())) {
 			ctx.replyErrorLocalized("music.messages.failure.cant_interact", "stop the playback");
-			return;
+			return false;
 		}
 		var guild = ctx.getGuild();
 		var musicPlayerCache = ctx.getCache().getMusicPlayerCache();
 		var musicPlayer = musicPlayerCache.getMusicPlayer(guild);
 		if (musicPlayer == null) {
 			ctx.replyErrorLocalized("music.messages.failure.no_music");
-			return;
+			return false;
 		}
 		musicPlayerCache.disconnectFromChannel(guild);
 		Utils.addReaction(ctx.getMessage(), "\uD83D\uDC4B"); // wave
+		return true;
 	}
 }

@@ -16,36 +16,38 @@ public class RepeatCommand extends Command {
 	}
 
 	@Override
-	public void execute(String[] args, CommandContext ctx) {
+	public boolean execute(String[] args, CommandContext ctx) {
 		if (!MusicUtils.canInteract(ctx.getMember())) {
 			ctx.replyErrorLocalized("music.messages.failure.cant_interact", "set the repeat mode");
-			return;
+			return false;
 		}
 		var guild = ctx.getGuild();
 		var musicPlayer = ctx.getCache().getMusicPlayerCache().getMusicPlayer(guild);
 		if (musicPlayer == null) {
 			ctx.replyErrorLocalized("music.messages.failure.no_music");
-			return;
+			return false;
 		}
 		var trackScheduler = musicPlayer.getTrackScheduler();
 		if (args.length == 0) {
 			if (trackScheduler.getRepeatMode() == null) {
 				ctx.replyErrorLocalized("commands.repeat.other.provide");
-				return;
+				return false;
 			}
 			trackScheduler.setRepeatMode(null);
 			ctx.reactLike();
 			ctx.replyLocalized("commands.repeat.other.reset");
-			return;
+			return true;
 		}
 		try {
 			var repeatMode = TrackScheduler.RepeatMode.valueOf(args[0].toUpperCase());
 			trackScheduler.setRepeatMode(repeatMode);
 			ctx.reactLike();
 			ctx.replyLocalized("commands.repeat.other.set", args[0]);
+			return true;
 		}
 		catch (IllegalArgumentException ex) {
 			ctx.replyError(ctx.getI18n().get("commands.repeat.other.doesnt_exist"), Emojis.DISLIKE);
+			return false;
 		}
 	}
 }

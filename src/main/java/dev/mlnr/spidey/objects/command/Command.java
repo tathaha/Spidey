@@ -21,7 +21,7 @@ public abstract class Command {
 		this.cooldown = cooldown;
 	}
 
-	public abstract void execute(String[] args, CommandContext ctx);
+	public abstract boolean execute(String[] args, CommandContext ctx);
 
 	public String getInvoke() {
 		return this.invoke;

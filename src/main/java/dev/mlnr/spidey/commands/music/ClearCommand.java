@@ -14,24 +14,25 @@ public class ClearCommand extends Command {
 	}
 
 	@Override
-	public void execute(String[] args, CommandContext ctx) {
+	public boolean execute(String[] args, CommandContext ctx) {
 		if (!MusicUtils.canInteract(ctx.getMember())) {
 			ctx.replyErrorLocalized("music.messages.failure.cant_interact", "clear the queue");
-			return;
+			return false;
 		}
 		var guild = ctx.getGuild();
 		var musicPlayer = ctx.getCache().getMusicPlayerCache().getMusicPlayer(guild);
 		if (musicPlayer == null) {
 			ctx.replyErrorLocalized("music.messages.failure.no_music");
-			return;
+			return false;
 		}
 		var trackScheduler = musicPlayer.getTrackScheduler();
 		var queue = trackScheduler.getQueue();
 		if (queue.isEmpty()) {
 			ctx.replyErrorLocalized("music.messages.failure.queue_empty");
-			return;
+			return false;
 		}
 		queue.clear();
 		ctx.replyLocalized("commands.clear.other.cleared");
+		return true;
 	}
 }

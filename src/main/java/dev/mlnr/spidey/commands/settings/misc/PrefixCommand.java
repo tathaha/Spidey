@@ -13,7 +13,7 @@ public class PrefixCommand extends Command {
 	}
 
 	@Override
-	public void execute(String[] args, CommandContext ctx) {
+	public boolean execute(String[] args, CommandContext ctx) {
 		var miscSettings = ctx.getCache().getGuildSettingsCache().getMiscSettings(ctx.getGuild().getIdLong());
 		var currentPrefix = miscSettings.getPrefix();
 		if (args.length == 0) {
@@ -24,18 +24,19 @@ public class PrefixCommand extends Command {
 				miscSettings.setPrefix("s!");
 				ctx.replyLocalized("commands.prefix.other.reset");
 			}
-			return;
+			return true;
 		}
 		var newPrefix = args[0];
 		if (currentPrefix.equals(newPrefix)) {
 			ctx.replyErrorLocalized("commands.prefix.other.already_set", newPrefix);
-			return;
+			return false;
 		}
 		if (newPrefix.length() > 10) {
 			ctx.replyErrorLocalized("commands.prefix.other.longer");
-			return;
+			return false;
 		}
 		miscSettings.setPrefix(newPrefix);
 		ctx.replyLocalized("commands.prefix.other.changed", newPrefix);
+		return true;
 	}
 }

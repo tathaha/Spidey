@@ -16,19 +16,19 @@ public class SnipeCommand extends Command {
 	}
 
 	@Override
-	public void execute(String[] args, CommandContext ctx) {
+	public boolean execute(String[] args, CommandContext ctx) {
 		var cache = ctx.getCache();
 		var miscSettings = cache.getGuildSettingsCache().getMiscSettings(ctx.getGuild().getIdLong());
 		if (!miscSettings.isSnipingEnabled()) {
 			ctx.replyErrorLocalized("sniping.disabled", miscSettings.getPrefix());
-			return;
+			return false;
 		}
 		var textChannel = ctx.getTextChannel();
 		var channelId = textChannel.getIdLong();
 		var lastDeletedMessage = cache.getMessageCache().getLastDeletedMessage(channelId);
 		if (lastDeletedMessage == null) {
 			ctx.replyErrorLocalized("sniping.no_message", "deleted");
-			return;
+			return false;
 		}
 		var eb = Utils.createEmbedBuilder(ctx.getAuthor());
 		eb.setTimestamp(lastDeletedMessage.getCreation());
@@ -39,5 +39,6 @@ public class SnipeCommand extends Command {
 			eb.setAuthor(user.getName(), null, user.getEffectiveAvatarUrl());
 			ctx.reply(eb);
 		});
+		return true;
 	}
 }

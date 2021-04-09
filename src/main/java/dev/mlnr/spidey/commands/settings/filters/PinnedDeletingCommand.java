@@ -13,12 +13,13 @@ public class PinnedDeletingCommand extends Command {
 	}
 
 	@Override
-	public void execute(String[] args, CommandContext ctx) {
+	public boolean execute(String[] args, CommandContext ctx) {
 		var miscSettings = ctx.getCache().getGuildSettingsCache().getFiltersSettings(ctx.getGuild().getIdLong());
 		var enabled = !miscSettings.isPinnedDeletingEnabled();
 		var i18n = ctx.getI18n();
 		miscSettings.setPinnedDeletingEnabled(enabled);
 		ctx.reactLike();
 		ctx.replyLocalized("commands.pinneddeleting.other.done", enabled ? i18n.get("enabled") : i18n.get("disabled"));
+		return true;
 	}
 }

@@ -16,7 +16,7 @@ public class StatsCommand extends Command {
 	}
 
 	@Override
-	public void execute(String[] args, CommandContext ctx) {
+	public boolean execute(String[] args, CommandContext ctx) {
 		var eb = Utils.createEmbedBuilder(ctx.getAuthor());
 		var prefix = ctx.getCache().getGuildSettingsCache().getMiscSettings(ctx.getGuild().getIdLong()).getPrefix();
 		var jda = ctx.getJDA();
@@ -33,5 +33,6 @@ public class StatsCommand extends Command {
 		eb.addField(i18n.get("commands.stats.other.threads"), String.valueOf(ManagementFactory.getThreadMXBean().getThreadCount()), true);
 		eb.setFooter("spidey.mlnr.dev");
 		ctx.reply(eb);
+		return true;
 	}
 }

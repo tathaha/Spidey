@@ -14,11 +14,11 @@ public class SegmentSkippingCommand extends Command {
 	}
 
 	@Override
-	public void execute(String[] args, CommandContext ctx) {
+	public boolean execute(String[] args, CommandContext ctx) {
 		var i18n = ctx.getI18n();
 		if (!MusicUtils.canInteract(ctx.getMember())) {
 			ctx.replyErrorLocalized("music.messages.failure.cant_interact", "enable/disable segment skipping");
-			return;
+			return false;
 		}
 		var musicSettings = ctx.getCache().getGuildSettingsCache().getMusicSettings(ctx.getGuild().getIdLong());
 		var enabled = !musicSettings.isSegmentSkippingEnabled();
@@ -26,5 +26,6 @@ public class SegmentSkippingCommand extends Command {
 		ctx.reactLike();
 		ctx.reply(i18n.get("commands.segmentskipping.other.done.text", enabled ? i18n.get("enabled") : i18n.get("disabled")) +
 				(enabled ? " " + i18n.get("commands.segmentskipping.other.done.warning") : ""));
+		return true;
 	}
 }

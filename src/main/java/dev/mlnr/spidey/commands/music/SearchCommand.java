@@ -22,10 +22,10 @@ public class SearchCommand extends Command {
 	}
 
 	@Override
-	public void execute(String[] args, CommandContext ctx) {
+	public boolean execute(String[] args, CommandContext ctx) {
 		var musicPlayer = MusicUtils.checkQueryInput(args, ctx);
 		if (musicPlayer == null) {
-			return;
+			return false;
 		}
 		var i18n = ctx.getI18n();
 		MusicUtils.loadQuery(musicPlayer, "ytsearch:" + args[0], new AudioLoadResultHandler() {
@@ -55,5 +55,6 @@ public class SearchCommand extends Command {
 				ctx.replyError(i18n.get("commands.search.other.error"), Emojis.DISLIKE);
 			}
 		});
+		return true;
 	}
 }

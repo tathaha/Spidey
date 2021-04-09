@@ -13,17 +13,17 @@ public class DJRoleCommand extends Command {
 	}
 
 	@Override
-	public void execute(String[] args, CommandContext ctx) {
+	public boolean execute(String[] args, CommandContext ctx) {
 		var musicSettings = ctx.getCache().getGuildSettingsCache().getMusicSettings(ctx.getGuild().getIdLong());
 		var dbRole = musicSettings.getDJRoleId();
 		if (args.length == 0) {
 			if (dbRole == 0) {
 				ctx.replyErrorLocalized("roles.not_set", "DJ");
-				return;
+				return false;
 			}
 			musicSettings.removeDJRole();
 			ctx.replyLocalized("roles.removed", "DJ");
-			return;
+			return true;
 		}
 		ctx.getArgumentAsRole(0, role -> {
 			if (role.isPublicRole() || role.isManaged()) {
@@ -43,5 +43,6 @@ public class DJRoleCommand extends Command {
 			musicSettings.setDJRoleId(roleId);
 			ctx.replyLocalized("roles.set", "DJ", role.getAsMention());
 		});
+		return true;
 	}
 }

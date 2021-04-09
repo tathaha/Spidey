@@ -14,14 +14,14 @@ public class VolumeCommand extends Command {
 	}
 
 	@Override
-	public void execute(String[] args, CommandContext ctx) {
+	public boolean execute(String[] args, CommandContext ctx) {
 		var i18n = ctx.getI18n();
 		var cache = ctx.getCache();
 		var guild = ctx.getGuild();
 		var musicPlayer = cache.getMusicPlayerCache().getMusicPlayer(guild);
 		if (musicPlayer == null) {
 			ctx.replyErrorLocalized("music.messages.failure.no_music");
-			return;
+			return false;
 		}
 		var playingTrack = musicPlayer.getPlayingTrack();
 		var member = ctx.getMember();
@@ -30,13 +30,13 @@ public class VolumeCommand extends Command {
 					? i18n.get("music.messages.failure.cant_interact", "change the volume")
 					: i18n.get("music.messages.failure.cant_interact_requester", "change the volume");
 			ctx.replyError(error);
-			return;
+			return false;
 		}
 		var currentVolume = musicPlayer.getVolume();
 		if (args.length == 0) {
 			var prefix = cache.getGuildSettingsCache().getMiscSettings(guild.getIdLong()).getPrefix();
 			ctx.replyLocalized("commands.volume.other.current", currentVolume, prefix);
-			return;
+			return false;
 		}
 		ctx.getArgumentAsInt(0, parsedVolume -> {
 			if (args[0].charAt(0) != '+' && args[0].charAt(0) != '-') {
@@ -57,6 +57,7 @@ public class VolumeCommand extends Command {
 			ctx.reactLike();
 			ctx.replyLocalized("commands.volume.other.set", newVolume);
 		});
+		return true;
 	}
 
 	private boolean checkNewVolume(CommandContext ctx, int newVolume, int currentVolume) {

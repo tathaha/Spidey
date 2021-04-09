@@ -16,12 +16,13 @@ public class AvatarCommand extends Command {
 	}
 
 	@Override
-	public void execute(String[] args, CommandContext ctx) {
+	public boolean execute(String[] args, CommandContext ctx) {
 		if (args.length == 0) {
 			respond(ctx, ctx.getAuthor());
-			return;
+			return true;
 		}
 		ctx.getArgumentAsUser(0, user -> respond(ctx, user));
+		return true;
 	}
 
 	private void respond(CommandContext ctx, User user) {

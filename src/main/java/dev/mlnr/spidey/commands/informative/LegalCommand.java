@@ -13,7 +13,8 @@ public class LegalCommand extends Command {
 	}
 
 	@Override
-	public void execute(String[] args, CommandContext ctx) {
+	public boolean execute(String[] args, CommandContext ctx) {
 		ctx.replyLocalized("commands.legal.other.text");
+		return true;
 	}
 }

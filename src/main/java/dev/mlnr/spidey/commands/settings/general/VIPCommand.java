@@ -13,10 +13,10 @@ public class VIPCommand extends Command {
 	}
 
 	@Override
-	public void execute(String[] args, CommandContext ctx) {
+	public boolean execute(String[] args, CommandContext ctx) {
 		if (ctx.getAuthor().getIdLong() != 394607709741252621L) {
 			ctx.replyErrorLocalized("command_failures.only_dev");
-			return;
+			return false;
 		}
 		var guildId = args.length == 0 ? ctx.getGuild().getIdLong() : Long.parseLong(args[0]);
 		var generalSettings = ctx.getCache().getGuildSettingsCache().getGeneralSettings(guildId);
@@ -24,5 +24,6 @@ public class VIPCommand extends Command {
 		generalSettings.setVip(vip);
 		ctx.reactLike();
 		ctx.reply("VIP for guild **" + guildId + "** has been **" + (vip ? "enabled" : "disabled") + "**.");
+		return true;
 	}
 }

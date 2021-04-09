@@ -20,7 +20,7 @@ public class InviteDeletingCommand extends Command {
 	}
 
 	@Override
-	public void execute(String[] args, CommandContext ctx) {
+	public boolean execute(String[] args, CommandContext ctx) {
 		var guildSettingsCache = ctx.getCache().getGuildSettingsCache();
 		var guildId = ctx.getGuild().getIdLong();
 		var filtersSettings = guildSettingsCache.getFiltersSettings(guildId);
@@ -31,21 +31,21 @@ public class InviteDeletingCommand extends Command {
 			ctx.reactLike();
 			ctx.reply(i18n.get("commands.invitedeleting.other.done.text", enabled ? i18n.get("enabled") : i18n.get("disabled")) +
 					(enabled ? " " + i18n.get("commands.invitedeleting.other.done.ignored.text") : ""));
-			return;
+			return true;
 		}
 		var prefix = guildSettingsCache.getMiscSettings(guildId).getPrefix();
 		if (!filtersSettings.isInviteDeletingEnabled()) {
 			ctx.replyErrorLocalized("commands.invitedeleting.other.disabled", prefix);
-			return;
+			return false;
 		}
 		var wrongSyntax = i18n.get("command_failures.wrong_syntax", prefix, "invitedeleting");
 		if (args[0].equalsIgnoreCase("list")) {
 			listIgnored(args, ctx, filtersSettings);
-			return;
+			return true;
 		}
 		if (args.length != 3) {
 			ctx.replyError(wrongSyntax);
-			return;
+			return false;
 		}
 		if (args[1].equalsIgnoreCase("user")) {
 			ctx.getArgumentAsUser(2, user -> proceed(args, ctx, filtersSettings, user));
@@ -56,11 +56,11 @@ public class InviteDeletingCommand extends Command {
 		else {
 			ctx.replyError(wrongSyntax);
 		}
+		return true;
 	}
 
 	private void proceed(String[] args, CommandContext ctx, GuildFiltersSettings filtersSettings, IMentionable entity) {
 		var id = entity.getIdLong();
-		var i18n = ctx.getI18n();
 		var mention = entity.getAsMention();
 		if (args[0].equalsIgnoreCase("add")) {
 			if (entity instanceof User) {

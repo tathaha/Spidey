@@ -26,14 +26,14 @@ public class EvalCommand extends Command {
 	}
 
 	@Override
-	public void execute(String[] args, CommandContext ctx) {
+	public boolean execute(String[] args, CommandContext ctx) {
 		var author = ctx.getAuthor();
 		var jda = ctx.getJDA();
 		var channel = ctx.getTextChannel();
 		var message = ctx.getMessage();
 		if (author.getIdLong() != 394607709741252621L) {
 			ctx.replyErrorLocalized("command_failures.only_dev");
-			return;
+			return false;
 		}
 		SCRIPT_ENGINE.put("guild", channel.getGuild());
 		SCRIPT_ENGINE.put("author", author);
@@ -52,7 +52,7 @@ public class EvalCommand extends Command {
 			var evaluated = SCRIPT_ENGINE.eval(toEval.toString());
 			ctx.reactLike();
 			if (evaluated == null) {
-				return;
+				return true;
 			}
 			eb.setColor(Color.GREEN);
 			eb.setDescription("```" + evaluated + "```");
@@ -63,5 +63,6 @@ public class EvalCommand extends Command {
 			eb.setDescription("```" + ex.getMessage() + "```");
 		}
 		ctx.reply(eb);
+		return true;
 	}
 }

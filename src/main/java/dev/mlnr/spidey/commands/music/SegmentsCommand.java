@@ -15,19 +15,19 @@ public class SegmentsCommand extends Command {
 	}
 
 	@Override
-	public void execute(String[] args, CommandContext ctx) {
+	public boolean execute(String[] args, CommandContext ctx) {
 		var cache = ctx.getCache();
 		var guild = ctx.getGuild();
 		var musicPlayer = cache.getMusicPlayerCache().getMusicPlayer(guild);
 		var i18n = ctx.getI18n();
 		if (musicPlayer == null) {
 			ctx.replyErrorLocalized("music.messages.failure.no_music");
-			return;
+			return false;
 		}
 		var playingTrack = musicPlayer.getPlayingTrack();
 		if (playingTrack == null) {
 			ctx.replyErrorLocalized("music.messages.failure.no_song");
-			return;
+			return false;
 		}
 		var videoSegmentCache = cache.getVideoSegmentCache();
 		var videoId = playingTrack.getIdentifier();
@@ -35,14 +35,14 @@ public class SegmentsCommand extends Command {
 		if (args.length > 0) {
 			if (!(args[0].toLowerCase().startsWith("rel") || args[0].equalsIgnoreCase("force"))) {
 				ctx.replyErrorLocalized("commands.segments.other.args");
-				return;
+				return false;
 			}
 			segments = videoSegmentCache.getVideoSegments(videoId, true);
 		}
 		var updatePrompt = i18n.get("commands.segments.other.prompt", cache.getGuildSettingsCache().getMiscSettings(guild.getIdLong()).getPrefix());
 		if (segments.isEmpty()) {
-			ctx.replyError(i18n.get("commands.segments.other.no_segs") + " " + updatePrompt);
-			return;
+			ctx.reply(i18n.get("commands.segments.other.no_segs") + " " + updatePrompt);
+			return true;
 		}
 		var size = segments.size();
 		var stringBuilder = new StringBuilder(size == 1 ? i18n.get("commands.segments.other.message.one") : i18n.get("commands.segments.other.message.multiple", size))
@@ -52,5 +52,6 @@ public class SegmentsCommand extends Command {
 				.append(formatDuration(segment.getSegmentEnd())).append("**\n"));
 		stringBuilder.append("\n").append(updatePrompt);
 		ctx.reply(stringBuilder.toString());
+		return true;
 	}
 }

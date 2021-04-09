@@ -19,18 +19,18 @@ public class NowPlayingCommand extends Command {
 	}
 
 	@Override
-	public void execute(String[] args, CommandContext ctx) {
+	public boolean execute(String[] args, CommandContext ctx) {
 		var guild = ctx.getGuild();
 		var musicPlayer = ctx.getCache().getMusicPlayerCache().getMusicPlayer(guild);
 		var i18n = ctx.getI18n();
 		if (musicPlayer == null) {
 			ctx.replyErrorLocalized("music.messages.failure.no_music");
-			return;
+			return false;
 		}
 		var playingTrack = musicPlayer.getPlayingTrack();
 		if (playingTrack == null) {
 			ctx.replyLocalized("music.messages.failure.no_song");
-			return;
+			return false;
 		}
 		var guildId = guild.getIdLong();
 		var paused = musicPlayer.isPaused();
@@ -60,5 +60,6 @@ public class NowPlayingCommand extends Command {
 			progressBuilder.addField(i18n.get("commands.nowplaying.other.duration_without_segments"), formatDuration(lengthWithoutSegments), true);
 		}
 		ctx.reply(progressBuilder);
+		return true;
 	}
 }

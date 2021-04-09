@@ -14,8 +14,9 @@ public class AkinatorCommand extends Command {
 	}
 
 	@Override
-	public void execute(String[] args, CommandContext ctx) {
+	public boolean execute(String[] args, CommandContext ctx) {
 		var akinatorCache = ctx.getCache().getAkinatorCache();
 		akinatorCache.createAkinator(ctx.getAuthor(), new AkinatorContext(ctx.getEvent(), akinatorCache, ctx.getI18n()));
+		return true;
 	}
 }

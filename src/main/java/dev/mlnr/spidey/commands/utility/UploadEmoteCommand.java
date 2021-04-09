@@ -23,16 +23,16 @@ public class UploadEmoteCommand extends Command {
 	}
 
 	@Override
-	public void execute(String[] args, CommandContext ctx) {
+	public boolean execute(String[] args, CommandContext ctx) {
 		var guild = ctx.getGuild();
 		var i18n = ctx.getI18n();
 		if (!guild.getSelfMember().hasPermission(getRequiredPermission())) {
 			ctx.replyErrorLocalized("commands.uploademote.other.no_perms");
-			return;
+			return false;
 		}
 		if (args.length == 0) {
 			ctx.replyErrorLocalized("commands.uploademote.other.provide_url");
-			return;
+			return false;
 		}
 		var name = "";
 		if (args.length == 2) {
@@ -46,7 +46,7 @@ public class UploadEmoteCommand extends Command {
 				var ext = args[0].substring(index + 1);
 				if (Icon.IconType.fromExtension(ext) == Icon.IconType.UNKNOWN) {
 					ctx.replyErrorLocalized("commands.uploademote.other.provide_format");
-					return;
+					return false;
 				}
 				name = tmp;
 			}
@@ -56,11 +56,11 @@ public class UploadEmoteCommand extends Command {
 		}
 		if (!(name.length() >= 2 && name.length() <= 32)) {
 			ctx.replyErrorLocalized("commands.uploademote.other.name_length");
-			return;
+			return false;
 		}
 		else if (!Utils.TEXT_PATTERN.matcher(name).matches()) {
 			ctx.replyErrorLocalized("commands.uploademote.other.valid_format");
-			return;
+			return false;
 		}
 		var image = new ByteArrayOutputStream();
 		try {
@@ -79,16 +79,16 @@ public class UploadEmoteCommand extends Command {
 		}
 		catch (MalformedURLException ex) {
 			ctx.replyErrorLocalized("commands.uploademote.other.provide_url");
-			return;
+			return false;
 		}
 		catch (IOException ex) {
 			ctx.replyErrorLocalized("internal_error", "upload the emote", ex.getMessage());
-			return;
+			return false;
 		}
 		var byteArray = image.toByteArray();
 		if (byteArray.length > 256000) {
 			ctx.replyErrorLocalized("commands.uploademote.other.size");
-			return;
+			return false;
 		}
 		var maxEmotes = guild.getMaxEmotes();
 		var animated = byteArray[0] == 'G' && byteArray[1] == 'I' && byteArray[2] == 'F' && byteArray[3] == '8' && byteArray[4] == '9' && byteArray[5] == 'a';
@@ -97,7 +97,7 @@ public class UploadEmoteCommand extends Command {
 				.get(animated).size());
 		if (maxEmotes == used) {
 			ctx.replyErrorLocalized("commands.uploademote.other.maximum_size");
-			return;
+			return false;
 		}
 		guild.createEmote(name, Icon.from(byteArray)).queue(emote -> {
 			var left = maxEmotes - used - 1;
@@ -105,5 +105,6 @@ public class UploadEmoteCommand extends Command {
 					animated ? i18n.get("commands.uploademote.other.success.animated") : i18n.get("commands.uploademote.other.success.emote"),
 					(left == 0 ? i18n.get("commands.uploademote.other.success.none") : left));
 		}, failure -> ctx.replyErrorLocalized("internal_error", "upload the emote", failure.getMessage()));
+		return true;
 	}
 }

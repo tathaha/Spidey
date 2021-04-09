@@ -18,12 +18,13 @@ public class UserCommand extends Command {
 	}
 
 	@Override
-	public void execute(String[] args, CommandContext ctx) {
+	public boolean execute(String[] args, CommandContext ctx) {
 		if (args.length == 0) {
 			respond(ctx, ctx.getAuthor(), ctx.getMember());
-			return;
+			return true;
 		}
 		ctx.getArgumentAsUser(0, user -> ctx.getGuild().retrieveMember(user).queue(member -> respond(ctx, user, member), failure -> respond(ctx, user, null)));
+		return true;
 	}
 
 	private void respond(CommandContext ctx, User user, Member member) {

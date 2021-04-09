@@ -13,5 +13,7 @@ public class AnalCommand extends Command {
 	}
 
 	@Override
-	public void execute(String[] args, CommandContext ctx) {}
+	public boolean execute(String[] args, CommandContext ctx) {
+		return true;
+	}
 }
