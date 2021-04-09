@@ -22,8 +22,7 @@ public class StringUtils {
 		return CommandHandler.getCommands().keySet().stream().filter(invoke -> getSimilarity(invoke, command) > 0.5).findFirst().orElse(null);
 	}
 
-	private static double getSimilarity(String s1, String s2) // https://stackoverflow.com/a/16018452/9046789
-	{
+	private static double getSimilarity(String s1, String s2) { // https://stackoverflow.com/a/16018452/9046789
 		var longer = s1;
 		var shorter = s2;
 		if (s1.length() < s2.length()) {
