@@ -1,9 +1,9 @@
 package dev.mlnr.spidey;
 
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory;
-import dev.mlnr.blh.api.BLHBuilder;
-import dev.mlnr.blh.api.BLHEventListener;
-import dev.mlnr.blh.api.BotList;
+import dev.mlnr.blh.core.api.BLHBuilder;
+import dev.mlnr.blh.core.api.BotList;
+import dev.mlnr.blh.jda.BLHJDAListener;
 import dev.mlnr.spidey.events.ReadyEvents;
 import dev.mlnr.spidey.handlers.command.CommandHandler;
 import dev.mlnr.spidey.objects.I18n;
@@ -42,7 +42,7 @@ public class Spidey {
 		RestAction.setDefaultFailure(null);
 		MessageAction.setDefaultMentions(EnumSet.noneOf(Message.MentionType.class));
 
-		var blh = new BLHBuilder().setDevModePredicate(jdaO -> jdaO.getSelfUser().getIdLong() != 772446532560486410L)
+		var blh = new BLHBuilder().setDevModePredicate(botId -> botId != 772446532560486410L)
 				.setSuccessLoggingEnabled(false)
 				.setUnavailableEventsEnabled(false)
 				.addBotList(BotList.TOP_GG, System.getenv("topgg"))
@@ -69,7 +69,7 @@ public class Spidey {
 			)
 			.setMemberCachePolicy(MemberCachePolicy.VOICE)
 			.setChunkingFilter(ChunkingFilter.NONE)
-			.addEventListeners(new ReadyEvents(this), ConcurrentUtils.getEventWaiter(), new BLHEventListener(blh))
+			.addEventListeners(new ReadyEvents(this), ConcurrentUtils.getEventWaiter(), new BLHJDAListener(blh))
 			.setActivity(Activity.watching("myself load"))
 			.setStatus(OnlineStatus.DO_NOT_DISTURB)
 			.setGatewayEncoding(GatewayEncoding.ETF)
