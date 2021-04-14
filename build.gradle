@@ -22,8 +22,7 @@ dependencies {
     implementation group: 'com.github.markozajc', name: 'akiwrapper', version: '1.5.1.1'
 
     // bot list handler
-    implementation group: 'dev.mlnr', name: 'BotListHandler-core', version: '2.0.0_4' // this wouldn't be required if IJ wasn't retarded
-    implementation group: 'dev.mlnr', name: 'BotListHandler-jda', version: '2.0.0_4'
+    implementation group: 'dev.mlnr', name: 'BotListHandler-jda', version: '2.0.0_5'
 
     // database
     implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.19'
