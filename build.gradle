@@ -10,10 +10,8 @@ application {
 }
 
 repositories {
-    mavenCentral() // this is just to receive dependabot prs from mvnrepository
-    maven {
-        url 'https://jitpack.io'
-    }
+    mavenCentral()
+    jcenter() // for jda-nas only
     maven {
         url 'https://m2.dv8tion.net/releases'
     }
@@ -24,7 +22,8 @@ dependencies {
     implementation group: 'com.github.markozajc', name: 'akiwrapper', version: '1.5.1.1'
 
     // bot list handler
-    implementation group: 'dev.mlnr', name: 'BotListHandler-jda', version: '2.0.0_1'
+    implementation group: 'dev.mlnr', name: 'BotListHandler-core', version: '2.0.0_4' // this wouldn't be required if IJ wasn't retarded
+    implementation group: 'dev.mlnr', name: 'BotListHandler-jda', version: '2.0.0_4'
 
     // database
     implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.19'
