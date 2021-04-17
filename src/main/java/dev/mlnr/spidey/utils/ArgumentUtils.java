@@ -61,7 +61,7 @@ public class ArgumentUtils {
 		var givenNameNotFound = i18n.get("argument_parser.not_found.given_name", typeLocalizedLowercase);
 		var embedBuilder = Utils.createEmbedBuilder(author);
 
-		if (argumentType.isMentionable() && argumentType.getMentionRegex().matcher(argument).matches()) {
+		if (argumentType.getMentionRegex().matcher(argument).matches()) {
 			var mentions = ctx.getMessage().getMentions(argumentType.getMentionType());
 			if (mentions.isEmpty()) {
 				ctx.replyError(entityNotFound);
@@ -143,31 +143,20 @@ public class ArgumentUtils {
 					}
 					break;
 				case TEXT_CHANNEL:
-					var textChannels = guild.getTextChannelsByName(argument, true);
-					if (textChannels.isEmpty()) {
-						ctx.replyError(givenNameNotFound);
-					}
-					else if (textChannels.size() == 1) {
-						entityConsumer.accept(textChannels.get(0));
-					}
-					else {
-						createEntitySelection(embedBuilder, textChannels, ctx, typeLocalizedLowercase,
-								textChannel -> textChannel.getAsMention() + " - ID: " + textChannel.getIdLong(),
-								choice -> entityConsumer.accept(textChannels.get(choice)));
-					}
-					break;
 				case VOICE_CHANNEL:
-					var voiceChannels = guild.getVoiceChannelsByName(argument, true);
-					if (voiceChannels.isEmpty()) {
+					var channels = argumentType == ArgumentType.TEXT_CHANNEL
+							? guild.getTextChannelsByName(argument, true)
+							: guild.getVoiceChannelsByName(argument, true);
+					if (channels.isEmpty()) {
 						ctx.replyError(givenNameNotFound);
 					}
-					else if (voiceChannels.size() == 1) {
-						entityConsumer.accept(voiceChannels.get(0));
+					else if (channels.size() == 1) {
+						entityConsumer.accept(channels.get(0));
 					}
 					else {
-						createEntitySelection(embedBuilder, voiceChannels, ctx, typeLocalizedLowercase,
-								voiceChannel -> voiceChannel.getName() + " - ID: " + voiceChannel.getIdLong(),
-								choice -> entityConsumer.accept(voiceChannels.get(choice)));
+						createEntitySelection(embedBuilder, channels, ctx, typeLocalizedLowercase,
+								channel -> channel.getAsMention() + " - ID: " + channel.getIdLong(),
+								choice -> entityConsumer.accept(channels.get(choice)));
 					}
 					break;
 			}
@@ -186,16 +175,12 @@ public class ArgumentUtils {
 		USER(Message.MentionType.USER),
 		ROLE(Message.MentionType.ROLE),
 		TEXT_CHANNEL(Message.MentionType.CHANNEL),
-		VOICE_CHANNEL(null);
+		VOICE_CHANNEL(Message.MentionType.CHANNEL);
 
 		private final Message.MentionType mentionType;
 
 		ArgumentType(Message.MentionType mentionType) {
 			this.mentionType = mentionType;
-		}
-
-		public boolean isMentionable() {
-			return mentionType != null;
 		}
 
 		public Message.MentionType getMentionType() {
