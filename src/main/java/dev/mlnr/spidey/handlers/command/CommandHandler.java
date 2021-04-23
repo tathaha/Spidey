@@ -4,14 +4,15 @@ import dev.mlnr.spidey.cache.Cache;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
-import dev.mlnr.spidey.utils.KSoftAPIHelper;
 import dev.mlnr.spidey.utils.StringUtils;
 import dev.mlnr.spidey.utils.Utils;
+import dev.mlnr.spidey.utils.requests.Requester;
 import io.github.classgraph.ClassGraph;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.*;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -68,8 +69,11 @@ public class CommandHandler {
 				Utils.returnError(i18n.get("command_failures.only_nsfw"), message);
 				return;
 			}
-			Utils.sendMessage(channel, KSoftAPIHelper.getNsfwImage(cmd.getInvoke(), member), message);
-			cooldown(userId, cmd, vip);
+			Requester.getRandomSubredditImage(cmd.getInvoke(), null, event, i18n, embedBuilder -> {
+				embedBuilder.setColor(Color.PINK);
+				Utils.sendMessage(channel, embedBuilder.build(), message);
+				cooldown(userId, cmd, vip);
+			});
 			return;
 		}
 		//

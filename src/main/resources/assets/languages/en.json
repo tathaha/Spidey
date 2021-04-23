@@ -129,6 +129,17 @@
         }
       }
     },
+    "subreddit": {
+      "description": "Sends a random image from given subreddit",
+      "usage": "subreddit <subreddit>",
+      "other": {
+        "enter_name": "Please enter the name of the subreddit.",
+        "description": "A random image from [r/%s](https://reddit.com/r/%1$s)",
+        "not_found": "Subreddit with name %s doesn't exist.",
+        "no_posts": "There are no posts within the last month in the subreddit.",
+        "nsfw": "The random image was marked as NSFW but this channel is not."
+      }
+    },
     "voicegame": {
       "description": "Creates an invite for a game in your voice channel",
       "usage": "voicegame <game name or blank to list available games>",

@@ -1,21 +1,21 @@
 package dev.mlnr.spidey.utils.requests.api;
 
 public enum API {
-	KSOFT_NSFW("https://api.ksoft.si/images/rand-reddit/%s?span=month", "Bearer " + System.getenv("ksoft"));
+	KSOFT("https://api.ksoft.si/images/rand-reddit/%s?span=month", "Bearer " + System.getenv("ksoft"));
 
 	private final String url;
-	private final String key;
+	private final String token;
 
-	API(String url, String key) {
+	API(String url, String token) {
 		this.url = url;
-		this.key = key;
+		this.token = token;
 	}
 
 	public String getUrl() {
 		return this.url;
 	}
 
-	public String getKey() {
-		return this.key;
+	public String getToken() {
+		return this.token;
 	}
 }

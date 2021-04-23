@@ -1,17 +1,21 @@
 package dev.mlnr.spidey.utils.requests;
 
+import dev.mlnr.spidey.objects.I18n;
+import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.games.VoiceGameType;
 import dev.mlnr.spidey.objects.music.VideoSegment;
+import dev.mlnr.spidey.utils.Utils;
 import dev.mlnr.spidey.utils.requests.api.API;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.utils.data.DataArray;
 import net.dv8tion.jda.api.utils.data.DataObject;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
+import okhttp3.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -25,21 +29,46 @@ public class Requester {
 
 	private Requester() {}
 
-	public static DataObject executeApiRequest(API api, Object... args) {
+	public static void getRandomSubredditImage(String subreddit, CommandContext ctx, GuildMessageReceivedEvent event, I18n i18n, Consumer<EmbedBuilder> embedBuilderConsumer) {
 		var requestBuilder = new Request.Builder();
-		var url = String.format(api.getUrl(), args);
-		requestBuilder.url(url);
-		var apiKey = api.getKey();
-		if (apiKey != null) {
-			requestBuilder.header("Authorization", apiKey);
-		}
-		try (var response = HTTP_CLIENT.newCall(requestBuilder.build()).execute(); var body = response.body()) {
-			return DataObject.fromJson(body.string());
-		}
-		catch (Exception ex) {
-			logger.error("There was an error while executing a request for url {}:", url, ex);
-		}
-		return DataObject.empty();
+		var url = API.KSOFT.getUrl();
+		requestBuilder.url(String.format(url, subreddit));
+		requestBuilder.header("Authorization", API.KSOFT.getToken());
+
+		HTTP_CLIENT.newCall(requestBuilder.build()).enqueue(new Callback() {
+			@Override
+			public void onFailure(final Call call, final IOException e) {
+				if (ctx != null) {
+					ctx.replyErrorLocalized("internal_error", "get a random image from the subreddit", e.getMessage());
+				}
+				logger.error("There was an error while executing a request for url {}:", url, e);
+			}
+
+			@Override
+			public void onResponse(final Call call, final Response response) throws IOException {
+				var responseCode = response.code();
+				if (responseCode == 404) {
+					ctx.replyErrorLocalized("commands.subreddit.other.not_found", subreddit);
+					return;
+				}
+				else if (responseCode == 410) {
+					ctx.replyErrorLocalized("commands.subreddit.other.no_posts", subreddit);
+					return;
+				}
+				var responseBody = response.body().string();
+				var json = DataObject.fromJson(responseBody);
+				if (json.getBoolean("nsfw") && !event.getChannel().isNSFW()) {
+					ctx.replyErrorLocalized("commands.subreddit.other.nsfw");
+					return;
+				}
+				var eb = Utils.createEmbedBuilder(event.getAuthor());
+				eb.setAuthor(json.getString("title"), json.getString("source"));
+				eb.setImage(json.getString("image_url"));
+				eb.setDescription(i18n.get("commands.subreddit.other.description", subreddit));
+				eb.setTimestamp(Instant.ofEpochSecond(json.getInt("created_at")));
+				embedBuilderConsumer.accept(eb);
+			}
+		});
 	}
 
 	public static List<VideoSegment> retrieveVideoSegments(String videoId) {
