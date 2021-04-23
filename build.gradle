@@ -25,19 +25,19 @@ dependencies {
     implementation group: 'dev.mlnr', name: 'BotListHandler-jda', version: '2.0.0_5'
 
     // database
-    implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.19'
+    implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.20'
     implementation group: 'com.zaxxer', name: 'HikariCP', version: '4.0.3'
-    implementation group: 'org.jooq', name: 'jooq', version: '3.14.8'
+    implementation group: 'org.jooq', name: 'jooq', version: '3.14.9'
     jooqGenerator group: 'org.postgresql', name: 'postgresql', version: '42.2.19'
 
     // eval
-    implementation group: 'org.codehaus.groovy', name: 'groovy-jsr223', version: '3.0.7'
+    implementation group: 'org.codehaus.groovy', name: 'groovy-jsr223', version: '3.0.8'
 
     // expiring map for caches
     implementation group: 'net.jodah', name: 'expiringmap', version: '0.5.9'
 
     // jda
-    implementation("net.dv8tion:JDA:4.2.1_258") {
+    implementation("net.dv8tion:JDA:4.2.1_261") {
         exclude group: 'club.minnced', module: 'opus-java'
     }
 
