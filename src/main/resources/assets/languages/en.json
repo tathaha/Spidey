@@ -136,8 +136,7 @@
         "enter_name": "Please enter the name of the subreddit.",
         "description": "A random image from [r/%s](https://reddit.com/r/%1$s)",
         "not_found": "Subreddit with name %s doesn't exist.",
-        "no_posts": "There are no posts within the last month in the subreddit.",
-        "nsfw": "The random image was marked as NSFW but this channel is not."
+        "no_posts": "No posts within the last month were found. This could also be caused by filtering out NSFW images when the channel the command was entered in is not marked as NSFW.",
       }
     },
     "voicegame": {

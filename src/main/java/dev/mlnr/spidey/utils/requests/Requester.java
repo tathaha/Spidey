@@ -32,7 +32,7 @@ public class Requester {
 	public static void getRandomSubredditImage(String subreddit, CommandContext ctx, GuildMessageReceivedEvent event, I18n i18n, Consumer<EmbedBuilder> embedBuilderConsumer) {
 		var requestBuilder = new Request.Builder();
 		var url = API.KSOFT.getUrl();
-		requestBuilder.url(String.format(url, subreddit));
+		requestBuilder.url(String.format(url, subreddit, !event.getChannel().isNSFW()));
 		requestBuilder.header("Authorization", API.KSOFT.getToken());
 
 		HTTP_CLIENT.newCall(requestBuilder.build()).enqueue(new Callback() {
@@ -57,10 +57,6 @@ public class Requester {
 				}
 				var responseBody = response.body().string();
 				var json = DataObject.fromJson(responseBody);
-				if (json.getBoolean("nsfw") && !event.getChannel().isNSFW()) {
-					ctx.replyErrorLocalized("commands.subreddit.other.nsfw");
-					return;
-				}
 				var eb = Utils.createEmbedBuilder(event.getAuthor());
 				eb.setAuthor(json.getString("title"), json.getString("source"));
 				eb.setImage(json.getString("image_url"));
