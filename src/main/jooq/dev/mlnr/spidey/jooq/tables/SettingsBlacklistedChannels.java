@@ -7,13 +7,22 @@ package dev.mlnr.spidey.jooq.tables;
 import dev.mlnr.spidey.jooq.Keys;
 import dev.mlnr.spidey.jooq.Public;
 import dev.mlnr.spidey.jooq.tables.records.SettingsBlacklistedChannelsRecord;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 import java.util.Arrays;
 import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Row2;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -83,16 +92,6 @@ public class SettingsBlacklistedChannels extends TableImpl<SettingsBlacklistedCh
     @Override
     public Schema getSchema() {
         return Public.PUBLIC;
-    }
-
-    @Override
-    public UniqueKey<SettingsBlacklistedChannelsRecord> getPrimaryKey() {
-        return Keys.SETTINGS_BLACKLISTED_CHANNELS_PKEY;
-    }
-
-    @Override
-    public List<UniqueKey<SettingsBlacklistedChannelsRecord>> getKeys() {
-        return Arrays.<UniqueKey<SettingsBlacklistedChannelsRecord>>asList(Keys.SETTINGS_BLACKLISTED_CHANNELS_PKEY);
     }
 
     @Override

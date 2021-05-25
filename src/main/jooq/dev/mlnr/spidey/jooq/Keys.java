@@ -4,8 +4,23 @@
 package dev.mlnr.spidey.jooq;
 
 
-import dev.mlnr.spidey.jooq.tables.*;
-import dev.mlnr.spidey.jooq.tables.records.*;
+import dev.mlnr.spidey.jooq.tables.Guilds;
+import dev.mlnr.spidey.jooq.tables.InviteFilterIgnoredRoles;
+import dev.mlnr.spidey.jooq.tables.InviteFilterIgnoredUsers;
+import dev.mlnr.spidey.jooq.tables.SettingsBlacklistedChannels;
+import dev.mlnr.spidey.jooq.tables.SettingsFilters;
+import dev.mlnr.spidey.jooq.tables.SettingsMisc;
+import dev.mlnr.spidey.jooq.tables.SettingsMusic;
+import dev.mlnr.spidey.jooq.tables.SettingsWhitelistedChannels;
+import dev.mlnr.spidey.jooq.tables.records.GuildsRecord;
+import dev.mlnr.spidey.jooq.tables.records.InviteFilterIgnoredRolesRecord;
+import dev.mlnr.spidey.jooq.tables.records.InviteFilterIgnoredUsersRecord;
+import dev.mlnr.spidey.jooq.tables.records.SettingsBlacklistedChannelsRecord;
+import dev.mlnr.spidey.jooq.tables.records.SettingsFiltersRecord;
+import dev.mlnr.spidey.jooq.tables.records.SettingsMiscRecord;
+import dev.mlnr.spidey.jooq.tables.records.SettingsMusicRecord;
+import dev.mlnr.spidey.jooq.tables.records.SettingsWhitelistedChannelsRecord;
+
 import org.jooq.ForeignKey;
 import org.jooq.TableField;
 import org.jooq.UniqueKey;
@@ -25,11 +40,9 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     public static final UniqueKey<GuildsRecord> GUILDS_PKEY = Internal.createUniqueKey(Guilds.GUILDS, DSL.name("guilds_pkey"), new TableField[] { Guilds.GUILDS.GUILD_ID }, true);
-    public static final UniqueKey<SettingsBlacklistedChannelsRecord> SETTINGS_BLACKLISTED_CHANNELS_PKEY = Internal.createUniqueKey(SettingsBlacklistedChannels.SETTINGS_BLACKLISTED_CHANNELS, DSL.name("settings_blacklisted_channels_pkey"), new TableField[] { SettingsBlacklistedChannels.SETTINGS_BLACKLISTED_CHANNELS.GUILD_ID }, true);
     public static final UniqueKey<SettingsFiltersRecord> SETTINGS_FILTERS_PKEY = Internal.createUniqueKey(SettingsFilters.SETTINGS_FILTERS, DSL.name("settings_filters_pkey"), new TableField[] { SettingsFilters.SETTINGS_FILTERS.GUILD_ID }, true);
     public static final UniqueKey<SettingsMiscRecord> SETTINGS_MISC_PKEY = Internal.createUniqueKey(SettingsMisc.SETTINGS_MISC, DSL.name("settings_misc_pkey"), new TableField[] { SettingsMisc.SETTINGS_MISC.GUILD_ID }, true);
     public static final UniqueKey<SettingsMusicRecord> SETTINGS_MUSIC_PKEY = Internal.createUniqueKey(SettingsMusic.SETTINGS_MUSIC, DSL.name("settings_music_pkey"), new TableField[] { SettingsMusic.SETTINGS_MUSIC.GUILD_ID }, true);
-    public static final UniqueKey<SettingsWhitelistedChannelsRecord> SETTINGS_WHITELISTED_CHANNELS_PKEY = Internal.createUniqueKey(SettingsWhitelistedChannels.SETTINGS_WHITELISTED_CHANNELS, DSL.name("settings_whitelisted_channels_pkey"), new TableField[] { SettingsWhitelistedChannels.SETTINGS_WHITELISTED_CHANNELS.GUILD_ID }, true);
 
     // -------------------------------------------------------------------------
     // FOREIGN KEY definitions

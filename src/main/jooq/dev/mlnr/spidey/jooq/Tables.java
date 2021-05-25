@@ -4,7 +4,14 @@
 package dev.mlnr.spidey.jooq;
 
 
-import dev.mlnr.spidey.jooq.tables.*;
+import dev.mlnr.spidey.jooq.tables.Guilds;
+import dev.mlnr.spidey.jooq.tables.InviteFilterIgnoredRoles;
+import dev.mlnr.spidey.jooq.tables.InviteFilterIgnoredUsers;
+import dev.mlnr.spidey.jooq.tables.SettingsBlacklistedChannels;
+import dev.mlnr.spidey.jooq.tables.SettingsFilters;
+import dev.mlnr.spidey.jooq.tables.SettingsMisc;
+import dev.mlnr.spidey.jooq.tables.SettingsMusic;
+import dev.mlnr.spidey.jooq.tables.SettingsWhitelistedChannels;
 
 
 /**

@@ -5,6 +5,7 @@ package dev.mlnr.spidey.jooq.tables.records;
 
 
 import dev.mlnr.spidey.jooq.tables.SettingsMusic;
+
 import org.jooq.Field;
 import org.jooq.Record1;
 import org.jooq.Record6;

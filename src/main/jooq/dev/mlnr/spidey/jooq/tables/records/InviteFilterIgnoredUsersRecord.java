@@ -5,6 +5,7 @@ package dev.mlnr.spidey.jooq.tables.records;
 
 
 import dev.mlnr.spidey.jooq.tables.InviteFilterIgnoredUsers;
+
 import org.jooq.Field;
 import org.jooq.Record2;
 import org.jooq.Row2;

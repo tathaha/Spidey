@@ -4,13 +4,21 @@
 package dev.mlnr.spidey.jooq;
 
 
-import dev.mlnr.spidey.jooq.tables.*;
-import org.jooq.Catalog;
-import org.jooq.Table;
-import org.jooq.impl.SchemaImpl;
+import dev.mlnr.spidey.jooq.tables.Guilds;
+import dev.mlnr.spidey.jooq.tables.InviteFilterIgnoredRoles;
+import dev.mlnr.spidey.jooq.tables.InviteFilterIgnoredUsers;
+import dev.mlnr.spidey.jooq.tables.SettingsBlacklistedChannels;
+import dev.mlnr.spidey.jooq.tables.SettingsFilters;
+import dev.mlnr.spidey.jooq.tables.SettingsMisc;
+import dev.mlnr.spidey.jooq.tables.SettingsMusic;
+import dev.mlnr.spidey.jooq.tables.SettingsWhitelistedChannels;
 
 import java.util.Arrays;
 import java.util.List;
+
+import org.jooq.Catalog;
+import org.jooq.Table;
+import org.jooq.impl.SchemaImpl;
 
 
 /**
