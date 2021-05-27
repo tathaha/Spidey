@@ -82,7 +82,8 @@ public class CommandHandler {
 		var tmp = SPACES_REGEX.split(content, maxArgs > 0 ? maxArgs + 1 : 0);
 		var args = Arrays.copyOfRange(tmp, 1, tmp.length);
 
-		if (cmd.execute(args, new CommandContext(args, event, i18n, cache))) {
+		var executed = cmd.execute(args, new CommandContext(args, event, i18n, cache));
+		if (executed) {
 			cooldown(userId, cmd, vip);
 		}
 	}

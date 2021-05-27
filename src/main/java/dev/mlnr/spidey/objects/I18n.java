@@ -47,7 +47,6 @@ public class I18n {
 		var parts = key.split("\\.");
 		for (var i = 0; i < (parts.length - 1); i++)
 			object = object.getObject(parts[i]);
-
 		var string = object.getString(parts[parts.length - 1]);
 		return applyArguments(string, args);
 	}

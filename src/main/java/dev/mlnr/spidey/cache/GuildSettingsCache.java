@@ -3,17 +3,18 @@ package dev.mlnr.spidey.cache;
 import dev.mlnr.spidey.Spidey;
 import dev.mlnr.spidey.objects.settings.guild.*;
 
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
 public class GuildSettingsCache {
-	private final Map<Class<?>, Map<Long, IGuildSettings>> guildSettingsMap = new HashMap<>();
+	private final Map<SettingsType, Map<Long, IGuildSettings>> guildSettingsMap = new EnumMap<>(SettingsType.class);
 
 	private final Spidey spidey;
 
 	private static GuildSettingsCache guildSettingsCache;
 
-	public GuildSettingsCache(Spidey spidey) {
+	private GuildSettingsCache(Spidey spidey) {
 		this.spidey = spidey;
 	}
 
@@ -28,23 +29,23 @@ public class GuildSettingsCache {
 	}
 
 	public GuildChannelsSettings getChannelsSettings(long guildId) {
-		return getSettings(GuildChannelsSettings.class, guildId);
+		return getSettings(SettingsType.CHANNELS, guildId);
 	}
 
 	public GuildFiltersSettings getFiltersSettings(long guildId) {
-		return getSettings(GuildFiltersSettings.class, guildId);
+		return getSettings(SettingsType.FILTERS, guildId);
 	}
 
 	public GuildGeneralSettings getGeneralSettings(long guildId) {
-		return getSettings(GuildGeneralSettings.class, guildId);
+		return getSettings(SettingsType.GENERAL, guildId);
 	}
 
 	public GuildMiscSettings getMiscSettings(long guildId) {
-		return getSettings(GuildMiscSettings.class, guildId);
+		return getSettings(SettingsType.MISC, guildId);
 	}
 
 	public GuildMusicSettings getMusicSettings(long guildId) {
-		return getSettings(GuildMusicSettings.class, guildId);
+		return getSettings(SettingsType.MUSIC, guildId);
 	}
 
 	public void remove(long guildId) {
@@ -53,7 +54,7 @@ public class GuildSettingsCache {
 
 	// helper methods
 
-	private <T extends IGuildSettings> T getSettings(Class<T> type, long guildId) {
+	private <T extends IGuildSettings> T getSettings(SettingsType type, long guildId) {
 		var cacheMap = guildSettingsMap.computeIfAbsent(type, k -> new HashMap<>());
 		var settings = cacheMap.get(guildId);
 		if (settings == null) {
@@ -63,16 +64,29 @@ public class GuildSettingsCache {
 		return (T) settings;
 	}
 
-	private IGuildSettings parseSettingsFromType(Class<?> type, long guildId) {
+	private IGuildSettings parseSettingsFromType(SettingsType type, long guildId) {
 		var databaseManager = spidey.getDatabaseManager();
-		if (type == GuildChannelsSettings.class)
-			return databaseManager.retrieveGuildChannelsSettings(guildId, databaseManager);
-		else if (type == GuildFiltersSettings.class)
-			return databaseManager.retrieveGuildFiltersSettings(guildId);
-		else if (type == GuildGeneralSettings.class)
-			return databaseManager.retrieveGuildGeneralSettings(guildId);
-		else if (type == GuildMiscSettings.class)
-			return databaseManager.retrieveGuildMiscSettings(guildId, spidey);
-		return databaseManager.retrieveGuildMusicSettings(guildId, spidey);
+		switch (type) {
+			case CHANNELS:
+				return databaseManager.retrieveGuildChannelsSettings(guildId);
+			case FILTERS:
+				return databaseManager.retrieveGuildFiltersSettings(guildId);
+			case GENERAL:
+				return databaseManager.retrieveGuildGeneralSettings(guildId);
+			case MISC:
+				return databaseManager.retrieveGuildMiscSettings(guildId, spidey);
+			case MUSIC:
+				return databaseManager.retrieveGuildMusicSettings(guildId, spidey);
+			default:
+				return null;
+		}
+	}
+
+	private enum SettingsType {
+		CHANNELS,
+		FILTERS,
+		GENERAL,
+		MISC,
+		MUSIC
 	}
 }

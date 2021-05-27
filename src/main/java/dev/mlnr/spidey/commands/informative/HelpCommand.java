@@ -101,7 +101,7 @@ public class HelpCommand extends Command {
 		var requiredPermission = command.getRequiredPermission();
 		var aliases = command.getAliases();
 		var generalSettings = guildSettingsCache.getGeneralSettings(guildId);
-		var cooldown = CooldownHandler.getCooldown(command, generalSettings.isVip());
+		var cooldown = CooldownHandler.adjustCooldown(command.getCooldown(), generalSettings.isVip());
 
 		eb.setAuthor(i18n.get("commands.help.other.viewing") + " - " + invoke);
 		eb.addField(i18n.get("commands.help.other.command_info.description"),

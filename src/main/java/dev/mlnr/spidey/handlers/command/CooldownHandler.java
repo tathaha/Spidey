@@ -12,10 +12,10 @@ public class CooldownHandler {
 
 	public static void cooldown(long userId, Command command, boolean vip) {
 		var cooldown = command.getCooldown();
-		if (cooldown == 0) {
-			return;
+		if (cooldown != 0) {
+			var adjustedCooldown = adjustCooldown(cooldown, vip) * 1000L;
+			COOLDOWN_MAP.computeIfAbsent(command, k -> new HashMap<>()).put(userId, System.currentTimeMillis() + adjustedCooldown);
 		}
-		COOLDOWN_MAP.computeIfAbsent(command, k -> new HashMap<>()).put(userId, System.currentTimeMillis() + getCooldown(command, vip) * 1000L);
 	}
 
 	public static boolean isOnCooldown(long userId, Command command) {
@@ -34,8 +34,7 @@ public class CooldownHandler {
 		return true;
 	}
 
-	public static int getCooldown(Command command, boolean vip) {
-		var cooldown = command.getCooldown();
+	public static int adjustCooldown(int cooldown, boolean vip) {
 		return vip ? cooldown / 2 : cooldown;
 	}
 }

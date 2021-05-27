@@ -56,8 +56,8 @@ public class DatabaseManager {
 		return defaultSettingsTransformer.apply(null);
 	}
 
-	public GuildChannelsSettings retrieveGuildChannelsSettings(long guildId, DatabaseManager databaseManager) {
-		return new GuildChannelsSettings(guildId, retrieveWhitelistedChannels(guildId), retrieveBlacklistedChannels(guildId), databaseManager);
+	public GuildChannelsSettings retrieveGuildChannelsSettings(long guildId) {
+		return new GuildChannelsSettings(guildId, retrieveWhitelistedChannels(guildId), retrieveBlacklistedChannels(guildId), this);
 	}
 
 	public GuildFiltersSettings retrieveGuildFiltersSettings(long guildId) {
