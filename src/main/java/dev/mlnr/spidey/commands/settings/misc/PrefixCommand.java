@@ -13,7 +13,7 @@ public class PrefixCommand extends Command {
 	}
 
 	@Override
-	public boolean execute(String[] args, CommandContext ctx) {
+	public boolean execute(CommandContext ctx) {
 		var miscSettings = ctx.getCache().getGuildSettingsCache().getMiscSettings(ctx.getGuild().getIdLong());
 		var currentPrefix = miscSettings.getPrefix();
 		if (args.length == 0) {

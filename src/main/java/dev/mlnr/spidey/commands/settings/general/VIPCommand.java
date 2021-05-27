@@ -13,8 +13,8 @@ public class VIPCommand extends Command {
 	}
 
 	@Override
-	public boolean execute(String[] args, CommandContext ctx) {
-		if (ctx.getAuthor().getIdLong() != 394607709741252621L) {
+	public boolean execute(CommandContext ctx) {
+		if (ctx.getUser().getIdLong() != 394607709741252621L) {
 			ctx.replyErrorLocalized("command_failures.only_dev");
 			return false;
 		}

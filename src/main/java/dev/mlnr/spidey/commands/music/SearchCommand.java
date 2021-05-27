@@ -9,33 +9,35 @@ import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.objects.music.AudioLoader;
 import dev.mlnr.spidey.utils.ConcurrentUtils;
-import dev.mlnr.spidey.utils.Emojis;
 import dev.mlnr.spidey.utils.MusicUtils;
 import dev.mlnr.spidey.utils.StringUtils;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 @SuppressWarnings("unused")
 public class SearchCommand extends Command {
-
 	public SearchCommand() {
-		super("search", new String[]{"ytsearch"}, Category.MUSIC, Permission.UNKNOWN, 1, 4);
+		super("search", Category.MUSIC, Permission.UNKNOWN, 4,
+				new OptionData(OptionType.STRING, "query", "The query to search YouTube for").setRequired(true));
 	}
 
 	@Override
-	public boolean execute(String[] args, CommandContext ctx) {
-		var musicPlayer = MusicUtils.checkQueryInput(args, ctx);
+	public boolean execute(CommandContext ctx) {
+		var musicPlayer = MusicUtils.checkPlayability(ctx);
 		if (musicPlayer == null) {
 			return false;
 		}
+		var query = ctx.getStringOption("query");
 		var i18n = ctx.getI18n();
-		MusicUtils.loadQuery(musicPlayer, "ytsearch:" + args[0], new AudioLoadResultHandler() {
+		MusicUtils.loadQuery(musicPlayer, "ytsearch:" + query, new AudioLoadResultHandler() {
 			@Override
 			public void trackLoaded(AudioTrack track) {}
 
 			@Override
 			public void playlistLoaded(AudioPlaylist playlist) {
 				var selectionEmbedBuilder = MusicUtils.createMusicResponseBuilder();
-				selectionEmbedBuilder.setAuthor(i18n.get("commands.search.other.searching", args[0]));
+				selectionEmbedBuilder.setAuthor(i18n.get("commands.search.other.searching", query));
 
 				var tracks = playlist.getTracks();
 				StringUtils.createSelection(selectionEmbedBuilder, tracks, ctx, "track", MusicUtils::formatTrack, ConcurrentUtils.getEventWaiter(), choice -> {
@@ -47,12 +49,12 @@ public class SearchCommand extends Command {
 
 			@Override
 			public void noMatches() {
-				ctx.replyError(i18n.get("music.messages.failure.no_matches", args[0]), Emojis.DISLIKE);
+				ctx.replyError(i18n.get("music.messages.failure.no_matches", query));
 			}
 
 			@Override
 			public void loadFailed(FriendlyException exception) {
-				ctx.replyError(i18n.get("commands.search.other.error"), Emojis.DISLIKE);
+				ctx.replyError(i18n.get("commands.search.other.error"));
 			}
 		});
 		return true;

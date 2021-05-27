@@ -1,13 +1,11 @@
 package dev.mlnr.spidey.utils.requests;
 
-import dev.mlnr.spidey.objects.I18n;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.games.VoiceGameType;
 import dev.mlnr.spidey.objects.music.VideoSegment;
 import dev.mlnr.spidey.utils.Utils;
 import dev.mlnr.spidey.utils.requests.api.API;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.utils.data.DataArray;
 import net.dv8tion.jda.api.utils.data.DataObject;
 import okhttp3.*;
@@ -29,10 +27,11 @@ public class Requester {
 
 	private Requester() {}
 
-	public static void getRandomSubredditImage(String subreddit, CommandContext ctx, GuildMessageReceivedEvent event, I18n i18n, Consumer<EmbedBuilder> embedBuilderConsumer) {
+	public static void getRandomSubredditImage(String subreddit, CommandContext ctx, Consumer<EmbedBuilder> embedBuilderConsumer) {
 		var requestBuilder = new Request.Builder();
 		var url = API.KSOFT.getUrl();
-		requestBuilder.url(String.format(url, subreddit, !event.getChannel().isNSFW()));
+		var event = ctx.getEvent();
+		requestBuilder.url(String.format(url, subreddit, !event.getTextChannel().isNSFW()));
 		requestBuilder.header("Authorization", API.KSOFT.getToken());
 
 		HTTP_CLIENT.newCall(requestBuilder.build()).enqueue(new Callback() {
@@ -57,10 +56,10 @@ public class Requester {
 				}
 				var responseBody = response.body().string();
 				var json = DataObject.fromJson(responseBody);
-				var eb = Utils.createEmbedBuilder(event.getAuthor());
+				var eb = Utils.createEmbedBuilder(event.getUser());
 				eb.setAuthor(json.getString("title"), json.getString("source"));
 				eb.setImage(json.getString("image_url"));
-				eb.setDescription(i18n.get("commands.subreddit.other.description", subreddit));
+				eb.setDescription(ctx.getI18n().get("commands.subreddit.other.description", subreddit));
 				eb.setTimestamp(Instant.ofEpochSecond(json.getInt("created_at")));
 				embedBuilderConsumer.accept(eb);
 			}

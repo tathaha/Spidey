@@ -12,15 +12,15 @@ import java.time.Instant;
 public class MembersCommand extends Command {
 
 	public MembersCommand() {
-		super("members", new String[]{"membercount"}, Category.INFORMATIVE, Permission.UNKNOWN, 0, 2);
+		super("members", Category.INFORMATIVE, Permission.UNKNOWN, 2);
 	}
 
 	@Override
-	public boolean execute(String[] args, CommandContext ctx) {
+	public boolean execute(CommandContext ctx) {
 		ctx.getGuild().loadMembers().onSuccess(members -> {
 			var total = members.size();
 			var bots = members.stream().filter(member -> member.getUser().isBot()).count();
-			var eb = Utils.createEmbedBuilder(ctx.getAuthor());
+			var eb = Utils.createEmbedBuilder(ctx.getUser());
 			var i18n = ctx.getI18n();
 
 			eb.setAuthor(i18n.get("commands.members.other.title"));

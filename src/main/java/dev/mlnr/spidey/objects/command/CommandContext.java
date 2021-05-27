@@ -2,38 +2,26 @@ package dev.mlnr.spidey.objects.command;
 
 import dev.mlnr.spidey.cache.Cache;
 import dev.mlnr.spidey.objects.I18n;
-import dev.mlnr.spidey.utils.ArgumentUtils;
-import dev.mlnr.spidey.utils.Emojis;
-import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-
-import java.util.function.Consumer;
-import java.util.function.IntConsumer;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 public class CommandContext {
-	private final String[] args;
-	private final GuildMessageReceivedEvent event;
+	private final SlashCommandEvent event;
 	private final I18n i18n;
 
 	private final Cache cache;
 
-	public CommandContext(String[] args, GuildMessageReceivedEvent event, I18n i18n, Cache cache) {
-		this.args = args;
+	public CommandContext(SlashCommandEvent event, I18n i18n, Cache cache) {
 		this.event = event;
 		this.i18n = i18n;
 
 		this.cache = cache;
 	}
 
-	public Message getMessage() {
-		return event.getMessage();
-	}
-
-	public User getAuthor() {
-		return event.getAuthor();
+	public User getUser() {
+		return event.getUser();
 	}
 
 	public Member getMember() {
@@ -41,7 +29,7 @@ public class CommandContext {
 	}
 
 	public TextChannel getTextChannel() {
-		return event.getChannel();
+		return event.getTextChannel();
 	}
 
 	public Guild getGuild() {
@@ -56,7 +44,7 @@ public class CommandContext {
 		return this.i18n;
 	}
 
-	public GuildMessageReceivedEvent getEvent() {
+	public SlashCommandEvent getEvent() {
 		return this.event;
 	}
 
@@ -64,59 +52,59 @@ public class CommandContext {
 		return cache;
 	}
 
-	// interaction methods
+	// options
 
-	public void reply(EmbedBuilder embedBuilder) {
-		Utils.sendMessage(getTextChannel(), embedBuilder.build(), getMessage());
+	public String getStringOption(String name) {
+		var option = event.getOption(name);
+		return option == null ? null : option.getAsString();
 	}
 
-	public void reply(String content) {
-		Utils.sendMessage(getTextChannel(), content, getMessage());
+	public Long getLongOption(String name) {
+		var option = event.getOption(name);
+		return option == null ? null : option.getAsLong();
+	}
+
+	public User getUserOption(String name) {
+		var option = event.getOption(name);
+		return option == null ? null : option.getAsUser();
+	}
+
+	public Role getRoleOption(String name) {
+		var option = event.getOption(name);
+		return option == null ? null : option.getAsRole();
+	}
+
+	public GuildChannel getChannelOption(String name) {
+		var option = event.getOption(name);
+		return option == null ? null : option.getAsGuildChannel();
+	}
+
+	public Boolean getBooleanOption(String name) {
+		var option = event.getOption(name);
+		return option == null ? null : option.getAsBoolean();
+	}
+
+	// TODO more option types
+
+	// reply methods
+
+	public void replyErrorLocalized(String key, Object... args) {
+		replyError(i18n.get(key, args));
+	}
+
+	public void replyError(String error) {
+		reply(":no_entry: " + error);
 	}
 
 	public void replyLocalized(String key, Object... args) {
 		reply(i18n.get(key, args));
 	}
 
-	public void replyError(String error) {
-		replyError(error, Emojis.CROSS);
+	public void reply(String content) {
+		event.reply(content).setEphemeral(true).queue();
 	}
 
-	public void replyErrorLocalized(String key, Object... args) {
-		replyError(i18n.get(key, args));
-	}
-
-	public void replyError(String error, String failureEmoji) {
-		Utils.returnError(error, getMessage(), failureEmoji);
-	}
-
-	public void reactLike() {
-		Utils.addReaction(getMessage(), Emojis.LIKE);
-	}
-
-	// arg stuff
-
-	public void getArgumentAsInt(int argIndex, IntConsumer consumer) {
-		ArgumentUtils.parseArgumentAsInt(args[argIndex], this, consumer);
-	}
-
-	public void getArgumentAsUnsignedInt(int argIndex, IntConsumer consumer) {
-		ArgumentUtils.parseArgumentAsUnsignedInt(args[argIndex], this, consumer);
-	}
-
-	public void getArgumentAsUser(int argIndex, Consumer<User> consumer) {
-		ArgumentUtils.parseArgumentAsUser(args[argIndex], this, consumer);
-	}
-
-	public void getArgumentAsRole(int argIndex, Consumer<Role> consumer) {
-		ArgumentUtils.parseArgumentAsRole(args[argIndex], this, consumer);
-	}
-
-	public void getArgumentAsTextChannel(int argIndex, Consumer<TextChannel> consumer) {
-		ArgumentUtils.parseArgumentAsTextChannel(args[argIndex], this, consumer);
-	}
-
-	public void getArgumentAsVoiceChannel(int argIndex, Consumer<VoiceChannel> consumer) {
-		ArgumentUtils.parseArgumentAsVoiceChannel(args[argIndex], this, consumer);
+	public void reply(EmbedBuilder embedBuilder) {
+		event.replyEmbeds(embedBuilder.build()).setEphemeral(true).queue();
 	}
 }

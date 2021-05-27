@@ -13,7 +13,7 @@ public class SnipingCommand extends Command {
 	}
 
 	@Override
-	public boolean execute(String[] args, CommandContext ctx) {
+	public boolean execute(CommandContext ctx) {
 		var cache = ctx.getCache();
 		var guildId = ctx.getGuild().getIdLong();
 		var miscSettings = cache.getGuildSettingsCache().getMiscSettings(guildId);

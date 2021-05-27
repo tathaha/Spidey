@@ -10,6 +10,8 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 import java.time.Duration;
 import java.util.List;
@@ -17,47 +19,42 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static dev.mlnr.spidey.utils.Utils.addReaction;
 import static dev.mlnr.spidey.utils.Utils.deleteMessage;
 
 @SuppressWarnings({"unused", "StringBufferReplaceableByString"})
 public class PurgeCommand extends Command {
 
 	public PurgeCommand() {
-		super("purge", new String[]{"d", "delete"}, Category.MODERATION, Permission.MESSAGE_MANAGE, 2, 6);
+		super("purge", Category.MODERATION, Permission.MESSAGE_MANAGE, 6,
+				new OptionData(OptionType.INTEGER, "amount", "The amount of messages to purge").setRequired(true),
+				new OptionData(OptionType.USER, "user", "The user to delete the messages of"));
 	}
 
 	@Override
-	public boolean execute(String[] args, CommandContext ctx) {
+	public boolean execute(CommandContext ctx) {
 		var guild = ctx.getGuild();
 		if (!guild.getSelfMember().hasPermission(ctx.getTextChannel(), getRequiredPermission(), Permission.MESSAGE_HISTORY)) {
 			ctx.replyErrorLocalized("commands.purge.other.messages.failure.no_perms");
 			return false;
 		}
-		if (args.length == 0) {
-			var prefix = ctx.getCache().getGuildSettingsCache().getMiscSettings(guild.getIdLong()).getPrefix();
-			ctx.replyErrorLocalized("command_failures.wrong_syntax", prefix, "purge");
+		var amount = ctx.getLongOption("amount");
+		if (amount < 1 || amount > 100) {
+			ctx.replyErrorLocalized("number.range", 100);
 			return false;
 		}
-		ctx.getArgumentAsUnsignedInt(0, amount -> {
-			if (amount < 1 || amount > 100) {
-				ctx.replyErrorLocalized("number.range", 100);
-				return;
-			}
-			if (args.length == 1) {
-				respond(ctx, null, amount);
-				return;
-			}
-			ctx.getArgumentAsUser(1, user -> respond(ctx, user, amount));
-		});
+		var user = ctx.getUserOption("user");
+		if (user == null) {
+			respond(ctx, null, amount);
+			return true;
+		}
+		respond(ctx, user, amount);
 		return true;
 	}
 
-	private void respond(CommandContext ctx, User target, int limit) {
-		var message = ctx.getMessage();
+	private void respond(CommandContext ctx, User target, long limit) {
 		var channel = ctx.getTextChannel();
 		var i18n = ctx.getI18n();
-		message.delete().queue(ignored -> channel.getIterableHistory().cache(false).limit(target == null ? limit : 100).queue(messages -> {
+		channel.getIterableHistory().cache(false).limit(target == null ? (int) limit : 100).queue(messages -> {
 			if (messages.isEmpty()) {
 				ctx.replyErrorLocalized("commands.purge.other.messages.failure.no_messages.text");
 				return;
@@ -89,7 +86,7 @@ public class PurgeCommand extends Command {
 				addReaction(sentMessage, Emojis.CROSS);
 
 				ConcurrentUtils.getEventWaiter().waitForEvent(GuildMessageReactionAddEvent.class,
-						ev -> ev.getUser().equals(ctx.getAuthor()) && ev.getMessageIdLong() == sentMessage.getIdLong(),
+						ev -> ev.getUser().equals(ctx.getUser()) && ev.getMessageIdLong() == sentMessage.getIdLong(),
 						ev -> {
 							switch (ev.getReactionEmote().getName()) {
 								case Emojis.CHECK:
@@ -114,7 +111,7 @@ public class PurgeCommand extends Command {
 							ctx.replyErrorLocalized("took_too_long");
 						});
 			});
-		}, throwable -> ctx.replyErrorLocalized("internal_error", "purge messages", throwable.getMessage())));
+		}, throwable -> ctx.replyErrorLocalized("internal_error", "purge messages", throwable.getMessage()));
 	}
 
 	private void proceed(List<Message> toDelete, User user, CommandContext ctx) {

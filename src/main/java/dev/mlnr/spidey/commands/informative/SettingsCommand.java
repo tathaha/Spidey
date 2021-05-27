@@ -12,21 +12,20 @@ import static java.lang.String.format;
 public class SettingsCommand extends Command {
 
 	public SettingsCommand() {
-		super("settings", new String[]{}, Category.INFORMATIVE, Permission.UNKNOWN, 0, 0);
+		super("settings", Category.INFORMATIVE, Permission.UNKNOWN, 0);
 	}
 
 	@Override
-	public boolean execute(String[] args, CommandContext ctx) {
+	public boolean execute(CommandContext ctx) {
 		var guildSettingsCache = ctx.getCache().getGuildSettingsCache();
 		var guildId = ctx.getGuild().getIdLong();
 		var miscSettings = guildSettingsCache.getMiscSettings(guildId);
-		var prefix = miscSettings.getPrefix();
-		var eb = Utils.createEmbedBuilder(ctx.getAuthor());
+		var eb = Utils.createEmbedBuilder(ctx.getUser());
 		var i18n = ctx.getI18n();
 
 		eb.setAuthor(i18n.get("commands.settings.other.title"));
 
-		var setTemplate = " (" + i18n.get("commands.settings.other.set") + " " + prefix + "%s)";
+		var setTemplate = " (" + i18n.get("commands.settings.other.set") + " /%s)";
 		var none = i18n.get("commands.settings.other.none");
 
 		var logChannel = miscSettings.getLogChannel();
@@ -40,8 +39,6 @@ public class SettingsCommand extends Command {
 		var djRole = guildSettingsCache.getMusicSettings(guildId).getDJRole();
 		eb.addField(i18n.get("commands.settings.other.dj"),
 				djRole == null ? none + format(setTemplate, "djrole") : djRole.getAsMention(), false);
-
-		eb.addField("Prefix", prefix + (prefix.equals("s!") ? " (" + i18n.get("commands.settings.other.prefix") + ")" : ""), false);
 
 		ctx.reply(eb);
 		return true;

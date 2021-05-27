@@ -12,11 +12,11 @@ import java.time.Instant;
 @SuppressWarnings("unused")
 public class SaveSongCommand extends Command {
 	public SaveSongCommand() {
-		super("savesong", new String[]{"savetrack"}, Category.MUSIC, Permission.UNKNOWN, 0, 4);
+		super("savesong", Category.MUSIC, Permission.UNKNOWN, 4);
 	}
 
 	@Override
-	public boolean execute(String[] args, CommandContext ctx) {
+	public boolean execute(CommandContext ctx) {
 		var guild = ctx.getGuild();
 		var musicPlayer = ctx.getCache().getMusicPlayerCache().getMusicPlayer(guild);
 		if (musicPlayer == null) {
@@ -28,7 +28,7 @@ public class SaveSongCommand extends Command {
 			ctx.replyErrorLocalized("music.messages.failure.no_song");
 			return false;
 		}
-		var user = ctx.getAuthor();
+		var user = ctx.getUser();
 		var embedBuilder = Utils.createEmbedBuilder(user).setColor(Utils.SPIDEY_COLOR);
 		var trackInfo = playingTrack.getInfo();
 		var length = MusicUtils.formatDuration(trackInfo.length);
@@ -48,7 +48,6 @@ public class SaveSongCommand extends Command {
 						return;
 					}
 					ctx.replyLocalized("commands.savesong.other.sent");
-					ctx.reactLike();
 				});
 		return true;
 	}

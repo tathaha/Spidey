@@ -4,18 +4,20 @@ import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 import static dev.mlnr.spidey.utils.MusicUtils.formatDuration;
 
 @SuppressWarnings("unused")
 public class SegmentsCommand extends Command {
-
 	public SegmentsCommand() {
-		super("segments", new String[]{"segs"}, Category.MUSIC, Permission.UNKNOWN, 0, 4);
+		super("segments", Category.MUSIC, Permission.UNKNOWN, 4,
+				new OptionData(OptionType.BOOLEAN, "reload", "Whether to force reload the segments"));
 	}
 
 	@Override
-	public boolean execute(String[] args, CommandContext ctx) {
+	public boolean execute(CommandContext ctx) {
 		var cache = ctx.getCache();
 		var guild = ctx.getGuild();
 		var musicPlayer = cache.getMusicPlayerCache().getMusicPlayer(guild);

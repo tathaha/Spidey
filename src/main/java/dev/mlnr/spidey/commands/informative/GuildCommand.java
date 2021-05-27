@@ -12,14 +12,13 @@ import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
 public class GuildCommand extends Command {
-
 	public GuildCommand() {
-		super("guild", new String[]{"server"}, Category.INFORMATIVE, Permission.UNKNOWN, 0, 0);
+		super("guild", Category.INFORMATIVE, Permission.UNKNOWN, 0);
 	}
 
 	@Override
-	public boolean execute(String[] args, CommandContext ctx) {
-		var eb = Utils.createEmbedBuilder(ctx.getAuthor());
+	public boolean execute(CommandContext ctx) {
+		var eb = Utils.createEmbedBuilder(ctx.getUser());
 		var guild = ctx.getGuild();
 		var i18n = ctx.getI18n();
 

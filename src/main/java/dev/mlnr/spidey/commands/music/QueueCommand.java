@@ -8,13 +8,12 @@ import net.dv8tion.jda.api.Permission;
 
 @SuppressWarnings("unused")
 public class QueueCommand extends Command {
-
 	public QueueCommand() {
-		super("queue", new String[]{"q"}, Category.MUSIC, Permission.UNKNOWN, 0, 3);
+		super("queue", Category.MUSIC, Permission.UNKNOWN, 3);
 	}
 
 	@Override
-	public boolean execute(String[] args, CommandContext ctx) {
+	public boolean execute(CommandContext ctx) {
 		var guild = ctx.getGuild();
 		var musicPlayer = ctx.getCache().getMusicPlayerCache().getMusicPlayer(guild);
 		if (musicPlayer == null) {

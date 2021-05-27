@@ -15,7 +15,7 @@ public class StopCommand extends Command {
 	}
 
 	@Override
-	public boolean execute(String[] args, CommandContext ctx) {
+	public boolean execute(CommandContext ctx) {
 		if (!MusicUtils.canInteract(ctx.getMember())) {
 			ctx.replyErrorLocalized("music.messages.failure.cant_interact", "stop the playback");
 			return false;

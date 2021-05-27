@@ -9,42 +9,36 @@ import dev.mlnr.spidey.objects.command.category.ICategory;
 import dev.mlnr.spidey.utils.StringUtils;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 @SuppressWarnings("unused")
 public class HelpCommand extends Command {
-
 	public HelpCommand() {
-		super("help", new String[]{"commands", "cmds"}, Category.INFORMATIVE, Permission.UNKNOWN, 0, 0);
+		super("help", Category.INFORMATIVE, Permission.UNKNOWN, 0,
+				new OptionData(OptionType.STRING, "command", "The command to get help for"));
 	}
 
 	@Override
-	public boolean execute(String[] args, CommandContext ctx) {
+	public boolean execute(CommandContext ctx) {
 		var commandsMap = CommandHandler.getCommands();
-		var author = ctx.getAuthor();
+		var author = ctx.getUser();
 		var guildSettingsCache = ctx.getCache().getGuildSettingsCache();
 		var guildId = ctx.getGuild().getIdLong();
-		var prefix = guildSettingsCache.getMiscSettings(guildId).getPrefix();
 		var i18n = ctx.getI18n();
 		var eb = Utils.createEmbedBuilder(author)
 				.setAuthor(i18n.get("commands.help.other.text"), "https://github.com/caneleex/Spidey", ctx.getJDA().getSelfUser().getEffectiveAvatarUrl());
+		var commandOption = ctx.getStringOption("command");
 
-		if (args.length == 0) {
+		if (commandOption == null) {
 			var commandsCopy = new HashMap<>(commandsMap);
 			var entries = commandsCopy.entrySet();
 			entries.removeIf(entry -> !ctx.getMember().hasPermission(entry.getValue().getRequiredPermission()));
 			var hidden = commandsMap.size() - commandsCopy.size();
-			var iter = entries.iterator();
-			var valueSet = new HashSet<>();
-			while (iter.hasNext()) { // remove all duplicate commands to just show invokes, not aliases
-				if (!valueSet.add(iter.next().getValue())) {
-					iter.remove();
-				}
-			}
 			var categories = new HashMap<ICategory, List<Command>>();
 			var nsfwHidden = false;
 			commandsCopy.values().forEach(cmd -> categories.computeIfAbsent(cmd.getCategory(), k -> new ArrayList<>()).add(cmd));
@@ -77,7 +71,7 @@ public class HelpCommand extends Command {
 
 			commandsStringBuilder.append(settingsBuilder);
 
-			eb.setDescription(i18n.get("commands.help.other.embed_content", prefix, commandsStringBuilder.toString(), prefix));
+			eb.setDescription(i18n.get("commands.help.other.embed_content", commandsStringBuilder.toString()));
 			if (hidden > 0) {
 				eb.appendDescription(i18n.get("commands.help.other.hidden.text", hidden));
 			}
@@ -87,34 +81,31 @@ public class HelpCommand extends Command {
 			ctx.reply(eb);
 			return true;
 		}
-		var invoke = args[0].toLowerCase();
-		var command = commandsMap.get(invoke);
+		var command = commandsMap.get(commandOption);
 		if (command == null) {
-			var similar = StringUtils.getSimilarCommand(invoke);
-			ctx.replyError(i18n.get("command_failures.invalid.message", invoke) + " " + (similar == null
-					? i18n.get("command_failures.invalid.check_help", prefix)
+			var similar = StringUtils.getSimilarCommand(commandOption);
+			ctx.replyError(i18n.get("command_failures.invalid.message", commandOption) + " " + (similar == null
+					? i18n.get("command_failures.invalid.check_help")
 					: i18n.get("command_failures.invalid.suggestion", similar)));
 			return false;
 		}
-		invoke = command.getInvoke();
+		commandOption = command.getInvoke();
 		var none = i18n.get("commands.help.other.command_info.info_none");
 		var requiredPermission = command.getRequiredPermission();
-		var aliases = command.getAliases();
 		var generalSettings = guildSettingsCache.getGeneralSettings(guildId);
 		var cooldown = CooldownHandler.adjustCooldown(command.getCooldown(), generalSettings.isVip());
 
-		eb.setAuthor(i18n.get("commands.help.other.viewing") + " - " + invoke);
+		eb.setAuthor(i18n.get("commands.help.other.viewing") + " - " + commandOption);
 		eb.addField(i18n.get("commands.help.other.command_info.description"),
-				i18n.get("commands." + invoke + ".description"), false);
+				i18n.get("commands." + commandOption + ".description"), false);
 
 		eb.addField(i18n.get("commands.help.other.command_info.usage"),
-				"`" + prefix + i18n.get("commands." + invoke + ".usage") + "` " +
+				"`" + i18n.get("commands." + commandOption + ".usage") + "` " +
 						i18n.get("commands.help.other.command_info.usage_required_optional"), false);
 
 		eb.addField(i18n.get("commands.help.other.command_info.category"), command.getCategory().getFriendlyName(), false);
 		eb.addField(i18n.get("commands.help.other.command_info.required_permission"), requiredPermission == Permission.UNKNOWN
 				? none : requiredPermission.getName(), false);
-		eb.addField(i18n.get("commands.help.other.command_info.aliases"), aliases.length == 0 ? none : String.join(", ", aliases), false);
 		eb.addField(i18n.get("commands.help.other.command_info.cooldown"), cooldown == 0 ? none : cooldown + " " +
 				i18n.get("commands.help.other.command_info.seconds"), false);
 

@@ -64,7 +64,7 @@ public class AudioLoader implements AudioLoadResultHandler {
 		var responseEmbedBuilder = createMusicResponseBuilder();
 		var responseDescriptionBuilder = responseEmbedBuilder.getDescriptionBuilder();
 		responseDescriptionBuilder.append(i18n.get("music.messages.queued")).append(" **").append(tracksLoaded).append("** ").append(i18n.get("music.messages.tracks")).append(" ")
-				.append(formatLength(originalLength, lengthWithoutSegments, i18n)).append(" [").append(ctx.getAuthor().getAsMention()).append("]");
+				.append(formatLength(originalLength, lengthWithoutSegments, i18n)).append(" [").append(ctx.getUser().getAsMention()).append("]");
 		ctx.reply(responseEmbedBuilder);
 	}
 
@@ -97,7 +97,7 @@ public class AudioLoader implements AudioLoadResultHandler {
 			return loadFailure;
 		}
 
-		var requester = ctx.getAuthor();
+		var requester = ctx.getUser();
 		var title = "[" + trackInfo.title + "](" + trackInfo.uri + ")";
 		var originalLength = trackInfo.length;
 		var stream = trackInfo.isStream;

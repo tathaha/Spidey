@@ -13,7 +13,7 @@ public class DJRoleCommand extends Command {
 	}
 
 	@Override
-	public boolean execute(String[] args, CommandContext ctx) {
+	public boolean execute(CommandContext ctx) {
 		var musicSettings = ctx.getCache().getGuildSettingsCache().getMusicSettings(ctx.getGuild().getIdLong());
 		var dbRole = musicSettings.getDJRoleId();
 		if (args.length == 0) {

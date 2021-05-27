@@ -6,23 +6,26 @@ import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.objects.music.AudioLoader;
 import dev.mlnr.spidey.utils.MusicUtils;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 @SuppressWarnings("unused")
 public class PlayCommand extends Command {
-
 	public PlayCommand() {
-		super("play", new String[]{"p"}, Category.MUSIC, Permission.UNKNOWN, 1, 2);
+		super("play", Category.MUSIC, Permission.UNKNOWN, 2,
+				new OptionData(OptionType.STRING, "query", "The YouTube link or query to play").setRequired(true));
 	}
 
 	@Override
-	public boolean execute(String[] args, CommandContext ctx) {
-		var musicPlayer = MusicUtils.checkQueryInput(args, ctx);
+	public boolean execute(CommandContext ctx) {
+		var musicPlayer = MusicUtils.checkPlayability(ctx);
 		if (musicPlayer == null) {
 			return false;
 		}
-		var query = MusicUtils.YOUTUBE_URL_PATTERN.matcher(args[0]).matches() ? args[0] : "ytsearch:" + args[0];
-		var loader = new AudioLoader(musicPlayer, query, ctx);
-		MusicUtils.loadQuery(musicPlayer, query, loader);
+		var query = ctx.getStringOption("query");
+		var toLoad = MusicUtils.YOUTUBE_URL_PATTERN.matcher(query).matches() ? query : "ytsearch:" + query;
+		var loader = new AudioLoader(musicPlayer, toLoad, ctx);
+		MusicUtils.loadQuery(musicPlayer, toLoad, loader);
 		return true;
 	}
 }

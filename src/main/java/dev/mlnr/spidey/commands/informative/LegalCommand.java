@@ -7,13 +7,12 @@ import net.dv8tion.jda.api.Permission;
 
 @SuppressWarnings("unused")
 public class LegalCommand extends Command {
-
 	public LegalCommand() {
-		super("legal", new String[]{"privacy", "tos", "policy", "privacypolicy"}, Category.INFORMATIVE, Permission.UNKNOWN, 0, 0);
+		super("legal", Category.INFORMATIVE, Permission.UNKNOWN, 0);
 	}
 
 	@Override
-	public boolean execute(String[] args, CommandContext ctx) {
+	public boolean execute(CommandContext ctx) {
 		ctx.replyLocalized("commands.legal.other.text");
 		return true;
 	}

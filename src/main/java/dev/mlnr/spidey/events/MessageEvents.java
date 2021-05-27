@@ -69,29 +69,17 @@ public class MessageEvents extends ListenerAdapter {
 			AkinatorHandler.handle(author, new AkinatorContext(event, akinatorCache, miscSettings.getI18n()));
 			return;
 		}
-
-		var prefix = miscSettings.getPrefix();
-		if (!content.startsWith(prefix) || !guildSettingsCache.getChannelsSettings(guildId).isChannelWhitelisted(channel) || author.isBot()) {
-			return;
-		}
-		CommandHandler.handle(event, prefix, cache);
 	}
 
 	@Override
 	public void onGuildMessageDelete(GuildMessageDeleteEvent event) {
 		var messageId = event.getMessageIdLong();
-		var responseCache = cache.getResponseCache();
-		var responseMessageId = responseCache.getResponseMessageId(messageId);
 		var channel = event.getChannel();
 		var paginatorCache = cache.getPaginatorCache();
-		if (responseMessageId != null) {
-			channel.deleteMessageById(responseMessageId).queue();
-			responseCache.removeResponseMessageId(messageId);
-		}
-		else if (paginatorCache.isPaginator(messageId)) {
+
+		if (paginatorCache.isPaginator(messageId)) {
 			paginatorCache.removePaginator(messageId);
 		}
-
 		if (!cache.getGuildSettingsCache().getMiscSettings(event.getGuild().getIdLong()).isSnipingEnabled()) {
 			return;
 		}

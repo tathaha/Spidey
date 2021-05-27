@@ -15,7 +15,7 @@ public class SkipCommand extends Command {
 	}
 
 	@Override
-	public boolean execute(String[] args, CommandContext ctx) {
+	public boolean execute(CommandContext ctx) {
 		var musicPlayer = ctx.getCache().getMusicPlayerCache().getMusicPlayer(ctx.getGuild());
 		var i18n = ctx.getI18n();
 		if (musicPlayer == null) {
@@ -37,7 +37,7 @@ public class SkipCommand extends Command {
 			return false;
 		}
 		var trackScheduler = musicPlayer.getTrackScheduler();
-		var author = ctx.getAuthor();
+		var author = ctx.getUser();
 		var mention = author.getAsMention();
 		if (trackScheduler.hasSkipVoted(author)) {
 			trackScheduler.removeSkipVote(author);

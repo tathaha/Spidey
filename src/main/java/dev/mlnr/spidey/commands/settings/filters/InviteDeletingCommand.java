@@ -20,7 +20,7 @@ public class InviteDeletingCommand extends Command {
 	}
 
 	@Override
-	public boolean execute(String[] args, CommandContext ctx) {
+	public boolean execute(CommandContext ctx) {
 		var guildSettingsCache = ctx.getCache().getGuildSettingsCache();
 		var guildId = ctx.getGuild().getIdLong();
 		var filtersSettings = guildSettingsCache.getFiltersSettings(guildId);
@@ -59,7 +59,7 @@ public class InviteDeletingCommand extends Command {
 		return true;
 	}
 
-	private void proceed(String[] args, CommandContext ctx, GuildFiltersSettings filtersSettings, IMentionable entity) {
+	private void proceed(CommandContext ctx, GuildFiltersSettings filtersSettings, IMentionable entity) {
 		var id = entity.getIdLong();
 		var mention = entity.getAsMention();
 		if (args[0].equalsIgnoreCase("add")) {
@@ -108,8 +108,8 @@ public class InviteDeletingCommand extends Command {
 		}
 	}
 
-	private void listIgnored(String[] args, CommandContext ctx, GuildFiltersSettings filtersSettings) {
-		var embedBuilder = Utils.createEmbedBuilder(ctx.getAuthor());
+	private void listIgnored(CommandContext ctx, GuildFiltersSettings filtersSettings) {
+		var embedBuilder = Utils.createEmbedBuilder(ctx.getUser());
 		var i18n = ctx.getI18n();
 		var prefix = ctx.getCache().getGuildSettingsCache().getMiscSettings(ctx.getGuild().getIdLong()).getPrefix();
 		var wrongSyntax = i18n.get("command_failures.wrong_syntax", prefix, "invitedeleting");

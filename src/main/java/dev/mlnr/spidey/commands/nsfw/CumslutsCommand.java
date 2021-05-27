@@ -13,7 +13,7 @@ public class CumslutsCommand extends Command {
 	}
 
 	@Override
-	public boolean execute(String[] args, CommandContext ctx) {
+	public boolean execute(CommandContext ctx) {
 		return true;
 	}
 }

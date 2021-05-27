@@ -10,7 +10,6 @@ public class GuildMiscSettings implements IGuildSettings {
 
 	private long logChannelId;
 	private long joinRoleId;
-	private String prefix = "s!";
 	private final I18n i18n;
 
 	private boolean snipingEnabled = true;
@@ -26,12 +25,11 @@ public class GuildMiscSettings implements IGuildSettings {
 		this.spidey = spidey;
 	}
 
-	public GuildMiscSettings(long guildId, long logChannelId, long joinRoleId, String prefix, String language, boolean snipingEnabled, boolean errorCleanupEnabled, Spidey spidey) {
+	public GuildMiscSettings(long guildId, long logChannelId, long joinRoleId, String language, boolean snipingEnabled, boolean errorCleanupEnabled, Spidey spidey) {
 		this.guildId = guildId;
 
 		this.logChannelId = logChannelId;
 		this.joinRoleId = joinRoleId;
-		this.prefix = prefix;
 		this.i18n = I18n.ofLanguage(language);
 
 		this.snipingEnabled = snipingEnabled;
@@ -48,10 +46,6 @@ public class GuildMiscSettings implements IGuildSettings {
 
 	public long getJoinRoleId() {
 		return this.joinRoleId;
-	}
-
-	public String getPrefix() {
-		return this.prefix;
 	}
 
 	public I18n getI18n() {
@@ -76,11 +70,6 @@ public class GuildMiscSettings implements IGuildSettings {
 	public void setJoinRoleId(long joinRoleId) {
 		this.joinRoleId = joinRoleId;
 		spidey.getDatabaseManager().setJoinRoleId(guildId, joinRoleId);
-	}
-
-	public void setPrefix(String prefix) {
-		this.prefix = prefix;
-		spidey.getDatabaseManager().setPrefix(guildId, prefix);
 	}
 
 	//	public void setLanguage(String language) {

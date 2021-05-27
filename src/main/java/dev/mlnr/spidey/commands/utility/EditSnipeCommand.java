@@ -16,7 +16,7 @@ public class EditSnipeCommand extends Command {
 	}
 
 	@Override
-	public boolean execute(String[] args, CommandContext ctx) {
+	public boolean execute(CommandContext ctx) {
 		var cache = ctx.getCache();
 		var miscSettings = cache.getGuildSettingsCache().getMiscSettings(ctx.getGuild().getIdLong());
 		if (!miscSettings.isSnipingEnabled()) {
@@ -30,7 +30,7 @@ public class EditSnipeCommand extends Command {
 			ctx.replyErrorLocalized("sniping.no_message", "edited");
 			return false;
 		}
-		var eb = Utils.createEmbedBuilder(ctx.getAuthor());
+		var eb = Utils.createEmbedBuilder(ctx.getUser());
 		eb.setTimestamp(lastEditedMessage.getCreation());
 		eb.setDescription(lastEditedMessage.getContent());
 		eb.setColor(Color.GREEN);

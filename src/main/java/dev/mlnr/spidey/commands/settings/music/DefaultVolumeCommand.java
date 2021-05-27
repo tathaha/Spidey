@@ -14,7 +14,7 @@ public class DefaultVolumeCommand extends Command {
 	}
 
 	@Override
-	public boolean execute(String[] args, CommandContext ctx) {
+	public boolean execute(CommandContext ctx) {
 		if (!MusicUtils.canInteract(ctx.getMember())) {
 			ctx.replyErrorLocalized("music.messages.failure.cant_interact", "set the default music volume");
 			return false;

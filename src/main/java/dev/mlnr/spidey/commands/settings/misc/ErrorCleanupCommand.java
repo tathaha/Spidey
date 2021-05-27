@@ -13,7 +13,7 @@ public class ErrorCleanupCommand extends Command {
 	}
 
 	@Override
-	public boolean execute(String[] args, CommandContext ctx) {
+	public boolean execute(CommandContext ctx) {
 		var miscSettings = ctx.getCache().getGuildSettingsCache().getMiscSettings(ctx.getGuild().getIdLong());
 		var enabled = !miscSettings.isErrorCleanupEnabled();
 		var i18n = ctx.getI18n();

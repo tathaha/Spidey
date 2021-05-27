@@ -14,7 +14,7 @@ public class VolumeCommand extends Command {
 	}
 
 	@Override
-	public boolean execute(String[] args, CommandContext ctx) {
+	public boolean execute(CommandContext ctx) {
 		var i18n = ctx.getI18n();
 		var cache = ctx.getCache();
 		var guild = ctx.getGuild();

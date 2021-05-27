@@ -4,19 +4,24 @@ import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.objects.music.TrackScheduler;
-import dev.mlnr.spidey.utils.Emojis;
 import dev.mlnr.spidey.utils.MusicUtils;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 @SuppressWarnings("unused")
 public class RepeatCommand extends Command {
-
 	public RepeatCommand() {
-		super("repeat", new String[]{"loop"}, Category.MUSIC, Permission.UNKNOWN, 0, 0);
+		super("repeat", Category.MUSIC, Permission.UNKNOWN, 0,
+				new OptionData(OptionType.STRING, "repeat_mode", "The repeat mode to set")
+						.addChoice(TrackScheduler.RepeatMode.SONG.getFriendlyName(), TrackScheduler.RepeatMode.SONG.name())
+						.addChoice(TrackScheduler.RepeatMode.QUEUE.getFriendlyName(), TrackScheduler.RepeatMode.QUEUE.name())
+						.addChoice(TrackScheduler.RepeatMode.NONE.getFriendlyName(), TrackScheduler.RepeatMode.NONE.name())
+						.setRequired(true));
 	}
 
 	@Override
-	public boolean execute(String[] args, CommandContext ctx) {
+	public boolean execute(CommandContext ctx) {
 		if (!MusicUtils.canInteract(ctx.getMember())) {
 			ctx.replyErrorLocalized("music.messages.failure.cant_interact", "set the repeat mode");
 			return false;
@@ -28,26 +33,10 @@ public class RepeatCommand extends Command {
 			return false;
 		}
 		var trackScheduler = musicPlayer.getTrackScheduler();
-		if (args.length == 0) {
-			if (trackScheduler.getRepeatMode() == null) {
-				ctx.replyErrorLocalized("commands.repeat.other.provide");
-				return false;
-			}
-			trackScheduler.setRepeatMode(null);
-			ctx.reactLike();
-			ctx.replyLocalized("commands.repeat.other.reset");
-			return true;
-		}
-		try {
-			var repeatMode = TrackScheduler.RepeatMode.valueOf(args[0].toUpperCase());
-			trackScheduler.setRepeatMode(repeatMode);
-			ctx.reactLike();
-			ctx.replyLocalized("commands.repeat.other.set", args[0]);
-			return true;
-		}
-		catch (IllegalArgumentException ex) {
-			ctx.replyError(ctx.getI18n().get("commands.repeat.other.doesnt_exist"), Emojis.DISLIKE);
-			return false;
-		}
+		var repeatOption = ctx.getStringOption("repeat_mode");
+		var repeatMode = TrackScheduler.RepeatMode.valueOf(repeatOption);
+		trackScheduler.setRepeatMode(repeatMode);
+		ctx.replyLocalized("commands.repeat.other.set", repeatMode.getFriendlyName());
+		return true;
 	}
 }

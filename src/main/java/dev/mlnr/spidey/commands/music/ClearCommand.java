@@ -8,13 +8,12 @@ import net.dv8tion.jda.api.Permission;
 
 @SuppressWarnings("unused")
 public class ClearCommand extends Command {
-
 	public ClearCommand() {
-		super("clear", new String[]{"clearqueue", "queueclear"}, Category.MUSIC, Permission.UNKNOWN, 0, 0);
+		super("clear", Category.MUSIC, Permission.UNKNOWN, 0);
 	}
 
 	@Override
-	public boolean execute(String[] args, CommandContext ctx) {
+	public boolean execute(CommandContext ctx) {
 		if (!MusicUtils.canInteract(ctx.getMember())) {
 			ctx.replyErrorLocalized("music.messages.failure.cant_interact", "clear the queue");
 			return false;

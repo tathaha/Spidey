@@ -16,7 +16,7 @@ public class SnipeCommand extends Command {
 	}
 
 	@Override
-	public boolean execute(String[] args, CommandContext ctx) {
+	public boolean execute(CommandContext ctx) {
 		var cache = ctx.getCache();
 		var miscSettings = cache.getGuildSettingsCache().getMiscSettings(ctx.getGuild().getIdLong());
 		if (!miscSettings.isSnipingEnabled()) {
@@ -30,7 +30,7 @@ public class SnipeCommand extends Command {
 			ctx.replyErrorLocalized("sniping.no_message", "deleted");
 			return false;
 		}
-		var eb = Utils.createEmbedBuilder(ctx.getAuthor());
+		var eb = Utils.createEmbedBuilder(ctx.getUser());
 		eb.setTimestamp(lastDeletedMessage.getCreation());
 		eb.setDescription(lastDeletedMessage.getContent());
 		eb.setColor(Color.GREEN);

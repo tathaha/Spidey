@@ -5,20 +5,19 @@ import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.utils.requests.Requester;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 @SuppressWarnings("unused")
 public class SubredditCommand extends Command {
 	public SubredditCommand() {
-		super("subreddit", new String[]{"sub", "reddit"}, Category.FUN, Permission.UNKNOWN, 0, 3);
+		super("subreddit", Category.FUN, Permission.UNKNOWN, 3,
+				new OptionData(OptionType.STRING, "subreddit", "The subreddit to get a random image from").setRequired(true));
 	}
 
 	@Override
-	public boolean execute(String[] args, CommandContext ctx) {
-		if (args.length == 0) {
-			ctx.replyErrorLocalized("commands.subreddit.other.enter_name");
-			return false;
-		}
-		Requester.getRandomSubredditImage(args[0], ctx, ctx.getEvent(), ctx.getI18n(), ctx::reply);
+	public boolean execute(CommandContext ctx) {
+		Requester.getRandomSubredditImage(ctx.getStringOption("subreddit"), ctx, ctx::reply);
 		return true;
 	}
 }

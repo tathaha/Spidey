@@ -5,15 +5,18 @@ import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.utils.MusicUtils;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 @SuppressWarnings("unused")
 public class RemoveCommand extends Command {
 	public RemoveCommand() {
-		super("remove", new String[]{"rem"}, Category.MUSIC, Permission.UNKNOWN, 0, 0);
+		super("remove", Category.MUSIC, Permission.UNKNOWN, 0,
+				new OptionData(OptionType.INTEGER, "position", "The position of the track to remove").setRequired(true));
 	}
 
 	@Override
-	public boolean execute(String[] args, CommandContext ctx) {
+	public boolean execute(CommandContext ctx) {
 		var guild = ctx.getGuild();
 		var musicPlayer = ctx.getCache().getMusicPlayerCache().getMusicPlayer(guild);
 		if (musicPlayer == null) {
@@ -26,26 +29,20 @@ public class RemoveCommand extends Command {
 			ctx.replyErrorLocalized("music.messages.failure.queue_empty");
 			return false;
 		}
-		if (args.length == 0) {
-			ctx.replyErrorLocalized("commands.remove.other.provide");
+		var trackPosition = ctx.getLongOption("position");
+		var size = queue.size();
+		if (trackPosition == 0 || trackPosition > size) {
+			ctx.replyErrorLocalized("number.range", size);
 			return false;
 		}
-		ctx.getArgumentAsUnsignedInt(0, trackPosition -> {
-			var size = queue.size();
-			if (trackPosition == 0 || trackPosition > size) {
-				ctx.replyErrorLocalized("number.range", size);
-				return;
-			}
-			var actualPosition = trackPosition - 1;
-			var selectedTrack = queue.get(actualPosition);
-			if (!MusicUtils.canInteract(ctx.getMember(), selectedTrack)) {
-				ctx.replyErrorLocalized("music.messages.failure.cant_interact_requester", "remove someone else's song from the queue");
-				return;
-			}
-			queue.remove(actualPosition);
-			ctx.reactLike();
-			ctx.replyLocalized("commands.remove.other.removed", selectedTrack.getInfo().title);
-		});
+		var actualPosition = (int) (trackPosition - 1);
+		var selectedTrack = queue.get(actualPosition);
+		if (!MusicUtils.canInteract(ctx.getMember(), selectedTrack)) {
+			ctx.replyErrorLocalized("music.messages.failure.cant_interact_requester", "remove someone else's song from the queue");
+			return false;
+		}
+		queue.remove(actualPosition);
+		ctx.replyLocalized("commands.remove.other.removed", selectedTrack.getInfo().title);
 		return true;
 	}
 }

@@ -190,12 +190,8 @@ public class MusicUtils {
 		AUDIO_PLAYER_MANAGER.loadItemOrdered(musicPlayer, query, loader);
 	}
 
-	public static MusicPlayer checkQueryInput(String[] args, CommandContext ctx) {
+	public static MusicPlayer checkPlayability(CommandContext ctx) {
 		var i18n = ctx.getI18n();
-		if (args.length == 0) {
-			ctx.replyErrorLocalized("music.messages.failure.no_query");
-			return null;
-		}
 		var connectionFailure = checkVoiceChannel(ctx);
 		if (connectionFailure != null) {
 			ctx.replyError(i18n.get("music.messages.failure.connect.cant_play")

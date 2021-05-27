@@ -16,7 +16,7 @@ public class WhitelistChannelCommand extends Command {
 	}
 
 	@Override
-	public boolean execute(String[] args, CommandContext ctx) {
+	public boolean execute(CommandContext ctx) {
 		var guildSettingsCache = ctx.getCache().getGuildSettingsCache();
 		var guildId = ctx.getGuild().getIdLong();
 		var i18n = ctx.getI18n();
@@ -67,7 +67,7 @@ public class WhitelistChannelCommand extends Command {
 	private void listWhitelistedChannels(CommandContext ctx, String prefix, GuildChannelsSettings channelsSettings) {
 		var whitelistedChannels = channelsSettings.getWhitelistedChannels();
 		var i18n = ctx.getI18n();
-		var embedBuilder = Utils.createEmbedBuilder(ctx.getAuthor()).setAuthor(i18n.get("commands.whitelist.other.channels.text"));
+		var embedBuilder = Utils.createEmbedBuilder(ctx.getUser()).setAuthor(i18n.get("commands.whitelist.other.channels.text"));
 
 		embedBuilder.setDescription(whitelistedChannels.isEmpty()
 				? i18n.get("commands.whitelist.other.channels.none")

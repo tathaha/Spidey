@@ -23,7 +23,7 @@ public class UploadEmoteCommand extends Command {
 	}
 
 	@Override
-	public boolean execute(String[] args, CommandContext ctx) {
+	public boolean execute(CommandContext ctx) {
 		var guild = ctx.getGuild();
 		var i18n = ctx.getI18n();
 		if (!guild.getSelfMember().hasPermission(getRequiredPermission())) {

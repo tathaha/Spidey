@@ -2,33 +2,27 @@ package dev.mlnr.spidey.objects.command;
 
 import dev.mlnr.spidey.objects.command.category.ICategory;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 public abstract class Command {
-
 	private final String invoke;
-	private final String[] aliases;
 	private final ICategory category;
 	private final Permission requiredPermission;
-	private final int maxArgs;
 	private final int cooldown;
+	private final OptionData[] options;
 
-	protected Command(String invoke, String[] aliases, ICategory category, Permission requiredPermission, int maxArgs, int cooldown) {
+	protected Command(String invoke, ICategory category, Permission requiredPermission, int cooldown, OptionData... options) {
 		this.invoke = invoke;
-		this.aliases = aliases;
 		this.category = category;
 		this.requiredPermission = requiredPermission;
-		this.maxArgs = maxArgs;
 		this.cooldown = cooldown;
+		this.options = options;
 	}
 
-	public abstract boolean execute(String[] args, CommandContext ctx);
+	public abstract boolean execute(CommandContext ctx);
 
 	public String getInvoke() {
 		return this.invoke;
-	}
-
-	public String[] getAliases() {
-		return this.aliases;
 	}
 
 	public ICategory getCategory() {
@@ -39,11 +33,11 @@ public abstract class Command {
 		return this.requiredPermission;
 	}
 
-	public int getMaxArgs() {
-		return this.maxArgs;
-	}
-
 	public int getCooldown() {
 		return this.cooldown;
+	}
+
+	public OptionData[] getOptions() {
+		return this.options;
 	}
 }

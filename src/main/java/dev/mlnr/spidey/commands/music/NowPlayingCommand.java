@@ -13,13 +13,12 @@ import static dev.mlnr.spidey.utils.MusicUtils.formatDuration;
 
 @SuppressWarnings("unused")
 public class NowPlayingCommand extends Command {
-
 	public NowPlayingCommand() {
-		super("nowplaying", new String[]{"np", "playing"}, Category.MUSIC, Permission.UNKNOWN, 0, 0);
+		super("nowplaying", Category.MUSIC, Permission.UNKNOWN, 0);
 	}
 
 	@Override
-	public boolean execute(String[] args, CommandContext ctx) {
+	public boolean execute(CommandContext ctx) {
 		var guild = ctx.getGuild();
 		var musicPlayer = ctx.getCache().getMusicPlayerCache().getMusicPlayer(guild);
 		var i18n = ctx.getI18n();
@@ -35,7 +34,7 @@ public class NowPlayingCommand extends Command {
 		var guildId = guild.getIdLong();
 		var paused = musicPlayer.isPaused();
 		var trackInfo = playingTrack.getInfo();
-		var progressBuilder = Utils.createEmbedBuilder(ctx.getAuthor());
+		var progressBuilder = Utils.createEmbedBuilder(ctx.getUser());
 		var stream = trackInfo.isStream;
 		var position = playingTrack.getPosition();
 

@@ -16,7 +16,7 @@ public class LogCommand extends Command {
 	}
 
 	@Override
-	public boolean execute(String[] args, CommandContext ctx) {
+	public boolean execute(CommandContext ctx) {
 		var guildId = ctx.getGuild().getIdLong();
 		if (args.length == 0) {
 			proceed(guildId, ctx.getTextChannel(), ctx);

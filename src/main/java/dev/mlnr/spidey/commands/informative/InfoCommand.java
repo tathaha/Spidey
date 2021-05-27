@@ -9,22 +9,20 @@ import net.dv8tion.jda.api.Permission;
 
 @SuppressWarnings("unused")
 public class InfoCommand extends Command {
-
 	public InfoCommand() {
-		super("info", new String[]{}, Category.INFORMATIVE, Permission.UNKNOWN, 0, 0);
+		super("info", Category.INFORMATIVE, Permission.UNKNOWN, 0);
 	}
 
 	@Override
-	public boolean execute(String[] args, CommandContext ctx) {
-		var eb = Utils.createEmbedBuilder(ctx.getAuthor());
+	public boolean execute(CommandContext ctx) {
+		var eb = Utils.createEmbedBuilder(ctx.getUser());
 		var avatar = ctx.getJDA().getSelfUser().getEffectiveAvatarUrl();
 		var i18n = ctx.getI18n();
 
 		eb.setAuthor("Spidey", null, avatar);
 		eb.setThumbnail(avatar);
 		eb.addField(i18n.get("commands.info.fields.about.title"), i18n.get("commands.info.fields.about.text", "cane#0570"), false);
-		eb.addField(i18n.get("commands.info.fields.commands.title"),
-				i18n.get("commands.info.fields.commands.text", ctx.getCache().getGuildSettingsCache().getMiscSettings(ctx.getGuild().getIdLong()).getPrefix()), false);
+		eb.addField(i18n.get("commands.info.fields.commands.title"), i18n.get("commands.info.fields.commands.text"), false);
 		eb.addField(i18n.get("commands.info.fields.info.title"), i18n.get("commands.info.fields.info.text", JDAInfo.VERSION), false);
 		eb.addField(i18n.get("commands.info.fields.links"), "[`Website`](https://spidey.mlnr.dev)\n[`Discord`](https://discord.gg/uJCw7B9fxZ)" +
 				"\n[`GitHub`](https://github.com/caneleex/Spidey)", false);

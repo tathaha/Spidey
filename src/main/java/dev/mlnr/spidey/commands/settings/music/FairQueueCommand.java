@@ -15,7 +15,7 @@ public class FairQueueCommand extends Command {
 	}
 
 	@Override
-	public boolean execute(String[] args, CommandContext ctx) {
+	public boolean execute(CommandContext ctx) {
 		if (!MusicUtils.canInteract(ctx.getMember())) {
 			ctx.replyErrorLocalized("music.messages.failure.cant_interact", "enable/disable the fair queue or to set the threshold");
 			return false;

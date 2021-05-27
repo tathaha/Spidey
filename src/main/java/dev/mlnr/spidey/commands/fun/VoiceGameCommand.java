@@ -7,52 +7,51 @@ import dev.mlnr.spidey.objects.games.VoiceGameType;
 import dev.mlnr.spidey.utils.Utils;
 import dev.mlnr.spidey.utils.requests.Requester;
 import net.dv8tion.jda.api.Permission;
-
-import java.util.Arrays;
-import java.util.stream.Collectors;
+import net.dv8tion.jda.api.entities.ChannelType;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 @SuppressWarnings("unused")
 public class VoiceGameCommand extends Command {
 	public VoiceGameCommand() {
-		super("voicegame", new String[]{"voiceactivity", "vcgame", "vcactivity"}, Category.FUN, Permission.CREATE_INSTANT_INVITE, 1, 10);
+		super("voicegame", Category.FUN, Permission.CREATE_INSTANT_INVITE, 10,
+				new OptionData(OptionType.STRING, "game", "The game to create an invite for")
+						.addChoice(VoiceGameType.BETRAYAL_IO.getFriendlyName(), VoiceGameType.BETRAYAL_IO.name())
+						.addChoice(VoiceGameType.FISHINGTON_IO.getFriendlyName(), VoiceGameType.FISHINGTON_IO.name())
+						.addChoice(VoiceGameType.POKER_NIGHT.getFriendlyName(), VoiceGameType.POKER_NIGHT.name())
+						.addChoice(VoiceGameType.YOUTUBE_TOGETHER.getFriendlyName(), VoiceGameType.YOUTUBE_TOGETHER.name())
+						.setRequired(true),
+				new OptionData(OptionType.CHANNEL, "channel", "The channel to create the game invite for"));
 	}
 
 	@Override
-	public boolean execute(String[] args, CommandContext ctx) {
-		var voiceState = ctx.getMember().getVoiceState();
+	public boolean execute(CommandContext ctx) {
+		var channel = ctx.getChannelOption("channel");
 		var i18n = ctx.getI18n();
-		var notInVoice = i18n.get("commands.voicegame.other.not_in_voice");
-		if (voiceState == null) {
-			ctx.replyError(notInVoice);
-			return false;
-		}
-		var channel = voiceState.getChannel();
 		if (channel == null) {
-			ctx.replyError(notInVoice);
+			var voiceState = ctx.getMember().getVoiceState();
+			var notInVoice = i18n.get("commands.voicegame.other.not_in_voice");
+			if (voiceState == null) {
+				ctx.replyError(notInVoice);
+				return false;
+			}
+			var voiceStateChannel = voiceState.getChannel();
+			if (voiceStateChannel == null) {
+				ctx.replyError(notInVoice);
+				return false;
+			}
+			channel = voiceStateChannel;
+		}
+		if (channel.getType() != ChannelType.VOICE) {
+			ctx.replyErrorLocalized("commands.voicegame.other.not_voice");
 			return false;
 		}
 		if (!ctx.getGuild().getSelfMember().hasPermission(channel, Permission.CREATE_INSTANT_INVITE)) {
 			ctx.replyErrorLocalized("commands.voicegame.other.no_perms");
 			return false;
 		}
-		var embedBuilder = Utils.createEmbedBuilder(ctx.getAuthor());
-		if (args.length == 0) {
-			embedBuilder.setAuthor(i18n.get("commands.voicegame.other.available_games"));
-			var availableGamesBuilder = embedBuilder.getDescriptionBuilder();
-			for (var voiceGame : VoiceGameType.values()) {
-				var keys = Arrays.stream(voiceGame.getKeys()).collect(Collectors.joining(", ", "**", "**"));
-				availableGamesBuilder.append("**").append(voiceGame.getFriendlyName()).append("**").append(" - ").append(keys).append("\n");
-			}
-			var prefix = ctx.getCache().getGuildSettingsCache().getMiscSettings(ctx.getGuild().getIdLong()).getPrefix();
-			availableGamesBuilder.append("\n").append(i18n.get("commands.voicegame.other.pick", prefix));
-			ctx.reply(embedBuilder);
-			return false;
-		}
-		var voiceGame = VoiceGameType.from(args[0]);
-		if (voiceGame == null) {
-			ctx.replyErrorLocalized("commands.voicegame.other.no_game");
-			return false;
-		}
+		var embedBuilder = Utils.createEmbedBuilder(ctx.getUser());
+		var voiceGame = VoiceGameType.valueOf(ctx.getStringOption("game"));
 		Requester.launchVoiceGameSession(channel.getId(), voiceGame, code -> {
 			embedBuilder.setColor(16711680);
 			embedBuilder.setDescription(i18n.get("commands.voicegame.other.click", code, voiceGame.getFriendlyName()));

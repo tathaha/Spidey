@@ -87,7 +87,7 @@ public class DatabaseManager {
 				settingsRecord ->
 		{
 			var casted = (SettingsMiscRecord) settingsRecord;
-			return new GuildMiscSettings(guildId, casted.getLogChannelId(), casted.getJoinRoleId(), casted.getPrefix(), casted.getLanguage(),
+			return new GuildMiscSettings(guildId, casted.getLogChannelId(), casted.getJoinRoleId(), casted.getLanguage(),
 					casted.getSnipingEnabled(), casted.getErrorCleanupEnabled(), spidey);
 		});
 	}
@@ -182,10 +182,6 @@ public class DatabaseManager {
 
 	public void setJoinRoleId(long guildId, long roleId) {
 		executeMiscSetQuery(SETTINGS_MISC.JOIN_ROLE_ID, roleId, guildId);
-	}
-
-	public void setPrefix(long guildId, String prefix) {
-		executeMiscSetQuery(SETTINGS_MISC.PREFIX, prefix, guildId);
 	}
 
 	//	public void setLanguage(long guildId, String language) {

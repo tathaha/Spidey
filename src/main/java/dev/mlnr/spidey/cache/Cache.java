@@ -14,7 +14,6 @@ public class Cache {
 	private final GuildSettingsCache guildSettingsCache;
 	private final MessageCache messageCache;
 	private final PaginatorCache paginatorCache;
-	private final ResponseCache responseCache;
 
 	public Cache(Spidey spidey, JDA jda) {
 		this.musicPlayerCache = MusicPlayerCache.getInstance();
@@ -27,7 +26,6 @@ public class Cache {
 
 		this.messageCache = new MessageCache();
 		this.paginatorCache = new PaginatorCache(jda);
-		this.responseCache = ResponseCache.getInstance();
 	}
 
 	public MusicPlayerCache getMusicPlayerCache() {
@@ -56,9 +54,5 @@ public class Cache {
 
 	public PaginatorCache getPaginatorCache() {
 		return paginatorCache;
-	}
-
-	public ResponseCache getResponseCache() {
-		return responseCache;
 	}
 }

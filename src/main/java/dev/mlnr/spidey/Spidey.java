@@ -5,7 +5,6 @@ import dev.mlnr.blh.core.api.BLHBuilder;
 import dev.mlnr.blh.core.api.BotList;
 import dev.mlnr.blh.jda.BLHJDAListener;
 import dev.mlnr.spidey.events.ReadyEvents;
-import dev.mlnr.spidey.handlers.command.CommandHandler;
 import dev.mlnr.spidey.objects.I18n;
 import dev.mlnr.spidey.utils.ConcurrentUtils;
 import dev.mlnr.spidey.utils.MusicUtils;
@@ -36,7 +35,6 @@ public class Spidey {
 
 	public Spidey() throws LoginException, InterruptedException {
 		I18n.loadLanguages();
-		CommandHandler.loadCommands();
 		MusicUtils.registerSources();
 
 		RestAction.setDefaultFailure(null);

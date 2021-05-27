@@ -8,15 +8,14 @@ import net.dv8tion.jda.api.Permission;
 
 @SuppressWarnings("unused")
 public class AkinatorCommand extends Command {
-
 	public AkinatorCommand() {
-		super("akinator", new String[]{"aki"}, Category.FUN, Permission.UNKNOWN, 0, 0);
+		super("akinator", Category.FUN, Permission.UNKNOWN, 0);
 	}
 
 	@Override
-	public boolean execute(String[] args, CommandContext ctx) {
+	public boolean execute(CommandContext ctx) {
 		var akinatorCache = ctx.getCache().getAkinatorCache();
-		akinatorCache.createAkinator(ctx.getAuthor(), new AkinatorContext(ctx.getEvent(), akinatorCache, ctx.getI18n()));
+		akinatorCache.createAkinator(ctx.getUser(), new AkinatorContext(ctx.getEvent(), akinatorCache, ctx.getI18n()));
 		return true;
 	}
 }

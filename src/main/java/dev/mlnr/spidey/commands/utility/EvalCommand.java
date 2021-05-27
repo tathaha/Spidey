@@ -26,8 +26,8 @@ public class EvalCommand extends Command {
 	}
 
 	@Override
-	public boolean execute(String[] args, CommandContext ctx) {
-		var author = ctx.getAuthor();
+	public boolean execute(CommandContext ctx) {
+		var author = ctx.getUser();
 		var jda = ctx.getJDA();
 		var channel = ctx.getTextChannel();
 		var message = ctx.getMessage();

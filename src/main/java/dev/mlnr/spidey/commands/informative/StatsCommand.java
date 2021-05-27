@@ -12,13 +12,12 @@ import java.lang.management.ManagementFactory;
 public class StatsCommand extends Command {
 
 	public StatsCommand() {
-		super("stats", new String[]{}, Category.INFORMATIVE, Permission.UNKNOWN, 0, 0);
+		super("stats", Category.INFORMATIVE, Permission.UNKNOWN, 0);
 	}
 
 	@Override
-	public boolean execute(String[] args, CommandContext ctx) {
-		var eb = Utils.createEmbedBuilder(ctx.getAuthor());
-		var prefix = ctx.getCache().getGuildSettingsCache().getMiscSettings(ctx.getGuild().getIdLong()).getPrefix();
+	public boolean execute(CommandContext ctx) {
+		var eb = Utils.createEmbedBuilder(ctx.getUser());
 		var jda = ctx.getJDA();
 		var runtime = Runtime.getRuntime();
 		var total = runtime.totalMemory();
@@ -27,7 +26,7 @@ public class StatsCommand extends Command {
 
 		eb.setColor(Utils.SPIDEY_COLOR);
 		eb.setAuthor(i18n.get("commands.stats.other.title"), "https://spidey.mlnr.dev", jda.getSelfUser().getEffectiveAvatarUrl());
-		eb.setDescription(i18n.get("commands.stats.other.more", prefix));
+		eb.setDescription(i18n.get("commands.stats.other.more"));
 		eb.addField(i18n.get("commands.stats.other.total_servers"), String.valueOf(jda.getGuildCache().size()), true);
 		eb.addField(i18n.get("commands.stats.other.memory"), memory + "MB / " + (total / 100000) + "MB", true);
 		eb.addField(i18n.get("commands.stats.other.threads"), String.valueOf(ManagementFactory.getThreadMXBean().getThreadCount()), true);

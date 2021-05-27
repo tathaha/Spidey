@@ -7,6 +7,8 @@ import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 import static dev.mlnr.spidey.utils.Utils.formatDate;
 
@@ -14,21 +16,26 @@ import static dev.mlnr.spidey.utils.Utils.formatDate;
 public class UserCommand extends Command {
 
 	public UserCommand() {
-		super("user", new String[]{}, Category.INFORMATIVE, Permission.UNKNOWN, 1, 2);
+		super("user", Category.INFORMATIVE, Permission.UNKNOWN, 2,
+				new OptionData(OptionType.USER, "user", "The user to get the info about"));
 	}
 
 	@Override
-	public boolean execute(String[] args, CommandContext ctx) {
-		if (args.length == 0) {
-			respond(ctx, ctx.getAuthor(), ctx.getMember());
-			return true;
+	public boolean execute(CommandContext ctx) {
+		var user = ctx.getUserOption("user");
+		var author = ctx.getUser();
+		if (user == null || user.equals(author)) {
+			respond(ctx, author, ctx.getMember());
 		}
-		ctx.getArgumentAsUser(0, user -> ctx.getGuild().retrieveMember(user).queue(member -> respond(ctx, user, member), failure -> respond(ctx, user, null)));
+		else {
+			ctx.getGuild().retrieveMember(user)
+					.queue(member -> respond(ctx, user, member), failure -> respond(ctx, user, null));
+		}
 		return true;
 	}
 
 	private void respond(CommandContext ctx, User user, Member member) {
-		var eb = Utils.createEmbedBuilder(ctx.getAuthor());
+		var eb = Utils.createEmbedBuilder(ctx.getUser());
 		var i18n = ctx.getI18n();
 
 		eb.setAuthor(i18n.get("commands.user.other.title") + " - " + user.getAsTag());

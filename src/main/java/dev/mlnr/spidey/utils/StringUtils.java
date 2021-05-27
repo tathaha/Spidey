@@ -81,7 +81,7 @@ public class StringUtils {
 		var channel = ctx.getTextChannel();
 		channel.sendMessage(selectionBuilder.build()).queue(selectionMessage -> {
 			var message = ctx.getMessage();
-			eventWaiter.waitForEvent(GuildMessageReceivedEvent.class, event -> event.getChannel().equals(channel) && event.getAuthor().equals(ctx.getAuthor()),
+			eventWaiter.waitForEvent(GuildMessageReceivedEvent.class, event -> event.getChannel().equals(channel) && event.getAuthor().equals(ctx.getUser()),
 					event -> {
 						var choiceMessage = event.getMessage();
 						var content = choiceMessage.getContentRaw();
