@@ -11,7 +11,7 @@ import java.awt.*;
 @SuppressWarnings("unused")
 public class SnipeCommand extends Command {
 	public SnipeCommand() {
-		super("snipe", Category.UTILITY, Permission.UNKNOWN, 6);
+		super("snipe", "Snipes a deleted message", Category.UTILITY, Permission.UNKNOWN, 6);
 	}
 
 	@Override

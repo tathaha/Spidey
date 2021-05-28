@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 @SuppressWarnings("unused")
 public class JoinRoleCommand extends Command {
 	public JoinRoleCommand() {
-		super("joinrole", Category.Settings.MISC, Permission.MANAGE_SERVER, 4,
+		super("joinrole", "Sets/removes the role that is added to a member after joining", Category.Settings.MISC, Permission.MANAGE_SERVER, 4,
 				new OptionData(OptionType.ROLE, "role", "The role to set as the join role or blank to reset"));
 	}
 

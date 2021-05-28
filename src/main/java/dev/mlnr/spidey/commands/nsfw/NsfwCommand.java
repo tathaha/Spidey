@@ -14,7 +14,7 @@ import java.awt.*;
 @SuppressWarnings("unused")
 public class NsfwCommand extends Command {
 	public NsfwCommand() {
-		super("nsfw", Category.NSFW, Permission.UNKNOWN, 4,
+		super("nsfw", "Sends a NSFW image", Category.NSFW, Permission.UNKNOWN, 4,
 				new OptionData(OptionType.STRING, "type", "The type of the NSFW image")
 						.addChoice(NSFWType.ANAL.getFriendlyName(), NSFWType.ANAL.name())
 						.addChoice(NSFWType.ASIANS.getFriendlyName(), NSFWType.ASIANS.name())

@@ -13,7 +13,6 @@ import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEve
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
-import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -24,10 +23,9 @@ import static dev.mlnr.spidey.utils.Utils.deleteMessage;
 
 @SuppressWarnings({"unused", "StringBufferReplaceableByString"})
 public class PurgeCommand extends Command {
-
 	public PurgeCommand() {
-		super("purge", Category.MODERATION, Permission.MESSAGE_MANAGE, 6,
-				new OptionData(OptionType.INTEGER, "amount", "The amount of messages to purge").setRequired(true),
+		super("purge", "Purges messages (by entered user)", Category.MODERATION, Permission.MESSAGE_MANAGE, 6,
+				new OptionData(OptionType.INTEGER, "amount", "The amount of messages to purge", true),
 				new OptionData(OptionType.USER, "user", "The user to delete the messages of"));
 	}
 
@@ -35,7 +33,7 @@ public class PurgeCommand extends Command {
 	public boolean execute(CommandContext ctx) {
 		var guild = ctx.getGuild();
 		if (!guild.getSelfMember().hasPermission(ctx.getTextChannel(), getRequiredPermission(), Permission.MESSAGE_HISTORY)) {
-			ctx.replyErrorLocalized("commands.purge.other.messages.failure.no_perms");
+			ctx.replyErrorLocalized("commands.purge.messages.failure.no_perms");
 			return false;
 		}
 		var amount = ctx.getLongOption("amount");
@@ -57,12 +55,12 @@ public class PurgeCommand extends Command {
 		var i18n = ctx.getI18n();
 		channel.getIterableHistory().cache(false).limit(target == null ? (int) limit : 100).queue(messages -> {
 			if (messages.isEmpty()) {
-				ctx.replyErrorLocalized("commands.purge.other.messages.failure.no_messages.text");
+				ctx.replyErrorLocalized("commands.purge.messages.failure.no_messages.text");
 				return;
 			}
 			var msgs = target == null ? messages : messages.stream().filter(msg -> msg.getAuthor().equals(target)).limit(limit).collect(Collectors.toList());
 			if (msgs.isEmpty()) {
-				ctx.replyErrorLocalized("commands.purge.other.messages.failure.no_messages.user", target.getAsTag());
+				ctx.replyErrorLocalized("commands.purge.messages.failure.no_messages.user", target.getAsTag());
 				return;
 			}
 			var pinned = msgs.stream().filter(Message::isPinned).collect(Collectors.toList());
@@ -71,15 +69,15 @@ public class PurgeCommand extends Command {
 				return;
 			}
 			var size = pinned.size();
-			var builder = new StringBuilder(size == 1 ? i18n.get("commands.purge.other.messages.pinned.one")
-					: i18n.get("commands.purge.other.messages.pinned.multiple"));
-			builder.append(" ").append(i18n.get("commands.purge.other.messages.pinned.confirmation.text")).append(" ");
-			builder.append(size == 1 ? i18n.get("commands.purge.other.messages.pinned.confirmation.one")
-					: i18n.get("commands.purge.other.messages.pinned.confirmation.multiple"));
-			builder.append("? ").append(i18n.get("commands.purge.other.messages.pinned.middle_text.text"));
-			builder.append(" ").append(size == 1 ? i18n.get("commands.purge.other.messages.pinned.middle_text.one")
-					: i18n.get("commands.purge.other.messages.pinned.middle_text_multiple"));
-			builder.append(i18n.get("commands.purge.other.messages.pinned.end_text"));
+			var builder = new StringBuilder(size == 1 ? i18n.get("commands.purge.messages.pinned.one")
+					: i18n.get("commands.purge.messages.pinned.multiple"));
+			builder.append(" ").append(i18n.get("commands.purge.messages.pinned.confirmation.text")).append(" ");
+			builder.append(size == 1 ? i18n.get("commands.purge.messages.pinned.confirmation.one")
+					: i18n.get("commands.purge.messages.pinned.confirmation.multiple"));
+			builder.append("? ").append(i18n.get("commands.purge.messages.pinned.middle_text.text"));
+			builder.append(" ").append(size == 1 ? i18n.get("commands.purge.messages.pinned.middle_text.one")
+					: i18n.get("commands.purge.messages.pinned.middle_text_multiple"));
+			builder.append(i18n.get("commands.purge.messages.pinned.end_text"));
 
 			channel.sendMessage(builder.toString()).queue(sentMessage -> {
 				addReaction(sentMessage, Emojis.CHECK);
@@ -100,7 +98,7 @@ public class PurgeCommand extends Command {
 									msgs.removeAll(pinned);
 									deleteMessage(sentMessage);
 									if (msgs.isEmpty()) {
-										ctx.replyErrorLocalized("commands.purge.other.messages.failure.no_messages.unpinned");
+										ctx.replyErrorLocalized("commands.purge.messages.failure.no_messages.unpinned");
 										return;
 									}
 									break;
@@ -116,6 +114,8 @@ public class PurgeCommand extends Command {
 	}
 
 	private void proceed(List<Message> toDelete, User user, CommandContext ctx) {
+		ctx.getEvent().deferReply(true).queue();
+
 		var channel = ctx.getTextChannel();
 		var future = CompletableFuture.allOf(channel.purgeMessages(toDelete).toArray(new CompletableFuture[0]));
 		future.whenCompleteAsync((ignored, throwable) -> {
@@ -124,16 +124,13 @@ public class PurgeCommand extends Command {
 				ctx.replyErrorLocalized("internal_error", "purge messages", throwable.getMessage());
 				return;
 			}
-			channel.sendMessage(generateSuccessMessage(toDelete.size(), user, i18n))
-					.delay(Duration.ofSeconds(5))
-					.flatMap(Message::delete)
-					.queue();
+			ctx.getEvent().getHook().sendMessage(generateSuccessMessage(toDelete.size(), user, i18n)).queue();
 		});
 	}
 
 	private String generateSuccessMessage(int amount, User user, I18n i18n) {
-		return i18n.get("commands.purge.other.messages.success.text", amount) + " "
-				+ (amount == 1 ? i18n.get("commands.purge.other.messages.success.one") : i18n.get("commands.purge.other.messages.success.multiple"))
-				+ (user == null ? "." : " " + i18n.get("commands.purge.other.messages.success.user", user) + ".");
+		return i18n.get("commands.purge.messages.success.text", amount) + " "
+				+ (amount == 1 ? i18n.get("commands.purge.messages.success.one") : i18n.get("commands.purge.messages.success.multiple"))
+				+ (user == null ? "." : " " + i18n.get("commands.purge.messages.success.user", user) + ".");
 	}
 }

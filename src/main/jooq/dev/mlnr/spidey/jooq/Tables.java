@@ -5,13 +5,8 @@ package dev.mlnr.spidey.jooq;
 
 
 import dev.mlnr.spidey.jooq.tables.Guilds;
-import dev.mlnr.spidey.jooq.tables.InviteFilterIgnoredRoles;
-import dev.mlnr.spidey.jooq.tables.InviteFilterIgnoredUsers;
-import dev.mlnr.spidey.jooq.tables.SettingsBlacklistedChannels;
-import dev.mlnr.spidey.jooq.tables.SettingsFilters;
 import dev.mlnr.spidey.jooq.tables.SettingsMisc;
 import dev.mlnr.spidey.jooq.tables.SettingsMusic;
-import dev.mlnr.spidey.jooq.tables.SettingsWhitelistedChannels;
 
 
 /**
@@ -26,26 +21,6 @@ public class Tables {
     public static final Guilds GUILDS = Guilds.GUILDS;
 
     /**
-     * The table <code>public.invite_filter_ignored_roles</code>.
-     */
-    public static final InviteFilterIgnoredRoles INVITE_FILTER_IGNORED_ROLES = InviteFilterIgnoredRoles.INVITE_FILTER_IGNORED_ROLES;
-
-    /**
-     * The table <code>public.invite_filter_ignored_users</code>.
-     */
-    public static final InviteFilterIgnoredUsers INVITE_FILTER_IGNORED_USERS = InviteFilterIgnoredUsers.INVITE_FILTER_IGNORED_USERS;
-
-    /**
-     * The table <code>public.settings_blacklisted_channels</code>.
-     */
-    public static final SettingsBlacklistedChannels SETTINGS_BLACKLISTED_CHANNELS = SettingsBlacklistedChannels.SETTINGS_BLACKLISTED_CHANNELS;
-
-    /**
-     * The table <code>public.settings_filters</code>.
-     */
-    public static final SettingsFilters SETTINGS_FILTERS = SettingsFilters.SETTINGS_FILTERS;
-
-    /**
      * The table <code>public.settings_misc</code>.
      */
     public static final SettingsMisc SETTINGS_MISC = SettingsMisc.SETTINGS_MISC;
@@ -54,9 +29,4 @@ public class Tables {
      * The table <code>public.settings_music</code>.
      */
     public static final SettingsMusic SETTINGS_MUSIC = SettingsMusic.SETTINGS_MUSIC;
-
-    /**
-     * The table <code>public.settings_whitelisted_channels</code>.
-     */
-    public static final SettingsWhitelistedChannels SETTINGS_WHITELISTED_CHANNELS = SettingsWhitelistedChannels.SETTINGS_WHITELISTED_CHANNELS;
 }

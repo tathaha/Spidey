@@ -8,12 +8,12 @@ import net.dv8tion.jda.api.Permission;
 @SuppressWarnings("unused")
 public class LegalCommand extends Command {
 	public LegalCommand() {
-		super("legal", Category.INFORMATIVE, Permission.UNKNOWN, 0);
+		super("legal", "Shows you the Privacy Policy", Category.INFORMATIVE, Permission.UNKNOWN, 0);
 	}
 
 	@Override
 	public boolean execute(CommandContext ctx) {
-		ctx.replyLocalized("commands.legal.other.text");
+		ctx.replyLocalized("commands.legal.text");
 		return true;
 	}
 }

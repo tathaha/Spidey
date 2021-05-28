@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.Permission;
 @SuppressWarnings("unused")
 public class StopCommand extends Command {
 	public StopCommand() {
-		super("stop", Category.MUSIC, Permission.UNKNOWN, 0);
+		super("stop", "Stops the playback and disconnects the bot", Category.MUSIC, Permission.UNKNOWN, 0);
 	}
 
 	@Override

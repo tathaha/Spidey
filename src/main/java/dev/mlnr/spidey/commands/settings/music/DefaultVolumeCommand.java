@@ -11,7 +11,7 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 @SuppressWarnings("unused")
 public class DefaultVolumeCommand extends Command {
 	public DefaultVolumeCommand() {
-		super("defaultvolume", Category.Settings.MUSIC, Permission.UNKNOWN, 0,
+		super("defaultvolume", "Sets the default music volume", Category.Settings.MUSIC, Permission.UNKNOWN, 0,
 				new OptionData(OptionType.INTEGER, "volume", "The default music volume for this server or blank to see the current default volume"));
 	}
 
@@ -27,16 +27,16 @@ public class DefaultVolumeCommand extends Command {
 		var musicSettings = guildSettingsCache.getMusicSettings(guildId);
 		var currentDefaultVolume = musicSettings.getDefaultVolume();
 		if (volumeOption == null) {
-			ctx.replyLocalized("commands.defaultvolume.other.current", currentDefaultVolume);
+			ctx.replyLocalized("commands.defaultvolume.current", currentDefaultVolume);
 			return true;
 		}
 		var newDefaultVolume = (int) Math.min(volumeOption, 150);
 		if (newDefaultVolume == currentDefaultVolume) {
-			ctx.replyErrorLocalized("commands.defaultvolume.other.already_set", newDefaultVolume);
+			ctx.replyErrorLocalized("commands.defaultvolume.already_set", newDefaultVolume);
 			return true;
 		}
 		musicSettings.setDefaultVolume(newDefaultVolume);
-		ctx.replyLocalized("commands.defaultvolume.other.set", newDefaultVolume);
+		ctx.replyLocalized("commands.defaultvolume.set", newDefaultVolume);
 		return true;
 	}
 }

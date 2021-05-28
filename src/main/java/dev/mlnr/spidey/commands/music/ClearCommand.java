@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.Permission;
 @SuppressWarnings("unused")
 public class ClearCommand extends Command {
 	public ClearCommand() {
-		super("clear", Category.MUSIC, Permission.UNKNOWN, 0);
+		super("clear", "Clears the music queue", Category.MUSIC, Permission.UNKNOWN, 0);
 	}
 
 	@Override
@@ -31,7 +31,7 @@ public class ClearCommand extends Command {
 			return false;
 		}
 		queue.clear();
-		ctx.replyLocalized("commands.clear.other.cleared");
+		ctx.replyLocalized("commands.clear.cleared");
 		return true;
 	}
 }

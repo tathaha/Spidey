@@ -10,9 +10,8 @@ import java.time.Instant;
 
 @SuppressWarnings("unused")
 public class MembersCommand extends Command {
-
 	public MembersCommand() {
-		super("members", Category.INFORMATIVE, Permission.UNKNOWN, 2);
+		super("members", "Shows you the membercount of the server", Category.INFORMATIVE, Permission.UNKNOWN, 2);
 	}
 
 	@Override
@@ -23,11 +22,11 @@ public class MembersCommand extends Command {
 			var eb = Utils.createEmbedBuilder(ctx.getUser());
 			var i18n = ctx.getI18n();
 
-			eb.setAuthor(i18n.get("commands.members.other.title"));
+			eb.setAuthor(i18n.get("commands.members.title"));
 			eb.setTimestamp(Instant.now());
-			eb.addField(i18n.get("commands.members.other.total"), "**" + total + "**", true);
-			eb.addField(i18n.get("commands.members.other.people"), "**" + (total - bots) + "**", true);
-			eb.addField(i18n.get("commands.members.other.bots"), "**" + bots + "**", true);
+			eb.addField(i18n.get("commands.members.total"), "**" + total + "**", true);
+			eb.addField(i18n.get("commands.members.people"), "**" + (total - bots) + "**", true);
+			eb.addField(i18n.get("commands.members.bots"), "**" + bots + "**", true);
 			ctx.reply(eb);
 		});
 		return true;

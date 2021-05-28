@@ -11,7 +11,7 @@ import java.awt.*;
 @SuppressWarnings("unused")
 public class EditSnipeCommand extends Command {
 	public EditSnipeCommand() {
-		super("editsnipe", Category.UTILITY, Permission.UNKNOWN, 6);
+		super("editsnipe", "Snipes an edited message", Category.UTILITY, Permission.UNKNOWN, 6);
 	}
 
 	@Override

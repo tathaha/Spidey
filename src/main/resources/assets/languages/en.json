@@ -1,7 +1,7 @@
 {
   "limit_exceeded": "Limit exceeded",
   "took_too_long": "Sorry, you took too long.",
-  "internal_error": "Unfortunately, i couldn't %s due to an internal error: **%s**. Please report this message to the Developer.",
+  "internal_error": "Unfortunately, I couldn't %s due to an internal error: **%s**. Please report this message to the Developer.",
   "enabled": "enabled",
   "disabled": "disabled",
   "number": {
@@ -48,9 +48,9 @@
         "connect": {
           "cant_play": "I can't play music as",
           "no_channel": "you're not connected to any channel",
-          "no_perms": "i don't have permission to join your channel",
+          "no_perms": "I don't have permission to join your channel",
           "channel_full": "the voice channel you're in is full",
-          "cant_speak": "i can't speak in your channel"
+          "cant_speak": "I can't speak in your channel"
         },
         "load": {
           "cant_load": "I can't load this track as",
@@ -81,83 +81,74 @@
     "no_message": "There's no %s message to snipe."
   },
   "commands": {
-    "akinator": {
-      "description": "Lets you play akinator",
-      "usage": "akinator",
-      "other": {
-        "couldnt_create": "Sorry, an Akinator game couldn't be created at the moment.",
-        "of": "Akinator of user %s",
-        "question": "Question **%d**:",
-        "guess": "I'm **%.1f**%% sure your character is.. **%s**",
-        "yesno": "Please answer only with **yes/no**.",
-        "end": {
-          "win": "I won!",
-          "lose": "You got me this time..",
-          "again": "Wanna play again?"
+    "subreddit": {
+      "enter_name": "Please enter the name of the subreddit.",
+      "description": "A random image from [r/%s](https://reddit.com/r/%1$s)",
+      "not_found": "Subreddit with name **%s** doesn't exist. This may be caused by specifying a NSFW subreddit in a non-NSFW channel.",
+      "no_posts": "No posts within the last month were found. This may be caused by specifying a subreddit with NSFW content in a non-NSFW channel."
+    },
+    "voicegame": {
+      "not_in_voice": "You're not in a voice channel. Connect to one or specify a channel.",
+      "not_voice": "Selected channel is not a voice channel.",
+      "no_perms": "I don't have the **Create Invite** permission for your channel to create a session.",
+      "click": "Click [here](https://discord.gg/%s) to join a %s session.",
+      "create": "create a game session"
+    },
+    "avatar": {
+      "title": "Avatar of user"
+    },
+    "help": {
+      "text": "Spidey's commands",
+      "embed_content": "%s\n\nTo see more info about a command, type `/help <command>`.\n",
+      "viewing": "Viewing command info",
+      "hidden": {
+        "text": "\n**%d** commands were hidden as you don't have permissions to use them.",
+        "nsfw": "\nNSFW commands were hidden from the help msg. If you want to see all NSFW commands, type the help command in a NSFW channel."
+      },
+      "command_info": {
+        "category": "Category",
+        "required_permission": "Required permission",
+        "aliases": "Aliases",
+        "cooldown": "Cooldown",
+        "info_none": "None",
+        "seconds": "seconds"
+      },
+      "donate": {
+        "title": "Reducing commands' cooldown",
+        "text": "If you want to reduce the commands' cooldown by half, you can achieve so by donating at least 2€.\nBy donating, you also support the Developer and help cover hosting fees. Type `/info` for the PayPal link. Thank you!"
+      }
+    },
+    "info": {
+      "fields": {
+        "about": {
+          "title": "About me",
+          "text": "Hey, I'm Spidey. I was made by `%s`."
         },
-        "cancel": {
-          "text": "cancel",
-          "success": ":white_check_mark: You've cancelled your akinator session."
+        "commands": {
+          "title": "Commands",
+          "text": "Type `/help` for a list of commands."
         },
-        "answers": {
-          "yes": {
-            "text": "yes",
-            "alias": "y"
-          },
-          "no": {
-            "text": "no",
-            "alias": "n"
-          },
-          "dont_know": {
-            "text": "don't know",
-            "alias": "dk"
-          },
-          "probably": {
-            "text": "probably",
-            "alias": "prob"
-          },
-          "probably_not": {
-            "text": "probably not",
-            "alias": "prob not"
-          },
-          "undo": {
-            "text": "undo",
-            "error": "Couldn't undo your answer."
-          }
+        "info": {
+          "title": "Bot info",
+          "text": "[Library](https://github.com/DV8FromTheWorld/JDA) version: `%s`"
+        },
+        "links": "Links",
+        "support": {
+          "title": "Support",
+          "text": "If you want to support the development of Spidey, you can do so by donating using my [PayPal](https://paypal.me/caneleex). Thank you!"
         }
       }
     },
-    "subreddit": {
-      "description": "Sends a random image from given subreddit",
-      "usage": "subreddit <subreddit>",
-      "other": {
-        "enter_name": "Please enter the name of the subreddit.",
-        "description": "A random image from [r/%s](https://reddit.com/r/%1$s)",
-        "not_found": "Subreddit with name %s doesn't exist.",
-        "no_posts": "No posts within the last month were found. This could also be caused by filtering out NSFW images when the channel the command was entered in is not marked as NSFW."
-      }
+    "legal": {
+      "text": "To see the Privacy Policy, visit https://spidey.mlnr.dev/privacy or join the support server to see side-by-side changes to the policy: discord.gg/uJCw7B9fxZ"
     },
-    "voicegame": {
-      "description": "Creates an invite for a game in your voice channel",
-      "usage": "voicegame <game name or blank to list available games>",
-      "other": {
-        "not_in_voice": "You're not in a voice channel.",
-        "not_voice": "Selected channel is not a voice channel.",
-        "no_perms": "I don't have the **Create Invite** permission for your channel to create a session.",
-        "click": "Click [here](https://discord.gg/%s) to join a %s session.",
-        "create": "create a game session"
-      }
+    "members": {
+      "title": "Member count",
+      "total": "Total",
+      "people": "People",
+      "bots": "Bots"
     },
-    "avatar": {
-      "description": "Shows your/entered user's avatar",
-      "usage": "avatar (@user, user id or username/nickname)",
-      "other": {
-        "title": "Avatar of user"
-      }
-    },
-    "guild": {
-      "description": "Shows you info about this guild",
-      "usage": "guild",
+    "server": {
       "fields": {
         "name": "Server Name",
         "id": "Server ID",
@@ -186,407 +177,201 @@
         "creation": "Creation",
         "vanity_url": {
           "title": "Custom invite/Vanity url",
-          "none": "Guild has no vanity url set",
-          "not_eligible": "Guild isn't eligible to set vanity url"
+          "none": "Server has no vanity url set",
+          "not_eligible": "Server isn't eligible to set vanity url"
         },
         "roles": "Roles",
         "emotes": "Emotes (**%d** | **%d** animated)"
       }
     },
-    "help": {
-      "description": "Shows the help message",
-      "usage": "help (command)",
-      "other": {
-        "text": "Spidey's commands",
-        "embed_content": "%s\n\nTo see more info about a command, type `/help <command>`.\n",
-        "viewing": "Viewing command info",
-        "hidden": {
-          "text": "\n**%d** commands were hidden as you don't have permissions to use them.",
-          "nsfw": "\nNSFW commands were hidden from the help msg. If you want to see all NSFW commands, type the help command in a NSFW channel."
-        },
-        "command_info": {
-          "description": "Description",
-          "usage": "Usage",
-          "usage_required_optional": "(<> = required, () = optional)",
-          "category": "Category",
-          "required_permission": "Required permission",
-          "aliases": "Aliases",
-          "cooldown": "Cooldown",
-          "info_none": "None",
-          "seconds": "seconds"
-        },
-        "donate": {
-          "title": "Reducing commands' cooldown",
-          "text": "If you want to reduce the commands' cooldown by half, you can achieve so by donating at least 2€.\nBy donating, you also support the Developer and help cover hosting fees. Type `%sinfo` for the PayPal link. Thank you!"
-        }
-      }
-    },
-    "info": {
-      "description": "Shows you info about me",
-      "usage": "info",
-      "fields": {
-        "about": {
-          "title": "About me",
-          "text": "Hey, i'm Spidey. I was made by `%s`."
-        },
-        "commands": {
-          "title": "Commands",
-          "text": "Type `/help` for a list of commands."
-        },
-        "info": {
-          "title": "Bot info",
-          "text": "[Library](https://github.com/DV8FromTheWorld/JDA) version: `%s`"
-        },
-        "links": "Links",
-        "support": {
-          "title": "Support",
-          "text": "If you want to support the development of Spidey, you can do so by donating using my [PayPal](https://paypal.me/caneleex). Thank you!"
-        }
-      }
-    },
-    "legal": {
-      "description": "Shows you the Privacy Policy",
-      "usage": "legal",
-      "other": {
-        "text": "To see the Privacy Policy, visit https://spidey.mlnr.dev/privacy or join the support guild to see side-by-side changes to the policy: discord.gg/uJCw7B9fxZ"
-      }
-    },
-    "members": {
-      "description": "Shows you the membercount of the guild",
-      "usage": "members",
-      "other": {
-        "title": "Member count",
-        "total": "Total",
-        "people": "People",
-        "bots": "Bots"
-      }
-    },
     "settings": {
-      "description": "Shows the current settings for this guild",
-      "usage": "settings",
-      "other": {
-        "title": "Current settings for this guild",
-        "set": "set one with",
-        "log": "Log channel",
-        "join": "Join role",
-        "dj": "DJ role",
-        "none": "None"
-      }
+      "title": "Current settings for this server",
+      "set": "set one with",
+      "log": "Log channel",
+      "join": "Join role",
+      "dj": "DJ role",
+      "none": "None"
     },
     "stats": {
-      "description": "Shows you Spidey's stats",
-      "usage": "stats",
-      "other": {
-        "title": "Spidey's stats",
-        "more": "For more info about Spidey, type `/info`",
-        "total_servers": "Total servers",
-        "memory": "Memory usage",
-        "threads": "Thread count"
-      }
+      "title": "Spidey's stats",
+      "more": "For more info about Spidey, type `/info`",
+      "total_servers": "Total servers",
+      "memory": "Memory usage",
+      "threads": "Thread count"
     },
     "user": {
-      "description": "Shows info about you or entered user",
-      "usage": "user (@user, user id or username/nickname)",
-      "other": {
-        "title": "User info",
-        "created": "Account created",
-        "nickname": "Nickname for this guild",
-        "joined": "User joined",
-        "boosting": "Boosting since",
-        "roles": "Roles"
-      }
+      "title": "User info",
+      "created": "Account created",
+      "nickname": "Nickname for this server",
+      "joined": "User joined",
+      "boosting": "Boosting since",
+      "roles": "Roles"
     },
     "purge": {
-      "description": "Purges messages (by entered user)",
-      "usage": "purge <count> (@user, user id or username/nickname)",
-      "other": {
-        "messages": {
-          "failure": {
-            "no_perms": "I don't have permission to purge messages or see the message history in this channel.",
-            "no_messages": {
-              "text": "There are no messages to be deleted.",
-              "user": "There are no messages by user **%s** to be deleted.",
-              "unpinned": "There are no unpinned messages to be deleted."
-            }
-          },
-          "pinned": {
-            "one": "There is **1** pinned message",
-            "multiple": "There are **%d** pinned messages",
-            "confirmation": {
-              "text": "selected for deletion. Are you sure you want to delete",
-              "one": "it",
-              "multiple": "them"
-            },
-            "middle_text": {
-              "text": "Deleting a message will also unpin it.\n\nReacting with :white_check_mark: will delete",
-              "one": "this message.",
-              "multiple": "these messages."
-            },
-            "end_text": "\nReacting with :wastebasket: will delete each unpinned message.\nReacting with :x: will cancel the deletion.\n\nThe deletion will be cancelled automatically in **1 minute** if a decision isn't made."
-          },
-          "success": {
-            "text": ":white_check_mark: Successfully deleted **%d**",
-            "one": "message",
-            "multiple": "messages",
-            "user": "by user **%s**"
+      "messages": {
+        "failure": {
+          "no_perms": "I don't have permission to purge messages or see the message history in this channel.",
+          "no_messages": {
+            "text": "There are no messages to be deleted.",
+            "user": "There are no messages by user **%s** to be deleted.",
+            "unpinned": "There are no unpinned messages to be deleted."
           }
+        },
+        "pinned": {
+          "one": "There is **1** pinned message",
+          "multiple": "There are **%d** pinned messages",
+          "confirmation": {
+            "text": "selected for deletion. Are you sure you want to delete",
+            "one": "it",
+            "multiple": "them"
+          },
+          "middle_text": {
+            "text": "Deleting a message will also unpin it.\n\nReacting with :white_check_mark: will delete",
+            "one": "this message.",
+            "multiple": "these messages."
+          },
+          "end_text": "\nReacting with :wastebasket: will delete each unpinned message.\nReacting with :x: will cancel the deletion.\n\nThe deletion will be cancelled automatically in **1 minute** if a decision isn't made."
+        },
+        "success": {
+          "text": ":white_check_mark: Successfully deleted **%d**",
+          "one": "message",
+          "multiple": "messages",
+          "user": "by user **%s**"
         }
       }
     },
     "clear": {
-      "description": "Clears the queue",
-      "usage": "clear",
-      "other": {
-        "cleared": ":white_check_mark: The queue has been cleared."
-      }
+      "cleared": ":white_check_mark: The queue has been cleared."
     },
     "nowplaying": {
-      "description": "Shows what's the current song",
-      "usage": "nowplaying",
-      "other": {
-        "paused": "Paused",
-        "at": "at",
-        "livestream": "Livestream",
-        "requested": "Requested by",
-        "duration_without_segments": "Duration without segments"
-      }
+      "paused": "Paused",
+      "at": "at",
+      "livestream": "Livestream",
+      "requested": "Requested by",
+      "duration_without_segments": "Duration without segments"
     },
     "pause": {
-      "description": "Pauses/unpauses the playback",
-      "usage": "pause/unpause"
+      "state": "The current song has been %s.",
+      "paused": "paused",
+      "unpaused": "unpaused"
     },
     "play": {
-      "description": "Plays/queues a song",
-      "usage": "play <youtube (music) link or search term>"
+
     },
     "queue": {
-      "description": "Lists the current queue",
-      "usage": "queue",
-      "other": {
-        "text": {
-          "one": "There is **1** track in the queue",
-          "multiple": "There are **%d** tracks in the queue",
-          "length": "with total length of **%s**"
-        }
+      "text": {
+        "one": "There is **1** track in the queue",
+        "multiple": "There are **%d** tracks in the queue",
+        "length": "with total length of **%s**"
       }
     },
     "remove": {
-      "description": "Removes a song from the queue based on its position",
-      "usage": "remove <position>",
-      "other": {
-        "provide": "Please provide the position of the track to remove.",
-        "removed": "Track `%s` has been removed from the queue."
-      }
+      "provide": "Please provide the position of the track to remove.",
+      "removed": "Track `%s` has been removed from the queue."
     },
     "repeat": {
-      "description": "Sets/resets the repeat mode",
-      "usage": "repeat (song/queue or blank to reset)",
-      "other": {
-        "provide": "Please provide the repeat mode - **song**/**queue**.",
-        "reset": "The repeat mode has been reset.",
-        "set": "The repeat mode has been set to **%s**.",
-        "doesnt_exist": "There is no such repeat mode."
-      }
+      "provide": "Please provide the repeat mode - **song**/**queue**.",
+      "reset": "The repeat mode has been reset.",
+      "set": "The repeat mode has been set to **%s**."
     },
     "savesong": {
-      "description": "Sends the current playing song into your private messages",
-      "usage": "savesong",
-      "other": {
-        "open_dms": "Please open your DMs so i can send you the current song.",
-        "sent": "I sent the current playing song into your DMs."
-      }
+      "open_dms": "Please open your DMs so I can send you the current song.",
+      "sent": "I sent the current playing song into your DMs."
     },
     "search": {
-      "description": "Searches a query on YouTube",
-      "usage": "search <query>",
-      "other": {
-        "searching": "Searching for %s",
-        "error": "There was an error while searching your query."
-      }
+      "searching": "Searching for %s",
+      "error": "There was an error while searching your query."
     },
     "segments": {
-      "description": "Lists all non music segments in this video",
-      "usage": "segments (force/reload)",
-      "other": {
-        "prompt": "If you've just added some segments, force the cache to update by using `/segments reload`.",
-        "no_segs": "There are no segments in this video.",
-        "message": {
-          "one": "There is **1** segment",
-          "multiple": "There are **%d** segments",
-          "video": "in this video!\n\n"
-        }
+      "prompt": "If you've just added some segments, force the cache to update by using `/segments reload`.",
+      "no_segs": "There are no segments in this video.",
+      "message": {
+        "one": "There is **1** segment",
+        "multiple": "There are **%d** segments",
+        "video": "in this video!\n\n"
       }
     },
     "shuffle": {
-      "description": "Shuffles the queue",
-      "usage": "shuffle",
-      "other": {
-        "only_one": "There is only one song in the queue.",
-        "success": "The queue has been shuffled."
-      }
+      "only_one": "There is only one song in the queue.",
+      "success": "The queue has been shuffled."
     },
     "skip": {
-      "description": "Skips a song",
-      "usage": "skip",
-      "other": {
-        "same_channel": "You need to be connected to the same channel as me in order to vote for skipping.",
-        "removed": "You've removed your vote to skip the current track.",
-        "added": "You've voted to skip the current track. Votes:"
-      }
+      "same_channel": "You need to be connected to the same channel as me in order to vote for skipping.",
+      "removed": "You've removed your vote to skip the current track.",
+      "added": "You've voted to skip the current track. Votes:",
+      "skipped": "The current song has been skipped."
     },
     "stop": {
-      "description": "Stops the playback and disconnects the bot",
-      "usage": "stop"
+
     },
     "volume": {
-      "description": "Sets the volume of music",
-      "usage": "volume <(+-)volume>",
-      "other": {
-        "set": "The volume has been set to **%d%%**.",
-        "already_set": "The volume is already set to **%d%%**."
-      }
-    },
-    "anal": {
-      "description": "Sends a (NSFW) picture of an anal",
-      "usage": "anal"
-    },
-    "asiansgonewild": {
-      "description": "Sends a (NSFW) picture of an asian",
-      "usage": "asiansgonewild"
-    },
-    "ass": {
-      "description": "Sends a (NSFW) picture of an ass",
-      "usage": "ass"
-    },
-    "blowjobs": {
-      "description": "Sends a (NSFW) picture of a blowjob",
-      "usage": "blowjobs"
-    },
-    "boobs": {
-      "description": "Sends a (NSFW) picture of boobs",
-      "usage": "boobs"
-    },
-    "cumsluts": {
-      "description": "Sends a (NSFW) picture of a cumslut",
-      "usage": "cumsluts"
-    },
-    "legalteen": {
-      "description": "Sends a (NSFW) picture of a legal teen",
-      "usage": "legalteen"
-    },
-    "lesbians": {
-      "description": "Sends a (NSFW) picture of lesbians",
-      "usage": "lesbians"
-    },
-    "milf": {
-      "description": "Sends a (NSFW) picture of a milf",
-      "usage": "milf"
+      "set": "The volume has been set to **%d%%**.",
+      "already_set": "The volume is already set to **%d%%**."
     },
     "nsfw": {
-      "description": "Sends a nsfw picture",
-      "usage": "nsfw"
-    },
-    "pussy": {
-      "description": "Sends a (NSFW) picture of a pussy",
-      "usage": "pussy"
+
     },
     "vip": {
-      "description": "Adds/removes a guild to/from VIP guilds",
-      "usage": "vip (guild id)"
+
     },
     "joinrole": {
-      "description": "Sets/removes the role that is added to a member after joining",
-      "usage": "joinrole (@role, role id or name of the role or blank to reset)"
+
     },
     "log": {
-      "description": "Sets log channel",
-      "usage": "log (#channel, channel id or channel name or blank to reset)",
-      "other": {
-        "not_text": "Selected channel is not a text channel.",
-        "reset": ":white_check_mark: The log channel has been reset!",
-        "set": ":white_check_mark: The log channel has been set to channel <#%d>!"
-      }
+      "not_text": "Selected channel is not a text channel.",
+      "reset": ":white_check_mark: The log channel has been reset!",
+      "set": ":white_check_mark: The log channel has been set to channel <#%d>!"
+    },
+    "sniping": {
+      "done": "Message sniping has been **%s**."
     },
     "defaultvolume": {
-      "description": "Sets the default music volume. This volume will be set when you start listening to music",
-      "usage": "defaultvolume <volume>",
-      "other": {
-        "current": "Current default music volume is **%d%%**. You can change this by using `/defaultvolume <volume>`.",
-        "set": "The default music volume has been set to **%d%%**.",
-        "already_set": "The default music volume is already set to **%d%%**."
-      }
+      "current": "Current default music volume is **%d%%**. You can change this by using `/defaultvolume <volume>`.",
+      "set": "The default music volume has been set to **%d%%**.",
+      "already_set": "The default music volume is already set to **%d%%**."
     },
     "djrole": {
-      "description": "Sets/removes the DJ role",
-      "usage": "djrole (@role, role id or name of the role or blank to reset)"
-    },
-    "errorcleanup": {
-      "description": "Enables/disables automatic error message cleaning after 10 seconds",
-      "usage": "errorcleanup",
-      "other": {
-        "done": "Error cleaning has been **%s**."
-      }
+
     },
     "fairqueue": {
-      "description": "Enables/disables fair queue or sets the threshold",
-      "usage": "fairqueue",
-      "other": {
-        "provide_argument": "Please provide at least one argument.",
-        "threshold_number": "Please enter a threshold from `2` to `10`.",
-        "already_set": "The threshold is already set to **%d**.",
-        "already_enabled": "Fair queue is already enabled.",
-        "already_disabled": "Fair queue is already disabled.",
-        "done": {
-          "text": "Fair queue has been **%s**.",
-          "threshold": "The threshold has been set to **%d**."
-        }
+      "provide_argument": "Please provide at least one argument.",
+      "threshold_range": "Please enter a threshold from `2` to `10`.",
+      "already_set": "The threshold is already set to **%d**.",
+      "already_enabled": "Fair queue is already enabled.",
+      "already_disabled": "Fair queue is already disabled.",
+      "done": {
+        "text": "Fair queue has been **%s**.",
+        "threshold": "The threshold has been set to **%d**."
       }
     },
     "segmentskipping": {
-      "description": "Enables/disables non-music segment skipping using [SponsorBlock](https://sponsor.ajay.app)",
-      "usage": "segmentskipping",
-      "other": {
-        "done": {
-          "text": "Segment skipping has been **%s**.",
-          "warning": "As SponsorBlock is a crowdsourced extension, some segments can be placed at wrong timing. Report such submissions on SponsorBlock's Discord, not to the Developer."
-        }
-      }
-    },
-    "sniping": {
-      "description": "Enables/disables message delete/edit sniping",
-      "usage": "sniping",
-      "other": {
-        "done": "Message sniping has been **%s**."
+      "done": {
+        "text": "Segment skipping has been **%s**.",
+        "warning": "As SponsorBlock is a crowdsourced extension, some segments can be placed at wrong timing. Report such submissions on SponsorBlock's Discord, not to the Developer."
       }
     },
     "editsnipe": {
-      "description": "Snipes an edited message",
-      "usage": "editsnipe"
+
     },
     "eval": {
-      "description": "Evals java code",
-      "usage": "eval <code>"
+
     },
     "snipe": {
-      "description": "Snipes a deleted message",
-      "usage": "snipe"
+
     },
     "uploademote": {
-      "description": "Uploads the image from the provided url as an emote",
-      "usage": "uploademote <link> (name)",
-      "other": {
-        "no_perms": "I don't have permission to upload emotes",
-        "provide_format": "Please provide a URL with a valid format - JP(E)G, PNG, WEBP or GIF.",
-        "name_length": "The name of the emote has to be between 2 and 32 in length.",
-        "valid_format": "The name of the emote has to be in a valid format.",
-        "size": "The emote size has to be less than **256KB**.",
-        "maximum_size": "Guild has the maximum amount of emotes.",
-        "success": {
-          "text": "Emote %s has been successfully uploaded! %s slots left: **%s**",
-          "emote": "Emote",
-          "animated": "Animated emote",
-          "none": "None"
-        }
+      "no_perms": "I don't have permission to upload emotes",
+      "provide_url": "Please provide a valid URL.",
+      "provide_format": "Please provide a URL with a valid format - JP(E)G, PNG, WEBP or GIF.",
+      "name_length": "The name of the emote has to be between 2 and 32 in length.",
+      "valid_format": "The name of the emote has to be in a valid format.",
+      "size": "The emote size has to be less than **256KB**.",
+      "maximum_size": "Server has the maximum amount of emotes.",
+      "success": {
+        "text": "Emote %s has been successfully uploaded! %s slots left: **%s**",
+        "emote": "Emote",
+        "animated": "Animated emote",
+        "none": "None"
       }
     }
   },
@@ -607,7 +392,7 @@
       }
     },
     "boost_tier_change": {
-      "author": "GUILD BOOST TIER HAS CHANGED",
+      "author": "SERVER BOOST TIER HAS CHANGED",
       "fields": {
         "tier": "Boost tier",
         "boosts": "Boosts"

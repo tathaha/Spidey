@@ -15,7 +15,7 @@ import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row7;
+import org.jooq.Row5;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -63,11 +63,6 @@ public class SettingsMisc extends TableImpl<SettingsMiscRecord> {
     public final TableField<SettingsMiscRecord, Long> JOIN_ROLE_ID = createField(DSL.name("join_role_id"), SQLDataType.BIGINT.defaultValue(DSL.field("'0'::bigint", SQLDataType.BIGINT)), this, "");
 
     /**
-     * The column <code>public.settings_misc.prefix</code>.
-     */
-    public final TableField<SettingsMiscRecord, String> PREFIX = createField(DSL.name("prefix"), SQLDataType.VARCHAR(10).defaultValue(DSL.field("'s!'::character varying", SQLDataType.VARCHAR)), this, "");
-
-    /**
      * The column <code>public.settings_misc.language</code>.
      */
     public final TableField<SettingsMiscRecord, String> LANGUAGE = createField(DSL.name("language"), SQLDataType.VARCHAR(2).defaultValue(DSL.field("'en'::character varying", SQLDataType.VARCHAR)), this, "");
@@ -76,11 +71,6 @@ public class SettingsMisc extends TableImpl<SettingsMiscRecord> {
      * The column <code>public.settings_misc.sniping_enabled</code>.
      */
     public final TableField<SettingsMiscRecord, Boolean> SNIPING_ENABLED = createField(DSL.name("sniping_enabled"), SQLDataType.BOOLEAN.defaultValue(DSL.field("true", SQLDataType.BOOLEAN)), this, "");
-
-    /**
-     * The column <code>public.settings_misc.error_cleanup_enabled</code>.
-     */
-    public final TableField<SettingsMiscRecord, Boolean> ERROR_CLEANUP_ENABLED = createField(DSL.name("error_cleanup_enabled"), SQLDataType.BOOLEAN.defaultValue(DSL.field("false", SQLDataType.BOOLEAN)), this, "");
 
     private SettingsMisc(Name alias, Table<SettingsMiscRecord> aliased) {
         this(alias, aliased, null);
@@ -171,11 +161,11 @@ public class SettingsMisc extends TableImpl<SettingsMiscRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row7 type methods
+    // Row5 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row7<Long, Long, Long, String, String, Boolean, Boolean> fieldsRow() {
-        return (Row7) super.fieldsRow();
+    public Row5<Long, Long, Long, String, Boolean> fieldsRow() {
+        return (Row5) super.fieldsRow();
     }
 }

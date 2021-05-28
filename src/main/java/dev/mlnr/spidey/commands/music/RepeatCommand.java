@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 @SuppressWarnings("unused")
 public class RepeatCommand extends Command {
 	public RepeatCommand() {
-		super("repeat", Category.MUSIC, Permission.UNKNOWN, 0,
+		super("repeat", "Sets the repeat mode", Category.MUSIC, Permission.UNKNOWN, 0,
 				new OptionData(OptionType.STRING, "repeat_mode", "The repeat mode to set")
 						.addChoice(TrackScheduler.RepeatMode.SONG.getFriendlyName(), TrackScheduler.RepeatMode.SONG.name())
 						.addChoice(TrackScheduler.RepeatMode.QUEUE.getFriendlyName(), TrackScheduler.RepeatMode.QUEUE.name())
@@ -36,7 +36,7 @@ public class RepeatCommand extends Command {
 		var repeatOption = ctx.getStringOption("repeat_mode");
 		var repeatMode = TrackScheduler.RepeatMode.valueOf(repeatOption);
 		trackScheduler.setRepeatMode(repeatMode);
-		ctx.replyLocalized("commands.repeat.other.set", repeatMode.getFriendlyName());
+		ctx.replyLocalized("commands.repeat.set", repeatMode.getFriendlyName());
 		return true;
 	}
 }

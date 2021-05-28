@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.Permission;
 @SuppressWarnings("unused")
 public class SkipCommand extends Command {
 	public SkipCommand() {
-		super("skip", Category.MUSIC, Permission.UNKNOWN, 0);
+		super("skip", "Skips the current song", Category.MUSIC, Permission.UNKNOWN, 0);
 	}
 
 	@Override
@@ -30,7 +30,7 @@ public class SkipCommand extends Command {
 			return true;
 		}
 		if (!MusicUtils.isMemberConnected(ctx)) {
-			ctx.replyError(i18n.get("commands.skip.other.same_channel"));
+			ctx.replyError(i18n.get("commands.skip.same_channel"));
 			return false;
 		}
 		var trackScheduler = musicPlayer.getTrackScheduler();
@@ -38,17 +38,18 @@ public class SkipCommand extends Command {
 		var mention = author.getAsMention();
 		if (trackScheduler.hasSkipVoted(author)) {
 			trackScheduler.removeSkipVote(author);
-			ctx.reply(i18n.get("commands.skip.other.removed") + " [" + mention + "]");
+			ctx.reply(i18n.get("commands.skip.removed") + " [" + mention + "]");
 			return true;
 		}
 		trackScheduler.addSkipVote(author);
 		var skipVotes = trackScheduler.getSkipVotes();
 		var requiredSkipVotes = trackScheduler.getRequiredSkipVotes();
 		if (skipVotes < requiredSkipVotes) {
-			ctx.reply(i18n.get("commands.skip.other.added") + " **" + skipVotes + "**/**" + requiredSkipVotes + "** [" + mention + "]");
+			ctx.reply(i18n.get("commands.skip.added") + " **" + skipVotes + "**/**" + requiredSkipVotes + "** [" + mention + "]");
 			return true;
 		}
 		musicPlayer.skip();
+		ctx.replyLocalized("commands.skip.skipped");
 		return true;
 	}
 }

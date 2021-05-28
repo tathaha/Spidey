@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.Permission;
 @SuppressWarnings("unused")
 public class InfoCommand extends Command {
 	public InfoCommand() {
-		super("info", Category.INFORMATIVE, Permission.UNKNOWN, 0);
+		super("info", "Shows you info about me", Category.INFORMATIVE, Permission.UNKNOWN, 0);
 	}
 
 	@Override

@@ -12,8 +12,8 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 @SuppressWarnings("unused")
 public class PlayCommand extends Command {
 	public PlayCommand() {
-		super("play", Category.MUSIC, Permission.UNKNOWN, 2,
-				new OptionData(OptionType.STRING, "query", "The YouTube link or query to play").setRequired(true));
+		super("play", "Plays/queues a song", Category.MUSIC, Permission.UNKNOWN, 2,
+				new OptionData(OptionType.STRING, "query", "The YouTube link or query to play", true));
 	}
 
 	@Override

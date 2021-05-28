@@ -21,9 +21,6 @@ repositories {
 }
 
 dependencies {
-    // akinator wrapper
-    implementation group: 'com.github.markozajc', name: 'akiwrapper', version: '1.5.1.1'
-
     // bot list handler
     implementation group: 'dev.mlnr', name: 'BotListHandler-jda', version: '2.0.0_5'
 
@@ -40,7 +37,7 @@ dependencies {
     implementation group: 'net.jodah', name: 'expiringmap', version: '0.5.9'
 
     // jda
-    implementation("com.github.DV8FromTheWorld:JDA:bacd237") {
+    implementation("com.github.DV8FromTheWorld:JDA:9c31ef1") {
         exclude group: 'club.minnced', module: 'opus-java'
     }
 

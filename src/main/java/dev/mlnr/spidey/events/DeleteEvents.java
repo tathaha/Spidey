@@ -19,15 +19,8 @@ public class DeleteEvents extends ListenerAdapter {
 		var channel = event.getChannel();
 
 		var miscSettings = guildSettingsCache.getMiscSettings(guildId);
-		var channelsSettings = guildSettingsCache.getChannelsSettings(guildId);
 		if (channel.getIdLong() == miscSettings.getLogChannelId()) {
 			miscSettings.removeLogChannel();
-		}
-		if (channelsSettings.isChannelWhitelisted(channel, true)) {
-			channelsSettings.removeWhitelistedChannel(channel);
-		}
-		else if (channelsSettings.isChannelBlacklisted(channel)) {
-			channelsSettings.removeBlacklistedChannel(channel);
 		}
 	}
 
@@ -38,15 +31,11 @@ public class DeleteEvents extends ListenerAdapter {
 		var guildSettingsCache = cache.getGuildSettingsCache();
 		var miscSettings = guildSettingsCache.getMiscSettings(guildId);
 		var musicSettings = guildSettingsCache.getMusicSettings(guildId);
-		var filterSettings = guildSettingsCache.getFiltersSettings(guildId);
 		if (roleId == miscSettings.getJoinRoleId()) {
 			miscSettings.removeJoinRole();
 		}
 		if (roleId == musicSettings.getDJRoleId()) {
 			musicSettings.removeDJRole();
-		}
-		if (filterSettings.isRoleIgnored(roleId)) {
-			filterSettings.removeIgnoredRole(roleId);
 		}
 	}
 }

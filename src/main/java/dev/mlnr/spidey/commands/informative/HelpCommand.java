@@ -19,7 +19,7 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class HelpCommand extends Command {
 	public HelpCommand() {
-		super("help", Category.INFORMATIVE, Permission.UNKNOWN, 0,
+		super("help", "Shows the help message", Category.INFORMATIVE, Permission.UNKNOWN, 0,
 				new OptionData(OptionType.STRING, "command", "The command to get help for"));
 	}
 
@@ -31,7 +31,7 @@ public class HelpCommand extends Command {
 		var guildId = ctx.getGuild().getIdLong();
 		var i18n = ctx.getI18n();
 		var eb = Utils.createEmbedBuilder(author)
-				.setAuthor(i18n.get("commands.help.other.text"), "https://github.com/caneleex/Spidey", ctx.getJDA().getSelfUser().getEffectiveAvatarUrl());
+				.setAuthor(i18n.get("commands.help.text"), "https://github.com/caneleex/Spidey", ctx.getJDA().getSelfUser().getEffectiveAvatarUrl());
 		var commandOption = ctx.getStringOption("command");
 
 		if (commandOption == null) {
@@ -71,12 +71,12 @@ public class HelpCommand extends Command {
 
 			commandsStringBuilder.append(settingsBuilder);
 
-			eb.setDescription(i18n.get("commands.help.other.embed_content", commandsStringBuilder.toString()));
+			eb.setDescription(i18n.get("commands.help.embed_content", commandsStringBuilder.toString()));
 			if (hidden > 0) {
-				eb.appendDescription(i18n.get("commands.help.other.hidden.text", hidden));
+				eb.appendDescription(i18n.get("commands.help.hidden.text", hidden));
 			}
 			if (nsfwHidden) {
-				eb.appendDescription(i18n.get("commands.help.other.hidden.nsfw"));
+				eb.appendDescription(i18n.get("commands.help.hidden.nsfw"));
 			}
 			ctx.reply(eb);
 			return true;
@@ -90,28 +90,21 @@ public class HelpCommand extends Command {
 			return false;
 		}
 		commandOption = command.getInvoke();
-		var none = i18n.get("commands.help.other.command_info.info_none");
+		var none = i18n.get("commands.help.command_info.info_none");
 		var requiredPermission = command.getRequiredPermission();
 		var generalSettings = guildSettingsCache.getGeneralSettings(guildId);
 		var cooldown = CooldownHandler.adjustCooldown(command.getCooldown(), generalSettings.isVip());
 
-		eb.setAuthor(i18n.get("commands.help.other.viewing") + " - " + commandOption);
-		eb.addField(i18n.get("commands.help.other.command_info.description"),
-				i18n.get("commands." + commandOption + ".description"), false);
-
-		eb.addField(i18n.get("commands.help.other.command_info.usage"),
-				"`" + i18n.get("commands." + commandOption + ".usage") + "` " +
-						i18n.get("commands.help.other.command_info.usage_required_optional"), false);
-
-		eb.addField(i18n.get("commands.help.other.command_info.category"), command.getCategory().getFriendlyName(), false);
-		eb.addField(i18n.get("commands.help.other.command_info.required_permission"), requiredPermission == Permission.UNKNOWN
+		eb.setAuthor(i18n.get("commands.help.viewing") + " - " + commandOption);
+		eb.addField(i18n.get("commands.help.command_info.category"), command.getCategory().getFriendlyName(), false);
+		eb.addField(i18n.get("commands.help.command_info.required_permission"), requiredPermission == Permission.UNKNOWN
 				? none : requiredPermission.getName(), false);
-		eb.addField(i18n.get("commands.help.other.command_info.cooldown"), cooldown == 0 ? none : cooldown + " " +
-				i18n.get("commands.help.other.command_info.seconds"), false);
+		eb.addField(i18n.get("commands.help.command_info.cooldown"), cooldown == 0 ? none : cooldown + " " +
+				i18n.get("commands.help.command_info.seconds"), false);
 
 		if (!generalSettings.isVip()) {
 			eb.addBlankField(false);
-			eb.addField(i18n.get("commands.help.other.donate.title"), i18n.get("commands.help.other.donate.text"), false);
+			eb.addField(i18n.get("commands.help.donate.title"), i18n.get("commands.help.donate.text"), false);
 		}
 		ctx.reply(eb);
 		return true;

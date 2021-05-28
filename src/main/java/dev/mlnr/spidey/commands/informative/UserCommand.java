@@ -14,9 +14,8 @@ import static dev.mlnr.spidey.utils.Utils.formatDate;
 
 @SuppressWarnings("unused")
 public class UserCommand extends Command {
-
 	public UserCommand() {
-		super("user", Category.INFORMATIVE, Permission.UNKNOWN, 2,
+		super("user", "Shows info about you or entered user", Category.INFORMATIVE, Permission.UNKNOWN, 2,
 				new OptionData(OptionType.USER, "user", "The user to get the info about"));
 	}
 
@@ -38,10 +37,10 @@ public class UserCommand extends Command {
 		var eb = Utils.createEmbedBuilder(ctx.getUser());
 		var i18n = ctx.getI18n();
 
-		eb.setAuthor(i18n.get("commands.user.other.title") + " - " + user.getAsTag());
+		eb.setAuthor(i18n.get("commands.user.title") + " - " + user.getAsTag());
 		eb.setThumbnail(user.getEffectiveAvatarUrl());
 		eb.addField("ID", user.getId(), false);
-		eb.addField(i18n.get("commands.user.other.created"), formatDate(user.getTimeCreated()), true);
+		eb.addField(i18n.get("commands.user.created"), formatDate(user.getTimeCreated()), true);
 
 		if (member == null) {
 			ctx.reply(eb);
@@ -49,14 +48,14 @@ public class UserCommand extends Command {
 		}
 		var nick = member.getNickname();
 		if (nick != null) {
-			eb.addField(i18n.get("commands.user.other.nickname"), nick, false);
+			eb.addField(i18n.get("commands.user.nickname"), nick, false);
 		}
 
-		eb.addField(i18n.get("commands.user.other.joined"), formatDate(member.getTimeJoined()), false);
+		eb.addField(i18n.get("commands.user.joined"), formatDate(member.getTimeJoined()), false);
 
 		var boostingSince = member.getTimeBoosted();
 		if (boostingSince != null) {
-			eb.addField(i18n.get("commands.user.other.boosting"), formatDate(boostingSince), false);
+			eb.addField(i18n.get("commands.user.boosting"), formatDate(boostingSince), false);
 		}
 
 		var roles = member.getRoles();
@@ -67,7 +66,7 @@ public class UserCommand extends Command {
 				++rc;
 				sb.append(role.getName()).append(rc == roles.size() ? "" : ", ");
 			}
-			eb.addField(i18n.get("commands.user.other.roles") + " [**" + roles.size() + "**]",
+			eb.addField(i18n.get("commands.user.roles") + " [**" + roles.size() + "**]",
 					sb.length() > 1024 ? i18n.get("limit_exceeded") : sb.toString(), false);
 		}
 		ctx.reply(eb);

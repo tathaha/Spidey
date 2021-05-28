@@ -18,8 +18,8 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 @SuppressWarnings("unused")
 public class SearchCommand extends Command {
 	public SearchCommand() {
-		super("search", Category.MUSIC, Permission.UNKNOWN, 4,
-				new OptionData(OptionType.STRING, "query", "The query to search YouTube for").setRequired(true));
+		super("search", "Searches a query on YouTube", Category.MUSIC, Permission.UNKNOWN, 4,
+				new OptionData(OptionType.STRING, "query", "The query to search YouTube for", true));
 	}
 
 	@Override
@@ -37,7 +37,7 @@ public class SearchCommand extends Command {
 			@Override
 			public void playlistLoaded(AudioPlaylist playlist) {
 				var selectionEmbedBuilder = MusicUtils.createMusicResponseBuilder();
-				selectionEmbedBuilder.setAuthor(i18n.get("commands.search.other.searching", query));
+				selectionEmbedBuilder.setAuthor(i18n.get("commands.search.searching", query));
 
 				var tracks = playlist.getTracks();
 				StringUtils.createSelection(selectionEmbedBuilder, tracks, ctx, "track", MusicUtils::formatTrack, ConcurrentUtils.getEventWaiter(), choice -> {
@@ -54,7 +54,7 @@ public class SearchCommand extends Command {
 
 			@Override
 			public void loadFailed(FriendlyException exception) {
-				ctx.replyError(i18n.get("commands.search.other.error"));
+				ctx.replyError(i18n.get("commands.search.error"));
 			}
 		});
 		return true;

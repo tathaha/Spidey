@@ -14,7 +14,7 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 @SuppressWarnings("unused")
 public class VoiceGameCommand extends Command {
 	public VoiceGameCommand() {
-		super("voicegame", Category.FUN, Permission.CREATE_INSTANT_INVITE, 10,
+		super("voicegame", "Creates an invite for a game for a voice channel", Category.FUN, Permission.CREATE_INSTANT_INVITE, 10,
 				new OptionData(OptionType.STRING, "game", "The game to create an invite for")
 						.addChoice(VoiceGameType.BETRAYAL_IO.getFriendlyName(), VoiceGameType.BETRAYAL_IO.name())
 						.addChoice(VoiceGameType.FISHINGTON_IO.getFriendlyName(), VoiceGameType.FISHINGTON_IO.name())
@@ -30,7 +30,7 @@ public class VoiceGameCommand extends Command {
 		var i18n = ctx.getI18n();
 		if (channel == null) {
 			var voiceState = ctx.getMember().getVoiceState();
-			var notInVoice = i18n.get("commands.voicegame.other.not_in_voice");
+			var notInVoice = i18n.get("commands.voicegame.not_in_voice");
 			if (voiceState == null) {
 				ctx.replyError(notInVoice);
 				return false;
@@ -43,20 +43,20 @@ public class VoiceGameCommand extends Command {
 			channel = voiceStateChannel;
 		}
 		if (channel.getType() != ChannelType.VOICE) {
-			ctx.replyErrorLocalized("commands.voicegame.other.not_voice");
+			ctx.replyErrorLocalized("commands.voicegame.not_voice");
 			return false;
 		}
 		if (!ctx.getGuild().getSelfMember().hasPermission(channel, Permission.CREATE_INSTANT_INVITE)) {
-			ctx.replyErrorLocalized("commands.voicegame.other.no_perms");
+			ctx.replyErrorLocalized("commands.voicegame.no_perms");
 			return false;
 		}
 		var embedBuilder = Utils.createEmbedBuilder(ctx.getUser());
 		var voiceGame = VoiceGameType.valueOf(ctx.getStringOption("game"));
 		Requester.launchVoiceGameSession(channel.getId(), voiceGame, code -> {
 			embedBuilder.setColor(16711680);
-			embedBuilder.setDescription(i18n.get("commands.voicegame.other.click", code, voiceGame.getFriendlyName()));
+			embedBuilder.setDescription(i18n.get("commands.voicegame.click", code, voiceGame.getFriendlyName()));
 			ctx.reply(embedBuilder);
-		}, error -> ctx.replyErrorLocalized("internal_error", i18n.get("commands.voicegame.other.create"), error.getMessage()));
+		}, error -> ctx.replyErrorLocalized("internal_error", i18n.get("commands.voicegame.create"), error.getMessage()));
 		return true;
 	}
 }

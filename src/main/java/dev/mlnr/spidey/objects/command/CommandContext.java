@@ -84,8 +84,6 @@ public class CommandContext {
 		return option == null ? null : option.getAsBoolean();
 	}
 
-	// TODO more option types
-
 	// reply methods
 
 	public void replyErrorLocalized(String key, Object... args) {

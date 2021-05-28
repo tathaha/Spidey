@@ -12,7 +12,7 @@ import static dev.mlnr.spidey.utils.MusicUtils.formatDuration;
 @SuppressWarnings("unused")
 public class SegmentsCommand extends Command {
 	public SegmentsCommand() {
-		super("segments", Category.MUSIC, Permission.UNKNOWN, 4,
+		super("segments", "Lists all non music SponsorBlock segments in this video", Category.MUSIC, Permission.UNKNOWN, 4,
 				new OptionData(OptionType.BOOLEAN, "reload", "Whether to force reload the segments"));
 	}
 
@@ -38,14 +38,14 @@ public class SegmentsCommand extends Command {
 		if (reload != null && reload) {
 			segments = videoSegmentCache.getVideoSegments(videoId, true);
 		}
-		var updatePrompt = i18n.get("commands.segments.other.prompt");
+		var updatePrompt = i18n.get("commands.segments.prompt");
 		if (segments.isEmpty()) {
-			ctx.reply(i18n.get("commands.segments.other.no_segs") + " " + updatePrompt);
+			ctx.reply(i18n.get("commands.segments.no_segs") + " " + updatePrompt);
 			return true;
 		}
 		var size = segments.size();
-		var stringBuilder = new StringBuilder(size == 1 ? i18n.get("commands.segments.other.message.one") : i18n.get("commands.segments.other.message.multiple", size))
-				.append(" ").append(i18n.get("commands.segments.other.message.video"));
+		var stringBuilder = new StringBuilder(size == 1 ? i18n.get("commands.segments.message.one") : i18n.get("commands.segments.message.multiple", size))
+				.append(" ").append(i18n.get("commands.segments.message.video"));
 
 		segments.forEach(segment -> stringBuilder.append("**").append(formatDuration(segment.getSegmentStart())).append("**").append(" - ").append("**")
 				.append(formatDuration(segment.getSegmentEnd())).append("**\n"));

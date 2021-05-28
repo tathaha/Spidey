@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 @SuppressWarnings("unused")
 public class AvatarCommand extends Command {
 	public AvatarCommand() {
-		super("avatar", Category.INFORMATIVE, Permission.UNKNOWN, 2,
+		super("avatar", "Shows your/entered user's avatar", Category.INFORMATIVE, Permission.UNKNOWN, 2,
 				new OptionData(OptionType.USER, "user", "The user to get the avatar of"));
 	}
 
@@ -24,7 +24,7 @@ public class AvatarCommand extends Command {
 		var avatarUrl = user.getEffectiveAvatarUrl() + "?size=2048";
 		var eb = Utils.createEmbedBuilder(author);
 
-		eb.setAuthor(ctx.getI18n().get("commands.avatar.other.title") + " " + MarkdownSanitizer.escape(user.getAsTag()));
+		eb.setAuthor(ctx.getI18n().get("commands.avatar.title") + " " + MarkdownSanitizer.escape(user.getAsTag()));
 		eb.setDescription("[Avatar link](" + avatarUrl + ")");
 		eb.setImage(avatarUrl);
 		ctx.reply(eb);

@@ -11,8 +11,8 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 @SuppressWarnings("unused")
 public class VolumeCommand extends Command {
 	public VolumeCommand() {
-		super("volume", Category.MUSIC, Permission.UNKNOWN, 0,
-				new OptionData(OptionType.INTEGER, "volume", "The new volume").setRequired(true));
+		super("volume", "Sets the volume of music", Category.MUSIC, Permission.UNKNOWN, 0,
+				new OptionData(OptionType.INTEGER, "volume", "The new volume", true));
 	}
 
 	@Override
@@ -40,13 +40,13 @@ public class VolumeCommand extends Command {
 			return false;
 		}
 		musicPlayer.setVolume(newVolume);
-		ctx.replyLocalized("commands.volume.other.set", newVolume);
+		ctx.replyLocalized("commands.volume.set", newVolume);
 		return true;
 	}
 
 	private boolean checkNewVolume(CommandContext ctx, int newVolume, int currentVolume) {
 		if (newVolume == currentVolume) {
-			ctx.replyErrorLocalized("commands.volume.other.already_set", newVolume);
+			ctx.replyErrorLocalized("commands.volume.already_set", newVolume);
 			return false;
 		}
 		return true;

@@ -11,8 +11,8 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 @SuppressWarnings("unused")
 public class SubredditCommand extends Command {
 	public SubredditCommand() {
-		super("subreddit", Category.FUN, Permission.UNKNOWN, 3,
-				new OptionData(OptionType.STRING, "subreddit", "The subreddit to get a random image from").setRequired(true));
+		super("subreddit", "Sends a random image from given subreddit", Category.FUN, Permission.UNKNOWN, 3,
+				new OptionData(OptionType.STRING, "subreddit", "The subreddit to get a random image from", true));
 	}
 
 	@Override

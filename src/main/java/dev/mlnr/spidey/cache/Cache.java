@@ -9,7 +9,6 @@ public class Cache {
 	private final MusicPlayerCache musicPlayerCache;
 	private final VideoSegmentCache videoSegmentCache;
 
-	private final AkinatorCache akinatorCache;
 	private final GeneralCache generalCache;
 	private final GuildSettingsCache guildSettingsCache;
 	private final MessageCache messageCache;
@@ -18,8 +17,6 @@ public class Cache {
 	public Cache(Spidey spidey, JDA jda) {
 		this.musicPlayerCache = MusicPlayerCache.getInstance();
 		this.videoSegmentCache = VideoSegmentCache.getInstance();
-
-		this.akinatorCache = new AkinatorCache();
 
 		this.guildSettingsCache = GuildSettingsCache.getInstance(spidey);
 		this.generalCache = new GeneralCache(guildSettingsCache, spidey.getDatabaseManager());
@@ -34,10 +31,6 @@ public class Cache {
 
 	public VideoSegmentCache getVideoSegmentCache() {
 		return videoSegmentCache;
-	}
-
-	public AkinatorCache getAkinatorCache() {
-		return akinatorCache;
 	}
 
 	public GeneralCache getGeneralCache() {

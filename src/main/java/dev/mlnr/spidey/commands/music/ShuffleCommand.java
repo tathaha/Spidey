@@ -11,7 +11,7 @@ import java.util.Collections;
 @SuppressWarnings("unused")
 public class ShuffleCommand extends Command {
 	public ShuffleCommand() {
-		super("shuffle", Category.MUSIC, Permission.UNKNOWN, 0);
+		super("shuffle", "Shuffles the queue", Category.MUSIC, Permission.UNKNOWN, 0);
 	}
 
 	@Override
@@ -33,11 +33,11 @@ public class ShuffleCommand extends Command {
 			return false;
 		}
 		if (queue.size() == 1) {
-			ctx.replyErrorLocalized("commands.shuffle.other.only_one");
+			ctx.replyErrorLocalized("commands.shuffle.only_one");
 			return false;
 		}
 		Collections.shuffle(queue);
-		ctx.replyLocalized("commands.shuffle.other.success");
+		ctx.replyLocalized("commands.shuffle.success");
 		return true;
 	}
 }

@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.Permission;
 @SuppressWarnings("unused")
 public class QueueCommand extends Command {
 	public QueueCommand() {
-		super("queue", Category.MUSIC, Permission.UNKNOWN, 3);
+		super("queue", "Lists the current queue", Category.MUSIC, Permission.UNKNOWN, 3);
 	}
 
 	@Override

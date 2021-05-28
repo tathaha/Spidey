@@ -12,7 +12,7 @@ import java.time.Instant;
 @SuppressWarnings("unused")
 public class SaveSongCommand extends Command {
 	public SaveSongCommand() {
-		super("savesong", Category.MUSIC, Permission.UNKNOWN, 4);
+		super("savesong", "Sends the current playing song into your private messages", Category.MUSIC, Permission.UNKNOWN, 4);
 	}
 
 	@Override
@@ -44,10 +44,10 @@ public class SaveSongCommand extends Command {
 				.thenCompose(privateChannel -> privateChannel.sendMessage(embedBuilder.build()).submit())
 				.whenComplete((ignored, throwable) -> {
 					if (throwable != null) {
-						ctx.replyErrorLocalized("commands.savesong.other.open_dms");
+						ctx.replyErrorLocalized("commands.savesong.open_dms");
 						return;
 					}
-					ctx.replyLocalized("commands.savesong.other.sent");
+					ctx.replyLocalized("commands.savesong.sent");
 				});
 		return true;
 	}

@@ -10,8 +10,8 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 @SuppressWarnings("unused")
 public class VIPCommand extends Command {
 	public VIPCommand() {
-		super("vip", Category.Settings.GENERAL, Permission.UNKNOWN, 0,
-				new OptionData(OptionType.INTEGER, "guild_id", "The ID of the guild to enable/disabled VIP for"));
+		super("vip", "Enables/disables VIP for a guild", Category.Settings.GENERAL, Permission.UNKNOWN, 0,
+				new OptionData(OptionType.INTEGER, "guild_id", "The ID of the guild to enable/disable VIP for"));
 	}
 
 	@Override

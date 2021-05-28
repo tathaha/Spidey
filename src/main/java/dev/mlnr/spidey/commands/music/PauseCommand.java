@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.Permission;
 @SuppressWarnings("unused")
 public class PauseCommand extends Command {
 	public PauseCommand() {
-		super("pause", Category.MUSIC, Permission.UNKNOWN, 0);
+		super("pause", "Pauses/unpauses the playback", Category.MUSIC, Permission.UNKNOWN, 0);
 	}
 
 	@Override
@@ -29,7 +29,9 @@ public class PauseCommand extends Command {
 			ctx.replyErrorLocalized("music.messages.failure.cant_interact_requester", "pause the playback");
 			return false;
 		}
-		musicPlayer.pauseOrUnpause();
+		var paused = musicPlayer.pauseOrUnpause();
+		var i18n = ctx.getI18n();
+		ctx.replyLocalized("commands.pause.state", paused ? i18n.get("commands.pause.paused") : i18n.get("commands.pause.unpaused"));
 		return true;
 	}
 }

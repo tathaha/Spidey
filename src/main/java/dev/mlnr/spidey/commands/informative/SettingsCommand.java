@@ -10,9 +10,8 @@ import static java.lang.String.format;
 
 @SuppressWarnings("unused")
 public class SettingsCommand extends Command {
-
 	public SettingsCommand() {
-		super("settings", Category.INFORMATIVE, Permission.UNKNOWN, 0);
+		super("settings", "Shows the current settings for this server", Category.INFORMATIVE, Permission.UNKNOWN, 0);
 	}
 
 	@Override
@@ -23,21 +22,21 @@ public class SettingsCommand extends Command {
 		var eb = Utils.createEmbedBuilder(ctx.getUser());
 		var i18n = ctx.getI18n();
 
-		eb.setAuthor(i18n.get("commands.settings.other.title"));
+		eb.setAuthor(i18n.get("commands.settings.title"));
 
-		var setTemplate = " (" + i18n.get("commands.settings.other.set") + " /%s)";
-		var none = i18n.get("commands.settings.other.none");
+		var setTemplate = " (" + i18n.get("commands.settings.set") + " /%s)";
+		var none = i18n.get("commands.settings.none");
 
 		var logChannel = miscSettings.getLogChannel();
-		eb.addField(i18n.get("commands.settings.other.log"),
+		eb.addField(i18n.get("commands.settings.log"),
 				logChannel == null ? none + format(setTemplate, "log") : logChannel.getAsMention(), false);
 
 		var joinRole = miscSettings.getJoinRole();
-		eb.addField(i18n.get("commands.settings.other.join"),
+		eb.addField(i18n.get("commands.settings.join"),
 				joinRole == null ? none + format(setTemplate, "joinrole") : joinRole.getAsMention(), false);
 
 		var djRole = guildSettingsCache.getMusicSettings(guildId).getDJRole();
-		eb.addField(i18n.get("commands.settings.other.dj"),
+		eb.addField(i18n.get("commands.settings.dj"),
 				djRole == null ? none + format(setTemplate, "djrole") : djRole.getAsMention(), false);
 
 		ctx.reply(eb);

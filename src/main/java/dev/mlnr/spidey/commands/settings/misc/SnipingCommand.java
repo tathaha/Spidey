@@ -10,8 +10,8 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 @SuppressWarnings("unused")
 public class SnipingCommand extends Command {
 	public SnipingCommand() {
-		super("sniping", Category.Settings.MISC, Permission.MANAGE_SERVER, 4,
-				new OptionData(OptionType.BOOLEAN, "enable", "Whether to enable (edit)sniping").setRequired(true));
+		super("sniping", "Enables/disables message delete/edit sniping", Category.Settings.MISC, Permission.MANAGE_SERVER, 4,
+				new OptionData(OptionType.BOOLEAN, "enable", "Whether to enable (edit)sniping", true));
 	}
 
 	@Override
@@ -22,7 +22,7 @@ public class SnipingCommand extends Command {
 		var enabled = ctx.getBooleanOption("enable");
 		var i18n = ctx.getI18n();
 		miscSettings.setSnipingEnabled(enabled);
-		ctx.replyLocalized("commands.sniping.other.done", enabled ? i18n.get("enabled") : i18n.get("disabled"));
+		ctx.replyLocalized("commands.sniping.done", enabled ? i18n.get("enabled") : i18n.get("disabled"));
 		if (!enabled) {
 			cache.getMessageCache().pruneCache(guildId);
 		}

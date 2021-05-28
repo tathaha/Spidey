@@ -80,13 +80,12 @@ public class StringUtils {
 
 		var channel = ctx.getTextChannel();
 		channel.sendMessage(selectionBuilder.build()).queue(selectionMessage -> {
-			var message = ctx.getMessage();
 			eventWaiter.waitForEvent(GuildMessageReceivedEvent.class, event -> event.getChannel().equals(channel) && event.getAuthor().equals(ctx.getUser()),
 					event -> {
 						var choiceMessage = event.getMessage();
 						var content = choiceMessage.getContentRaw();
 						if (content.equalsIgnoreCase(cancel)) {
-							channel.purgeMessages(message, selectionMessage, choiceMessage);
+							channel.purgeMessages(selectionMessage, choiceMessage);
 							return;
 						}
 						var choice = 0;
@@ -105,7 +104,7 @@ public class StringUtils {
 						Utils.deleteMessage(selectionMessage);
 					}, 1, TimeUnit.MINUTES,
 					() -> {
-						channel.purgeMessages(message, selectionMessage);
+						Utils.deleteMessage(selectionMessage);
 						ctx.replyErrorLocalized("took_too_long");
 					});
 		});
@@ -130,13 +129,13 @@ public class StringUtils {
 		var length = queue.stream().mapToLong(track -> track.getInfo().length).sum();
 		var size = queue.size();
 		var i18n = ctx.getI18n();
-		var pluralized = size == 1 ? i18n.get("commands.queue.other.text.one") : i18n.get("commands.queue.other.text.multiple", size);
+		var pluralized = size == 1 ? i18n.get("commands.queue.text.one") : i18n.get("commands.queue.text.multiple", size);
 
 		ctx.getCache().getPaginatorCache().createPaginator(ctx, descriptions.size(), (page, embedBuilder) -> {
 			embedBuilder.setAuthor(i18n.get("paginator.queue", ctx.getGuild().getName()));
 			embedBuilder.setDescription(descriptions.get(page));
 			embedBuilder.appendDescription("\n\n").appendDescription(pluralized).appendDescription(" ")
-					.appendDescription(i18n.get("commands.queue.other.text.length", MusicUtils.formatDuration(length)));
+					.appendDescription(i18n.get("commands.queue.text.length", MusicUtils.formatDuration(length)));
 		});
 	}
 }

@@ -45,11 +45,11 @@ public class Requester {
 			public void onResponse(final Call call, final Response response) throws IOException {
 				var responseCode = response.code();
 				if (responseCode == 404) {
-					ctx.replyErrorLocalized("commands.subreddit.other.not_found", subreddit);
+					ctx.replyErrorLocalized("commands.subreddit.not_found", subreddit);
 					return;
 				}
 				else if (responseCode == 410) {
-					ctx.replyErrorLocalized("commands.subreddit.other.no_posts", subreddit);
+					ctx.replyErrorLocalized("commands.subreddit.no_posts", subreddit);
 					return;
 				}
 				var responseBody = response.body().string();
@@ -57,7 +57,7 @@ public class Requester {
 				var eb = Utils.createEmbedBuilder(event.getUser());
 				eb.setAuthor(json.getString("title"), json.getString("source"));
 				eb.setImage(json.getString("image_url"));
-				eb.setDescription(ctx.getI18n().get("commands.subreddit.other.description", subreddit));
+				eb.setDescription(ctx.getI18n().get("commands.subreddit.description", subreddit));
 				eb.setTimestamp(Instant.ofEpochSecond(json.getInt("created_at")));
 				embedBuilderConsumer.accept(eb);
 			}

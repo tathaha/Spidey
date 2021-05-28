@@ -5,13 +5,8 @@ package dev.mlnr.spidey.jooq;
 
 
 import dev.mlnr.spidey.jooq.tables.Guilds;
-import dev.mlnr.spidey.jooq.tables.InviteFilterIgnoredRoles;
-import dev.mlnr.spidey.jooq.tables.InviteFilterIgnoredUsers;
-import dev.mlnr.spidey.jooq.tables.SettingsBlacklistedChannels;
-import dev.mlnr.spidey.jooq.tables.SettingsFilters;
 import dev.mlnr.spidey.jooq.tables.SettingsMisc;
 import dev.mlnr.spidey.jooq.tables.SettingsMusic;
-import dev.mlnr.spidey.jooq.tables.SettingsWhitelistedChannels;
 
 import java.util.Arrays;
 import java.util.List;
@@ -40,26 +35,6 @@ public class Public extends SchemaImpl {
     public final Guilds GUILDS = Guilds.GUILDS;
 
     /**
-     * The table <code>public.invite_filter_ignored_roles</code>.
-     */
-    public final InviteFilterIgnoredRoles INVITE_FILTER_IGNORED_ROLES = InviteFilterIgnoredRoles.INVITE_FILTER_IGNORED_ROLES;
-
-    /**
-     * The table <code>public.invite_filter_ignored_users</code>.
-     */
-    public final InviteFilterIgnoredUsers INVITE_FILTER_IGNORED_USERS = InviteFilterIgnoredUsers.INVITE_FILTER_IGNORED_USERS;
-
-    /**
-     * The table <code>public.settings_blacklisted_channels</code>.
-     */
-    public final SettingsBlacklistedChannels SETTINGS_BLACKLISTED_CHANNELS = SettingsBlacklistedChannels.SETTINGS_BLACKLISTED_CHANNELS;
-
-    /**
-     * The table <code>public.settings_filters</code>.
-     */
-    public final SettingsFilters SETTINGS_FILTERS = SettingsFilters.SETTINGS_FILTERS;
-
-    /**
      * The table <code>public.settings_misc</code>.
      */
     public final SettingsMisc SETTINGS_MISC = SettingsMisc.SETTINGS_MISC;
@@ -68,11 +43,6 @@ public class Public extends SchemaImpl {
      * The table <code>public.settings_music</code>.
      */
     public final SettingsMusic SETTINGS_MUSIC = SettingsMusic.SETTINGS_MUSIC;
-
-    /**
-     * The table <code>public.settings_whitelisted_channels</code>.
-     */
-    public final SettingsWhitelistedChannels SETTINGS_WHITELISTED_CHANNELS = SettingsWhitelistedChannels.SETTINGS_WHITELISTED_CHANNELS;
 
     /**
      * No further instances allowed
@@ -91,12 +61,7 @@ public class Public extends SchemaImpl {
     public final List<Table<?>> getTables() {
         return Arrays.<Table<?>>asList(
             Guilds.GUILDS,
-            InviteFilterIgnoredRoles.INVITE_FILTER_IGNORED_ROLES,
-            InviteFilterIgnoredUsers.INVITE_FILTER_IGNORED_USERS,
-            SettingsBlacklistedChannels.SETTINGS_BLACKLISTED_CHANNELS,
-            SettingsFilters.SETTINGS_FILTERS,
             SettingsMisc.SETTINGS_MISC,
-            SettingsMusic.SETTINGS_MUSIC,
-            SettingsWhitelistedChannels.SETTINGS_WHITELISTED_CHANNELS);
+            SettingsMusic.SETTINGS_MUSIC);
     }
 }

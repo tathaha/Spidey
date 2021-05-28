@@ -14,7 +14,7 @@ import static dev.mlnr.spidey.utils.MusicUtils.formatDuration;
 @SuppressWarnings("unused")
 public class NowPlayingCommand extends Command {
 	public NowPlayingCommand() {
-		super("nowplaying", Category.MUSIC, Permission.UNKNOWN, 0);
+		super("nowplaying", "Shows what the current song is", Category.MUSIC, Permission.UNKNOWN, 0);
 	}
 
 	@Override
@@ -43,20 +43,20 @@ public class NowPlayingCommand extends Command {
 
 		var pausedBuilder = new StringBuilder(trackInfo.title);
 		if (paused) {
-			pausedBuilder.append(" - ").append(i18n.get("commands.nowplaying.other.paused"));
+			pausedBuilder.append(" - ").append(i18n.get("commands.nowplaying.paused"));
 			if (!stream) {
-				pausedBuilder.append(" ").append(i18n.get("commands.nowplaying.other.at")).append(" ").append(formatDuration(position));
+				pausedBuilder.append(" ").append(i18n.get("commands.nowplaying.at")).append(" ").append(formatDuration(position));
 			}
 		}
 
 		progressBuilder.setAuthor(pausedBuilder.toString(), trackInfo.uri);
 		progressBuilder.setThumbnail("https://i.ytimg.com/vi/" + trackInfo.identifier + "/maxresdefault.jpg");
 		progressBuilder.setColor(paused ? Color.ORANGE.getRGB() : Utils.SPIDEY_COLOR);
-		progressBuilder.setDescription(stream ? i18n.get("commands.nowplaying.other.livestream") : MusicUtils.getProgressBar(position, originalLength));
-		progressBuilder.addField(i18n.get("commands.nowplaying.other.requested"), "<@" + MusicUtils.getRequesterId(playingTrack) + ">", true);
+		progressBuilder.setDescription(stream ? i18n.get("commands.nowplaying.livestream") : MusicUtils.getProgressBar(position, originalLength));
+		progressBuilder.addField(i18n.get("commands.nowplaying.requested"), "<@" + MusicUtils.getRequesterId(playingTrack) + ">", true);
 
 		if (lengthWithoutSegments != originalLength) {
-			progressBuilder.addField(i18n.get("commands.nowplaying.other.duration_without_segments"), formatDuration(lengthWithoutSegments), true);
+			progressBuilder.addField(i18n.get("commands.nowplaying.duration_without_segments"), formatDuration(lengthWithoutSegments), true);
 		}
 		ctx.reply(progressBuilder);
 		return true;

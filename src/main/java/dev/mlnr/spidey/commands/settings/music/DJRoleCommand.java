@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 @SuppressWarnings("unused")
 public class DJRoleCommand extends Command {
 	public DJRoleCommand() {
-		super("djrole", Category.Settings.MUSIC, Permission.MANAGE_SERVER, 4,
+		super("djrole", "Sets/removes the DJ role", Category.Settings.MUSIC, Permission.MANAGE_SERVER, 4,
 				new OptionData(OptionType.ROLE, "role", "The role to set as the DJ role or blank to reset"));
 	}
 
