@@ -10,7 +10,6 @@ import java.util.function.BiConsumer;
 public class Paginator {
 	private final long invokeChannelId;
 	private final long paginatorMessageId;
-	private final long invokeMessageId;
 	private final long authorId;
 	private final int totalPages;
 	private final BiConsumer<Integer, EmbedBuilder> pagesConsumer;
@@ -19,10 +18,9 @@ public class Paginator {
 	private final I18n i18n;
 	private final PaginatorCache paginatorCache;
 
-	public Paginator(long invokeChannelId, long paginatorMessageId, long invokeMessageId, long authorId, int totalPages, BiConsumer<Integer, EmbedBuilder> pagesConsumer, I18n i18n, PaginatorCache paginatorCache) {
+	public Paginator(long invokeChannelId, long paginatorMessageId, long authorId, int totalPages, BiConsumer<Integer, EmbedBuilder> pagesConsumer, I18n i18n, PaginatorCache paginatorCache) {
 		this.invokeChannelId = invokeChannelId;
 		this.paginatorMessageId = paginatorMessageId;
-		this.invokeMessageId = invokeMessageId;
 		this.authorId = authorId;
 		this.totalPages = totalPages;
 		this.pagesConsumer = pagesConsumer;
@@ -61,10 +59,6 @@ public class Paginator {
 
 	public long getInvokeChannelId() {
 		return this.invokeChannelId;
-	}
-
-	public long getInvokeMessageId() {
-		return this.invokeMessageId;
 	}
 
 	public long getAuthorId() {

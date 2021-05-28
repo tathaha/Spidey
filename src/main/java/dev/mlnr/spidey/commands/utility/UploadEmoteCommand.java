@@ -7,6 +7,8 @@ import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Icon;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -19,7 +21,9 @@ import java.util.stream.Collectors;
 public class UploadEmoteCommand extends Command {
 
 	public UploadEmoteCommand() {
-		super("uploademote", new String[]{"upemote"}, Category.UTILITY, Permission.MANAGE_EMOTES, 0, 4);
+		super("uploademote", Category.UTILITY, Permission.MANAGE_EMOTES, 4,
+				new OptionData(OptionType.STRING, "link", "The link of the emote").setRequired(true),
+				new OptionData(OptionType.STRING, "name", "The emote name"));
 	}
 
 	@Override
@@ -30,20 +34,18 @@ public class UploadEmoteCommand extends Command {
 			ctx.replyErrorLocalized("commands.uploademote.other.no_perms");
 			return false;
 		}
-		if (args.length == 0) {
-			ctx.replyErrorLocalized("commands.uploademote.other.provide_url");
-			return false;
-		}
 		var name = "";
-		if (args.length == 2) {
-			name = args[1];
+		var link = ctx.getStringOption("link");
+		var nameOption = ctx.getStringOption("name");
+		if (nameOption != null) {
+			name = nameOption;
 		}
 		else {
-			var tmpIndex = args[0].lastIndexOf('/') + 1;
+			var tmpIndex = link.lastIndexOf('/') + 1;
 			try {
-				var index = args[0].lastIndexOf('.');
-				var tmp = args[0].substring(tmpIndex, index); // possible name, if it doesn't throw, check for the extension
-				var ext = args[0].substring(index + 1);
+				var index = link.lastIndexOf('.');
+				var tmp = link.substring(tmpIndex, index); // possible name, if it doesn't throw, check for the extension
+				var ext = link.substring(index + 1);
 				if (Icon.IconType.fromExtension(ext) == Icon.IconType.UNKNOWN) {
 					ctx.replyErrorLocalized("commands.uploademote.other.provide_format");
 					return false;
@@ -51,7 +53,7 @@ public class UploadEmoteCommand extends Command {
 				name = tmp;
 			}
 			catch (IndexOutOfBoundsException ex) {
-				name = args[0].substring(tmpIndex);
+				name = link.substring(tmpIndex);
 			}
 		}
 		if (!(name.length() >= 2 && name.length() <= 32)) {
@@ -64,7 +66,7 @@ public class UploadEmoteCommand extends Command {
 		}
 		var image = new ByteArrayOutputStream();
 		try {
-			var con = (HttpURLConnection) new URL(args[0]).openConnection(); // TODO execute the request using Requester class
+			var con = (HttpURLConnection) new URL(link).openConnection(); // TODO execute the request using Requester class
 			con.setRequestProperty("User-Agent", "dev.mlnr.spidey");
 			try (var stream = con.getInputStream()) {
 				var chunk = new byte[4096];

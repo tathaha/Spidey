@@ -3,15 +3,17 @@ package dev.mlnr.spidey.commands.settings.music;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
-import dev.mlnr.spidey.objects.settings.guild.GuildMusicSettings;
 import dev.mlnr.spidey.utils.MusicUtils;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 @SuppressWarnings("unused")
 public class FairQueueCommand extends Command {
-
 	public FairQueueCommand() {
-		super("fairqueue", new String[]{"fq"}, Category.Settings.MUSIC, Permission.UNKNOWN, 0, 4);
+		super("fairqueue", Category.Settings.MUSIC, Permission.UNKNOWN, 4,
+				new OptionData(OptionType.BOOLEAN, "enable", "Whether to enable fair queue"),
+				new OptionData(OptionType.INTEGER, "threshold", "The fair queue threshold"));
 	}
 
 	@Override
@@ -20,45 +22,41 @@ public class FairQueueCommand extends Command {
 			ctx.replyErrorLocalized("music.messages.failure.cant_interact", "enable/disable the fair queue or to set the threshold");
 			return false;
 		}
-		var musicSettings = ctx.getCache().getGuildSettingsCache().getMusicSettings(ctx.getGuild().getIdLong());
-		if (args.length == 0) {
-			manageFairQueue(musicSettings, ctx, !musicSettings.isFairQueueEnabled());
-			return true;
+		var enabledOption = ctx.getBooleanOption("enable");
+		var thresholdOption = ctx.getLongOption("threshold");
+		if (enabledOption == null && thresholdOption == null) {
+			ctx.replyErrorLocalized("commands.fairqueue.other.provide_argument");
+			return false;
 		}
-		ctx.getArgumentAsUnsignedInt(0, threshold -> {
-			if (threshold == 0) {
-				manageFairQueue(musicSettings, ctx, false);
-				return;
-			}
-			if (threshold < 2 || threshold > 10) {
-				ctx.replyErrorLocalized("commands.fairqueue.other.threshold_number");
-				return;
-			}
-			if (threshold == musicSettings.getFairQueueThreshold()) {
-				ctx.replyErrorLocalized("commands.fairqueue.other.already_set", threshold);
-				return;
-			}
-			manageFairQueue(musicSettings, ctx, true, threshold);
-		});
-		return true;
-	}
-
-	private void manageFairQueue(GuildMusicSettings musicSettings, CommandContext ctx, boolean enabled) {
-		manageFairQueue(musicSettings, ctx, enabled, -1);
-	}
-
-	private void manageFairQueue(GuildMusicSettings musicSettings, CommandContext ctx, boolean enabled, int threshold) {
+		var guildId = ctx.getGuild().getIdLong();
+		var musicSettings = ctx.getCache().getGuildSettingsCache().getMusicSettings(guildId);
+		var responseBuilder = new StringBuilder();
 		var i18n = ctx.getI18n();
-		if (!enabled && !musicSettings.isFairQueueEnabled()) {
-			ctx.replyErrorLocalized("commands.fairqueue.other.already_disabled");
-			return;
+		if (enabledOption != null) {
+			var currentState = musicSettings.isFairQueueEnabled();
+			if (enabledOption == currentState) {
+				ctx.replyErrorLocalized(currentState ? "commands.fairqueue.other.already_enabled" : "commands.fairqueue.other.already_disabled");
+				return false;
+			}
+			musicSettings.setFairQueueEnabled(enabledOption);
+			responseBuilder.append(i18n.get("commands.fairqueue.other.done.text", currentState ? i18n.get("enabled") : i18n.get("disabled")));
 		}
-		if (threshold != -1) {
+		responseBuilder.append(" ");
+		if (thresholdOption != null) {
+			var currentThreshold = musicSettings.getFairQueueThreshold();
+			if (thresholdOption == currentThreshold) {
+				ctx.replyErrorLocalized("commands.fairqueue.other.already_set", currentThreshold);
+				return false;
+			}
+			if (thresholdOption < 2 || thresholdOption > 10) {
+				ctx.replyErrorLocalized("commands.fairqueue.other.threshold_number");
+				return false;
+			}
+			var threshold = thresholdOption.intValue();
 			musicSettings.setFairQueueThreshold(threshold);
+			responseBuilder.append(i18n.get("commands.fairqueue.other.done.threshold", threshold));
 		}
-		musicSettings.setFairQueueEnabled(enabled);
-		ctx.reactLike();
-		ctx.reply(i18n.get("commands.fairqueue.other.done.text", enabled ? i18n.get("enabled") : i18n.get("disabled")) +
-				(threshold == -1 ? "." : " " + i18n.get("commands.fairqueue.other.done.threshold", threshold)));
+		ctx.reply(responseBuilder.toString());
+		return true;
 	}
 }

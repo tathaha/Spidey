@@ -5,12 +5,14 @@ import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.utils.MusicUtils;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 @SuppressWarnings("unused")
 public class VolumeCommand extends Command {
-
 	public VolumeCommand() {
-		super("volume", new String[]{"vol"}, Category.MUSIC, Permission.UNKNOWN, 0, 0);
+		super("volume", Category.MUSIC, Permission.UNKNOWN, 0,
+				new OptionData(OptionType.INTEGER, "volume", "The new volume").setRequired(true));
 	}
 
 	@Override
@@ -33,30 +35,12 @@ public class VolumeCommand extends Command {
 			return false;
 		}
 		var currentVolume = musicPlayer.getVolume();
-		if (args.length == 0) {
-			var prefix = cache.getGuildSettingsCache().getMiscSettings(guild.getIdLong()).getPrefix();
-			ctx.replyLocalized("commands.volume.other.current", currentVolume, prefix);
+		var newVolume = (int) Math.min(ctx.getLongOption("volume"), 150);
+		if (!checkNewVolume(ctx, newVolume, currentVolume)) {
 			return false;
 		}
-		ctx.getArgumentAsInt(0, parsedVolume -> {
-			if (args[0].charAt(0) != '+' && args[0].charAt(0) != '-') {
-				var newVolume = Math.min(parsedVolume, 150);
-				if (!checkNewVolume(ctx, newVolume, currentVolume)) {
-					return;
-				}
-				musicPlayer.setVolume(newVolume);
-				ctx.reactLike();
-				ctx.replyLocalized("commands.volume.other.set", newVolume);
-				return;
-			}
-			var newVolume = Math.min(Math.max(currentVolume + parsedVolume, 0), 150);
-			if (!checkNewVolume(ctx, newVolume, currentVolume)) {
-				return;
-			}
-			musicPlayer.setVolume(newVolume);
-			ctx.reactLike();
-			ctx.replyLocalized("commands.volume.other.set", newVolume);
-		});
+		musicPlayer.setVolume(newVolume);
+		ctx.replyLocalized("commands.volume.other.set", newVolume);
 		return true;
 	}
 

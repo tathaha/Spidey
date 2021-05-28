@@ -4,14 +4,12 @@ import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.utils.MusicUtils;
-import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
 
 @SuppressWarnings("unused")
 public class StopCommand extends Command {
-
 	public StopCommand() {
-		super("stop", new String[]{"disconnect", "dis"}, Category.MUSIC, Permission.UNKNOWN, 0, 0);
+		super("stop", Category.MUSIC, Permission.UNKNOWN, 0);
 	}
 
 	@Override
@@ -28,7 +26,7 @@ public class StopCommand extends Command {
 			return false;
 		}
 		musicPlayerCache.disconnectFromChannel(guild);
-		Utils.addReaction(ctx.getMessage(), "\uD83D\uDC4B"); // wave
+		ctx.reply(":wave:");
 		return true;
 	}
 }

@@ -10,9 +10,8 @@ import java.util.Collections;
 
 @SuppressWarnings("unused")
 public class ShuffleCommand extends Command {
-
 	public ShuffleCommand() {
-		super("shuffle", new String[]{}, Category.MUSIC, Permission.UNKNOWN, 0, 0);
+		super("shuffle", Category.MUSIC, Permission.UNKNOWN, 0);
 	}
 
 	@Override
@@ -38,7 +37,6 @@ public class ShuffleCommand extends Command {
 			return false;
 		}
 		Collections.shuffle(queue);
-		ctx.reactLike();
 		ctx.replyLocalized("commands.shuffle.other.success");
 		return true;
 	}

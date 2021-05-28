@@ -27,8 +27,7 @@ public class PaginatorCache {
 	}
 
 	public void createPaginator(CommandContext ctx, int totalPages, BiConsumer<Integer, EmbedBuilder> pagesConsumer) {
-		var invokeMessage = ctx.getMessage();
-		var channel = invokeMessage.getTextChannel();
+		var channel = ctx.getTextChannel();
 		var embedBuilder = new EmbedBuilder().setColor(Utils.SPIDEY_COLOR);
 		var i18n = ctx.getI18n();
 
@@ -37,7 +36,7 @@ public class PaginatorCache {
 
 		channel.sendMessage(embedBuilder.build()).queue(paginatorMessage -> {
 			var paginatorMessageId = paginatorMessage.getIdLong();
-			var paginator = new Paginator(channel.getIdLong(), paginatorMessageId, invokeMessage.getIdLong(), invokeMessage.getAuthor().getIdLong(), totalPages, pagesConsumer, i18n, this);
+			var paginator = new Paginator(channel.getIdLong(), paginatorMessageId, ctx.getUser().getIdLong(), totalPages, pagesConsumer, i18n, this);
 			paginatorMap.put(paginatorMessageId, paginator);
 
 			Utils.addReaction(paginatorMessage, Emojis.BACKWARDS);
@@ -71,6 +70,6 @@ public class PaginatorCache {
 		if (channel == null) {
 			return;
 		}
-		channel.purgeMessagesById(paginator.getInvokeMessageId(), messageId);
+		channel.deleteMessageById(messageId).queue();
 	}
 }

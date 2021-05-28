@@ -31,17 +31,14 @@ public class SegmentsCommand extends Command {
 			ctx.replyErrorLocalized("music.messages.failure.no_song");
 			return false;
 		}
+		var reload = ctx.getBooleanOption("reload");
 		var videoSegmentCache = cache.getVideoSegmentCache();
 		var videoId = playingTrack.getIdentifier();
 		var segments = videoSegmentCache.getVideoSegments(videoId);
-		if (args.length > 0) {
-			if (!(args[0].toLowerCase().startsWith("rel") || args[0].equalsIgnoreCase("force"))) {
-				ctx.replyErrorLocalized("commands.segments.other.args");
-				return false;
-			}
+		if (reload != null && reload) {
 			segments = videoSegmentCache.getVideoSegments(videoId, true);
 		}
-		var updatePrompt = i18n.get("commands.segments.other.prompt", cache.getGuildSettingsCache().getMiscSettings(guild.getIdLong()).getPrefix());
+		var updatePrompt = i18n.get("commands.segments.other.prompt");
 		if (segments.isEmpty()) {
 			ctx.reply(i18n.get("commands.segments.other.no_segs") + " " + updatePrompt);
 			return true;

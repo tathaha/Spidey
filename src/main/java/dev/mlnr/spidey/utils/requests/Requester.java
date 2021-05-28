@@ -37,9 +37,7 @@ public class Requester {
 		HTTP_CLIENT.newCall(requestBuilder.build()).enqueue(new Callback() {
 			@Override
 			public void onFailure(final Call call, final IOException e) {
-				if (ctx != null) {
-					ctx.replyErrorLocalized("internal_error", "get a random image from the subreddit", e.getMessage());
-				}
+				ctx.replyErrorLocalized("internal_error", "get a random image from the subreddit", e.getMessage());
 				logger.error("There was an error while executing a request for url {}:", url, e);
 			}
 

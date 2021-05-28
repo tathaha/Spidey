@@ -10,9 +10,8 @@ import java.awt.*;
 
 @SuppressWarnings("unused")
 public class EditSnipeCommand extends Command {
-
 	public EditSnipeCommand() {
-		super("editsnipe", new String[]{"esnipe", "es"}, Category.UTILITY, Permission.UNKNOWN, 0, 6);
+		super("editsnipe", Category.UTILITY, Permission.UNKNOWN, 6);
 	}
 
 	@Override
@@ -20,7 +19,7 @@ public class EditSnipeCommand extends Command {
 		var cache = ctx.getCache();
 		var miscSettings = cache.getGuildSettingsCache().getMiscSettings(ctx.getGuild().getIdLong());
 		if (!miscSettings.isSnipingEnabled()) {
-			ctx.replyErrorLocalized("sniping.disabled", miscSettings.getPrefix());
+			ctx.replyErrorLocalized("sniping.disabled");
 			return false;
 		}
 		var textChannel = ctx.getTextChannel();

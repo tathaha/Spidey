@@ -19,6 +19,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import static dev.mlnr.spidey.utils.Utils.addReaction;
 import static dev.mlnr.spidey.utils.Utils.deleteMessage;
 
 @SuppressWarnings({"unused", "StringBufferReplaceableByString"})

@@ -56,7 +56,7 @@
           "cant_load": "I can't load this track as",
           "queue_full": "the max queue size of **%d** tracks has been reached! To completely remove this limit, you can purchase permanent VIP for a symbolic price of 2€.",
           "track_long": "the track is at least **%d** hours long. To completely remove the length limit, you can purchase permanent VIP for a symbolic price of 2€.",
-          "fair_queue": "the fair queue limit of **%d** tracks has been reached! Don't queue the same song over and over again. A DJ or a Server Manager can disable this or increase the threshold by using `%sfairqueue (threshold)`.",
+          "fair_queue": "the fair queue limit of **%d** tracks has been reached! Don't queue the same song over and over again. A DJ or a Server Manager can disable this or increase the threshold by using `/fairqueue (threshold)`.",
           "no_tracks": "No tracks could be loaded from the playlist.",
           "error": "There was an error while loading the track."
         },
@@ -77,7 +77,7 @@
     "invalid": "Selected role can't be the public role or managed by an integration."
   },
   "sniping": {
-    "disabled": "Sniping messages for this server is disabled, which could be caused by manually disabling it or having more than 10000 people in this server. You can enable sniping by using `%ssniping`.",
+    "disabled": "Sniping messages for this server is disabled, which could be caused by manually disabling it or having more than 10000 people in this server. You can enable sniping by using `/sniping`.",
     "no_message": "There's no %s message to snipe."
   },
   "commands": {
@@ -142,7 +142,7 @@
       "usage": "voicegame <game name or blank to list available games>",
       "other": {
         "not_in_voice": "You're not in a voice channel.",
-        "not_voice": "Selected channel is not a voice channel",
+        "not_voice": "Selected channel is not a voice channel.",
         "no_perms": "I don't have the **Create Invite** permission for your channel to create a session.",
         "click": "Click [here](https://discord.gg/%s) to join a %s session.",
         "create": "create a game session"
@@ -270,8 +270,7 @@
         "log": "Log channel",
         "join": "Join role",
         "dj": "DJ role",
-        "none": "None",
-        "prefix": "set a custom prefix with s!prefix"
+        "none": "None"
       }
     },
     "stats": {
@@ -409,8 +408,7 @@
       "description": "Lists all non music segments in this video",
       "usage": "segments (force/reload)",
       "other": {
-        "args": "Valid arguments are **force** or **(rel)oad**.",
-        "prompt": "If you've just added some segments, force the cache to update by using `%ssegments reload`.",
+        "prompt": "If you've just added some segments, force the cache to update by using `/segments reload`.",
         "no_segs": "There are no segments in this video.",
         "message": {
           "one": "There is **1** segment",
@@ -444,7 +442,6 @@
       "description": "Sets the volume of music",
       "usage": "volume <(+-)volume>",
       "other": {
-        "current": "Current volume is **%d%%**. You can change this by using `%svolume <volume>`.",
         "set": "The volume has been set to **%d%%**.",
         "already_set": "The volume is already set to **%d%%**."
       }
@@ -493,51 +490,28 @@
       "description": "Sends a (NSFW) picture of a pussy",
       "usage": "pussy"
     },
-    "blacklist": {
-      "description": "Adds/removes a channel to/from blacklist. Spidey will only respond to commands that are not blacklisted.",
-      "usage": "blacklist <add/remove/list> <channel>",
-      "other": {
-        "channels": {
-          "text": "Blacklisted channels",
-          "none": "There are currently no blacklisted channels.",
-          "add_remove": "Add/remove channels by using `%sblacklist <add/remove>`.",
-          "state": {
-            "already_blacklisted": "Channel %s is already blacklisted.",
-            "not_blacklisted": "Channel %s isn't blacklisted.",
-            "add": {
-              "success": "Channel %s has been added to the blacklist.",
-              "whitelisted": "Channel %s is blacklisted. If you want, remove it from the whitelist by using `%swhitelist`."
-            },
-            "removed": "Channel %s has been removed from the whitelist."
-          }
-        }
-      }
+    "vip": {
+      "description": "Adds/removes a guild to/from VIP guilds",
+      "usage": "vip (guild id)"
     },
-    "whitelist": {
-      "description": "Adds/removes a channel to/from whitelist. Spidey will only respond to commands in whitelisted channels",
-      "usage": "whitelist <add/remove/list> <channel>",
+    "joinrole": {
+      "description": "Sets/removes the role that is added to a member after joining",
+      "usage": "joinrole (@role, role id or name of the role or blank to reset)"
+    },
+    "log": {
+      "description": "Sets log channel",
+      "usage": "log (#channel, channel id or channel name or blank to reset)",
       "other": {
-        "channels": {
-          "text": "Whitelisted channels",
-          "none": "There are currently no whitelisted channels.",
-          "add_remove": "Add/remove channels by using `%swhitelist <add/remove>`.",
-          "state": {
-            "already_whitelisted": "Channel %s is already whitelisted.",
-            "not_whitelisted": "Channel %s isn't whitelisted.",
-            "add": {
-              "success": "Channel %s has been added to the whitelist.",
-              "blacklisted": "Channel %s is blacklisted. If you want, remove it from the blacklist by using `%sblacklist`."
-            },
-            "removed": "Channel %s has been removed from the whitelist."
-          }
-        }
+        "not_text": "Selected channel is not a text channel.",
+        "reset": ":white_check_mark: The log channel has been reset!",
+        "set": ":white_check_mark: The log channel has been set to channel <#%d>!"
       }
     },
     "defaultvolume": {
       "description": "Sets the default music volume. This volume will be set when you start listening to music",
       "usage": "defaultvolume <volume>",
       "other": {
-        "current": "Current default music volume is **%d%%**. You can change this by using `%sdefaultvolume <volume>`.",
+        "current": "Current default music volume is **%d%%**. You can change this by using `/defaultvolume <volume>`.",
         "set": "The default music volume has been set to **%d%%**.",
         "already_set": "The default music volume is already set to **%d%%**."
       }
@@ -555,72 +529,17 @@
     },
     "fairqueue": {
       "description": "Enables/disables fair queue or sets the threshold",
-      "usage": "fairqueue (threshold from 2 to 10 or blank to enable/disable fair queue)",
+      "usage": "fairqueue",
       "other": {
+        "provide_argument": "Please provide at least one argument.",
         "threshold_number": "Please enter a threshold from `2` to `10`.",
         "already_set": "The threshold is already set to **%d**.",
-        "already_disabled": "The fair queue is already disabled.",
+        "already_enabled": "Fair queue is already enabled.",
+        "already_disabled": "Fair queue is already disabled.",
         "done": {
-          "text": "Fair queue has been **%s**",
-          "threshold": "and the threshold has been set to **%d**."
+          "text": "Fair queue has been **%s**.",
+          "threshold": "The threshold has been set to **%d**."
         }
-      }
-    },
-    "joinrole": {
-      "description": "Sets/removes the role that is added to a member after joining",
-      "usage": "joinrole (@role, role id or name of the role or blank to reset)"
-    },
-    "log": {
-      "description": "Sets log channel",
-      "usage": "log (#channel, channel id or channel name or blank to reset)",
-      "other": {
-        "reset": ":white_check_mark: The log channel has been reset!",
-        "set": ":white_check_mark: The log channel has been set to channel <#%d>!"
-      }
-    },
-    "invitedeleting": {
-      "description": "Enables/disables deleting messages with foreign invite links",
-      "usage": "invitedeleting <add/remove/list> <user/role> <@user/role, user/role id or name/nickname of the role/user",
-      "other": {
-        "disabled": "Deleting foreign invites is disabled. You can enable it by using `%sinvitedeleting`.",
-        "already_ignored": "%s %s is already ignored.",
-        "not_ignored": "%s %s is not ignored.",
-        "listing": {
-          "all": "Listing all ignored users/roles",
-          "users": "Listing all ignored users",
-          "roles": "Listing all ignored roles",
-          "none": "None",
-          "ignored": {
-            "users": "**Ignored users**",
-            "roles": "\n\n**Ignored roles**"
-          }
-        },
-        "done": {
-          "text": "Deleting of foreign invite links has been **%s**.",
-          "ignored": {
-            "text": "Users with \"Manage Messages\" permission will be ignored.",
-            "added": ":white_check_mark: %s %s has been added to ignored.",
-            "removed": ":white_check_mark: %s %s has been removed from ignored."
-          }
-        }
-      }
-    },
-    "pinneddeleting": {
-      "description": "Enables/disables deleting \"Message was pinned\" messages",
-      "usage": "pinneddeleting",
-      "other": {
-        "done": "Deleting of \"Message was pinned\" messages has been **%s**."
-      }
-    },
-    "prefix": {
-      "description": "Sets/removes the prefix for this server",
-      "usage": "prefix (new prefix or blank to reset)",
-      "other": {
-        "default": "The prefix for this server is set to the default one. You can change it by using `s!prefix <new prefix>` (without brackets).",
-        "reset": ":white_check_mark: The prefix for this server has been reset to `s!`!",
-        "already_set": "The prefix for this server is already set to `%s`.",
-        "longer": "The prefix cannot be longer than 10 characters.",
-        "changed": ":white_check_mark: The prefix has been successfully changed to `%s`!"
       }
     },
     "segmentskipping": {
@@ -640,10 +559,6 @@
         "done": "Message sniping has been **%s**."
       }
     },
-    "vip": {
-      "description": "Adds/removes a guild to/from VIP guilds",
-      "usage": "vip (guild id)"
-    },
     "editsnipe": {
       "description": "Snipes an edited message",
       "usage": "editsnipe"
@@ -661,7 +576,6 @@
       "usage": "uploademote <link> (name)",
       "other": {
         "no_perms": "I don't have permission to upload emotes",
-        "provide_url": "Please provide a URL to retrieve the emote from.",
         "provide_format": "Please provide a URL with a valid format - JP(E)G, PNG, WEBP or GIF.",
         "name_length": "The name of the emote has to be between 2 and 32 in length.",
         "valid_format": "The name of the emote has to be in a valid format.",

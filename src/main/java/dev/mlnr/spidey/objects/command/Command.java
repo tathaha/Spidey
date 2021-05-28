@@ -6,13 +6,15 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 public abstract class Command {
 	private final String invoke;
+	private final String description;
 	private final ICategory category;
 	private final Permission requiredPermission;
 	private final int cooldown;
 	private final OptionData[] options;
 
-	protected Command(String invoke, ICategory category, Permission requiredPermission, int cooldown, OptionData... options) {
+	protected Command(String invoke, String description, ICategory category, Permission requiredPermission, int cooldown, OptionData... options) {
 		this.invoke = invoke;
+		this.description = description;
 		this.category = category;
 		this.requiredPermission = requiredPermission;
 		this.cooldown = cooldown;
@@ -23,6 +25,10 @@ public abstract class Command {
 
 	public String getInvoke() {
 		return this.invoke;
+	}
+
+	public String getDescription() {
+		return description;
 	}
 
 	public ICategory getCategory() {

@@ -15,7 +15,7 @@ public class InteractionEvents extends ListenerAdapter {
 	@Override
 	public void onSlashCommand(SlashCommandEvent event) {
 		if (!event.isFromGuild()) {
-			event.reply("Spidey only supports commands in a server. Sorry for this inconvenience.").queue();
+			event.reply("Spidey only supports commands in servers. Sorry for this inconvenience.").queue();
 			return;
 		}
 		CommandHandler.handle(event, cache);

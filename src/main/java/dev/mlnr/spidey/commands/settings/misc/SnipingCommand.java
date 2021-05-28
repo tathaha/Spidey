@@ -4,12 +4,14 @@ import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 @SuppressWarnings("unused")
 public class SnipingCommand extends Command {
-
 	public SnipingCommand() {
-		super("sniping", new String[]{}, Category.Settings.MISC, Permission.MANAGE_SERVER, 0, 4);
+		super("sniping", Category.Settings.MISC, Permission.MANAGE_SERVER, 4,
+				new OptionData(OptionType.BOOLEAN, "enable", "Whether to enable (edit)sniping").setRequired(true));
 	}
 
 	@Override
@@ -17,10 +19,9 @@ public class SnipingCommand extends Command {
 		var cache = ctx.getCache();
 		var guildId = ctx.getGuild().getIdLong();
 		var miscSettings = cache.getGuildSettingsCache().getMiscSettings(guildId);
-		var enabled = !miscSettings.isSnipingEnabled();
+		var enabled = ctx.getBooleanOption("enable");
 		var i18n = ctx.getI18n();
 		miscSettings.setSnipingEnabled(enabled);
-		ctx.reactLike();
 		ctx.replyLocalized("commands.sniping.other.done", enabled ? i18n.get("enabled") : i18n.get("disabled"));
 		if (!enabled) {
 			cache.getMessageCache().pruneCache(guildId);

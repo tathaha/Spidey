@@ -3,10 +3,12 @@ package dev.mlnr.spidey;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import dev.mlnr.spidey.jooq.tables.records.GuildsRecord;
-import dev.mlnr.spidey.jooq.tables.records.SettingsFiltersRecord;
 import dev.mlnr.spidey.jooq.tables.records.SettingsMiscRecord;
 import dev.mlnr.spidey.jooq.tables.records.SettingsMusicRecord;
-import dev.mlnr.spidey.objects.settings.guild.*;
+import dev.mlnr.spidey.objects.settings.guild.GuildGeneralSettings;
+import dev.mlnr.spidey.objects.settings.guild.GuildMiscSettings;
+import dev.mlnr.spidey.objects.settings.guild.GuildMusicSettings;
+import dev.mlnr.spidey.objects.settings.guild.IGuildSettings;
 import org.jooq.*;
 import org.jooq.exception.DataAccessException;
 import org.jooq.impl.DSL;
@@ -14,8 +16,6 @@ import org.jooq.impl.DefaultConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.function.Function;
 
 import static dev.mlnr.spidey.jooq.Tables.*;
@@ -56,21 +56,6 @@ public class DatabaseManager {
 		return defaultSettingsTransformer.apply(null);
 	}
 
-	public GuildChannelsSettings retrieveGuildChannelsSettings(long guildId) {
-		return new GuildChannelsSettings(guildId, retrieveWhitelistedChannels(guildId), retrieveBlacklistedChannels(guildId), this);
-	}
-
-	public GuildFiltersSettings retrieveGuildFiltersSettings(long guildId) {
-		return (GuildFiltersSettings) retrieveGuildSettings(SETTINGS_FILTERS, guildId,
-				defaultRecord -> new GuildFiltersSettings(guildId, this),
-				settingsRecord ->
-		{
-			var casted = (SettingsFiltersRecord) settingsRecord;
-			return new GuildFiltersSettings(guildId, casted.getPinnedDeletingEnabled(), casted.getInviteDeletingEnabled(),
-					retrieveInviteFilterIgnoredUsers(guildId), retrieveInviteFilterIgnoredRoles(guildId), this);
-		});
-	}
-
 	public GuildGeneralSettings retrieveGuildGeneralSettings(long guildId) {
 		return (GuildGeneralSettings) retrieveGuildSettings(GUILDS, guildId,
 				defaultRecord -> new GuildGeneralSettings(guildId, this),
@@ -88,7 +73,7 @@ public class DatabaseManager {
 		{
 			var casted = (SettingsMiscRecord) settingsRecord;
 			return new GuildMiscSettings(guildId, casted.getLogChannelId(), casted.getJoinRoleId(), casted.getLanguage(),
-					casted.getSnipingEnabled(), casted.getErrorCleanupEnabled(), spidey);
+					casted.getSnipingEnabled(), spidey);
 		});
 	}
 
@@ -142,10 +127,6 @@ public class DatabaseManager {
 		}
 	}
 
-	public <T> void executeFiltersSetQuery(Field<T> column, T value, long guildId) {
-		executeSetQuery(SETTINGS_FILTERS, column, value, guildId);
-	}
-
 	public <T> void executeGeneralSetQuery(Field<T> column, T value, long guildId) {
 		executeSetQuery(GUILDS, column, value, guildId);
 	}
@@ -156,16 +137,6 @@ public class DatabaseManager {
 
 	public <T> void executeMusicSetQuery(Field<T> column, T value, long guildId) {
 		executeSetQuery(SETTINGS_MUSIC, column, value, guildId);
-	}
-
-	// guild filters setters
-
-	public void setPinnedDeletingEnabled(long guildId, boolean enabled) {
-		executeFiltersSetQuery(SETTINGS_FILTERS.PINNED_DELETING_ENABLED, enabled, guildId);
-	}
-
-	public void setInviteDeletingEnabled(long guildId, boolean enabled) {
-		executeFiltersSetQuery(SETTINGS_FILTERS.INVITE_DELETING_ENABLED, enabled, guildId);
 	}
 
 	// guild general setters
@@ -192,10 +163,6 @@ public class DatabaseManager {
 		executeMiscSetQuery(SETTINGS_MISC.SNIPING_ENABLED, enabled, guildId);
 	}
 
-	public void setErrorCleanupEnabled(long guildId, boolean enabled) {
-		executeMiscSetQuery(SETTINGS_MISC.ERROR_CLEANUP_ENABLED, enabled, guildId);
-	}
-
 	// guild music setters
 
 	public void setDefaultVolume(long guildId, int defaultVolume) {
@@ -216,118 +183,6 @@ public class DatabaseManager {
 
 	public void setSegmentSkippingEnabled(long guildId, boolean enabled) {
 		executeMusicSetQuery(SETTINGS_MUSIC.SEGMENT_SKIPPING_ENABLED, enabled, guildId);
-	}
-
-	// helper insert/delete methods
-
-	public <T> void insert(Table<? extends Record> table, Field<T> column, T value, long guildId) {
-		try (var insertStep = getCtx().insertInto(table).columns(GUILDS.GUILD_ID, column)) {
-			try {
-				insertStep.values(guildId, value).execute();
-			}
-			catch (DataAccessException ex) {
-				logger.error("There was an error while inserting to column {} in table {} for guild {}", column.getName(), table.getName(), guildId, ex);
-			}
-		}
-	}
-
-	public <T> void delete(Table<? extends Record> table, Field<T> column, T value, long guildId) {
-		try (var deleteStep = getCtx().deleteFrom(table)) {
-			try {
-				deleteStep.where(guildIdEquals(table, guildId)).and(column.eq(value)).execute();
-			}
-			catch (DataAccessException ex) {
-				logger.error("There was an error while deleting from column {} in table {} for guild {}", column.getName(), table.getName(), guildId, ex);
-			}
-		}
-	}
-
-	// list retrieving
-
-	public <T> List<Long> retrieveLongList(Table<? extends Record> table, Field<T> column, long guildId) {
-		try (var selectStep = getCtx().select(column)) {
-			try {
-				var result = selectStep.from(table).where(guildIdEquals(table, guildId)).fetch();
-				return result.getValues(column, Long.class);
-			}
-			catch (DataAccessException ex) {
-				logger.error("There was an error while fetching the {} list from table {} for guild {}", column.getName(), table.getName(),
-						guildId, ex);
-				return Collections.emptyList();
-			}
-		}
-	}
-
-	// invite filter ignored lists
-
-	public <T> List<Long> retrieveInviteFilterIgnoredList(Table<? extends Record> table, Field<T> column, long guildId) {
-		return retrieveLongList(table, column, guildId);
-	}
-
-	public List<Long> retrieveInviteFilterIgnoredUsers(long guildId) {
-		return retrieveInviteFilterIgnoredList(INVITE_FILTER_IGNORED_USERS, INVITE_FILTER_IGNORED_USERS.USER_ID, guildId);
-	}
-
-	public List<Long> retrieveInviteFilterIgnoredRoles(long guildId) {
-		return retrieveInviteFilterIgnoredList(INVITE_FILTER_IGNORED_ROLES, INVITE_FILTER_IGNORED_ROLES.ROLE_ID, guildId);
-	}
-
-	public void executeInviteFilterAddQuery(Table<? extends Record> table, Field<Long> column, long id, long guildId) {
-		insert(table, column, id, guildId);
-	}
-
-	public void executeInviteFilterDeleteQuery(Table<? extends Record> table, Field<Long> column, long id, long guildId) {
-		delete(table, column, id, guildId);
-	}
-
-	public void addIgnoredUser(long guildId, long userId) {
-		executeInviteFilterAddQuery(INVITE_FILTER_IGNORED_USERS, INVITE_FILTER_IGNORED_USERS.USER_ID, userId, guildId);
-	}
-
-	public void addIgnoredRole(long guildId, long roleId) {
-		executeInviteFilterAddQuery(INVITE_FILTER_IGNORED_ROLES, INVITE_FILTER_IGNORED_ROLES.ROLE_ID, roleId, guildId);
-	}
-
-	public void removeIgnoredUser(long guildId, long userId) {
-		executeInviteFilterDeleteQuery(INVITE_FILTER_IGNORED_USERS, INVITE_FILTER_IGNORED_USERS.USER_ID, userId, guildId);
-	}
-
-	public void removeIgnoredRole(long guildId, long roleId) {
-		executeInviteFilterDeleteQuery(INVITE_FILTER_IGNORED_ROLES, INVITE_FILTER_IGNORED_ROLES.ROLE_ID, roleId, guildId);
-	}
-
-	// whitelisted/blacklisted channels
-
-	public List<Long> retrieveWhitelistedChannels(long guildId) {
-		return retrieveLongList(SETTINGS_WHITELISTED_CHANNELS, SETTINGS_WHITELISTED_CHANNELS.CHANNEL_ID, guildId);
-	}
-
-	public List<Long> retrieveBlacklistedChannels(long guildId) {
-		return retrieveLongList(SETTINGS_BLACKLISTED_CHANNELS, SETTINGS_BLACKLISTED_CHANNELS.CHANNEL_ID, guildId);
-	}
-
-	public void executeChannelsAddQuery(Table<? extends Record> table, Field<Long> column, long id, long guildId) {
-		insert(table, column, id, guildId);
-	}
-
-	public void executeChannelsDeleteQuery(Table<? extends Record> table, Field<Long> column, long id, long guildId) {
-		delete(table, column, id, guildId);
-	}
-
-	public void addWhitelistedChannel(long guildId, long channelId) {
-		executeChannelsAddQuery(SETTINGS_WHITELISTED_CHANNELS, SETTINGS_WHITELISTED_CHANNELS.CHANNEL_ID, channelId, guildId);
-	}
-
-	public void addBlacklistedChannel(long guildId, long channelId) {
-		executeChannelsAddQuery(SETTINGS_BLACKLISTED_CHANNELS, SETTINGS_BLACKLISTED_CHANNELS.CHANNEL_ID, channelId, guildId);
-	}
-
-	public void removeWhitelistedChannel(long guildId, long channelId) {
-		executeChannelsDeleteQuery(SETTINGS_WHITELISTED_CHANNELS, SETTINGS_WHITELISTED_CHANNELS.CHANNEL_ID, channelId, guildId);
-	}
-
-	public void removeBlacklistedChannel(long guildId, long channelId) {
-		executeChannelsDeleteQuery(SETTINGS_BLACKLISTED_CHANNELS, SETTINGS_BLACKLISTED_CHANNELS.CHANNEL_ID, channelId, guildId);
 	}
 
 	// jooq

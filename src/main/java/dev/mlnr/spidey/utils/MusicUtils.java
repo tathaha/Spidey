@@ -223,7 +223,7 @@ public class MusicUtils {
 				message += i18n.get("music.messages.failure.load.track_long", MAX_TRACK_LENGTH_HOURS);
 				break;
 			case FAIR_QUEUE:
-				message += i18n.get("music.messages.failure.load.fair_queue", MAX_FAIR_QUEUE, GuildSettingsCache.getInstance().getMiscSettings(ctx.getGuild().getIdLong()).getPrefix());
+				message += i18n.get("music.messages.failure.load.fair_queue", MAX_FAIR_QUEUE);
 				break;
 		}
 		return message;

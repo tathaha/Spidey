@@ -3,12 +3,10 @@ package dev.mlnr.spidey.handlers.command;
 import dev.mlnr.spidey.cache.Cache;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
-import dev.mlnr.spidey.objects.command.category.Category;
 import io.github.classgraph.ClassGraph;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
-import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,18 +34,7 @@ public class CommandHandler {
 			return;
 		}
 		var vip = cache.getGuildSettingsCache().getGeneralSettings(guildId).isVip();
-		var channel = event.getTextChannel();
 		var userId = member.getIdLong();
-		if (command.getCategory() == Category.NSFW) {
-			if (!channel.isNSFW()) {
-				event.reply(i18n.get("command_failures.only_nsfw")).setEphemeral(true).queue();
-				return;
-			}
-			// TODO type enum
-			cooldown(userId, command, vip);
-			return;
-		}
-
 		var executed = command.execute(new CommandContext(event, i18n, cache));
 		if (executed) {
 			cooldown(userId, command, vip);
@@ -63,10 +50,8 @@ public class CommandHandler {
 				var commandName = command.getInvoke();
 				COMMANDS.put(commandName, command);
 
-				var commandData = new CommandData(commandName, "");
-				for (OptionData option : command.getOptions()) {
-					commandData.addOption(option);
-				}
+				var commandData = new CommandData(commandName, command.getDescription());
+				commandData.addOptions(command.getOptions());
 				commandsUpdate.addCommands(commandData);
 			}
 			commandsUpdate.queue();

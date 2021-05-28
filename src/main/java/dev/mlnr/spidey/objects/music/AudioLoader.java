@@ -5,7 +5,6 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import dev.mlnr.spidey.objects.command.CommandContext;
-import dev.mlnr.spidey.utils.Emojis;
 import dev.mlnr.spidey.utils.MusicUtils;
 
 import static dev.mlnr.spidey.utils.MusicUtils.LoadFailureReason.FAIR_QUEUE;
@@ -53,12 +52,12 @@ public class AudioLoader implements AudioLoadResultHandler {
                 continue;
             }
 			if (loadFailure == QUEUE_FULL) {
-				ctx.replyError(i18n.get("music.messages.failure.add") + " " + i18n.get("music.messages.failure.load.queue_full", MusicUtils.MAX_QUEUE_SIZE) + ".", Emojis.DISLIKE);
+				ctx.replyError(i18n.get("music.messages.failure.add") + " " + i18n.get("music.messages.failure.load.queue_full", MusicUtils.MAX_QUEUE_SIZE) + ".");
 				break;
 			}
 		}
 		if (tracksLoaded == 0) {
-			ctx.replyError(i18n.get("music.messages.failure.load.no_tracks"), Emojis.DISLIKE);
+			ctx.replyErrorLocalized("music.messages.failure.load.no_tracks");
 			return;
 		}
 		var responseEmbedBuilder = createMusicResponseBuilder();
@@ -70,12 +69,12 @@ public class AudioLoader implements AudioLoadResultHandler {
 
 	@Override
 	public void noMatches() {
-		ctx.replyError(ctx.getI18n().get("music.messages.failure.no_matches", query.startsWith("ytsearch:") ? query.substring(9) : query), Emojis.DISLIKE);
+		ctx.replyErrorLocalized("music.messages.failure.no_matches", query.startsWith("ytsearch:") ? query.substring(9) : query);
 	}
 
 	@Override
 	public void loadFailed(FriendlyException exception) {
-		ctx.replyError(ctx.getI18n().get("music.messages.failure.load.error"), Emojis.DISLIKE);
+		ctx.replyErrorLocalized("music.messages.failure.load.error");
 	}
 
 	private void loadSingle(AudioTrack track) {
@@ -92,7 +91,7 @@ public class AudioLoader implements AudioLoadResultHandler {
 		var loadFailure = MusicUtils.checkTrack(track, this.musicPlayer, guildId);
 		if (loadFailure != null) {
             if (!playlist) {
-                ctx.replyError(MusicUtils.formatLoadError(loadFailure, ctx), Emojis.DISLIKE);
+                ctx.replyError(MusicUtils.formatLoadError(loadFailure, ctx));
             }
 			return loadFailure;
 		}

@@ -20,7 +20,6 @@ public enum Category implements ICategory {
     }
 
     public enum Settings implements ICategory {
-        CHANNELS("\u270D\uFE0F Channels"),
         FILTERS("\uD83D\uDEB1 Chat Filters"),
         GENERAL("\u2699\uFE0F General"),
         MISC("\uD83D\uDCA1 Miscellaneous"),

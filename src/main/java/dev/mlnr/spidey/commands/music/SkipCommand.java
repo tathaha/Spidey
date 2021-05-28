@@ -3,15 +3,13 @@ package dev.mlnr.spidey.commands.music;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
-import dev.mlnr.spidey.utils.Emojis;
 import dev.mlnr.spidey.utils.MusicUtils;
 import net.dv8tion.jda.api.Permission;
 
 @SuppressWarnings("unused")
 public class SkipCommand extends Command {
-
 	public SkipCommand() {
-		super("skip", new String[]{}, Category.MUSIC, Permission.UNKNOWN, 0, 0);
+		super("skip", Category.MUSIC, Permission.UNKNOWN, 0);
 	}
 
 	@Override
@@ -29,11 +27,10 @@ public class SkipCommand extends Command {
 		}
 		if (MusicUtils.canInteract(ctx.getMember(), playingTrack)) {
 			musicPlayer.skip();
-			ctx.reactLike();
 			return true;
 		}
 		if (!MusicUtils.isMemberConnected(ctx)) {
-			ctx.replyError(i18n.get("commands.skip.other.same_channel"), Emojis.DISLIKE);
+			ctx.replyError(i18n.get("commands.skip.other.same_channel"));
 			return false;
 		}
 		var trackScheduler = musicPlayer.getTrackScheduler();
@@ -41,7 +38,6 @@ public class SkipCommand extends Command {
 		var mention = author.getAsMention();
 		if (trackScheduler.hasSkipVoted(author)) {
 			trackScheduler.removeSkipVote(author);
-			ctx.reactLike();
 			ctx.reply(i18n.get("commands.skip.other.removed") + " [" + mention + "]");
 			return true;
 		}
@@ -49,12 +45,10 @@ public class SkipCommand extends Command {
 		var skipVotes = trackScheduler.getSkipVotes();
 		var requiredSkipVotes = trackScheduler.getRequiredSkipVotes();
 		if (skipVotes < requiredSkipVotes) {
-			ctx.reactLike();
 			ctx.reply(i18n.get("commands.skip.other.added") + " **" + skipVotes + "**/**" + requiredSkipVotes + "** [" + mention + "]");
 			return true;
 		}
 		musicPlayer.skip();
-		ctx.reactLike();
 		return true;
 	}
 }

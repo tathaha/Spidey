@@ -13,7 +13,6 @@ public class GuildMiscSettings implements IGuildSettings {
 	private final I18n i18n;
 
 	private boolean snipingEnabled = true;
-	private boolean errorCleanupEnabled;
 
 	private final Spidey spidey;
 
@@ -25,7 +24,7 @@ public class GuildMiscSettings implements IGuildSettings {
 		this.spidey = spidey;
 	}
 
-	public GuildMiscSettings(long guildId, long logChannelId, long joinRoleId, String language, boolean snipingEnabled, boolean errorCleanupEnabled, Spidey spidey) {
+	public GuildMiscSettings(long guildId, long logChannelId, long joinRoleId, String language, boolean snipingEnabled, Spidey spidey) {
 		this.guildId = guildId;
 
 		this.logChannelId = logChannelId;
@@ -33,7 +32,6 @@ public class GuildMiscSettings implements IGuildSettings {
 		this.i18n = I18n.ofLanguage(language);
 
 		this.snipingEnabled = snipingEnabled;
-		this.errorCleanupEnabled = errorCleanupEnabled;
 
 		this.spidey = spidey;
 	}
@@ -56,10 +54,6 @@ public class GuildMiscSettings implements IGuildSettings {
 		return this.snipingEnabled;
 	}
 
-	public boolean isErrorCleanupEnabled() {
-		return this.errorCleanupEnabled;
-	}
-
 	// setters
 
 	public void setLogChannelId(long logChannelId) {
@@ -80,11 +74,6 @@ public class GuildMiscSettings implements IGuildSettings {
 	public void setSnipingEnabled(boolean enabled) {
 		this.snipingEnabled = enabled;
 		spidey.getDatabaseManager().setSnipingEnabled(guildId, enabled);
-	}
-
-	public void setErrorCleanupEnabled(boolean enabled) {
-		this.errorCleanupEnabled = enabled;
-		spidey.getDatabaseManager().setErrorCleanupEnabled(guildId, enabled);
 	}
 
 	// helper methods

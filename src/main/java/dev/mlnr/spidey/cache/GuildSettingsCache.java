@@ -28,14 +28,6 @@ public class GuildSettingsCache {
 		return guildSettingsCache;
 	}
 
-	public GuildChannelsSettings getChannelsSettings(long guildId) {
-		return getSettings(SettingsType.CHANNELS, guildId);
-	}
-
-	public GuildFiltersSettings getFiltersSettings(long guildId) {
-		return getSettings(SettingsType.FILTERS, guildId);
-	}
-
 	public GuildGeneralSettings getGeneralSettings(long guildId) {
 		return getSettings(SettingsType.GENERAL, guildId);
 	}
@@ -67,10 +59,6 @@ public class GuildSettingsCache {
 	private IGuildSettings parseSettingsFromType(SettingsType type, long guildId) {
 		var databaseManager = spidey.getDatabaseManager();
 		switch (type) {
-			case CHANNELS:
-				return databaseManager.retrieveGuildChannelsSettings(guildId);
-			case FILTERS:
-				return databaseManager.retrieveGuildFiltersSettings(guildId);
 			case GENERAL:
 				return databaseManager.retrieveGuildGeneralSettings(guildId);
 			case MISC:
@@ -83,8 +71,6 @@ public class GuildSettingsCache {
 	}
 
 	private enum SettingsType {
-		CHANNELS,
-		FILTERS,
 		GENERAL,
 		MISC,
 		MUSIC

@@ -40,7 +40,7 @@ dependencies {
     implementation group: 'net.jodah', name: 'expiringmap', version: '0.5.9'
 
     // jda
-    implementation("com.github.DV8FromTheWorld:JDA:5885efc") {
+    implementation("com.github.DV8FromTheWorld:JDA:bacd237") {
         exclude group: 'club.minnced', module: 'opus-java'
     }
 
