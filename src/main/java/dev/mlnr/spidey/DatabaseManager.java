@@ -72,7 +72,7 @@ public class DatabaseManager {
 				settingsRecord ->
 		{
 			var casted = (SettingsMiscRecord) settingsRecord;
-			return new GuildMiscSettings(guildId, casted.getLogChannelId(), casted.getJoinRoleId(), casted.getLanguage(),
+			return new GuildMiscSettings(guildId, casted.getLogChannelId(), casted.getJoinRoleId(), casted.getPrefix(), casted.getLanguage(),
 					casted.getSnipingEnabled(), spidey);
 		});
 	}

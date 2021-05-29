@@ -7,23 +7,13 @@ package dev.mlnr.spidey.jooq.tables;
 import dev.mlnr.spidey.jooq.Keys;
 import dev.mlnr.spidey.jooq.Public;
 import dev.mlnr.spidey.jooq.tables.records.SettingsMiscRecord;
-
-import java.util.Arrays;
-import java.util.List;
-
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.Name;
-import org.jooq.Record;
-import org.jooq.Row5;
-import org.jooq.Schema;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -71,6 +61,11 @@ public class SettingsMisc extends TableImpl<SettingsMiscRecord> {
      * The column <code>public.settings_misc.sniping_enabled</code>.
      */
     public final TableField<SettingsMiscRecord, Boolean> SNIPING_ENABLED = createField(DSL.name("sniping_enabled"), SQLDataType.BOOLEAN.defaultValue(DSL.field("true", SQLDataType.BOOLEAN)), this, "");
+
+    /**
+     * The column <code>public.settings_misc.prefix</code>.
+     */
+    public final TableField<SettingsMiscRecord, String> PREFIX = createField(DSL.name("prefix"), SQLDataType.VARCHAR(10).defaultValue(DSL.field("'s!'::character varying", SQLDataType.VARCHAR)), this, "");
 
     private SettingsMisc(Name alias, Table<SettingsMiscRecord> aliased) {
         this(alias, aliased, null);
@@ -161,11 +156,11 @@ public class SettingsMisc extends TableImpl<SettingsMiscRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row5 type methods
+    // Row6 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row5<Long, Long, Long, String, Boolean> fieldsRow() {
-        return (Row5) super.fieldsRow();
+    public Row6<Long, Long, Long, String, Boolean, String> fieldsRow() {
+        return (Row6) super.fieldsRow();
     }
 }
