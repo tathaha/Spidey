@@ -55,7 +55,7 @@ public class VoiceGameCommand extends Command {
 		Requester.launchVoiceGameSession(channel.getId(), voiceGame, code -> {
 			embedBuilder.setColor(16711680);
 			embedBuilder.setDescription(i18n.get("commands.voicegame.click", code, voiceGame.getFriendlyName()));
-			ctx.reply(embedBuilder);
+			ctx.getEvent().replyEmbeds(embedBuilder.build()).queue();
 		}, error -> ctx.replyErrorLocalized("internal_error", i18n.get("commands.voicegame.create"), error.getMessage()));
 		return true;
 	}
