@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.components.Button;
 
 public class CommandContext {
 	private final SlashCommandEvent event;
@@ -104,5 +105,17 @@ public class CommandContext {
 
 	public void reply(EmbedBuilder embedBuilder) {
 		event.replyEmbeds(embedBuilder.build()).setEphemeral(true).queue();
+	}
+
+	public void replyWithButtons(EmbedBuilder embedBuilder, Button... buttons) {
+		event.replyEmbeds(embedBuilder.build()).addActionRow(buttons).queue();
+	}
+
+	public void editReply(EmbedBuilder embedBuilder) {
+		event.getHook().editOriginalEmbeds(embedBuilder.build()).queue();
+	}
+
+	public void deleteReply() {
+		event.getHook().deleteOriginal().queue();
 	}
 }

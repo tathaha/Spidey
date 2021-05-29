@@ -4,7 +4,8 @@ import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory;
 import dev.mlnr.blh.core.api.BLHBuilder;
 import dev.mlnr.blh.core.api.BotList;
 import dev.mlnr.blh.jda.BLHJDAListener;
-import dev.mlnr.spidey.events.ReadyEvents;
+import dev.mlnr.spidey.cache.Cache;
+import dev.mlnr.spidey.events.*;
 import dev.mlnr.spidey.objects.I18n;
 import dev.mlnr.spidey.utils.ConcurrentUtils;
 import dev.mlnr.spidey.utils.MusicUtils;
@@ -51,6 +52,8 @@ public class Spidey {
 				.addBotList(BotList.DBL, System.getenv("dbl"))
 				.build();
 
+		var cache = new Cache(this);
+
 		jda = JDABuilder.create(System.getenv("Spidey"),
 				GUILD_BANS,
 				GUILD_INVITES,
@@ -63,11 +66,14 @@ public class Spidey {
 				MEMBER_OVERRIDES,
 				ROLE_TAGS,
 				ACTIVITY,
-				CLIENT_STATUS
+				CLIENT_STATUS,
+				ONLINE_STATUS
 			)
 			.setMemberCachePolicy(MemberCachePolicy.VOICE)
 			.setChunkingFilter(ChunkingFilter.NONE)
-			.addEventListeners(new ReadyEvents(this), ConcurrentUtils.getEventWaiter(), new BLHJDAListener(blh))
+			.addEventListeners(new ReadyEvents(databaseManager, cache), new BanEvents(cache), new DeleteEvents(cache), new GuildEvents(databaseManager, cache),
+					new InviteEvents(cache), new MemberEvents(cache), new MessageEvents(cache), new PaginatorEvent(cache), new VoiceEvent(cache),
+					new InteractionEvents(cache), ConcurrentUtils.getEventWaiter(), new BLHJDAListener(blh))
 			.setActivity(Activity.watching("myself load"))
 			.setStatus(OnlineStatus.DO_NOT_DISTURB)
 			.setGatewayEncoding(GatewayEncoding.ETF)

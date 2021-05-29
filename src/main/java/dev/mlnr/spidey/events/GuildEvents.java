@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.events;
 
-import dev.mlnr.spidey.Spidey;
+import dev.mlnr.spidey.DatabaseManager;
 import dev.mlnr.spidey.cache.Cache;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -12,11 +12,11 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import java.time.Instant;
 
 public class GuildEvents extends ListenerAdapter {
-	private final Spidey spidey;
+	private final DatabaseManager databaseManager;
 	private final Cache cache;
 
-	public GuildEvents(Spidey spidey, Cache cache) {
-		this.spidey = spidey;
+	public GuildEvents(DatabaseManager databaseManager, Cache cache) {
+		this.databaseManager = databaseManager;
 		this.cache = cache;
 	}
 
@@ -30,7 +30,8 @@ public class GuildEvents extends ListenerAdapter {
 			Utils.sendMessage(defaultChannel, "Hey! I'm **Spidey**. Thanks for inviting me. To start, check `s!info`.");
 		}
 		Utils.storeInvites(guild, cache.getGeneralCache());
-		spidey.getDatabaseManager().registerGuild(guildId);
+		databaseManager.registerGuild(guildId);
+
 		var memberCount = guild.getMemberCount();
 		Utils.sendMessage(jda.getTextChannelById(785630223785787452L), "I've joined guild **" + guild.getName() + "** (**" + guildId + "**) with **" + memberCount + "** members");
 		if (memberCount >= 10000)

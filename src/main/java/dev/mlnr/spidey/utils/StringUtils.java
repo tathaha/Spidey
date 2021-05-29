@@ -9,6 +9,7 @@ import org.apache.commons.collections4.ListUtils;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
@@ -16,6 +17,8 @@ import java.util.function.IntConsumer;
 import static java.lang.Math.min;
 
 public class StringUtils {
+	private static final String CHARACTERS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
 	private StringUtils() {}
 
 	public static String getSimilarCommand(String command) {
@@ -41,7 +44,7 @@ public class StringUtils {
 		s2 = s2.toLowerCase();
 
 		var costs = new int[s2.length() + 1];
-		for (int i = 0; i <= s1.length(); i++) {
+		for (var i = 0; i <= s1.length(); i++) {
 			var lastValue = i;
 			for (var j = 0; j <= s2.length(); j++) {
 				if (i == 0) {
@@ -79,13 +82,13 @@ public class StringUtils {
 		selectionBuilder.setDescription(descriptionBuilder.toString());
 
 		var channel = ctx.getTextChannel();
-		channel.sendMessage(selectionBuilder.build()).queue(selectionMessage -> {
+		ctx.getEvent().replyEmbeds(selectionBuilder.build()).setEphemeral(true).queue(success -> {
 			eventWaiter.waitForEvent(GuildMessageReceivedEvent.class, event -> event.getChannel().equals(channel) && event.getAuthor().equals(ctx.getUser()),
 					event -> {
 						var choiceMessage = event.getMessage();
 						var content = choiceMessage.getContentRaw();
 						if (content.equalsIgnoreCase(cancel)) {
-							channel.purgeMessages(selectionMessage, choiceMessage);
+							Utils.deleteMessage(choiceMessage);
 							return;
 						}
 						var choice = 0;
@@ -101,10 +104,8 @@ public class StringUtils {
 							return;
 						}
 						choiceConsumer.accept(choice - 1);
-						Utils.deleteMessage(selectionMessage);
 					}, 1, TimeUnit.MINUTES,
 					() -> {
-						Utils.deleteMessage(selectionMessage);
 						ctx.replyErrorLocalized("took_too_long");
 					});
 		});
@@ -137,5 +138,15 @@ public class StringUtils {
 			embedBuilder.appendDescription("\n\n").appendDescription(pluralized).appendDescription(" ")
 					.appendDescription(i18n.get("commands.queue.text.length", MusicUtils.formatDuration(length)));
 		});
+	}
+
+	public static String randomString(int length) {
+		var stringBuilder = new StringBuilder(length);
+		var random = ThreadLocalRandom.current();
+		for (var i = 0; i < length; i++) {
+			var randomInt = random.nextInt(length);
+			stringBuilder.append(CHARACTERS.charAt(randomInt));
+		}
+		return stringBuilder.toString();
 	}
 }

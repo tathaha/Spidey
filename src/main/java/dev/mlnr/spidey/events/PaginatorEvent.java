@@ -2,8 +2,8 @@ package dev.mlnr.spidey.events;
 
 import dev.mlnr.spidey.cache.Cache;
 import dev.mlnr.spidey.objects.Paginator;
-import dev.mlnr.spidey.utils.Emojis;
-import net.dv8tion.jda.api.events.message.guild.react.GenericGuildMessageReactionEvent;
+import dev.mlnr.spidey.objects.Emojis;
+import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 public class PaginatorEvent extends ListenerAdapter {
@@ -14,22 +14,22 @@ public class PaginatorEvent extends ListenerAdapter {
 	}
 
 	@Override
-	public void onGenericGuildMessageReaction(GenericGuildMessageReactionEvent event) {
+	public void onButtonClick(ButtonClickEvent event) {
+		event.deferEdit().queue();
+
 		var paginatorCache = cache.getPaginatorCache();
-		var messageId = event.getMessageIdLong();
-		if (!paginatorCache.isPaginator(messageId)) {
+		var button = event.getComponent();
+		var paginatorId = button.getId().split(":")[0];
+		if (!paginatorCache.isPaginator(paginatorId)) {
 			return;
 		}
-		var paginator = paginatorCache.getPaginator(messageId);
-		if (event.getUserIdLong() != paginator.getAuthorId()) {
+		var paginator = paginatorCache.getPaginator(paginatorId);
+		if (event.getUser().getIdLong() != paginator.getAuthorId()) {
 			return;
 		}
-		var reactionEmote = event.getReactionEmote();
-		if (!reactionEmote.isEmoji()) {
-			return;
-		}
+		var emoji = button.getEmoji();
 		Paginator.Action move;
-		switch (reactionEmote.getEmoji()) {
+		switch (emoji.getName()) {
 			case Emojis.BACKWARDS:
 				move = Paginator.Action.BACKWARDS;
 				break;
@@ -42,6 +42,6 @@ public class PaginatorEvent extends ListenerAdapter {
 			default:
 				return;
 		}
-		paginator.switchPage(move, event.getChannel());
+		paginator.switchPage(move);
 	}
 }

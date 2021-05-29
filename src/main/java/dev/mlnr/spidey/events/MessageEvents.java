@@ -35,11 +35,7 @@ public class MessageEvents extends ListenerAdapter {
 	public void onGuildMessageDelete(GuildMessageDeleteEvent event) {
 		var messageId = event.getMessageIdLong();
 		var channel = event.getChannel();
-		var paginatorCache = cache.getPaginatorCache();
 
-		if (paginatorCache.isPaginator(messageId)) {
-			paginatorCache.removePaginator(messageId);
-		}
 		if (!cache.getGuildSettingsCache().getMiscSettings(event.getGuild().getIdLong()).isSnipingEnabled()) {
 			return;
 		}

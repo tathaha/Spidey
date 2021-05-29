@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.events;
 
-import dev.mlnr.spidey.Spidey;
+import dev.mlnr.spidey.DatabaseManager;
 import dev.mlnr.spidey.cache.Cache;
 import dev.mlnr.spidey.handlers.command.CommandHandler;
 import dev.mlnr.spidey.utils.Utils;
@@ -11,26 +11,26 @@ import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 public class ReadyEvents extends ListenerAdapter {
-	private final Spidey spidey;
+	private final DatabaseManager databaseManager;
+	private final Cache cache;
 
-	public ReadyEvents(Spidey spidey) {
-		this.spidey = spidey;
+	public ReadyEvents(DatabaseManager databaseManager, Cache cache) {
+		this.databaseManager = databaseManager;
+		this.cache = cache;
 	}
 
 	@Override
 	public void onGuildReady(GuildReadyEvent event) {
-		spidey.getDatabaseManager().registerGuild(event.getGuild().getIdLong());
+		var guild = event.getGuild();
+		databaseManager.registerGuild(guild.getIdLong());
+		Utils.storeInvites(guild, cache.getGeneralCache());
 	}
 
 	@Override
 	public void onReady(ReadyEvent event) {
 		var jda = event.getJDA();
-		var cache = new Cache(spidey, jda);
 
 		CommandHandler.loadCommands(jda);
 		jda.getPresence().setPresence(OnlineStatus.ONLINE, Activity.listening("s!help"));
-		jda.getGuildCache().forEachUnordered(guild -> Utils.storeInvites(guild, cache.getGeneralCache()));
-		jda.addEventListener(new BanEvents(cache), new DeleteEvents(cache), new GuildEvents(spidey, cache), new InviteEvents(cache),
-				new MemberEvents(cache), new MessageEvents(cache), new PaginatorEvent(cache), new VoiceEvent(cache), new InteractionEvents(cache));
 	}
 }

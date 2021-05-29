@@ -1,4 +1,4 @@
-package dev.mlnr.spidey.utils;
+package dev.mlnr.spidey.objects;
 
 public class Emojis {
 	public static final String CHECK = "\u2705";
