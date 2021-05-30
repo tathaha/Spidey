@@ -76,10 +76,6 @@ public class TrackScheduler extends AudioEventAdapter {
 		return (List<AudioTrack>) this.queue;
 	}
 
-	public RepeatMode getRepeatMode() {
-		return this.repeatMode;
-	}
-
 	public void setRepeatMode(RepeatMode repeatMode) {
 		this.repeatMode = repeatMode;
 	}
@@ -127,7 +123,7 @@ public class TrackScheduler extends AudioEventAdapter {
 	public enum RepeatMode {
 		SONG("Song"),
 		QUEUE("Queue"),
-		NONE("Queue");
+		NONE("None");
 
 		private final String friendlyName;
 
