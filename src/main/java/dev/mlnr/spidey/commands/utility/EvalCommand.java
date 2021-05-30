@@ -33,6 +33,8 @@ public class EvalCommand extends Command {
 			ctx.replyErrorLocalized("command_failures.only_dev");
 			return false;
 		}
+		ctx.getEvent().deferReply(true).queue();
+
 		var jda = ctx.getJDA();
 		var channel = ctx.getTextChannel();
 		SCRIPT_ENGINE.put("guild", channel.getGuild());
@@ -58,7 +60,7 @@ public class EvalCommand extends Command {
 			eb.setColor(Color.RED);
 			eb.setDescription("```" + ex.getMessage() + "```");
 		}
-		ctx.reply(eb);
+		ctx.getEvent().getHook().sendMessageEmbeds(eb.build()).queue();
 		return true;
 	}
 }
