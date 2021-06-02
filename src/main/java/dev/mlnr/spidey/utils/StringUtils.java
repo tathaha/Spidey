@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.apache.commons.collections4.ListUtils;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
@@ -105,26 +105,22 @@ public class StringUtils {
 						}
 						choiceConsumer.accept(choice - 1);
 					}, 1, TimeUnit.MINUTES,
-					() -> {
-						ctx.replyErrorLocalized("took_too_long");
-					});
+					() -> ctx.replyErrorLocalized("took_too_long"));
 		});
 	}
 
 	public static void createQueuePaginator(CommandContext ctx, List<AudioTrack> queue) {
-		var tracksChunks = ListUtils.partition(queue, 10);
-		var descriptions = new HashMap<Integer, StringBuilder>();
+		var trackChunks = ListUtils.partition(queue, 10);
+		var pages = new ArrayList<String>(trackChunks.size());
 
 		var currentTrack = 0;
-		var chunk = 0;
-		for (var tracks : tracksChunks) {
-			var chunkBuilder = new StringBuilder();
+		for (var tracks : trackChunks) {
+			var pageBuilder = new StringBuilder();
 			for (var track : tracks) {
-				chunkBuilder.append(currentTrack + 1).append(". ").append(MusicUtils.formatTrack(track)).append(" [<@").append(track.getUserData(Long.class)).append(">]\n");
+				pageBuilder.append(currentTrack + 1).append(". ").append(MusicUtils.formatTrack(track)).append(" [<@").append(track.getUserData(Long.class)).append(">]\n");
 				currentTrack++;
 			}
-			descriptions.put(chunk, chunkBuilder);
-			chunk++;
+			pages.add(pageBuilder.toString());
 		}
 
 		var length = queue.stream().mapToLong(track -> track.getInfo().length).sum();
@@ -132,9 +128,9 @@ public class StringUtils {
 		var i18n = ctx.getI18n();
 		var pluralized = size == 1 ? i18n.get("commands.queue.text.one") : i18n.get("commands.queue.text.multiple", size);
 
-		ctx.getCache().getPaginatorCache().createPaginator(ctx, descriptions.size(), (page, embedBuilder) -> {
+		ctx.getCache().getPaginatorCache().createPaginator(ctx, pages.size(), (page, embedBuilder) -> {
 			embedBuilder.setAuthor(i18n.get("paginator.queue", ctx.getGuild().getName()));
-			embedBuilder.setDescription(descriptions.get(page));
+			embedBuilder.setDescription(pages.get(page));
 			embedBuilder.appendDescription("\n\n").appendDescription(pluralized).appendDescription(" ")
 					.appendDescription(i18n.get("commands.queue.text.length", MusicUtils.formatDuration(length)));
 		});
