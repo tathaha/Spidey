@@ -36,7 +36,7 @@ public class SnipeCommand extends Command {
 
 		ctx.getJDA().retrieveUserById(lastDeletedMessage.getAuthorId()).queue(user -> {
 			eb.setAuthor(user.getName(), null, user.getEffectiveAvatarUrl());
-			ctx.reply(eb);
+			ctx.reply(eb, false);
 		});
 		return true;
 	}

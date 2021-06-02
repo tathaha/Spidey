@@ -36,7 +36,7 @@ public class EditSnipeCommand extends Command {
 
 		ctx.getJDA().retrieveUserById(lastEditedMessage.getAuthorId()).queue(user -> {
 			eb.setAuthor(user.getName(), lastEditedMessage.getJumpUrl(), user.getEffectiveAvatarUrl());
-			ctx.reply(eb);
+			ctx.reply(eb, false);
 		});
 		return true;
 	}

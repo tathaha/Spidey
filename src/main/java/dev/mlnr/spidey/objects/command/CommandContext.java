@@ -85,7 +85,28 @@ public class CommandContext {
 		return option == null ? null : option.getAsBoolean();
 	}
 
+
 	// reply methods
+
+	public void reply(String content) {
+		event.reply(content).setEphemeral(true).queue();
+	}
+
+	public void reply(String content, boolean ephemeral) {
+		event.reply(content).setEphemeral(ephemeral).queue();
+	}
+
+	public void reply(EmbedBuilder embedBuilder) {
+		reply(embedBuilder, true);
+	}
+
+	public void reply(EmbedBuilder embedBuilder, boolean ephemeral) {
+		event.replyEmbeds(embedBuilder.build()).setEphemeral(ephemeral).queue();
+	}
+
+	public void replyWithButtons(EmbedBuilder embedBuilder, Button... buttons) {
+		event.replyEmbeds(embedBuilder.build()).addActionRow(buttons).queue();
+	}
 
 	public void replyErrorLocalized(String key, Object... args) {
 		replyError(i18n.get(key, args));
@@ -97,18 +118,6 @@ public class CommandContext {
 
 	public void replyLocalized(String key, Object... args) {
 		reply(i18n.get(key, args));
-	}
-
-	public void reply(String content) {
-		event.reply(content).setEphemeral(true).queue();
-	}
-
-	public void reply(EmbedBuilder embedBuilder) {
-		event.replyEmbeds(embedBuilder.build()).setEphemeral(true).queue();
-	}
-
-	public void replyWithButtons(EmbedBuilder embedBuilder, Button... buttons) {
-		event.replyEmbeds(embedBuilder.build()).addActionRow(buttons).queue();
 	}
 
 	public void editReply(EmbedBuilder embedBuilder) {
