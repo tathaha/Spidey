@@ -31,6 +31,6 @@ public class ReadyEvents extends ListenerAdapter {
 		var jda = event.getJDA();
 
 		CommandHandler.loadCommands(jda);
-		jda.getPresence().setPresence(OnlineStatus.ONLINE, Activity.listening("s!help"));
+		jda.getPresence().setPresence(OnlineStatus.ONLINE, Activity.listening("/help"));
 	}
 }

@@ -29,14 +29,14 @@ public class SnipeCommand extends Command {
 			ctx.replyErrorLocalized("sniping.no_message", "deleted");
 			return false;
 		}
-		var eb = Utils.createEmbedBuilder(ctx.getUser());
-		eb.setTimestamp(lastDeletedMessage.getCreation());
-		eb.setDescription(lastDeletedMessage.getContent());
-		eb.setColor(Color.GREEN);
+		var embedBuilder = Utils.createEmbedBuilder(ctx.getUser());
+		embedBuilder.setTimestamp(lastDeletedMessage.getCreation());
+		embedBuilder.setDescription(lastDeletedMessage.getContent());
+		embedBuilder.setColor(Color.GREEN);
 
 		ctx.getJDA().retrieveUserById(lastDeletedMessage.getAuthorId()).queue(user -> {
-			eb.setAuthor(user.getName(), null, user.getEffectiveAvatarUrl());
-			ctx.reply(eb);
+			embedBuilder.setAuthor(user.getName(), null, user.getEffectiveAvatarUrl());
+			ctx.reply(embedBuilder, false);
 		});
 		return true;
 	}

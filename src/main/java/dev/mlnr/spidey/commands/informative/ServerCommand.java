@@ -18,40 +18,40 @@ public class ServerCommand extends Command {
 
 	@Override
 	public boolean execute(CommandContext ctx) {
-		var eb = Utils.createEmbedBuilder(ctx.getUser());
+		var embedBuilder = Utils.createEmbedBuilder(ctx.getUser());
 		var guild = ctx.getGuild();
 		var i18n = ctx.getI18n();
 
-		eb.setColor(Color.ORANGE);
-		eb.setThumbnail(guild.getIconUrl());
+		embedBuilder.setColor(Color.ORANGE);
+		embedBuilder.setThumbnail(guild.getIconUrl());
 
-		eb.addField(i18n.get("commands.server.fields.name"), guild.getName(), true);
-		eb.addField(i18n.get("commands.server.fields.id"), String.valueOf(guild.getIdLong()), true);
+		embedBuilder.addField(i18n.get("commands.server.fields.name"), guild.getName(), true);
+		embedBuilder.addField(i18n.get("commands.server.fields.id"), String.valueOf(guild.getIdLong()), true);
 
 		var ownerId = guild.getOwnerId();
-		eb.addField(i18n.get("commands.server.fields.owner.title"), "<@" + ownerId + ">", true);
-		eb.addField(i18n.get("commands.server.fields.owner.id"), ownerId, true);
+		embedBuilder.addField(i18n.get("commands.server.fields.owner.title"), "<@" + ownerId + ">", true);
+		embedBuilder.addField(i18n.get("commands.server.fields.owner.id"), ownerId, true);
 
-		eb.addField(i18n.get("commands.server.fields.channels.text"), String.valueOf(guild.getTextChannelCache().size()), true);
-		eb.addField(i18n.get("commands.server.fields.channels.voice"), String.valueOf(guild.getVoiceChannelCache().size()), true);
+		embedBuilder.addField(i18n.get("commands.server.fields.channels.text"), String.valueOf(guild.getTextChannelCache().size()), true);
+		embedBuilder.addField(i18n.get("commands.server.fields.channels.voice"), String.valueOf(guild.getVoiceChannelCache().size()), true);
 
-		eb.addField(i18n.get("commands.server.fields.members"), String.valueOf(guild.getMemberCount()), true);
+		embedBuilder.addField(i18n.get("commands.server.fields.members"), String.valueOf(guild.getMemberCount()), true);
 
-		eb.addField(i18n.get("commands.server.fields.verification_level.title"),
+		embedBuilder.addField(i18n.get("commands.server.fields.verification_level.title"),
 				i18n.get("commands.server.fields.verification_level." + guild.getVerificationLevel().name().toLowerCase()), true);
 
-		eb.addField(i18n.get("commands.server.fields.boost.tier"), String.valueOf(guild.getBoostTier().getKey()), true);
-		eb.addField(i18n.get("commands.server.fields.boost.amount"), String.valueOf(guild.getBoostCount()), true);
+		embedBuilder.addField(i18n.get("commands.server.fields.boost.tier"), String.valueOf(guild.getBoostTier().getKey()), true);
+		embedBuilder.addField(i18n.get("commands.server.fields.boost.amount"), String.valueOf(guild.getBoostCount()), true);
 
-		eb.addField(i18n.get("commands.server.fields.region"), guild.getRegion().getName(), true);
-		eb.addField(i18n.get("commands.server.fields.creation"), Utils.formatDate(guild.getTimeCreated()), true);
+		embedBuilder.addField(i18n.get("commands.server.fields.region"), guild.getRegion().getName(), true);
+		embedBuilder.addField(i18n.get("commands.server.fields.creation"), Utils.formatDate(guild.getTimeCreated()), true);
 
 		var vanityUrl = guild.getVanityUrl();
-		eb.addField(i18n.get("commands.server.fields.vanity_url.title"), guild.getFeatures().contains("VANITY_URL")
+		embedBuilder.addField(i18n.get("commands.server.fields.vanity_url.title"), guild.getFeatures().contains("VANITY_URL")
 				? (vanityUrl == null ? i18n.get("commands.server.fields.vanity_url.none") : vanityUrl)
 				: i18n.get("commands.server.fields.vanity_url.not_eligible"), true);
 
-		eb.addField(i18n.get("commands.server.fields.roles"), String.valueOf(guild.getRoleCache().size() - 1), true);
+		embedBuilder.addField(i18n.get("commands.server.fields.roles"), String.valueOf(guild.getRoleCache().size() - 1), true);
 
 		var emoteCache = guild.getEmoteCache();
 		var emotes = emoteCache.applyStream(stream -> stream.filter(emote -> !emote.isManaged()).collect(Collectors.toList()));
@@ -63,10 +63,10 @@ public class ServerCommand extends Command {
 				sb.append(emote.getAsMention()).append(ec == emotes.size() ? "" : " ");
 			}
 			var animated = emoteCache.applyStream(stream -> stream.filter(Emote::isAnimated).count());
-			eb.addField(i18n.get("commands.server.fields.emotes", emotes.size(), animated),
+			embedBuilder.addField(i18n.get("commands.server.fields.emotes", emotes.size(), animated),
 					sb.length() > 1024 ? i18n.get("limit_exceeded") : sb.toString(), false);
 		}
-		ctx.reply(eb);
+		ctx.reply(embedBuilder);
 		return true;
 	}
 }

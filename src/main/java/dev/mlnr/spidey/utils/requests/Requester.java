@@ -54,12 +54,12 @@ public class Requester {
 				}
 				var responseBody = response.body().string();
 				var json = DataObject.fromJson(responseBody);
-				var eb = Utils.createEmbedBuilder(event.getUser());
-				eb.setAuthor(json.getString("title"), json.getString("source"));
-				eb.setImage(json.getString("image_url"));
-				eb.setDescription(ctx.getI18n().get("commands.subreddit.description", subreddit));
-				eb.setTimestamp(Instant.ofEpochSecond(json.getInt("created_at")));
-				embedBuilderConsumer.accept(eb);
+				var embedBuilder = Utils.createEmbedBuilder(event.getUser());
+				embedBuilder.setAuthor(json.getString("title"), json.getString("source"));
+				embedBuilder.setImage(json.getString("image_url"));
+				embedBuilder.setDescription(ctx.getI18n().get("commands.subreddit.description", subreddit));
+				embedBuilder.setTimestamp(Instant.ofEpochSecond(json.getInt("created_at")));
+				embedBuilderConsumer.accept(embedBuilder);
 			}
 		});
 	}

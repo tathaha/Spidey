@@ -29,14 +29,14 @@ public class EditSnipeCommand extends Command {
 			ctx.replyErrorLocalized("sniping.no_message", "edited");
 			return false;
 		}
-		var eb = Utils.createEmbedBuilder(ctx.getUser());
-		eb.setTimestamp(lastEditedMessage.getCreation());
-		eb.setDescription(lastEditedMessage.getContent());
-		eb.setColor(Color.GREEN);
+		var embedBuilder = Utils.createEmbedBuilder(ctx.getUser());
+		embedBuilder.setTimestamp(lastEditedMessage.getCreation());
+		embedBuilder.setDescription(lastEditedMessage.getContent());
+		embedBuilder.setColor(Color.GREEN);
 
 		ctx.getJDA().retrieveUserById(lastEditedMessage.getAuthorId()).queue(user -> {
-			eb.setAuthor(user.getName(), lastEditedMessage.getJumpUrl(), user.getEffectiveAvatarUrl());
-			ctx.reply(eb);
+			embedBuilder.setAuthor(user.getName(), lastEditedMessage.getJumpUrl(), user.getEffectiveAvatarUrl());
+			ctx.reply(embedBuilder, false);
 		});
 		return true;
 	}

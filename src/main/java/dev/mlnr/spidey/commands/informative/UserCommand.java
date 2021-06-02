@@ -34,28 +34,28 @@ public class UserCommand extends Command {
 	}
 
 	private void respond(CommandContext ctx, User user, Member member) {
-		var eb = Utils.createEmbedBuilder(ctx.getUser());
+		var embedBuilder = Utils.createEmbedBuilder(ctx.getUser());
 		var i18n = ctx.getI18n();
 
-		eb.setAuthor(i18n.get("commands.user.title") + " - " + user.getAsTag());
-		eb.setThumbnail(user.getEffectiveAvatarUrl());
-		eb.addField("ID", user.getId(), false);
-		eb.addField(i18n.get("commands.user.created"), formatDate(user.getTimeCreated()), true);
+		embedBuilder.setAuthor(i18n.get("commands.user.title") + " - " + user.getAsTag());
+		embedBuilder.setThumbnail(user.getEffectiveAvatarUrl());
+		embedBuilder.addField("ID", user.getId(), false);
+		embedBuilder.addField(i18n.get("commands.user.created"), formatDate(user.getTimeCreated()), true);
 
 		if (member == null) {
-			ctx.reply(eb);
+			ctx.reply(embedBuilder);
 			return;
 		}
 		var nick = member.getNickname();
 		if (nick != null) {
-			eb.addField(i18n.get("commands.user.nickname"), nick, false);
+			embedBuilder.addField(i18n.get("commands.user.nickname"), nick, false);
 		}
 
-		eb.addField(i18n.get("commands.user.joined"), formatDate(member.getTimeJoined()), false);
+		embedBuilder.addField(i18n.get("commands.user.joined"), formatDate(member.getTimeJoined()), false);
 
 		var boostingSince = member.getTimeBoosted();
 		if (boostingSince != null) {
-			eb.addField(i18n.get("commands.user.boosting"), formatDate(boostingSince), false);
+			embedBuilder.addField(i18n.get("commands.user.boosting"), formatDate(boostingSince), false);
 		}
 
 		var roles = member.getRoles();
@@ -66,9 +66,9 @@ public class UserCommand extends Command {
 				++rc;
 				sb.append(role.getName()).append(rc == roles.size() ? "" : ", ");
 			}
-			eb.addField(i18n.get("commands.user.roles") + " [**" + roles.size() + "**]",
+			embedBuilder.addField(i18n.get("commands.user.roles") + " [**" + roles.size() + "**]",
 					sb.length() > 1024 ? i18n.get("limit_exceeded") : sb.toString(), false);
 		}
-		ctx.reply(eb);
+		ctx.reply(embedBuilder);
 	}
 }

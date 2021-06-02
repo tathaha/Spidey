@@ -39,33 +39,33 @@ public class MemberEvents extends ListenerAdapter {
 
 		var escapedTag = escape(user.getAsTag());
 		var avatarUrl = user.getEffectiveAvatarUrl();
-		var eb = new EmbedBuilder();
+		var embedBuilder = new EmbedBuilder();
 		var i18n = miscSettings.getI18n();
 
 		if (user.isBot()) {
-			eb.setFooter(i18n.get("events.member_join.bot.footer"), avatarUrl);
-			eb.setColor(5614830);
+			embedBuilder.setFooter(i18n.get("events.member_join.bot.footer"), avatarUrl);
+			embedBuilder.setColor(5614830);
 
 			if (!selfMember.hasPermission(Permission.VIEW_AUDIT_LOGS)) {
-				eb.setDescription(i18n.get("events.member_join.bot.user.without", escapedTag, userId));
-				Utils.sendMessage(channel, eb.build());
+				embedBuilder.setDescription(i18n.get("events.member_join.bot.user.without", escapedTag, userId));
+				Utils.sendMessage(channel, embedBuilder.build());
 				return;
 			}
 			guild.retrieveAuditLogs().type(ActionType.BOT_ADD).queue(botsAdded -> {
 				var last = botsAdded.get(0);
-				eb.setDescription(i18n.get("events.member_join.bot.user.with", escape(last.getUser().getAsTag()), escapedTag, userId));
-				Utils.sendMessage(channel, eb.build());
+				embedBuilder.setDescription(i18n.get("events.member_join.bot.user.with", escape(last.getUser().getAsTag()), escapedTag, userId));
+				Utils.sendMessage(channel, embedBuilder.build());
 			});
 			return;
 		}
-		eb.setColor(7844437);
-		eb.setTimestamp(Instant.now());
-		eb.setFooter(i18n.get("events.member_join.user.footer"), avatarUrl);
-		eb.setDescription(i18n.get("events.member_join.user.invite.without", escapedTag, userId));
+		embedBuilder.setColor(7844437);
+		embedBuilder.setTimestamp(Instant.now());
+		embedBuilder.setFooter(i18n.get("events.member_join.user.footer"), avatarUrl);
+		embedBuilder.setDescription(i18n.get("events.member_join.user.invite.without", escapedTag, userId));
 
 		if (!selfMember.hasPermission(Permission.MANAGE_SERVER)) {
-			eb.appendDescription(".");
-			Utils.sendMessage(channel, eb.build());
+			embedBuilder.appendDescription(".");
+			Utils.sendMessage(channel, embedBuilder.build());
 			return;
 		}
 		guild.retrieveInvites().queue(invites -> {
@@ -75,12 +75,12 @@ public class MemberEvents extends ListenerAdapter {
 					continue;
 				}
 				inviteData.incrementUses();
-				eb.appendDescription(i18n.get("events.member_join.user.invite.with", invite.getUrl(), escape(invite.getInviter().getAsTag())));
-				Utils.sendMessage(channel, eb.build());
+				embedBuilder.appendDescription(i18n.get("events.member_join.user.invite.with", invite.getUrl(), escape(invite.getInviter().getAsTag())));
+				Utils.sendMessage(channel, embedBuilder.build());
 				return;
 			}
-			eb.appendDescription("."); // no invite was found, send the message either way
-			Utils.sendMessage(channel, eb.build());
+			embedBuilder.appendDescription("."); // no invite was found, send the message either way
+			Utils.sendMessage(channel, embedBuilder.build());
 		});
 	}
 
@@ -95,20 +95,20 @@ public class MemberEvents extends ListenerAdapter {
 		var escapedTag = escape(user.getAsTag());
 		var avatarUrl = user.getEffectiveAvatarUrl();
 		var userId = user.getIdLong();
-		var eb = new EmbedBuilder();
+		var embedBuilder = new EmbedBuilder();
 		var i18n = miscSettings.getI18n();
 
-		eb.setColor(14495300);
-		eb.setTimestamp(Instant.now());
+		embedBuilder.setColor(14495300);
+		embedBuilder.setTimestamp(Instant.now());
 
 		if (user.isBot()) {
-			eb.setDescription(i18n.get("events.member_remove.bot.text", escapedTag, userId));
-			eb.setFooter(i18n.get("events.member_remove.bot.footer"), avatarUrl);
-			Utils.sendMessage(channel, eb.build());
+			embedBuilder.setDescription(i18n.get("events.member_remove.bot.text", escapedTag, userId));
+			embedBuilder.setFooter(i18n.get("events.member_remove.bot.footer"), avatarUrl);
+			Utils.sendMessage(channel, embedBuilder.build());
 			return;
 		}
-		eb.setDescription(i18n.get("events.member_remove.user.text", escapedTag, userId));
-		eb.setFooter(i18n.get("events.member_remove.user.footer"), avatarUrl);
-		Utils.sendMessage(channel, eb.build());
+		embedBuilder.setDescription(i18n.get("events.member_remove.user.text", escapedTag, userId));
+		embedBuilder.setFooter(i18n.get("events.member_remove.user.footer"), avatarUrl);
+		Utils.sendMessage(channel, embedBuilder.build());
 	}
 }

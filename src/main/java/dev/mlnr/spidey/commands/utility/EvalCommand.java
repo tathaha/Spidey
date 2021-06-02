@@ -33,6 +33,8 @@ public class EvalCommand extends Command {
 			ctx.replyErrorLocalized("command_failures.only_dev");
 			return false;
 		}
+		ctx.getEvent().deferReply(true).queue();
+
 		var jda = ctx.getJDA();
 		var channel = ctx.getTextChannel();
 		SCRIPT_ENGINE.put("guild", channel.getGuild());
@@ -42,7 +44,7 @@ public class EvalCommand extends Command {
 		SCRIPT_ENGINE.put("jda", jda);
 		SCRIPT_ENGINE.put("api", jda);
 		SCRIPT_ENGINE.put("cache", ctx.getCache());
-		var eb = Utils.createEmbedBuilder(author);
+		var embedBuilder = Utils.createEmbedBuilder(author);
 		var toEval = new StringBuilder();
 		DEFAULT_IMPORTS.forEach(imp -> toEval.append("import ").append(imp).append(".*; "));
 		toEval.append(ctx.getStringOption("code"));
@@ -51,14 +53,14 @@ public class EvalCommand extends Command {
 			if (evaluated == null) {
 				return true;
 			}
-			eb.setColor(Color.GREEN);
-			eb.setDescription("```" + evaluated + "```");
+			embedBuilder.setColor(Color.GREEN);
+			embedBuilder.setDescription("```" + evaluated + "```");
 		}
 		catch (ScriptException ex) {
-			eb.setColor(Color.RED);
-			eb.setDescription("```" + ex.getMessage() + "```");
+			embedBuilder.setColor(Color.RED);
+			embedBuilder.setDescription("```" + ex.getMessage() + "```");
 		}
-		ctx.reply(eb);
+		ctx.getEvent().getHook().sendMessageEmbeds(embedBuilder.build()).queue();
 		return true;
 	}
 }
