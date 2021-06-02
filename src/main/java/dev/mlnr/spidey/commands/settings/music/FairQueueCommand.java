@@ -39,7 +39,7 @@ public class FairQueueCommand extends Command {
 				return false;
 			}
 			musicSettings.setFairQueueEnabled(enabledOption);
-			responseBuilder.append(i18n.get("commands.fairqueue.done.text", currentState ? i18n.get("enabled") : i18n.get("disabled")));
+			responseBuilder.append(i18n.get("commands.fairqueue.done.text", enabledOption ? i18n.get("enabled") : i18n.get("disabled")));
 		}
 		responseBuilder.append(" ");
 		if (thresholdOption != null) {
