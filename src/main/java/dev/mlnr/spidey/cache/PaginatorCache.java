@@ -32,9 +32,9 @@ public class PaginatorCache {
 		var paginatorId = StringUtils.randomString(10);
 		paginatorMap.put(paginatorId, new Paginator(paginatorId, ctx, totalPages, i18n, this, pagesConsumer));
 
-		var left = Button.primary(paginatorId + ":1", Emoji.ofUnicode(Emojis.BACKWARDS));
-		var right = Button.primary(paginatorId + ":2", Emoji.ofUnicode(Emojis.FORWARD));
-		var wastebasket = Button.primary(paginatorId + ":3", Emoji.ofUnicode(Emojis.WASTEBASKET));
+		var left = Button.primary(paginatorId + ":1", Emoji.fromUnicode(Emojis.BACKWARDS));
+		var right = Button.primary(paginatorId + ":2", Emoji.fromUnicode(Emojis.FORWARD));
+		var wastebasket = Button.primary(paginatorId + ":3", Emoji.fromUnicode(Emojis.WASTEBASKET));
 		ctx.replyWithButtons(embedBuilder, left, right, wastebasket);
 	}
 
