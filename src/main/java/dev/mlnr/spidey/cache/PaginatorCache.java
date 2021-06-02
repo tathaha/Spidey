@@ -19,7 +19,7 @@ public class PaginatorCache {
 	private final Map<String, Paginator> paginatorMap = ExpiringMap.builder()
 			.expirationPolicy(ExpirationPolicy.CREATED)
 			.expiration(10, TimeUnit.MINUTES)
-			.asyncExpirationListener((paginatorId, paginator) -> removePaginator(((Paginator) paginator)))
+			.asyncExpirationListener((paginatorId, paginator) -> removePaginator((Paginator) paginator))
 			.build();
 
 	public void createPaginator(CommandContext ctx, int totalPages, BiConsumer<Integer, EmbedBuilder> pagesConsumer) {
