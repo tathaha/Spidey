@@ -59,14 +59,14 @@ public class GuildEvents extends ListenerAdapter {
 		if (channel == null) {
 			return;
 		}
-		var eb = new EmbedBuilder();
+		var embedBuilder = new EmbedBuilder();
 		var i18n = miscSettings.getI18n();
 
-		eb.setAuthor(i18n.get("events.boost_tier_change.author"));
-		eb.setColor(16023551);
-		eb.setTimestamp(Instant.now());
-		eb.addField(i18n.get("events.boost_tier_change.fields.tier"), "**" + event.getNewBoostTier().getKey() + "**", true);
-		eb.addField(i18n.get("events.boost_tier_change.fields.boosts"), "**" + guild.getBoostCount() + "**", true);
-		Utils.sendMessage(channel, eb.build());
+		embedBuilder.setAuthor(i18n.get("events.boost_tier_change.author"));
+		embedBuilder.setColor(16023551);
+		embedBuilder.setTimestamp(Instant.now());
+		embedBuilder.addField(i18n.get("events.boost_tier_change.fields.tier"), "**" + event.getNewBoostTier().getKey() + "**", true);
+		embedBuilder.addField(i18n.get("events.boost_tier_change.fields.boosts"), "**" + guild.getBoostCount() + "**", true);
+		Utils.sendMessage(channel, embedBuilder.build());
 	}
 }

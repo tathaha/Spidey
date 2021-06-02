@@ -22,12 +22,12 @@ public class AvatarCommand extends Command {
 		var author = ctx.getUser();
 		var user = userOption == null ? author : userOption;
 		var avatarUrl = user.getEffectiveAvatarUrl() + "?size=2048";
-		var eb = Utils.createEmbedBuilder(author);
+		var embedBuilder = Utils.createEmbedBuilder(author);
 
-		eb.setAuthor(ctx.getI18n().get("commands.avatar.title") + " " + MarkdownSanitizer.escape(user.getAsTag()));
-		eb.setDescription("[Avatar link](" + avatarUrl + ")");
-		eb.setImage(avatarUrl);
-		ctx.reply(eb);
+		embedBuilder.setAuthor(ctx.getI18n().get("commands.avatar.title") + " " + MarkdownSanitizer.escape(user.getAsTag()));
+		embedBuilder.setDescription("[Avatar link](" + avatarUrl + ")");
+		embedBuilder.setImage(avatarUrl);
+		ctx.reply(embedBuilder);
 		return true;
 	}
 }

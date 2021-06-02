@@ -19,15 +19,15 @@ public class MembersCommand extends Command {
 		ctx.getGuild().loadMembers().onSuccess(members -> {
 			var total = members.size();
 			var bots = members.stream().filter(member -> member.getUser().isBot()).count();
-			var eb = Utils.createEmbedBuilder(ctx.getUser());
+			var embedBuilder = Utils.createEmbedBuilder(ctx.getUser());
 			var i18n = ctx.getI18n();
 
-			eb.setAuthor(i18n.get("commands.members.title"));
-			eb.setTimestamp(Instant.now());
-			eb.addField(i18n.get("commands.members.total"), "**" + total + "**", true);
-			eb.addField(i18n.get("commands.members.people"), "**" + (total - bots) + "**", true);
-			eb.addField(i18n.get("commands.members.bots"), "**" + bots + "**", true);
-			ctx.reply(eb);
+			embedBuilder.setAuthor(i18n.get("commands.members.title"));
+			embedBuilder.setTimestamp(Instant.now());
+			embedBuilder.addField(i18n.get("commands.members.total"), "**" + total + "**", true);
+			embedBuilder.addField(i18n.get("commands.members.people"), "**" + (total - bots) + "**", true);
+			embedBuilder.addField(i18n.get("commands.members.bots"), "**" + bots + "**", true);
+			ctx.reply(embedBuilder);
 		});
 		return true;
 	}

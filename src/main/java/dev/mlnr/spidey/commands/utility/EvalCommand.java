@@ -44,7 +44,7 @@ public class EvalCommand extends Command {
 		SCRIPT_ENGINE.put("jda", jda);
 		SCRIPT_ENGINE.put("api", jda);
 		SCRIPT_ENGINE.put("cache", ctx.getCache());
-		var eb = Utils.createEmbedBuilder(author);
+		var embedBuilder = Utils.createEmbedBuilder(author);
 		var toEval = new StringBuilder();
 		DEFAULT_IMPORTS.forEach(imp -> toEval.append("import ").append(imp).append(".*; "));
 		toEval.append(ctx.getStringOption("code"));
@@ -53,14 +53,14 @@ public class EvalCommand extends Command {
 			if (evaluated == null) {
 				return true;
 			}
-			eb.setColor(Color.GREEN);
-			eb.setDescription("```" + evaluated + "```");
+			embedBuilder.setColor(Color.GREEN);
+			embedBuilder.setDescription("```" + evaluated + "```");
 		}
 		catch (ScriptException ex) {
-			eb.setColor(Color.RED);
-			eb.setDescription("```" + ex.getMessage() + "```");
+			embedBuilder.setColor(Color.RED);
+			embedBuilder.setDescription("```" + ex.getMessage() + "```");
 		}
-		ctx.getEvent().getHook().sendMessageEmbeds(eb.build()).queue();
+		ctx.getEvent().getHook().sendMessageEmbeds(embedBuilder.build()).queue();
 		return true;
 	}
 }

@@ -29,17 +29,17 @@ public class BanEvents extends ListenerAdapter {
 			return;
 		}
 		var user = event.getUser();
-		var eb = new EmbedBuilder();
+		var embedBuilder = new EmbedBuilder();
 		var i18n = miscSettings.getI18n();
 
-		eb.setDescription(i18n.get("events.ban.reason.without", escape(user.getAsTag())));
-		eb.setColor(14495300);
-		eb.setFooter(i18n.get("events.ban.footer"), user.getEffectiveAvatarUrl());
-		eb.setTimestamp(Instant.now());
+		embedBuilder.setDescription(i18n.get("events.ban.reason.without", escape(user.getAsTag())));
+		embedBuilder.setColor(14495300);
+		embedBuilder.setFooter(i18n.get("events.ban.footer"), user.getEffectiveAvatarUrl());
+		embedBuilder.setTimestamp(Instant.now());
 
 		if (!guild.getSelfMember().hasPermission(Permission.VIEW_AUDIT_LOGS)) {
-			eb.appendDescription(".");
-			Utils.sendMessage(channel, eb.build());
+			embedBuilder.appendDescription(".");
+			Utils.sendMessage(channel, embedBuilder.build());
 			return;
 		}
 		guild.retrieveAuditLogs().type(ActionType.BAN).limit(1).queue(bans -> {
@@ -50,8 +50,8 @@ public class BanEvents extends ListenerAdapter {
 			var bannerTag = escape(ban.getUser().getAsTag());
 			var reason = ban.getReason();
 			reason = (reason == null || reason.isEmpty()) ? i18n.get("events.ban.reason.unknown") : reason.trim();
-			eb.appendDescription(i18n.get("events.ban.reason.with", bannerTag, reason));
-			Utils.sendMessage(channel, eb.build());
+			embedBuilder.appendDescription(i18n.get("events.ban.reason.with", bannerTag, reason));
+			Utils.sendMessage(channel, embedBuilder.build());
 		});
 	}
 
@@ -65,17 +65,17 @@ public class BanEvents extends ListenerAdapter {
 		}
 		var user = event.getUser();
 		var escapedTag = escape(user.getAsTag());
-		var eb = new EmbedBuilder();
+		var embedBuilder = new EmbedBuilder();
 		var i18n = miscSettings.getI18n();
 
-		eb.setDescription(i18n.get("events.unban.user.without", escapedTag));
-		eb.setColor(7844437);
-		eb.setFooter(i18n.get("events.unban.footer"), user.getEffectiveAvatarUrl());
-		eb.setTimestamp(Instant.now());
+		embedBuilder.setDescription(i18n.get("events.unban.user.without", escapedTag));
+		embedBuilder.setColor(7844437);
+		embedBuilder.setFooter(i18n.get("events.unban.footer"), user.getEffectiveAvatarUrl());
+		embedBuilder.setTimestamp(Instant.now());
 
 		if (!guild.getSelfMember().hasPermission(Permission.VIEW_AUDIT_LOGS)) {
-			eb.appendDescription(".");
-			Utils.sendMessage(channel, eb.build());
+			embedBuilder.appendDescription(".");
+			Utils.sendMessage(channel, embedBuilder.build());
 			return;
 		}
 		guild.retrieveAuditLogs().type(ActionType.UNBAN).limit(1).queue(unbans -> {
@@ -84,8 +84,8 @@ public class BanEvents extends ListenerAdapter {
 			}
 			var last = unbans.get(0);
 			var unbanner = last.getUser();
-			eb.appendDescription(i18n.get("events.unban.user.with", unbanner.getAsTag()));
-			Utils.sendMessage(channel, eb.build());
+			embedBuilder.appendDescription(i18n.get("events.unban.user.with", unbanner.getAsTag()));
+			Utils.sendMessage(channel, embedBuilder.build());
 		});
 	}
 }

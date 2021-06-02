@@ -19,27 +19,27 @@ public class SettingsCommand extends Command {
 		var guildSettingsCache = ctx.getCache().getGuildSettingsCache();
 		var guildId = ctx.getGuild().getIdLong();
 		var miscSettings = guildSettingsCache.getMiscSettings(guildId);
-		var eb = Utils.createEmbedBuilder(ctx.getUser());
+		var embedBuilder = Utils.createEmbedBuilder(ctx.getUser());
 		var i18n = ctx.getI18n();
 
-		eb.setAuthor(i18n.get("commands.settings.title"));
+		embedBuilder.setAuthor(i18n.get("commands.settings.title"));
 
 		var setTemplate = " (" + i18n.get("commands.settings.set") + " /%s)";
 		var none = i18n.get("commands.settings.none");
 
 		var logChannel = miscSettings.getLogChannel();
-		eb.addField(i18n.get("commands.settings.log"),
+		embedBuilder.addField(i18n.get("commands.settings.log"),
 				logChannel == null ? none + format(setTemplate, "log") : logChannel.getAsMention(), false);
 
 		var joinRole = miscSettings.getJoinRole();
-		eb.addField(i18n.get("commands.settings.join"),
+		embedBuilder.addField(i18n.get("commands.settings.join"),
 				joinRole == null ? none + format(setTemplate, "joinrole") : joinRole.getAsMention(), false);
 
 		var djRole = guildSettingsCache.getMusicSettings(guildId).getDJRole();
-		eb.addField(i18n.get("commands.settings.dj"),
+		embedBuilder.addField(i18n.get("commands.settings.dj"),
 				djRole == null ? none + format(setTemplate, "djrole") : djRole.getAsMention(), false);
 
-		ctx.reply(eb);
+		ctx.reply(embedBuilder);
 		return true;
 	}
 }

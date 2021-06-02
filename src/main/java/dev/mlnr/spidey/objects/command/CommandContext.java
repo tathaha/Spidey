@@ -84,8 +84,7 @@ public class CommandContext {
 		var option = event.getOption(name);
 		return option == null ? null : option.getAsBoolean();
 	}
-
-
+	
 	// reply methods
 
 	public void reply(String content) {
@@ -108,16 +107,16 @@ public class CommandContext {
 		event.replyEmbeds(embedBuilder.build()).addActionRow(buttons).queue();
 	}
 
-	public void replyErrorLocalized(String key, Object... args) {
-		replyError(i18n.get(key, args));
+	public void replyLocalized(String key, Object... args) {
+		reply(i18n.get(key, args));
 	}
 
 	public void replyError(String error) {
 		reply(":no_entry: " + error);
 	}
 
-	public void replyLocalized(String key, Object... args) {
-		reply(i18n.get(key, args));
+	public void replyErrorLocalized(String key, Object... args) {
+		replyError(i18n.get(key, args));
 	}
 
 	public void editReply(EmbedBuilder embedBuilder) {
