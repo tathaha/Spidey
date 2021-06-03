@@ -103,6 +103,10 @@ public class CommandContext {
 		event.replyEmbeds(embedBuilder.build()).setEphemeral(ephemeral).queue();
 	}
 
+	public void replyWithButtons(String content, Button... buttons) {
+		event.reply(content).addActionRow(buttons).queue();
+	}
+
 	public void replyWithButtons(EmbedBuilder embedBuilder, Button... buttons) {
 		event.replyEmbeds(embedBuilder.build()).addActionRow(buttons).queue();
 	}
