@@ -50,6 +50,7 @@ public class Spidey {
 				.addBotList(BotList.DSERVICES, System.getenv("dservices"))
 				.addBotList(BotList.DBOTS_GG, System.getenv("dbotsgg"))
 				.addBotList(BotList.DBL, System.getenv("dbl"))
+				.addBotList(BotList.DEL, System.getenv("del"))
 				.build();
 
 		var cache = new Cache(this);
