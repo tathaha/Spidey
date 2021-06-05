@@ -40,13 +40,12 @@ public class ButtonActionCache {
 
 	public void createPaginator(CommandContext ctx, int totalPages, BiConsumer<Integer, EmbedBuilder> pagesConsumer) {
 		var embedBuilder = new EmbedBuilder().setColor(Utils.SPIDEY_COLOR);
-		var i18n = ctx.getI18n();
 
-		embedBuilder.setFooter(i18n.get("paginator.page", 1, totalPages));
+		embedBuilder.setFooter(ctx.getI18n().get("paginator.page", 1, totalPages));
 		pagesConsumer.accept(0, embedBuilder);
 
 		var paginatorId = StringUtils.randomString(30);
-		var paginator = new Paginator(paginatorId, ctx, totalPages, i18n, pagesConsumer, this);
+		var paginator = new Paginator(paginatorId, ctx, totalPages, pagesConsumer, this);
 		var buttonAction = new ButtonAction(paginatorId, ctx, ButtonAction.ActionType.PAGINATION, paginator);
 		addButtonAction(paginatorId, buttonAction);
 

@@ -18,12 +18,12 @@ public class Paginator {
 
 	private int currentPage;
 
-	public Paginator(String id, CommandContext ctx, int totalPages, I18n i18n, BiConsumer<Integer, EmbedBuilder> pagesConsumer,
+	public Paginator(String id, CommandContext ctx, int totalPages, BiConsumer<Integer, EmbedBuilder> pagesConsumer,
 	                 ButtonActionCache buttonActionCache) {
 		this.id = id;
 		this.ctx = ctx;
 		this.totalPages = totalPages;
-		this.i18n = i18n;
+		this.i18n = ctx.getI18n();
 		this.pagesConsumer = pagesConsumer;
 		this.buttonActionCache = buttonActionCache;
 	}
