@@ -59,7 +59,6 @@ public class Spidey {
 				GUILD_INVITES,
 				GUILD_MEMBERS,
 				GUILD_MESSAGES,
-				GUILD_MESSAGE_REACTIONS,
 				GUILD_EMOJIS,
 				GUILD_VOICE_STATES)
 			.disableCache(
