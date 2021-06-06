@@ -49,9 +49,9 @@ public class ButtonActionCache {
 		var buttonAction = new ButtonAction(paginatorId, ctx, ButtonAction.ActionType.PAGINATION, paginator);
 		addButtonAction(paginatorId, buttonAction);
 
-		var left = Button.primary(paginatorId + ":1", Emoji.fromUnicode(Emojis.BACKWARDS));
-		var right = Button.primary(paginatorId + ":2", Emoji.fromUnicode(Emojis.FORWARD));
-		var wastebasket = Button.primary(paginatorId + ":3", Emoji.fromUnicode(Emojis.WASTEBASKET));
+		var left = Button.primary(paginatorId + ":BACKWARDS", Emoji.fromUnicode(Emojis.BACKWARDS));
+		var right = Button.primary(paginatorId + ":FORWARD", Emoji.fromUnicode(Emojis.FORWARD));
+		var wastebasket = Button.primary(paginatorId + ":REMOVE", Emoji.fromUnicode(Emojis.WASTEBASKET));
 		ctx.replyWithButtons(embedBuilder, left, right, wastebasket);
 	}
 
@@ -60,9 +60,9 @@ public class ButtonActionCache {
 		var buttonAction = new ButtonAction(purgeProcessorId, ctx, ButtonAction.ActionType.PURGE_PROMPT, purgeProcessor);
 		addButtonAction(purgeProcessorId, buttonAction);
 
-		var accept = Button.success(purgeProcessorId + ":1", Emoji.fromUnicode(Emojis.CHECK));
-		var wastebasket = Button.primary(purgeProcessorId + ":2", Emoji.fromUnicode(Emojis.WASTEBASKET));
-		var deny = Button.danger(purgeProcessorId + ":3", Emoji.fromUnicode(Emojis.CROSS));
+		var accept = Button.success(purgeProcessorId + ":ACCEPT", Emoji.fromUnicode(Emojis.CHECK));
+		var wastebasket = Button.primary(purgeProcessorId + ":REMOVE", Emoji.fromUnicode(Emojis.WASTEBASKET));
+		var deny = Button.danger(purgeProcessorId + ":DENY", Emoji.fromUnicode(Emojis.CROSS));
 		ctx.replyWithButtons(content, accept, wastebasket, deny);
 	}
 }

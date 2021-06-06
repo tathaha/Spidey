@@ -26,16 +26,15 @@ public class InteractionEvents extends ListenerAdapter {
 	public void onButtonClick(ButtonClickEvent event) {
 		event.deferEdit().queue();
 
-		var button = event.getComponent();
-		var buttonActionId = button.getId().split(":")[0];
+		var splitId = event.getComponent().getId().split(":");
 		var buttonActionCache = cache.getButtonActionCache();
-		var buttonAction = buttonActionCache.getButtonAction(buttonActionId);
+		var buttonAction = buttonActionCache.getButtonAction(splitId[0]);
 		if (buttonAction == null) {
 			return;
 		}
 		if (event.getUser().getIdLong() != buttonAction.getAuthorId()) {
 			return;
 		}
-		buttonAction.getType().getButtonConsumer().accept(button, buttonAction);
+		buttonAction.getType().getButtonConsumer().accept(splitId[1], buttonAction);
 	}
 }

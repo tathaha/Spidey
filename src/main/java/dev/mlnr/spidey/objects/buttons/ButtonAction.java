@@ -1,8 +1,6 @@
 package dev.mlnr.spidey.objects.buttons;
 
-import dev.mlnr.spidey.objects.Emojis;
 import dev.mlnr.spidey.objects.command.CommandContext;
-import net.dv8tion.jda.api.interactions.components.Button;
 import net.jodah.expiringmap.ExpirationPolicy;
 
 import java.util.concurrent.TimeUnit;
@@ -45,22 +43,8 @@ public class ButtonAction {
 	}
 
 	public enum ActionType {
-		PAGINATION(ExpirationPolicy.CREATED, 10, TimeUnit.MINUTES, (button, buttonAction) -> {
-			var emoji = button.getEmoji();
-			Paginator.Action move;
-			switch (emoji.getName()) {
-				case Emojis.BACKWARDS:
-					move = Paginator.Action.BACKWARDS;
-					break;
-				case Emojis.FORWARD:
-					move = Paginator.Action.FORWARD;
-					break;
-				case Emojis.WASTEBASKET:
-					move = Paginator.Action.REMOVE;
-					break;
-				default:
-					return;
-			}
+		PAGINATION(ExpirationPolicy.CREATED, 10, TimeUnit.MINUTES, (moveName, buttonAction) -> {
+			var move = Paginator.Action.valueOf(moveName);
 			((Paginator) buttonAction.getObject()).switchPage(move);
 		}, timeoutContext -> {
 
@@ -69,23 +53,9 @@ public class ButtonAction {
 			removeContext.deleteReply();
 			removeContext.getCache().getButtonActionCache().removeButtonAction(removeAction.getId());
 		}),
-		PURGE_PROMPT(ExpirationPolicy.CREATED, 1, TimeUnit.MINUTES, (button, buttonAction) -> {
-			var emoji = button.getEmoji();
+		PURGE_PROMPT(ExpirationPolicy.CREATED, 1, TimeUnit.MINUTES, (actionName, buttonAction) -> {
+			var action = PurgeProcessor.PromptAction.valueOf(actionName);
 			var purgeProcessor = (PurgeProcessor) buttonAction.getObject();
-			PurgeProcessor.PromptAction action;
-			switch (emoji.getName()) {
-				case Emojis.CHECK:
-					action = PurgeProcessor.PromptAction.ACCEPT;
-					break;
-				case Emojis.CROSS:
-					action = PurgeProcessor.PromptAction.DENY;
-					break;
-				case Emojis.WASTEBASKET:
-					action = PurgeProcessor.PromptAction.REMOVE;
-					break;
-				default:
-					return;
-			}
 			purgeProcessor.processPrompt(action);
 
 		}, timeoutContext -> {
@@ -99,11 +69,11 @@ public class ButtonAction {
 		private final ExpirationPolicy expirationPolicy;
 		private final long expirationDuration;
 		private final TimeUnit expirationUnit;
-		private final BiConsumer<Button, ButtonAction> buttonConsumer;
+		private final BiConsumer<String, ButtonAction> buttonConsumer;
 		private final Consumer<CommandContext> timeoutAction;
 		private final Consumer<ButtonAction> removeAction;
 
-		ActionType(ExpirationPolicy expirationPolicy, long expirationDuration, TimeUnit expirationUnit, BiConsumer<Button, ButtonAction> buttonConsumer,
+		ActionType(ExpirationPolicy expirationPolicy, long expirationDuration, TimeUnit expirationUnit, BiConsumer<String, ButtonAction> buttonConsumer,
 		           Consumer<CommandContext> timeoutAction, Consumer<ButtonAction> removeAction) {
 			this.expirationPolicy = expirationPolicy;
 			this.expirationDuration = expirationDuration;
@@ -125,7 +95,7 @@ public class ButtonAction {
 			return expirationUnit;
 		}
 
-		public BiConsumer<Button, ButtonAction> getButtonConsumer() {
+		public BiConsumer<String, ButtonAction> getButtonConsumer() {
 			return buttonConsumer;
 		}
 
