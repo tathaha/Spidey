@@ -11,7 +11,7 @@ public class Cache {
 	private final GeneralCache generalCache;
 	private final GuildSettingsCache guildSettingsCache;
 	private final MessageCache messageCache;
-	private final PaginatorCache paginatorCache;
+	private final ButtonActionCache buttonActionCache;
 
 	public Cache(Spidey spidey) {
 		this.musicPlayerCache = MusicPlayerCache.getInstance();
@@ -21,7 +21,7 @@ public class Cache {
 		this.generalCache = new GeneralCache(guildSettingsCache, spidey.getDatabaseManager());
 
 		this.messageCache = new MessageCache();
-		this.paginatorCache = new PaginatorCache();
+		this.buttonActionCache = new ButtonActionCache();
 	}
 
 	public MusicPlayerCache getMusicPlayerCache() {
@@ -44,7 +44,7 @@ public class Cache {
 		return messageCache;
 	}
 
-	public PaginatorCache getPaginatorCache() {
-		return paginatorCache;
+	public ButtonActionCache getButtonActionCache() {
+		return buttonActionCache;
 	}
 }

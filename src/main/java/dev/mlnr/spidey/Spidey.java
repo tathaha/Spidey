@@ -60,7 +60,6 @@ public class Spidey {
 				GUILD_INVITES,
 				GUILD_MEMBERS,
 				GUILD_MESSAGES,
-				GUILD_MESSAGE_REACTIONS,
 				GUILD_EMOJIS,
 				GUILD_VOICE_STATES)
 			.disableCache(
@@ -73,7 +72,7 @@ public class Spidey {
 			.setMemberCachePolicy(MemberCachePolicy.VOICE)
 			.setChunkingFilter(ChunkingFilter.NONE)
 			.addEventListeners(new ReadyEvents(databaseManager, cache), new BanEvents(cache), new DeleteEvents(cache), new GuildEvents(databaseManager, cache),
-					new InviteEvents(cache), new MemberEvents(cache), new MessageEvents(cache), new PaginatorEvent(cache), new VoiceEvent(cache),
+					new InviteEvents(cache), new MemberEvents(cache), new MessageEvents(cache), new VoiceEvent(cache),
 					new InteractionEvents(cache), ConcurrentUtils.getEventWaiter(), new BLHJDAListener(blh))
 			.setActivity(Activity.watching("myself load"))
 			.setStatus(OnlineStatus.DO_NOT_DISTURB)

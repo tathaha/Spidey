@@ -103,6 +103,10 @@ public class CommandContext {
 		event.replyEmbeds(embedBuilder.build()).setEphemeral(ephemeral).queue();
 	}
 
+	public void replyWithButtons(String content, Button... buttons) {
+		event.reply(content).addActionRow(buttons).queue();
+	}
+
 	public void replyWithButtons(EmbedBuilder embedBuilder, Button... buttons) {
 		event.replyEmbeds(embedBuilder.build()).addActionRow(buttons).queue();
 	}
@@ -117,6 +121,10 @@ public class CommandContext {
 
 	public void replyErrorLocalized(String key, Object... args) {
 		replyError(i18n.get(key, args));
+	}
+
+	public void editReply(String content) {
+		event.getHook().editOriginal(content).queue();
 	}
 
 	public void editReply(EmbedBuilder embedBuilder) {
