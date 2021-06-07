@@ -17,10 +17,7 @@ import java.util.function.BiConsumer;
 public class ButtonActionCache {
 	private final ExpiringMap<String, ButtonAction> buttonActionMap = ExpiringMap.builder()
 			.variableExpiration()
-			.asyncExpirationListener((buttonActionId, buttonActionObject) -> {
-				var buttonAction = (ButtonAction) buttonActionObject;
-				buttonAction.getType().getRemoveAction().accept(buttonAction);
-			})
+			.asyncExpirationListener((buttonActionId, buttonActionObject) -> ((ButtonAction) buttonActionObject).getCtx().deleteReply())
 			.build();
 
 	public void addButtonAction(String id, ButtonAction buttonAction) {
@@ -32,8 +29,9 @@ public class ButtonActionCache {
 		return buttonActionMap.get(id);
 	}
 
-	public void removeButtonAction(String id) {
-		buttonActionMap.remove(id);
+	public void removeButtonAction(ButtonAction buttonAction) {
+		buttonActionMap.remove(buttonAction.getId());
+		buttonAction.getCtx().deleteReply();
 	}
 
 	// paginator
@@ -46,8 +44,7 @@ public class ButtonActionCache {
 
 		var paginatorId = StringUtils.randomString(30);
 		var paginator = new Paginator(paginatorId, ctx, totalPages, pagesConsumer, this);
-		var buttonAction = new ButtonAction(paginatorId, ctx, ButtonAction.ActionType.PAGINATION, paginator);
-		addButtonAction(paginatorId, buttonAction);
+		addButtonAction(paginatorId, paginator);
 
 		var left = Button.primary(paginatorId + ":BACKWARDS", Emoji.fromUnicode(Emojis.BACKWARDS));
 		var right = Button.primary(paginatorId + ":FORWARD", Emoji.fromUnicode(Emojis.FORWARD));
@@ -57,8 +54,7 @@ public class ButtonActionCache {
 
 	public void createPurgePrompt(PurgeProcessor purgeProcessor, String content, CommandContext ctx) {
 		var purgeProcessorId = purgeProcessor.getId();
-		var buttonAction = new ButtonAction(purgeProcessorId, ctx, ButtonAction.ActionType.PURGE_PROMPT, purgeProcessor);
-		addButtonAction(purgeProcessorId, buttonAction);
+		addButtonAction(purgeProcessorId, purgeProcessor);
 
 		var accept = Button.success(purgeProcessorId + ":ACCEPT", Emoji.fromUnicode(Emojis.CHECK));
 		var wastebasket = Button.primary(purgeProcessorId + ":REMOVE", Emoji.fromUnicode(Emojis.WASTEBASKET));

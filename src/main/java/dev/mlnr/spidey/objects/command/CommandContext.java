@@ -123,6 +123,10 @@ public class CommandContext {
 		replyError(i18n.get(key, args));
 	}
 
+	public void editReply(String content) {
+		event.getHook().editOriginal(content).queue();
+	}
+
 	public void editReply(EmbedBuilder embedBuilder) {
 		event.getHook().editOriginalEmbeds(embedBuilder.build()).queue();
 	}

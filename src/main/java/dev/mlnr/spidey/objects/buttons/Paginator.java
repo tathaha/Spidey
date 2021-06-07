@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 
 import java.util.function.BiConsumer;
 
-public class Paginator {
+public class Paginator implements ButtonAction {
 	private final String id;
 	private final CommandContext ctx;
 	private final int totalPages;
@@ -50,10 +50,35 @@ public class Paginator {
 				currentPage++;
 				break;
 			case REMOVE:
-				buttonActionCache.removeButtonAction(id);
+				buttonActionCache.removeButtonAction(this);
 				return;
 		}
 		ctx.editReply(newPageBuilder);
+	}
+
+	@Override
+	public String getId() {
+		return id;
+	}
+
+	@Override
+	public CommandContext getCtx() {
+		return ctx;
+	}
+
+	@Override
+	public ActionType getType() {
+		return ButtonAction.ActionType.PAGINATION;
+	}
+
+	@Override
+	public Object getObject() {
+		return this;
+	}
+
+	@Override
+	public long getAuthorId() {
+		return ctx.getUser().getIdLong();
 	}
 
 	public enum Action {

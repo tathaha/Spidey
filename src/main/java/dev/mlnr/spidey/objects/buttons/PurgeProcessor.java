@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.entities.User;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public class PurgeProcessor {
+public class PurgeProcessor implements ButtonAction {
 	private final String id;
 	private final List<Message> allMessages;
 	private final List<Message> pinnedMessages;
@@ -28,8 +28,7 @@ public class PurgeProcessor {
 	}
 
 	public void processPrompt(PurgeProcessor.PromptAction action) {
-		ctx.deleteReply();
-		buttonActionCache.removeButtonAction(id);
+		buttonActionCache.removeButtonAction(this);
 
 		switch (action) {
 			case ACCEPT:
@@ -48,7 +47,7 @@ public class PurgeProcessor {
 	}
 
 	public void proceed() {
-		ctx.getEvent().deferReply(true).queue();
+		ctx.getEvent().deferReply().queue();
 
 		var channel = ctx.getTextChannel();
 		var future = CompletableFuture.allOf(channel.purgeMessages(allMessages).toArray(new CompletableFuture[0]));
@@ -58,7 +57,7 @@ public class PurgeProcessor {
 				ctx.replyErrorLocalized("internal_error", "purge messages", throwable.getMessage());
 				return;
 			}
-			ctx.getEvent().getHook().sendMessage(generateSuccessMessage(allMessages.size(), i18n)).queue();
+			ctx.getEvent().getHook().sendMessage(generateSuccessMessage(allMessages.size(), i18n)).setEphemeral(true).queue();
 		});
 	}
 
@@ -68,8 +67,29 @@ public class PurgeProcessor {
 				+ (target == null ? "." : " " + i18n.get("commands.purge.messages.success.user", target) + ".");
 	}
 
+	@Override
 	public String getId() {
 		return id;
+	}
+
+	@Override
+	public CommandContext getCtx() {
+		return ctx;
+	}
+
+	@Override
+	public ActionType getType() {
+		return ButtonAction.ActionType.PURGE_PROMPT;
+	}
+
+	@Override
+	public Object getObject() {
+		return this;
+	}
+
+	@Override
+	public long getAuthorId() {
+		return ctx.getUser().getIdLong();
 	}
 
 	public enum PromptAction {
