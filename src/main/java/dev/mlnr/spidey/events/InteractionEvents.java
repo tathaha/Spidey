@@ -26,7 +26,7 @@ public class InteractionEvents extends ListenerAdapter {
 	public void onButtonClick(ButtonClickEvent event) {
 		event.deferEdit().queue();
 
-		var splitId = event.getComponent().getId().split(":");
+		var splitId = event.getComponentId().split(":");
 		var buttonActionCache = cache.getButtonActionCache();
 		var buttonAction = buttonActionCache.getButtonAction(splitId[0]);
 		if (buttonAction == null) {
