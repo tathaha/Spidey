@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.commands.informative;
 
-import dev.mlnr.spidey.objects.command.Command;
+import dev.mlnr.spidey.objects.command.CommandBase;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.utils.Utils;
@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.JDAInfo;
 import net.dv8tion.jda.api.Permission;
 
 @SuppressWarnings("unused")
-public class InfoCommand extends Command {
+public class InfoCommand extends CommandBase {
 	public InfoCommand() {
 		super("info", "Shows you info about me", Category.INFORMATIVE, Permission.UNKNOWN, 0);
 	}

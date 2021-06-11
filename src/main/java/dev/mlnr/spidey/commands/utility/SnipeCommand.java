@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.commands.utility;
 
-import dev.mlnr.spidey.objects.command.Command;
+import dev.mlnr.spidey.objects.command.CommandBase;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.utils.Utils;
@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.Permission;
 import java.awt.*;
 
 @SuppressWarnings("unused")
-public class SnipeCommand extends Command {
+public class SnipeCommand extends CommandBase {
 	public SnipeCommand() {
 		super("snipe", "Snipes a deleted message", Category.UTILITY, Permission.UNKNOWN, 6);
 	}

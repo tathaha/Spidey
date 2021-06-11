@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.commands.music;
 
-import dev.mlnr.spidey.objects.command.Command;
+import dev.mlnr.spidey.objects.command.CommandBase;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.utils.MusicUtils;
@@ -12,7 +12,7 @@ import java.awt.*;
 import static dev.mlnr.spidey.utils.MusicUtils.formatDuration;
 
 @SuppressWarnings("unused")
-public class NowPlayingCommand extends Command {
+public class NowPlayingCommand extends CommandBase {
 	public NowPlayingCommand() {
 		super("nowplaying", "Shows what the current song is", Category.MUSIC, Permission.UNKNOWN, 0);
 	}

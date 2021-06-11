@@ -5,6 +5,7 @@ public enum VoiceGameType {
 	POKER_NIGHT(755827207812677713L, "Poker Night"),
 	BETRAYAL_IO(773336526917861400L, "Betrayal.io"),
 	FISHINGTON_IO(814288819477020702L, "Fishington.io");
+	// CHESS(832012586023256104L, "Chess Game");
 
 	private final long applicationId;
 	private final String friendlyName;

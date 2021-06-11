@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.commands.settings.music;
 
-import dev.mlnr.spidey.objects.command.Command;
+import dev.mlnr.spidey.objects.command.CommandBase;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.utils.MusicUtils;
@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 @SuppressWarnings("unused")
-public class FairQueueCommand extends Command {
+public class FairQueueCommand extends CommandBase {
 	public FairQueueCommand() {
 		super("fairqueue", "Enables/disables fair queue or sets the threshold", Category.Settings.MUSIC, Permission.UNKNOWN, 4,
 				new OptionData(OptionType.BOOLEAN, "enable", "Whether to enable fair queue"),

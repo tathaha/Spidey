@@ -1,22 +1,25 @@
 package dev.mlnr.spidey.commands.music;
 
-import dev.mlnr.spidey.objects.command.Command;
+import dev.mlnr.spidey.objects.command.CommandBase;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.objects.music.TrackScheduler;
 import dev.mlnr.spidey.utils.MusicUtils;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 @SuppressWarnings("unused")
-public class RepeatCommand extends Command {
+public class RepeatCommand extends CommandBase {
 	public RepeatCommand() {
 		super("repeat", "Sets the repeat mode", Category.MUSIC, Permission.UNKNOWN, 0,
 				new OptionData(OptionType.STRING, "repeat_mode", "The repeat mode to set")
-						.addChoice(TrackScheduler.RepeatMode.SONG.getFriendlyName(), TrackScheduler.RepeatMode.SONG.name())
-						.addChoice(TrackScheduler.RepeatMode.QUEUE.getFriendlyName(), TrackScheduler.RepeatMode.QUEUE.name())
-						.addChoice(TrackScheduler.RepeatMode.NONE.getFriendlyName(), TrackScheduler.RepeatMode.NONE.name())
+						.addChoices(Arrays.stream(TrackScheduler.RepeatMode.values()).map(
+								repeatMode -> new Command.Choice(repeatMode.getFriendlyName(), repeatMode.name())).collect(Collectors.toList()))
 						.setRequired(true));
 	}
 

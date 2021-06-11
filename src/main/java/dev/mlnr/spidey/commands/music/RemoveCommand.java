@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.commands.music;
 
-import dev.mlnr.spidey.objects.command.Command;
+import dev.mlnr.spidey.objects.command.CommandBase;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.utils.MusicUtils;
@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 @SuppressWarnings("unused")
-public class RemoveCommand extends Command {
+public class RemoveCommand extends CommandBase {
 	public RemoveCommand() {
 		super("remove", "Removes a song from the queue based on its position", Category.MUSIC, Permission.UNKNOWN, 0,
 				new OptionData(OptionType.INTEGER, "position", "The position of the track to remove", true));

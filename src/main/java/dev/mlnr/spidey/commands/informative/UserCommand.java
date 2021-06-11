@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.commands.informative;
 
-import dev.mlnr.spidey.objects.command.Command;
+import dev.mlnr.spidey.objects.command.CommandBase;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.utils.Utils;
@@ -13,7 +13,7 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import static dev.mlnr.spidey.utils.Utils.formatDate;
 
 @SuppressWarnings("unused")
-public class UserCommand extends Command {
+public class UserCommand extends CommandBase {
 	public UserCommand() {
 		super("user", "Shows info about you or entered user", Category.INFORMATIVE, Permission.UNKNOWN, 2,
 				new OptionData(OptionType.USER, "user", "The user to get the info about"));

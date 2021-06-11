@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.commands.fun;
 
-import dev.mlnr.spidey.objects.command.Command;
+import dev.mlnr.spidey.objects.command.CommandBase;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.objects.games.VoiceGameType;
@@ -8,18 +8,20 @@ import dev.mlnr.spidey.utils.Utils;
 import dev.mlnr.spidey.utils.requests.Requester;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.ChannelType;
+import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 @SuppressWarnings("unused")
-public class VoiceGameCommand extends Command {
+public class VoiceGameCommand extends CommandBase {
 	public VoiceGameCommand() {
 		super("voicegame", "Creates an invite for a game for a voice channel", Category.FUN, Permission.CREATE_INSTANT_INVITE, 10,
 				new OptionData(OptionType.STRING, "game", "The game to create an invite for")
-						.addChoice(VoiceGameType.BETRAYAL_IO.getFriendlyName(), VoiceGameType.BETRAYAL_IO.name())
-						.addChoice(VoiceGameType.FISHINGTON_IO.getFriendlyName(), VoiceGameType.FISHINGTON_IO.name())
-						.addChoice(VoiceGameType.POKER_NIGHT.getFriendlyName(), VoiceGameType.POKER_NIGHT.name())
-						.addChoice(VoiceGameType.YOUTUBE_TOGETHER.getFriendlyName(), VoiceGameType.YOUTUBE_TOGETHER.name())
+						.addChoices(Arrays.stream(VoiceGameType.values()).map(
+								voiceGameType -> new Command.Choice(voiceGameType.getFriendlyName(), voiceGameType.name())).collect(Collectors.toList()))
 						.setRequired(true),
 				new OptionData(OptionType.CHANNEL, "channel", "The channel to create the game invite for"));
 	}

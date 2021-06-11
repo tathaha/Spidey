@@ -1,7 +1,7 @@
 package dev.mlnr.spidey.handlers.command;
 
 import dev.mlnr.spidey.cache.Cache;
-import dev.mlnr.spidey.objects.command.Command;
+import dev.mlnr.spidey.objects.command.CommandBase;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import io.github.classgraph.ClassGraph;
 import net.dv8tion.jda.api.JDA;
@@ -16,7 +16,7 @@ import java.util.Map;
 import static dev.mlnr.spidey.handlers.command.CooldownHandler.cooldown;
 
 public class CommandHandler {
-	private static final Map<String, Command> COMMANDS = new HashMap<>();
+	private static final Map<String, CommandBase> COMMANDS = new HashMap<>();
 	private static final Logger logger = LoggerFactory.getLogger(CommandHandler.class);
 
 	private CommandHandler() {}
@@ -46,7 +46,7 @@ public class CommandHandler {
 
 		try (var result = new ClassGraph().acceptPackages("dev.mlnr.spidey.commands").scan()) {
 			for (var cls : result.getAllClasses()) {
-				var command = (Command) cls.loadClass().getDeclaredConstructor().newInstance();
+				var command = (CommandBase) cls.loadClass().getDeclaredConstructor().newInstance();
 				var commandName = command.getInvoke();
 				COMMANDS.put(commandName, command);
 
@@ -62,7 +62,7 @@ public class CommandHandler {
 		}
 	}
 
-	public static Map<String, Command> getCommands() {
+	public static Map<String, CommandBase> getCommands() {
 		return COMMANDS;
 	}
 }
