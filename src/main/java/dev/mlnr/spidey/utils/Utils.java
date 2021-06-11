@@ -43,12 +43,6 @@ public class Utils {
 		return new EmbedBuilder().setFooter("Command executed by " + user.getAsTag(), user.getEffectiveAvatarUrl()).setColor(0xFEFEFE);
 	}
 
-	public static void addReaction(Message message, String reaction) {
-		if (message.getGuild().getSelfMember().hasPermission(message.getTextChannel(), Permission.MESSAGE_HISTORY, Permission.MESSAGE_ADD_REACTION)) {
-			message.addReaction(reaction).queue();
-		}
-	}
-
 	public static void storeInvites(Guild guild, GeneralCache generalCache) {
 		if (guild.getSelfMember().hasPermission(Permission.MANAGE_SERVER)) {
 			guild.retrieveInvites().queue(invites -> invites.forEach(invite -> generalCache.getInviteCache().put(invite.getCode(), new InviteData(invite, guild))));
