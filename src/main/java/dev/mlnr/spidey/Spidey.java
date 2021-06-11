@@ -72,8 +72,8 @@ public class Spidey {
 			.setMemberCachePolicy(MemberCachePolicy.VOICE)
 			.setChunkingFilter(ChunkingFilter.NONE)
 			.addEventListeners(new ReadyEvents(databaseManager, cache), new BanEvents(cache), new DeleteEvents(cache), new GuildEvents(databaseManager, cache),
-					new InviteEvents(cache), new MemberEvents(cache), new MessageEvents(cache), new VoiceEvent(cache),
-					new InteractionEvents(cache), ConcurrentUtils.getEventWaiter(), new BLHJDAListener(blh))
+					new InviteEvents(cache), new MemberEvents(cache), new MessageEvents(cache), new VoiceEvent(cache), new InteractionEvents(cache),
+					new BLHJDAListener(blh), ConcurrentUtils.getEventWaiter()) // TODO get rid of EventWaiter once dropdowns are out
 			.setActivity(Activity.watching("myself load"))
 			.setStatus(OnlineStatus.DO_NOT_DISTURB)
 			.setGatewayEncoding(GatewayEncoding.ETF)
