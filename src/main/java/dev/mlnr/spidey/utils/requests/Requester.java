@@ -52,7 +52,8 @@ public class Requester {
 					ctx.replyErrorLocalized("commands.subreddit.no_posts", subreddit);
 					return;
 				}
-				var responseBody = response.body().string();
+				var body = response.body();
+				var responseBody = body.string();
 				var json = DataObject.fromJson(responseBody);
 				var embedBuilder = Utils.createEmbedBuilder(event.getUser());
 				embedBuilder.setAuthor(json.getString("title"), json.getString("source"));
@@ -60,6 +61,7 @@ public class Requester {
 				embedBuilder.setDescription(ctx.getI18n().get("commands.subreddit.description", subreddit));
 				embedBuilder.setTimestamp(Instant.ofEpochSecond(json.getInt("created_at")));
 				embedBuilderConsumer.accept(embedBuilder);
+				body.close();
 			}
 		});
 	}
@@ -94,13 +96,21 @@ public class Requester {
 				.header("Authorization", "Bot " + System.getenv("Spidey"))
 				.url("https://discord.com/api/v8/channels/" + channelId + "/invites")
 				.post(requestBody);
-		try (var response = HTTP_CLIENT.newCall(requestBuilder.build()).execute(); var body = response.body()) {
-			var json = DataObject.fromJson(body.string());
-			inviteConsumer.accept(json.getString("code"));
-		}
-		catch (Exception ex) {
-			logger.error("There was an exception while creating an invite for {} for channel {}", voiceGame.getFriendlyName(), channelId, ex);
-			errorConsumer.accept(ex);
-		}
+
+		HTTP_CLIENT.newCall(requestBuilder.build()).enqueue(new Callback() {
+			@Override
+			public void onFailure(final Call call, final IOException e) {
+				logger.error("There was an exception while creating an invite for {} for channel {}", voiceGame.getFriendlyName(), channelId, e);
+				errorConsumer.accept(e);
+			}
+
+			@Override
+			public void onResponse(final Call call, final Response response) throws IOException {
+				var body = response.body();
+				var json = DataObject.fromJson(body.string());
+				inviteConsumer.accept(json.getString("code"));
+				body.close();
+			}
+		});
 	}
 }
