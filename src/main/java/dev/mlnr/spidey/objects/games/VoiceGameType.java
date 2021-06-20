@@ -1,25 +1,28 @@
 package dev.mlnr.spidey.objects.games;
 
-public enum VoiceGameType {
-	YOUTUBE_TOGETHER(755600276941176913L, "YouTube Together"),
-	POKER_NIGHT(755827207812677713L, "Poker Night"),
-	BETRAYAL_IO(773336526917861400L, "Betrayal.io"),
-	FISHINGTON_IO(814288819477020702L, "Fishington.io");
-	// CHESS(832012586023256104L, "Chess Game");
+import dev.mlnr.spidey.objects.command.ChoicesEnum;
 
-	private final long applicationId;
+public enum VoiceGameType implements ChoicesEnum {
+	YOUTUBE_TOGETHER("YouTube Together", 755600276941176913L),
+	POKER_NIGHT("Poker Night", 755827207812677713L),
+	BETRAYAL_IO("Betrayal.io", 773336526917861400L),
+	FISHINGTON_IO("Fishington.io", 814288819477020702L);
+	// CHESS("Chess Game", 832012586023256104L);
+
 	private final String friendlyName;
+	private final long applicationId;
 
-	VoiceGameType(long applicationId, String friendlyName) {
-		this.applicationId = applicationId;
+	VoiceGameType(String friendlyName, long applicationId) {
 		this.friendlyName = friendlyName;
+		this.applicationId = applicationId;
+	}
+
+	@Override
+	public String getFriendlyName() {
+		return friendlyName;
 	}
 
 	public long getApplicationId() {
 		return applicationId;
-	}
-
-	public String getFriendlyName() {
-		return friendlyName;
 	}
 }

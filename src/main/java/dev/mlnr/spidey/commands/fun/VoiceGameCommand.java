@@ -8,21 +8,15 @@ import dev.mlnr.spidey.utils.Utils;
 import dev.mlnr.spidey.utils.requests.Requester;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.ChannelType;
-import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
-
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
 public class VoiceGameCommand extends CommandBase {
 	public VoiceGameCommand() {
 		super("voicegame", "Creates an invite for a game for a voice channel", Category.FUN, Permission.CREATE_INSTANT_INVITE, 10,
-				new OptionData(OptionType.STRING, "game", "The game to create an invite for")
-						.addChoices(Arrays.stream(VoiceGameType.values()).map(
-								voiceGameType -> new Command.Choice(voiceGameType.getFriendlyName(), voiceGameType.name())).collect(Collectors.toList()))
-						.setRequired(true),
+				new OptionData(OptionType.STRING, "game", "The game to create an invite for", true)
+						.addChoices(Utils.getChoicesFromEnum(VoiceGameType.class)),
 				new OptionData(OptionType.CHANNEL, "channel", "The channel to create the game invite for"));
 	}
 

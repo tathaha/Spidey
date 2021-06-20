@@ -4,6 +4,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
+import dev.mlnr.spidey.objects.command.ChoicesEnum;
 import dev.mlnr.spidey.utils.MusicUtils;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
@@ -120,7 +121,7 @@ public class TrackScheduler extends AudioEventAdapter {
 
 	// other
 
-	public enum RepeatMode {
+	public enum RepeatMode implements ChoicesEnum {
 		SONG("Song"),
 		QUEUE("Queue"),
 		NONE("None");

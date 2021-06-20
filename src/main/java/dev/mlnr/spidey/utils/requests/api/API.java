@@ -1,7 +1,7 @@
 package dev.mlnr.spidey.utils.requests.api;
 
 public enum API {
-	KSOFT("https://api.ksoft.si/images/rand-reddit/%s?span=month&remove_nsfw=%s", "Bearer " + System.getenv("ksoft"));
+	KSOFT("https://api.ksoft.si/images/rand-reddit/%s?span=%s&remove_nsfw=%s", "Bearer " + System.getenv("ksoft"));
 
 	private final String url;
 	private final String token;

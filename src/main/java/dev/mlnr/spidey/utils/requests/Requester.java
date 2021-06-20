@@ -27,11 +27,11 @@ public class Requester {
 
 	private Requester() {}
 
-	public static void getRandomSubredditImage(String subreddit, CommandContext ctx, Consumer<EmbedBuilder> embedBuilderConsumer) {
+	public static void getRandomSubredditImage(String subreddit, String span, CommandContext ctx, Consumer<EmbedBuilder> embedBuilderConsumer) {
 		var requestBuilder = new Request.Builder();
 		var url = API.KSOFT.getUrl();
 		var event = ctx.getEvent();
-		requestBuilder.url(String.format(url, subreddit, !event.getTextChannel().isNSFW()));
+		requestBuilder.url(String.format(url, subreddit, span == null ? "month": span.toLowerCase(), !event.getTextChannel().isNSFW()));
 		requestBuilder.header("Authorization", API.KSOFT.getToken());
 
 		HTTP_CLIENT.newCall(requestBuilder.build()).enqueue(new Callback() {

@@ -1,6 +1,8 @@
 package dev.mlnr.spidey.objects.nsfw;
 
-public enum NSFWType {
+import dev.mlnr.spidey.objects.command.ChoicesEnum;
+
+public enum NSFWType implements ChoicesEnum {
 	ANAL("Anal", "anal"),
 	ASIANS("Asians", "asiansgonewild"),
 	ASS("Ass", "ass"),
@@ -21,6 +23,7 @@ public enum NSFWType {
 		this.subreddit = subreddit;
 	}
 
+	@Override
 	public String getFriendlyName() {
 		return friendlyName;
 	}
