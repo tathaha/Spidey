@@ -132,6 +132,7 @@ public class TrackScheduler extends AudioEventAdapter {
 			this.friendlyName = friendlyName;
 		}
 
+		@Override
 		public String getFriendlyName() {
 			return friendlyName;
 		}
