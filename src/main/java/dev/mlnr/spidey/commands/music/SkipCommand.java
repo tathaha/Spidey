@@ -3,6 +3,7 @@ package dev.mlnr.spidey.commands.music;
 import dev.mlnr.spidey.objects.command.CommandBase;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
+import dev.mlnr.spidey.objects.music.MusicPlayer;
 import dev.mlnr.spidey.utils.MusicUtils;
 import net.dv8tion.jda.api.Permission;
 
@@ -26,7 +27,7 @@ public class SkipCommand extends CommandBase {
 			return false;
 		}
 		if (MusicUtils.canInteract(ctx.getMember(), playingTrack)) {
-			musicPlayer.skip();
+			skip(musicPlayer, ctx);
 			return true;
 		}
 		if (!MusicUtils.isMemberConnected(ctx)) {
@@ -48,8 +49,12 @@ public class SkipCommand extends CommandBase {
 			ctx.reply(i18n.get("commands.skip.added") + " **" + skipVotes + "**/**" + requiredSkipVotes + "** [" + mention + "]");
 			return true;
 		}
+		skip(musicPlayer, ctx);
+		return true;
+	}
+
+	private void skip(MusicPlayer musicPlayer, CommandContext ctx) {
 		musicPlayer.skip();
 		ctx.replyLocalized("commands.skip.skipped");
-		return true;
 	}
 }
