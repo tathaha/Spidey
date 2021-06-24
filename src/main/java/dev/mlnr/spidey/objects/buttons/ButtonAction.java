@@ -18,7 +18,7 @@ public interface ButtonAction {
 	long getAuthorId();
 
 	enum ActionType {
-		PAGINATION(ExpirationPolicy.CREATED, 1, TimeUnit.MINUTES, (moveName, buttonAction) -> {
+		PAGINATION(ExpirationPolicy.CREATED, 5, TimeUnit.MINUTES, (moveName, buttonAction) -> {
 			var move = Paginator.Action.valueOf(moveName);
 			((Paginator) buttonAction.getObject()).switchPage(move);
 		}),
