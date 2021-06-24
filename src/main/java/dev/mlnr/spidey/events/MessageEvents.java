@@ -2,7 +2,6 @@ package dev.mlnr.spidey.events;
 
 import dev.mlnr.spidey.cache.Cache;
 import dev.mlnr.spidey.objects.messages.MessageData;
-import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageUpdateEvent;
@@ -29,11 +28,6 @@ public class MessageEvents extends ListenerAdapter {
 		var miscSettings = guildSettingsCache.getMiscSettings(guildId);
 		if (miscSettings.isSnipingEnabled()) {
 			cache.getMessageCache().cacheMessage(message.getIdLong(), new MessageData(message));
-		}
-
-		var prefix = miscSettings.getPrefix();
-		if (content.startsWith(prefix)) {
-			Utils.sendMessage(event.getChannel(), "Spidey has migrated to slash commands meaning you will have to use the `/` prefix to use the commands.");
 		}
 	}
 

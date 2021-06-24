@@ -33,7 +33,7 @@ public class Utils {
 
 	public static void sendMessage(TextChannel channel, MessageEmbed embed) {
 		if (channel.canTalk() && channel.getGuild().getSelfMember().hasPermission(channel, Permission.MESSAGE_EMBED_LINKS)) {
-			channel.sendMessage(embed).queue();
+			channel.sendMessageEmbeds(embed).queue();
 		}
 	}
 
