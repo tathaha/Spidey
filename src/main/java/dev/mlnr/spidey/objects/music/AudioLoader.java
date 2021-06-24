@@ -64,7 +64,7 @@ public class AudioLoader implements AudioLoadResultHandler {
 		var responseDescriptionBuilder = responseEmbedBuilder.getDescriptionBuilder();
 		responseDescriptionBuilder.append(i18n.get("music.messages.queued")).append(" **").append(tracksLoaded).append("** ").append(i18n.get("music.messages.tracks")).append(" ")
 				.append(formatLength(originalLength, lengthWithoutSegments, i18n)).append(" [").append(ctx.getUser().getAsMention()).append("]");
-		ctx.reply(responseEmbedBuilder);
+		ctx.reply(responseEmbedBuilder, false);
 	}
 
 	@Override
@@ -114,7 +114,7 @@ public class AudioLoader implements AudioLoadResultHandler {
 		var responseDescriptionBuilder = responseEmbedBuilder.getDescriptionBuilder();
 		responseDescriptionBuilder.append(queue.isEmpty() ? i18n.get("music.messages.playing") : i18n.get("music.messages.queued")).append(" ").append(title)
 				.append(stream ? "" : " " + formatLength(originalLength, lengthWithoutSegments, i18n)).append(" [").append(requester.getAsMention()).append("]");
-		ctx.reply(responseEmbedBuilder);
+		ctx.reply(responseEmbedBuilder, false);
 		return null;
 	}
 }
