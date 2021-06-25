@@ -13,19 +13,18 @@ public interface ButtonAction {
 
 	ActionType getType();
 
-	Object getObject();
+	Object getActionObject();
 
 	long getAuthorId();
 
 	enum ActionType {
 		PAGINATION(ExpirationPolicy.CREATED, 5, TimeUnit.MINUTES, (moveName, buttonAction) -> {
 			var move = Paginator.Action.valueOf(moveName);
-			((Paginator) buttonAction.getObject()).switchPage(move);
+			((Paginator) buttonAction.getActionObject()).switchPage(move);
 		}),
 		PURGE_PROMPT(ExpirationPolicy.CREATED, 1, TimeUnit.MINUTES, (actionName, buttonAction) -> {
 			var action = PurgeProcessor.PromptAction.valueOf(actionName);
-			var purgeProcessor = (PurgeProcessor) buttonAction.getObject();
-			purgeProcessor.processPrompt(action);
+			((PurgeProcessor) buttonAction.getActionObject()).processPrompt(action);
 		});
 
 		private final ExpirationPolicy expirationPolicy;

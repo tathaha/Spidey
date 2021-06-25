@@ -83,7 +83,7 @@ public class PurgeProcessor implements ButtonAction {
 	}
 
 	@Override
-	public Object getObject() {
+	public Object getActionObject() {
 		return this;
 	}
 

@@ -72,7 +72,7 @@ public class Paginator implements ButtonAction {
 	}
 
 	@Override
-	public Object getObject() {
+	public Object getActionObject() {
 		return this;
 	}
 
