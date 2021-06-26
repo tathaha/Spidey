@@ -314,13 +314,6 @@
     "vip": {
 
     },
-    "hideresponses": {
-      "already_hide": "Responses are already set to be hidden.",
-      "already_show": "Responses are already set to be shown.",
-      "set": "Responses will now be %s.",
-      "shown": "shown",
-      "hidden": "hidden"
-    },
     "joinrole": {
 
     },
