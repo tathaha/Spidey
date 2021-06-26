@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.commands.music;
 
-import dev.mlnr.spidey.objects.command.CommandBase;
+import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.objects.music.AudioLoader;
@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 @SuppressWarnings("unused")
-public class PlayCommand extends CommandBase {
+public class PlayCommand extends Command {
 	public PlayCommand() {
 		super("play", "Plays/queues a song", Category.MUSIC, Permission.UNKNOWN, 2, false,
 				new OptionData(OptionType.STRING, "query", "The YouTube link or query to play", true));

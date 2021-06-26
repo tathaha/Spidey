@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.commands.settings.misc;
 
-import dev.mlnr.spidey.objects.command.CommandBase;
+import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
 import net.dv8tion.jda.api.Permission;
@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 @SuppressWarnings("unused")
-public class LogCommand extends CommandBase {
+public class LogCommand extends Command {
 	public LogCommand() {
 		super("log", "Sets the log channel", Category.Settings.MISC, Permission.MANAGE_SERVER, 4,
 				new OptionData(OptionType.CHANNEL, "channel", "The channel to set as the log channel"));

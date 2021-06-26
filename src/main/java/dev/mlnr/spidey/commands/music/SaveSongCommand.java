@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.commands.music;
 
-import dev.mlnr.spidey.objects.command.CommandBase;
+import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.utils.MusicUtils;
@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.Permission;
 import java.time.Instant;
 
 @SuppressWarnings("unused")
-public class SaveSongCommand extends CommandBase {
+public class SaveSongCommand extends Command {
 	public SaveSongCommand() {
 		super("savesong", "Sends the current playing song into your private messages", Category.MUSIC, Permission.UNKNOWN, 4);
 	}

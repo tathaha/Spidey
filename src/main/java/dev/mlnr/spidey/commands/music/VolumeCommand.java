@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.commands.music;
 
-import dev.mlnr.spidey.objects.command.CommandBase;
+import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.utils.MusicUtils;
@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 @SuppressWarnings("unused")
-public class VolumeCommand extends CommandBase {
+public class VolumeCommand extends Command {
 	public VolumeCommand() {
 		super("volume", "Sets the volume of music", Category.MUSIC, Permission.UNKNOWN, 0,
 				new OptionData(OptionType.INTEGER, "volume", "The new volume", true));

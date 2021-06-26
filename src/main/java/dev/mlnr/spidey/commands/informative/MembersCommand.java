@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.commands.informative;
 
-import dev.mlnr.spidey.objects.command.CommandBase;
+import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.utils.Utils;
@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.Permission;
 import java.time.Instant;
 
 @SuppressWarnings("unused")
-public class MembersCommand extends CommandBase {
+public class MembersCommand extends Command {
 	public MembersCommand() {
 		super("members", "Shows you the membercount of the server", Category.INFORMATIVE, Permission.UNKNOWN, 2);
 	}

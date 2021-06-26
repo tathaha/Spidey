@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.commands.informative;
 
-import dev.mlnr.spidey.objects.command.CommandBase;
+import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.utils.Utils;
@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 
 @SuppressWarnings("unused")
-public class AvatarCommand extends CommandBase {
+public class AvatarCommand extends Command {
 	public AvatarCommand() {
 		super("avatar", "Shows your/entered user's avatar", Category.INFORMATIVE, Permission.UNKNOWN, 2,
 				new OptionData(OptionType.USER, "user", "The user to get the avatar of"));

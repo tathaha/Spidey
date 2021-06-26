@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.commands.informative;
 
-import dev.mlnr.spidey.objects.command.CommandBase;
+import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.utils.Utils;
@@ -11,7 +11,7 @@ import java.awt.*;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
-public class ServerCommand extends CommandBase {
+public class ServerCommand extends Command {
 	public ServerCommand() {
 		super("server", "Shows you info about this server", Category.INFORMATIVE, Permission.UNKNOWN, 0);
 	}

@@ -2,7 +2,7 @@ package dev.mlnr.spidey.commands.informative;
 
 import dev.mlnr.spidey.handlers.command.CommandHandler;
 import dev.mlnr.spidey.handlers.command.CooldownHandler;
-import dev.mlnr.spidey.objects.command.CommandBase;
+import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.objects.command.category.ICategory;
@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @SuppressWarnings("unused")
-public class HelpCommand extends CommandBase {
+public class HelpCommand extends Command {
 	public HelpCommand() {
 		super("help", "Shows the help message", Category.INFORMATIVE, Permission.UNKNOWN, 0,
 				new OptionData(OptionType.STRING, "command", "The command to get help for"));
@@ -39,7 +39,7 @@ public class HelpCommand extends CommandBase {
 			var entries = commandsCopy.entrySet();
 			entries.removeIf(entry -> !ctx.getMember().hasPermission(entry.getValue().getRequiredPermission()));
 			var hidden = commandsMap.size() - commandsCopy.size();
-			var categories = new HashMap<ICategory, List<CommandBase>>();
+			var categories = new HashMap<ICategory, List<Command>>();
 			var nsfwHidden = false;
 			commandsCopy.values().forEach(cmd -> categories.computeIfAbsent(cmd.getCategory(), k -> new ArrayList<>()).add(cmd));
 			if (!ctx.getTextChannel().isNSFW()) {
@@ -110,7 +110,7 @@ public class HelpCommand extends CommandBase {
 		return true;
 	}
 
-	private String listToString(List<CommandBase> commands) {
+	private String listToString(List<Command> commands) {
 		var builder = new StringBuilder();
 		for (var i = 0; i < commands.size(); i++) {
 			var cmd = commands.get(i);

@@ -1,7 +1,7 @@
 package dev.mlnr.spidey.commands.moderation;
 
 import dev.mlnr.spidey.objects.buttons.PurgeProcessor;
-import dev.mlnr.spidey.objects.command.CommandBase;
+import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.utils.StringUtils;
@@ -14,7 +14,7 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
-public class PurgeCommand extends CommandBase {
+public class PurgeCommand extends Command {
 	public PurgeCommand() {
 		super("purge", "Purges messages (by entered user)", Category.MODERATION, Permission.MESSAGE_MANAGE, 6,
 				new OptionData(OptionType.INTEGER, "amount", "The amount of messages to purge", true),

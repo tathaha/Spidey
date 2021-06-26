@@ -4,7 +4,7 @@ import dev.mlnr.spidey.objects.command.category.ICategory;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
-public abstract class CommandBase {
+public abstract class Command {
 	private final String invoke;
 	private final String description;
 	private final ICategory category;
@@ -13,12 +13,12 @@ public abstract class CommandBase {
 	private final boolean hideResponse;
 	private final OptionData[] options;
 
-	protected CommandBase(String invoke, String description, ICategory category, Permission requiredPermission, int cooldown, OptionData... options) {
+	protected Command(String invoke, String description, ICategory category, Permission requiredPermission, int cooldown, OptionData... options) {
 		this(invoke, description, category, requiredPermission, cooldown, true, options);
 	}
 
-	protected CommandBase(String invoke, String description, ICategory category, Permission requiredPermission, int cooldown, boolean hideResponse,
-	                      OptionData... options) {
+	protected Command(String invoke, String description, ICategory category, Permission requiredPermission, int cooldown, boolean hideResponse,
+	                  OptionData... options) {
 		this.invoke = invoke;
 		this.description = description;
 		this.category = category;

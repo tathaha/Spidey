@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.commands.music;
 
-import dev.mlnr.spidey.objects.command.CommandBase;
+import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.objects.music.TrackScheduler;
@@ -11,7 +11,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 @SuppressWarnings("unused")
-public class RepeatCommand extends CommandBase {
+public class RepeatCommand extends Command {
 	public RepeatCommand() {
 		super("repeat", "Sets the repeat mode", Category.MUSIC, Permission.UNKNOWN, 0,
 				new OptionData(OptionType.STRING, "repeat_mode", "The repeat mode to set", true)

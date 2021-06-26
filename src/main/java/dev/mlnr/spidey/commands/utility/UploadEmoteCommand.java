@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.commands.utility;
 
-import dev.mlnr.spidey.objects.command.CommandBase;
+import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.utils.Utils;
@@ -18,7 +18,7 @@ import java.net.URL;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
-public class UploadEmoteCommand extends CommandBase {
+public class UploadEmoteCommand extends Command {
 	public UploadEmoteCommand() {
 		super("uploademote", "Uploads the image from the provided url as an emote", Category.UTILITY, Permission.MANAGE_EMOTES, 4,
 				new OptionData(OptionType.STRING, "link", "The link of the emote", true),

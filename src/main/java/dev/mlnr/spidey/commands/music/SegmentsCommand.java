@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.commands.music;
 
-import dev.mlnr.spidey.objects.command.CommandBase;
+import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
 import net.dv8tion.jda.api.Permission;
@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import static dev.mlnr.spidey.utils.MusicUtils.formatDuration;
 
 @SuppressWarnings("unused")
-public class SegmentsCommand extends CommandBase {
+public class SegmentsCommand extends Command {
 	public SegmentsCommand() {
 		super("segments", "Lists all non music SponsorBlock segments in this video", Category.MUSIC, Permission.UNKNOWN, 4,
 				new OptionData(OptionType.BOOLEAN, "reload", "Whether to force reload the segments"));

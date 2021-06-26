@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.commands.settings.music;
 
-import dev.mlnr.spidey.objects.command.CommandBase;
+import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.utils.MusicUtils;
@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 @SuppressWarnings("unused")
-public class SegmentSkippingCommand extends CommandBase {
+public class SegmentSkippingCommand extends Command {
 	public SegmentSkippingCommand() {
 		super("segmentskipping", "Enables/disables non-music segment skipping using SponsorBlock", Category.Settings.MUSIC, Permission.UNKNOWN, 4,
 				new OptionData(OptionType.BOOLEAN, "enable", "Whether to enable support for SponsorBlock segments", true));

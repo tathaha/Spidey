@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.commands.informative;
 
-import dev.mlnr.spidey.objects.command.CommandBase;
+import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.utils.Utils;
@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.Permission;
 import static java.lang.String.format;
 
 @SuppressWarnings("unused")
-public class SettingsCommand extends CommandBase {
+public class SettingsCommand extends Command {
 	public SettingsCommand() {
 		super("settings", "Shows the current settings for this server", Category.INFORMATIVE, Permission.UNKNOWN, 0);
 	}

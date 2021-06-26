@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.commands.nsfw;
 
-import dev.mlnr.spidey.objects.command.CommandBase;
+import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.objects.nsfw.NSFWType;
@@ -14,7 +14,7 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import java.awt.*;
 
 @SuppressWarnings("unused")
-public class NsfwCommand extends CommandBase {
+public class NsfwCommand extends Command {
 	public NsfwCommand() {
 		super("nsfw", "Sends a NSFW image", Category.NSFW, Permission.UNKNOWN, 4,
 				new OptionData(OptionType.STRING, "type", "The type of the NSFW image", true)
