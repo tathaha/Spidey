@@ -35,7 +35,7 @@ public abstract class Command {
 	}
 
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 
 	public ICategory getCategory() {
