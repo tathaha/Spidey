@@ -6,7 +6,9 @@ import dev.mlnr.spidey.objects.command.CommandContext;
 import io.github.classgraph.ClassGraph;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +37,7 @@ public class CommandHandler {
 		}
 		var vip = cache.getGuildSettingsCache().getGeneralSettings(guildId).isVip();
 		var userId = member.getIdLong();
-		var executed = command.execute(new CommandContext(event, i18n, cache));
+		var executed = command.execute(new CommandContext(event, command.shouldHideResponse(), i18n, cache));
 		if (executed) {
 			cooldown(userId, command, vip);
 		}
@@ -45,6 +47,8 @@ public class CommandHandler {
 		var commandsUpdate = jda.updateCommands();
 
 		try (var result = new ClassGraph().acceptPackages("dev.mlnr.spidey.commands").scan()) {
+			var hideOption = new OptionData(OptionType.BOOLEAN, "hide", "Whether to hide the response");
+
 			for (var cls : result.getAllClasses()) {
 				var command = (CommandBase) cls.loadClass().getDeclaredConstructor().newInstance();
 				var commandName = command.getInvoke();
@@ -52,6 +56,7 @@ public class CommandHandler {
 
 				var commandData = new CommandData(commandName, command.getDescription());
 				commandData.addOptions(command.getOptions());
+				commandData.addOptions(hideOption);
 				commandsUpdate.addCommands(commandData);
 			}
 			commandsUpdate.queue();

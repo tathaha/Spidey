@@ -10,12 +10,14 @@ import net.dv8tion.jda.api.interactions.components.Button;
 
 public class CommandContext {
 	private final SlashCommandEvent event;
+	private final boolean hideResponse;
 	private final I18n i18n;
 
 	private final Cache cache;
 
-	public CommandContext(SlashCommandEvent event, I18n i18n, Cache cache) {
+	public CommandContext(SlashCommandEvent event, boolean hideResponse, I18n i18n, Cache cache) {
 		this.event = event;
+		this.hideResponse = hideResponse;
 		this.i18n = i18n;
 
 		this.cache = cache;
@@ -84,23 +86,20 @@ public class CommandContext {
 		var option = event.getOption(name);
 		return option == null ? null : option.getAsBoolean();
 	}
-	
+
 	// reply methods
 
-	public void reply(String content) {
-		event.reply(content).setEphemeral(true).queue();
+	private boolean shouldHideResponse() {
+		var shouldHide = getBooleanOption("hide");
+		return shouldHide == null ? hideResponse : shouldHide;
 	}
 
-	public void reply(String content, boolean ephemeral) {
-		event.reply(content).setEphemeral(ephemeral).queue();
+	public void reply(String content) {
+		event.reply(content).setEphemeral(shouldHideResponse()).queue();
 	}
 
 	public void reply(EmbedBuilder embedBuilder) {
-		reply(embedBuilder, true);
-	}
-
-	public void reply(EmbedBuilder embedBuilder, boolean ephemeral) {
-		event.replyEmbeds(embedBuilder.build()).setEphemeral(ephemeral).queue();
+		event.replyEmbeds(embedBuilder.build()).setEphemeral(shouldHideResponse()).queue();
 	}
 
 	public void replyWithButtons(String content, Button... buttons) {
@@ -121,10 +120,6 @@ public class CommandContext {
 
 	public void replyErrorLocalized(String key, Object... args) {
 		replyError(i18n.get(key, args));
-	}
-
-	public void editReply(String content) {
-		event.getHook().editOriginal(content).queue();
 	}
 
 	public void editReply(EmbedBuilder embedBuilder) {

@@ -11,7 +11,7 @@ import java.awt.*;
 @SuppressWarnings("unused")
 public class EditSnipeCommand extends CommandBase {
 	public EditSnipeCommand() {
-		super("editsnipe", "Snipes an edited message", Category.UTILITY, Permission.UNKNOWN, 6);
+		super("editsnipe", "Snipes an edited message", Category.UTILITY, Permission.UNKNOWN, 6, false);
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class EditSnipeCommand extends CommandBase {
 
 		ctx.getJDA().retrieveUserById(lastEditedMessage.getAuthorId()).queue(user -> {
 			embedBuilder.setAuthor(user.getName(), lastEditedMessage.getJumpUrl(), user.getEffectiveAvatarUrl());
-			ctx.reply(embedBuilder, false);
+			ctx.reply(embedBuilder);
 		});
 		return true;
 	}

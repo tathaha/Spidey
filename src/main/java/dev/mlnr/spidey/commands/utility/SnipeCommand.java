@@ -11,7 +11,7 @@ import java.awt.*;
 @SuppressWarnings("unused")
 public class SnipeCommand extends CommandBase {
 	public SnipeCommand() {
-		super("snipe", "Snipes a deleted message", Category.UTILITY, Permission.UNKNOWN, 6);
+		super("snipe", "Snipes a deleted message", Category.UTILITY, Permission.UNKNOWN, 6, false);
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class SnipeCommand extends CommandBase {
 
 		ctx.getJDA().retrieveUserById(lastDeletedMessage.getAuthorId()).queue(user -> {
 			embedBuilder.setAuthor(user.getName(), null, user.getEffectiveAvatarUrl());
-			ctx.reply(embedBuilder, false);
+			ctx.reply(embedBuilder);
 		});
 		return true;
 	}

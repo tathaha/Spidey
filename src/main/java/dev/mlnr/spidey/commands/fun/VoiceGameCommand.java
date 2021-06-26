@@ -14,7 +14,7 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 @SuppressWarnings("unused")
 public class VoiceGameCommand extends CommandBase {
 	public VoiceGameCommand() {
-		super("voicegame", "Creates an invite for a game for a voice channel", Category.FUN, Permission.CREATE_INSTANT_INVITE, 10,
+		super("voicegame", "Creates an invite for a game for a voice channel", Category.FUN, Permission.CREATE_INSTANT_INVITE, 10, false,
 				new OptionData(OptionType.STRING, "game", "The game to create an invite for", true)
 						.addChoices(Utils.getChoicesFromEnum(VoiceGameType.class)),
 				new OptionData(OptionType.CHANNEL, "channel", "The channel to create the game invite for"));
@@ -51,7 +51,7 @@ public class VoiceGameCommand extends CommandBase {
 		Requester.launchVoiceGameSession(channel.getId(), voiceGame, code -> {
 			embedBuilder.setColor(16711680);
 			embedBuilder.setDescription(i18n.get("commands.voicegame.click", code, voiceGame.getFriendlyName()));
-			ctx.reply(embedBuilder, false);
+			ctx.reply(embedBuilder);
 		}, error -> ctx.replyErrorLocalized("internal_error", i18n.get("commands.voicegame.create"), error.getMessage()));
 		return true;
 	}

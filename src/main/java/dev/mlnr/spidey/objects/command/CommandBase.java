@@ -10,14 +10,21 @@ public abstract class CommandBase {
 	private final ICategory category;
 	private final Permission requiredPermission;
 	private final int cooldown;
+	private final boolean hideResponse;
 	private final OptionData[] options;
 
 	protected CommandBase(String invoke, String description, ICategory category, Permission requiredPermission, int cooldown, OptionData... options) {
+		this(invoke, description, category, requiredPermission, cooldown, true, options);
+	}
+
+	protected CommandBase(String invoke, String description, ICategory category, Permission requiredPermission, int cooldown, boolean hideResponse,
+	                      OptionData... options) {
 		this.invoke = invoke;
 		this.description = description;
 		this.category = category;
 		this.requiredPermission = requiredPermission;
 		this.cooldown = cooldown;
+		this.hideResponse = hideResponse;
 		this.options = options;
 	}
 
@@ -41,6 +48,10 @@ public abstract class CommandBase {
 
 	public int getCooldown() {
 		return this.cooldown;
+	}
+
+	public boolean shouldHideResponse() {
+		return this.hideResponse;
 	}
 
 	public OptionData[] getOptions() {
