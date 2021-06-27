@@ -239,9 +239,6 @@
       "paused": "paused",
       "unpaused": "unpaused"
     },
-    "play": {
-
-    },
     "queue": {
       "text": {
         "one": "There is **1** track in the queue",
@@ -285,21 +282,9 @@
       "added": "You've voted to skip the current track. Votes:",
       "skipped": "The current song has been skipped."
     },
-    "stop": {
-
-    },
     "volume": {
       "set": "The volume has been set to **%d%%**.",
       "already_set": "The volume is already set to **%d%%**."
-    },
-    "nsfw": {
-
-    },
-    "vip": {
-
-    },
-    "joinrole": {
-
     },
     "log": {
       "not_text": "Selected channel is not a text channel.",
@@ -313,9 +298,6 @@
       "current": "Current default music volume is **%d%%**. You can change this by using `/defaultvolume <volume>`.",
       "set": "The default music volume has been set to **%d%%**.",
       "already_set": "The default music volume is already set to **%d%%**."
-    },
-    "djrole": {
-
     },
     "fairqueue": {
       "provide_argument": "Please provide at least one argument.",
@@ -333,15 +315,6 @@
         "text": "Segment skipping has been **%s**.",
         "warning": "As SponsorBlock is a crowdsourced extension, some segments can be placed at wrong timing. Report such submissions on SponsorBlock's Discord, not to the Developer."
       }
-    },
-    "editsnipe": {
-
-    },
-    "eval": {
-
-    },
-    "snipe": {
-
     },
     "uploademote": {
       "no_perms": "I don't have permission to upload emotes",
