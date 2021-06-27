@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static dev.mlnr.spidey.handlers.command.CooldownHandler.cooldown;
+import static dev.mlnr.spidey.handlers.command.CooldownHandler.isOnCooldown;
 
 public class CommandHandler {
 	private static final Map<String, Command> COMMANDS = new HashMap<>();
@@ -35,8 +36,12 @@ public class CommandHandler {
 			event.reply(i18n.get("command_failures.no_perms", requiredPermission.getName())).setEphemeral(true).queue();
 			return;
 		}
-		var vip = cache.getGuildSettingsCache().getGeneralSettings(guildId).isVip();
 		var userId = member.getIdLong();
+		if (isOnCooldown(userId, command)) {
+			event.reply(i18n.get("command_failures.cooldown")).setEphemeral(true).queue();
+			return;
+		}
+		var vip = cache.getGuildSettingsCache().getGeneralSettings(guildId).isVip();
 		var executed = command.execute(new CommandContext(event, command.shouldHideResponse(), i18n, cache));
 		if (executed) {
 			cooldown(userId, command, vip);
