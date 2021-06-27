@@ -4,25 +4,9 @@
   "internal_error": "Unfortunately, I couldn't %s due to an internal error: **%s**. Please report this message to the Developer.",
   "enabled": "enabled",
   "disabled": "disabled",
-  "number": {
-    "range": "Please enter a number from 1-%d.",
-    "invalid": "Entered value is either negative or not a number."
-  },
   "selection": {
     "type_number": "Type a number to select a %s or `%s` to cancel the selection.",
     "cancel": "cancel"
-  },
-  "argument_parser": {
-    "types": {
-      "user": "User",
-      "role": "Role",
-      "text_channel": "Text Channel",
-      "voice_channel": "Voice Channel"
-    },
-    "not_found": {
-      "text": "not found.",
-      "given_name": "No %ss with given name found."
-    }
   },
   "command_failures": {
     "cooldown": "This command is on cooldown.",
