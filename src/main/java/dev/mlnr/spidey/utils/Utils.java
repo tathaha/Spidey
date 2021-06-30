@@ -7,11 +7,11 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.interactions.commands.Command;
+import net.dv8tion.jda.api.utils.TimeFormat;
 import net.jodah.expiringmap.ExpirationPolicy;
 import net.jodah.expiringmap.ExpiringMap;
 
 import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 public class Utils {
 	public static final Pattern TEXT_PATTERN = Pattern.compile("[a-zA-Z0-9-_]+");
 	public static final int SPIDEY_COLOR = 3288807;
-	private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("EE, d.LLL y | HH:mm:ss");
 
 	private Utils() {}
 
@@ -55,7 +54,7 @@ public class Utils {
 	}
 
 	public static String formatDate(OffsetDateTime date) {
-		return DATE_FORMATTER.format(date);
+		return TimeFormat.DATE_TIME_LONG.format(date);
 	}
 
 	public static <K, V> ExpiringMap<K, V> createDefaultExpiringMap() {
