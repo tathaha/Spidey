@@ -140,7 +140,7 @@ public class StringUtils {
 		var stringBuilder = new StringBuilder(length);
 		var random = ThreadLocalRandom.current();
 		for (var i = 0; i < length; i++) {
-			var randomInt = random.nextInt(length);
+			var randomInt = random.nextInt(CHARACTERS.length());
 			stringBuilder.append(CHARACTERS.charAt(randomInt));
 		}
 		return stringBuilder.toString();
