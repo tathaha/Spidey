@@ -15,6 +15,9 @@ repositories {
     maven {
         url 'https://m2.dv8tion.net/releases'
     }
+    maven {
+        url 'https://jitpack.io'
+    }
 }
 
 dependencies {
@@ -34,7 +37,7 @@ dependencies {
     implementation group: 'net.jodah', name: 'expiringmap', version: '0.5.9'
 
     // jda
-    implementation("net.dv8tion:JDA:4.3.0_288") {
+    implementation("com.github.DV8FromTheWorld:JDA:0c6c326") {
         exclude group: 'club.minnced', module: 'opus-java'
     }
 

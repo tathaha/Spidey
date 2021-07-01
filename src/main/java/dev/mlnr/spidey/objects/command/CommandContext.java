@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.interactions.components.Button;
+import net.dv8tion.jda.api.interactions.components.Component;
 
 public class CommandContext {
 	private final SlashCommandEvent event;
@@ -102,12 +102,12 @@ public class CommandContext {
 		event.replyEmbeds(embedBuilder.build()).setEphemeral(shouldHideResponse()).queue();
 	}
 
-	public void replyWithButtons(String content, Button... buttons) {
-		event.reply(content).addActionRow(buttons).queue();
+	public void replyWithAction(String content, Component... components) {
+		event.reply(content).addActionRow(components).queue();
 	}
 
-	public void replyWithButtons(EmbedBuilder embedBuilder, Button... buttons) {
-		event.replyEmbeds(embedBuilder.build()).addActionRow(buttons).queue();
+	public void replyWithAction(EmbedBuilder embedBuilder, Component... components) {
+		event.replyEmbeds(embedBuilder.build()).addActionRow(components).queue();
 	}
 
 	public void replyLocalized(String key, Object... args) {
@@ -120,6 +120,10 @@ public class CommandContext {
 
 	public void replyErrorLocalized(String key, Object... args) {
 		replyError(i18n.get(key, args));
+	}
+
+	public void editReply(String content) {
+		event.getHook().editOriginal(content).queue();
 	}
 
 	public void editReply(EmbedBuilder embedBuilder) {

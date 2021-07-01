@@ -7,8 +7,6 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
-import dev.mlnr.spidey.objects.music.AudioLoader;
-import dev.mlnr.spidey.utils.ConcurrentUtils;
 import dev.mlnr.spidey.utils.MusicUtils;
 import dev.mlnr.spidey.utils.StringUtils;
 import net.dv8tion.jda.api.Permission;
@@ -29,32 +27,23 @@ public class SearchCommand extends Command {
 			return false;
 		}
 		var query = ctx.getStringOption("query");
-		var i18n = ctx.getI18n();
 		MusicUtils.loadQuery(musicPlayer, "ytsearch:" + query, new AudioLoadResultHandler() {
 			@Override
 			public void trackLoaded(AudioTrack track) {}
 
 			@Override
 			public void playlistLoaded(AudioPlaylist playlist) {
-				var selectionEmbedBuilder = MusicUtils.createMusicResponseBuilder();
-				selectionEmbedBuilder.setAuthor(i18n.get("commands.search.searching", query));
-
-				var tracks = playlist.getTracks();
-				StringUtils.createSelection(selectionEmbedBuilder, tracks, ctx, "track", MusicUtils::formatTrack, ConcurrentUtils.getEventWaiter(), choice -> {
-					var url = tracks.get(choice).getInfo().uri;
-					var loader = new AudioLoader(musicPlayer, url, ctx);
-					MusicUtils.loadQuery(musicPlayer, url, loader);
-				});
+				StringUtils.createTrackSelection(ctx, musicPlayer, playlist.getTracks());
 			}
 
 			@Override
 			public void noMatches() {
-				ctx.replyError(i18n.get("music.messages.failure.no_matches", query));
+				ctx.replyErrorLocalized("music.messages.failure.no_matches", query);
 			}
 
 			@Override
 			public void loadFailed(FriendlyException exception) {
-				ctx.replyError(i18n.get("commands.search.error"));
+				ctx.replyErrorLocalized("commands.search.error");
 			}
 		});
 		return true;

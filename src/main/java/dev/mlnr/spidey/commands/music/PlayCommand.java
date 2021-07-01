@@ -24,7 +24,7 @@ public class PlayCommand extends Command {
 		}
 		var query = ctx.getStringOption("query");
 		var toLoad = MusicUtils.YOUTUBE_URL_PATTERN.matcher(query).matches() ? query : "ytsearch:" + query;
-		var loader = new AudioLoader(musicPlayer, toLoad, ctx);
+		var loader = new AudioLoader(musicPlayer, toLoad, ctx, false);
 		MusicUtils.loadQuery(musicPlayer, toLoad, loader);
 		return true;
 	}

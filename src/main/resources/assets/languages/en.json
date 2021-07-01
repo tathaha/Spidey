@@ -5,8 +5,7 @@
   "enabled": "enabled",
   "disabled": "disabled",
   "selection": {
-    "type_number": "Type a number to select a %s or `%s` to cancel the selection.",
-    "cancel": "cancel"
+    "choose": "Choose the track to play"
   },
   "command_failures": {
     "cooldown": "This command is on cooldown.",
