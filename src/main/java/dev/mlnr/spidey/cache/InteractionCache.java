@@ -53,7 +53,7 @@ public class InteractionCache {
 		var left = Button.primary(paginatorId + ":BACKWARDS", Emoji.fromUnicode(Emojis.BACKWARDS));
 		var right = Button.primary(paginatorId + ":FORWARD", Emoji.fromUnicode(Emojis.FORWARD));
 		var wastebasket = Button.primary(paginatorId + ":REMOVE", Emoji.fromUnicode(Emojis.WASTEBASKET));
-		ctx.replyWithAction(embedBuilder, left, right, wastebasket);
+		ctx.replyWithComponents(embedBuilder, left, right, wastebasket);
 	}
 
 	public void createPurgePrompt(PurgeProcessor purgeProcessor, String content, CommandContext ctx) {
@@ -63,7 +63,7 @@ public class InteractionCache {
 		var accept = Button.success(purgeProcessorId + ":ACCEPT", Emoji.fromUnicode(Emojis.CHECK));
 		var wastebasket = Button.primary(purgeProcessorId + ":REMOVE", Emoji.fromUnicode(Emojis.WASTEBASKET));
 		var deny = Button.danger(purgeProcessorId + ":DENY", Emoji.fromUnicode(Emojis.CROSS));
-		ctx.replyWithAction(content, accept, wastebasket, deny);
+		ctx.replyWithComponents(content, accept, wastebasket, deny);
 	}
 
 	// dropdowns
@@ -78,6 +78,6 @@ public class InteractionCache {
 				.setPlaceholder(choose)
 				.setRequiredRange(1, 1)
 				.addOptions(options).build();
-		ctx.replyWithAction(choose, menu);
+		ctx.replyWithComponents(choose, menu);
 	}
 }

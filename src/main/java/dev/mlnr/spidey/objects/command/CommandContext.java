@@ -102,11 +102,11 @@ public class CommandContext {
 		event.replyEmbeds(embedBuilder.build()).setEphemeral(shouldHideResponse()).queue();
 	}
 
-	public void replyWithAction(String content, Component... components) {
+	public void replyWithComponents(String content, Component... components) {
 		event.reply(content).addActionRow(components).queue();
 	}
 
-	public void replyWithAction(EmbedBuilder embedBuilder, Component... components) {
+	public void replyWithComponents(EmbedBuilder embedBuilder, Component... components) {
 		event.replyEmbeds(embedBuilder.build()).addActionRow(components).queue();
 	}
 
