@@ -41,7 +41,7 @@ public class SaveSongCommand extends Command {
 		embedBuilder.setTimestamp(Instant.now());
 
 		user.openPrivateChannel().submit()
-				.thenCompose(privateChannel -> privateChannel.sendMessage(embedBuilder.build()).submit())
+				.thenCompose(privateChannel -> privateChannel.sendMessageEmbeds(embedBuilder.build()).submit())
 				.whenComplete((ignored, throwable) -> {
 					if (throwable != null) {
 						ctx.replyErrorLocalized("commands.savesong.open_dms");

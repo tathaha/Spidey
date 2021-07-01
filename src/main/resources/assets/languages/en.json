@@ -156,7 +156,6 @@
           "tier": "Boost Tier",
           "amount": "Boosts"
         },
-        "region": "Region",
         "creation": "Creation",
         "vanity_url": {
           "title": "Custom invite/Vanity url",
