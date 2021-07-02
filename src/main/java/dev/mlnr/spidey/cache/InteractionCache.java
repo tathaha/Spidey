@@ -68,12 +68,13 @@ public class InteractionCache {
 
 	// dropdowns
 
-	public void createDropdown(CommandContext ctx, MusicPlayer musicPlayer, SelectOption[] options) {
+	public void createYouTubeSearchDropdown(CommandContext ctx, MusicPlayer musicPlayer, SelectOption[] options) {
 		var dropdownId = StringUtils.randomString(30);
 		var dropdown = new YouTubeSearchDropdown(dropdownId, ctx, musicPlayer, this);
 		addInteraction(dropdownId, dropdown);
 
-		var choose = ctx.getI18n().get("selection.choose");
+		var i18n = ctx.getI18n();
+		var choose = i18n.get("selection.text", i18n.get("selection.track"));
 		var menu = SelectionMenu.create(dropdownId)
 				.setPlaceholder(choose)
 				.setRequiredRange(1, 1)

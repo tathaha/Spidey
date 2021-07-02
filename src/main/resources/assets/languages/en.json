@@ -5,7 +5,8 @@
   "enabled": "enabled",
   "disabled": "disabled",
   "selection": {
-    "choose": "Choose the track to play"
+    "text": "Choose the %s",
+    "track": "track to play"
   },
   "command_failures": {
     "cooldown": "This command is on cooldown.",

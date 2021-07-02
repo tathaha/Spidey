@@ -100,7 +100,7 @@ public class StringUtils {
 			options[i] = SelectOption.of(trimString(trackInfo.author, 25), trackInfo.uri)
 					.withDescription(trimString(trackInfo.title, 50));
 		}
-		ctx.getCache().getInteractionCache().createDropdown(ctx, musicPlayer, options);
+		ctx.getCache().getInteractionCache().createYouTubeSearchDropdown(ctx, musicPlayer, options);
 	}
 
 	public static String randomString(int length) {
