@@ -69,7 +69,7 @@ public class Paginator implements Interaction {
 
 	@Override
 	public InteractionType getType() {
-		return Interaction.InteractionType.PAGINATION;
+		return Interaction.InteractionType.PAGINATOR;
 	}
 
 	@Override

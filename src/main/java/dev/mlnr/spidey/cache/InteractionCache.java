@@ -5,7 +5,7 @@ import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.interactions.Interaction;
 import dev.mlnr.spidey.objects.interactions.buttons.Paginator;
 import dev.mlnr.spidey.objects.interactions.buttons.PurgeProcessor;
-import dev.mlnr.spidey.objects.interactions.dropdowns.Dropdown;
+import dev.mlnr.spidey.objects.interactions.dropdowns.YouTubeSearchDropdown;
 import dev.mlnr.spidey.objects.music.MusicPlayer;
 import dev.mlnr.spidey.utils.StringUtils;
 import dev.mlnr.spidey.utils.Utils;
@@ -70,7 +70,7 @@ public class InteractionCache {
 
 	public void createDropdown(CommandContext ctx, MusicPlayer musicPlayer, SelectOption[] options) {
 		var dropdownId = StringUtils.randomString(30);
-		var dropdown = new Dropdown(dropdownId, ctx, musicPlayer, this);
+		var dropdown = new YouTubeSearchDropdown(dropdownId, ctx, musicPlayer, this);
 		addInteraction(dropdownId, dropdown);
 
 		var choose = ctx.getI18n().get("selection.choose");

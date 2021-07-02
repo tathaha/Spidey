@@ -3,7 +3,7 @@ package dev.mlnr.spidey.objects.interactions;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.interactions.buttons.Paginator;
 import dev.mlnr.spidey.objects.interactions.buttons.PurgeProcessor;
-import dev.mlnr.spidey.objects.interactions.dropdowns.Dropdown;
+import dev.mlnr.spidey.objects.interactions.dropdowns.YouTubeSearchDropdown;
 import net.jodah.expiringmap.ExpirationPolicy;
 
 import java.util.concurrent.TimeUnit;
@@ -22,7 +22,7 @@ public interface Interaction {
 
 	enum InteractionType {
 		// buttons
-		PAGINATION(ExpirationPolicy.CREATED, 5, TimeUnit.MINUTES, (moveName, interaction) -> {
+		PAGINATOR(ExpirationPolicy.CREATED, 5, TimeUnit.MINUTES, (moveName, interaction) -> {
 			var move = Paginator.Action.valueOf(moveName);
 			((Paginator) interaction.getObject()).switchPage(move);
 		}),
@@ -31,8 +31,8 @@ public interface Interaction {
 			((PurgeProcessor) interaction.getObject()).processPrompt(action);
 		}),
 		// dropdowns
-		DROPDOWN(ExpirationPolicy.CREATED, 1, TimeUnit.MINUTES, (link, interaction) -> {
-			((Dropdown) interaction.getObject()).loadVideo(link);
+		YOUTUBE_SEARCH_DROPDOWN(ExpirationPolicy.CREATED, 1, TimeUnit.MINUTES, (link, interaction) -> {
+			((YouTubeSearchDropdown) interaction.getObject()).loadVideo(link);
 		});
 
 		private final ExpirationPolicy expirationPolicy;
