@@ -51,7 +51,7 @@ dependencies {
 }
 
 jooq {
-    version = '3.14.11'
+    version = '3.14.12'
     configurations {
         main {
             generateSchemaSourceOnCompilation = false
