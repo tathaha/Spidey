@@ -36,13 +36,6 @@ public class Utils {
 		}
 	}
 
-	public static void deleteMessage(Message msg) {
-		var channel = msg.getTextChannel();
-		if (channel.getGuild().getSelfMember().hasPermission(channel, Permission.MESSAGE_MANAGE)) {
-			msg.delete().queue();
-		}
-	}
-
 	public static EmbedBuilder createEmbedBuilder(User user) {
 		return new EmbedBuilder().setFooter("Command executed by " + user.getAsTag(), user.getEffectiveAvatarUrl()).setColor(0xFEFEFE);
 	}
