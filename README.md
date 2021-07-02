@@ -24,9 +24,7 @@ Other:
 
 ## Vote for Spidey
 
-[![Spidey's Widget](https://api.botlist.space/widget/772446532560486410/6?rounded=true& "Spidey's Widget")](https://botlist.space/bot/772446532560486410)
-
-[![Discord Bots](https://top.gg/api/widget/772446532560486410.svg)](https://top.gg/bot/772446532560486410)
+[![top.gg](https://top.gg/api/widget/772446532560486410.svg)](https://top.gg/bot/772446532560486410)
 
 ## Support server
 
