@@ -36,19 +36,12 @@ public class VolumeCommand extends Command {
 		}
 		var currentVolume = musicPlayer.getVolume();
 		var newVolume = (int) Math.min(ctx.getLongOption("volume"), 150);
-		if (!checkNewVolume(ctx, newVolume, currentVolume)) {
+		if (newVolume == currentVolume) {
+			ctx.replyErrorLocalized("commands.volume.already_set", currentVolume);
 			return false;
 		}
 		musicPlayer.setVolume(newVolume);
 		ctx.replyLocalized("commands.volume.set", newVolume);
-		return true;
-	}
-
-	private boolean checkNewVolume(CommandContext ctx, int newVolume, int currentVolume) {
-		if (newVolume == currentVolume) {
-			ctx.replyErrorLocalized("commands.volume.already_set", newVolume);
-			return false;
-		}
 		return true;
 	}
 }
