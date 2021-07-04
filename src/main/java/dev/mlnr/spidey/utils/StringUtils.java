@@ -3,16 +3,13 @@ package dev.mlnr.spidey.utils;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import dev.mlnr.spidey.handlers.command.CommandHandler;
 import dev.mlnr.spidey.objects.command.CommandContext;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import dev.mlnr.spidey.objects.music.MusicPlayer;
+import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
 import org.apache.commons.collections4.ListUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
-import java.util.function.IntConsumer;
 
 import static java.lang.Math.min;
 
@@ -68,47 +65,6 @@ public class StringUtils {
 		return costs[s2.length()];
 	}
 
-	public static <T> void createSelection(EmbedBuilder selectionBuilder, List<T> elements, CommandContext ctx, String selectionType, Function<T, String> mapper,
-	                                       EventWaiter eventWaiter, IntConsumer choiceConsumer) {
-		var descriptionBuilder = selectionBuilder.getDescriptionBuilder();
-		var size = min(elements.size(), 10);
-		for (var i = 0; i < size; i++) {
-			var elem = elements.get(i);
-			descriptionBuilder.append(i + 1).append(". ").append(mapper.apply(elem)).append("\n");
-		}
-		var i18n = ctx.getI18n();
-		var cancel = i18n.get("selection.cancel");
-		descriptionBuilder.append("\n\n").append(i18n.get("selection.type_number", selectionType, cancel));
-		selectionBuilder.setDescription(descriptionBuilder.toString());
-
-		var channel = ctx.getTextChannel();
-		ctx.getEvent().replyEmbeds(selectionBuilder.build()).setEphemeral(true).queue(success -> {
-			eventWaiter.waitForEvent(GuildMessageReceivedEvent.class, event -> event.getChannel().equals(channel) && event.getAuthor().equals(ctx.getUser()),
-					event -> {
-						var choiceMessage = event.getMessage();
-						var content = choiceMessage.getContentRaw();
-						if (content.equalsIgnoreCase(cancel)) {
-							Utils.deleteMessage(choiceMessage);
-							return;
-						}
-						var choice = 0;
-						try {
-							choice = Integer.parseUnsignedInt(content);
-						}
-						catch (NumberFormatException ex) {
-							ctx.replyErrorLocalized("number.invalid");
-							return;
-						}
-						if (choice == 0 || choice > size) {
-							ctx.replyErrorLocalized("number.range", size);
-							return;
-						}
-						choiceConsumer.accept(choice - 1);
-					}, 1, TimeUnit.MINUTES,
-					() -> ctx.replyErrorLocalized("took_too_long"));
-		});
-	}
-
 	public static void createQueuePaginator(CommandContext ctx, List<AudioTrack> queue) {
 		var trackChunks = ListUtils.partition(queue, 10);
 		var pages = new ArrayList<String>(trackChunks.size());
@@ -128,7 +84,7 @@ public class StringUtils {
 		var i18n = ctx.getI18n();
 		var pluralized = size == 1 ? i18n.get("commands.queue.text.one") : i18n.get("commands.queue.text.multiple", size);
 
-		ctx.getCache().getButtonActionCache().createPaginator(ctx, pages.size(), (page, embedBuilder) -> {
+		ctx.getCache().getInteractionCache().createPaginator(ctx, pages.size(), (page, embedBuilder) -> {
 			embedBuilder.setAuthor(i18n.get("paginator.queue", ctx.getGuild().getName()));
 			embedBuilder.setDescription(pages.get(page));
 			embedBuilder.appendDescription("\n\n").appendDescription(pluralized).appendDescription(" ")
@@ -136,13 +92,31 @@ public class StringUtils {
 		});
 	}
 
+	public static void createTrackSelection(CommandContext ctx, MusicPlayer musicPlayer, List<AudioTrack> tracks) {
+		var size = min(tracks.size(), 25);
+		var options = new SelectOption[size];
+		for (var i = 0; i < size; i++) {
+			var trackInfo = tracks.get(i).getInfo();
+			options[i] = SelectOption.of(trimString(trackInfo.author, 25), trackInfo.uri)
+					.withDescription(trimString(trackInfo.title, 50));
+		}
+		ctx.getCache().getInteractionCache().createYouTubeSearchDropdown(ctx, musicPlayer, options);
+	}
+
 	public static String randomString(int length) {
 		var stringBuilder = new StringBuilder(length);
 		var random = ThreadLocalRandom.current();
 		for (var i = 0; i < length; i++) {
-			var randomInt = random.nextInt(length);
+			var randomInt = random.nextInt(CHARACTERS.length());
 			stringBuilder.append(CHARACTERS.charAt(randomInt));
 		}
 		return stringBuilder.toString();
+	}
+
+	public static String trimString(String string, int maxLength) {
+		if (string.length() > maxLength) {
+			return string.substring(0, maxLength - 1) + "…";
+		}
+		return string;
 	}
 }

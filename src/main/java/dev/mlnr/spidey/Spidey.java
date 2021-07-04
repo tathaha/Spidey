@@ -7,7 +7,6 @@ import dev.mlnr.blh.jda.BLHJDAListener;
 import dev.mlnr.spidey.cache.Cache;
 import dev.mlnr.spidey.events.*;
 import dev.mlnr.spidey.objects.I18n;
-import dev.mlnr.spidey.utils.ConcurrentUtils;
 import dev.mlnr.spidey.utils.MusicUtils;
 import net.dv8tion.jda.api.GatewayEncoding;
 import net.dv8tion.jda.api.JDA;
@@ -72,8 +71,7 @@ public class Spidey {
 			.setMemberCachePolicy(MemberCachePolicy.VOICE)
 			.setChunkingFilter(ChunkingFilter.NONE)
 			.addEventListeners(new ReadyEvents(databaseManager, cache), new BanEvents(cache), new DeleteEvents(cache), new GuildEvents(databaseManager, cache),
-					new InviteEvents(cache), new MemberEvents(cache), new MessageEvents(cache), new VoiceEvent(cache), new InteractionEvents(cache),
-					new BLHJDAListener(blh), ConcurrentUtils.getEventWaiter()) // TODO get rid of EventWaiter once dropdowns are out
+					new InviteEvents(cache), new MemberEvents(cache), new MessageEvents(cache), new VoiceEvent(cache), new InteractionEvents(cache), new BLHJDAListener(blh))
 			.setActivity(Activity.watching("myself load"))
 			.setStatus(OnlineStatus.DO_NOT_DISTURB)
 			.setGatewayEncoding(GatewayEncoding.ETF)

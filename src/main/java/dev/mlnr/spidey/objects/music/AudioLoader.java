@@ -16,11 +16,13 @@ public class AudioLoader implements AudioLoadResultHandler {
 	private final MusicPlayer musicPlayer;
 	private final String query;
 	private final CommandContext ctx;
+	private final boolean useHook;
 
-	public AudioLoader(MusicPlayer musicPlayer, String query, CommandContext ctx) {
+	public AudioLoader(MusicPlayer musicPlayer, String query, CommandContext ctx, boolean useHook) {
 		this.musicPlayer = musicPlayer;
 		this.query = query;
 		this.ctx = ctx;
+		this.useHook = useHook; // dirty as fuck, I hate this
 	}
 
 	@Override
@@ -114,7 +116,12 @@ public class AudioLoader implements AudioLoadResultHandler {
 		var responseDescriptionBuilder = responseEmbedBuilder.getDescriptionBuilder();
 		responseDescriptionBuilder.append(queue.isEmpty() ? i18n.get("music.messages.playing") : i18n.get("music.messages.queued")).append(" ").append(title)
 				.append(stream ? "" : " " + formatLength(originalLength, lengthWithoutSegments, i18n)).append(" [").append(requester.getAsMention()).append("]");
-		ctx.reply(responseEmbedBuilder);
+		if (useHook) { // I hate this so fucking much
+			ctx.getEvent().getHook().sendMessageEmbeds(responseEmbedBuilder.build()).queue();
+		}
+		else {
+			ctx.reply(responseEmbedBuilder);
+		}
 		return null;
 	}
 }

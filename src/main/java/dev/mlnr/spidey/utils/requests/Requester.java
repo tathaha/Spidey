@@ -24,6 +24,7 @@ import static java.lang.Float.parseFloat;
 public class Requester {
 	private static final Logger logger = LoggerFactory.getLogger(Requester.class);
 	private static final OkHttpClient HTTP_CLIENT = new OkHttpClient();
+	private static final String SPONSORBLOCK_URL = "https://sponsor.ajay.app/api/skipSegments?videoID=%s&categories=[\"sponsor\", \"selfpromo\", \"interaction\", \"intro\", \"outro\", \"preview\", \"music_offtopic\"]";
 
 	private Requester() {}
 
@@ -68,7 +69,7 @@ public class Requester {
 
 	public static List<VideoSegment> retrieveVideoSegments(String videoId) {
 		var requestBuilder = new Request.Builder();
-		requestBuilder.url("https://sponsor.ajay.app/api/skipSegments?videoID=" + videoId + "&category=music_offtopic");
+		requestBuilder.url(String.format(SPONSORBLOCK_URL, videoId));
 		try (var response = HTTP_CLIENT.newCall(requestBuilder.build()).execute(); var body = response.body()) {
 			if (response.code() == 404) {
 				return Collections.emptyList();

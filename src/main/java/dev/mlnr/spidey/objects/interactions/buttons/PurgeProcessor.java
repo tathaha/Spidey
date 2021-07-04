@@ -1,34 +1,36 @@
-package dev.mlnr.spidey.objects.buttons;
+package dev.mlnr.spidey.objects.interactions.buttons;
 
-import dev.mlnr.spidey.cache.ButtonActionCache;
+import dev.mlnr.spidey.cache.InteractionCache;
 import dev.mlnr.spidey.objects.I18n;
 import dev.mlnr.spidey.objects.command.CommandContext;
+import dev.mlnr.spidey.objects.interactions.Interaction;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
-public class PurgeProcessor implements ButtonAction {
+public class PurgeProcessor implements Interaction {
 	private final String id;
-	private final List<Message> allMessages;
-	private final List<Message> pinnedMessages;
+	private final List<String> allMessagesIds;
+	private final List<String> pinnedMessagesIds;
 	private final User target;
 	private final CommandContext ctx;
-	private final ButtonActionCache buttonActionCache;
+	private final InteractionCache interactionCache;
 
 	public PurgeProcessor(String id, List<Message> allMessages, List<Message> pinnedMessages, User target, CommandContext ctx,
-	                      ButtonActionCache buttonActionCache) {
+	                      InteractionCache interactionCache) {
 		this.id = id;
-		this.allMessages = allMessages;
-		this.pinnedMessages = pinnedMessages;
+		this.allMessagesIds = allMessages.stream().map(Message::getId).collect(Collectors.toList());
+		this.pinnedMessagesIds = pinnedMessages.stream().map(Message::getId).collect(Collectors.toList());
 		this.target = target;
 		this.ctx = ctx;
-		this.buttonActionCache = buttonActionCache;
+		this.interactionCache = interactionCache;
 	}
 
 	public void processPrompt(PurgeProcessor.PromptAction action) {
-		buttonActionCache.removeButtonAction(this);
+		interactionCache.removeInteraction(this);
 
 		switch (action) {
 			case ACCEPT:
@@ -36,8 +38,8 @@ public class PurgeProcessor implements ButtonAction {
 			case DENY:
 				return;
 			case REMOVE:
-				allMessages.removeAll(pinnedMessages);
-				if (allMessages.isEmpty()) {
+				allMessagesIds.removeAll(pinnedMessagesIds);
+				if (allMessagesIds.isEmpty()) {
 					ctx.replyErrorLocalized("commands.purge.messages.failure.no_messages.unpinned");
 					return;
 				}
@@ -50,14 +52,14 @@ public class PurgeProcessor implements ButtonAction {
 		ctx.getEvent().deferReply().queue();
 
 		var channel = ctx.getTextChannel();
-		var future = CompletableFuture.allOf(channel.purgeMessages(allMessages).toArray(new CompletableFuture[0]));
+		var future = CompletableFuture.allOf(channel.purgeMessagesById(allMessagesIds).toArray(new CompletableFuture[0]));
 		future.whenCompleteAsync((ignored, throwable) -> {
 			var i18n = ctx.getI18n();
 			if (throwable != null) {
 				ctx.replyErrorLocalized("internal_error", "purge messages", throwable.getMessage());
 				return;
 			}
-			ctx.getEvent().getHook().sendMessage(generateSuccessMessage(allMessages.size(), i18n)).setEphemeral(true).queue();
+			ctx.getEvent().getHook().sendMessage(generateSuccessMessage(allMessagesIds.size(), i18n)).setEphemeral(true).queue();
 		});
 	}
 
@@ -78,12 +80,12 @@ public class PurgeProcessor implements ButtonAction {
 	}
 
 	@Override
-	public ActionType getType() {
-		return ButtonAction.ActionType.PURGE_PROMPT;
+	public InteractionType getType() {
+		return Interaction.InteractionType.PURGE_PROMPT;
 	}
 
 	@Override
-	public Object getActionObject() {
+	public Object getObject() {
 		return this;
 	}
 

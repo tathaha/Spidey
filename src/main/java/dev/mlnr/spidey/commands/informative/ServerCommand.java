@@ -43,7 +43,6 @@ public class ServerCommand extends Command {
 		embedBuilder.addField(i18n.get("commands.server.fields.boost.tier"), String.valueOf(guild.getBoostTier().getKey()), true);
 		embedBuilder.addField(i18n.get("commands.server.fields.boost.amount"), String.valueOf(guild.getBoostCount()), true);
 
-		embedBuilder.addField(i18n.get("commands.server.fields.region"), guild.getRegion().getName(), true);
 		embedBuilder.addField(i18n.get("commands.server.fields.creation"), Utils.formatDate(guild.getTimeCreated()), true);
 
 		var vanityUrl = guild.getVanityUrl();
