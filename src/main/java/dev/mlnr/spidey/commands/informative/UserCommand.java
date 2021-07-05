@@ -27,8 +27,7 @@ public class UserCommand extends Command {
 			respond(ctx, author, ctx.getMember());
 		}
 		else {
-			ctx.getGuild().retrieveMember(user)
-					.queue(member -> respond(ctx, user, member), failure -> respond(ctx, user, null));
+			ctx.getGuild().retrieveMember(user).queue(member -> respond(ctx, user, member), failure -> respond(ctx, user, null));
 		}
 		return true;
 	}

@@ -33,12 +33,7 @@ public class PurgeCommand extends Command {
 			ctx.replyErrorLocalized("number.range", 100);
 			return false;
 		}
-		var user = ctx.getUserOption("user");
-		if (user == null) {
-			respond(ctx, null, amount);
-			return true;
-		}
-		respond(ctx, user, amount);
+		respond(ctx, ctx.getUserOption("user"), amount);
 		return true;
 	}
 
