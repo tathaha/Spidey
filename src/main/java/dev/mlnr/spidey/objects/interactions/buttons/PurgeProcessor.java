@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.objects.interactions.buttons;
 
-import dev.mlnr.spidey.cache.InteractionCache;
+import dev.mlnr.spidey.cache.ComponentActionCache;
 import dev.mlnr.spidey.objects.I18n;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.interactions.ComponentAction;
@@ -17,20 +17,20 @@ public class PurgeProcessor implements ComponentAction {
 	private final List<String> pinnedMessagesIds;
 	private final User target;
 	private final CommandContext ctx;
-	private final InteractionCache interactionCache;
+	private final ComponentActionCache componentActionCache;
 
 	public PurgeProcessor(String id, List<Message> allMessages, List<Message> pinnedMessages, User target, CommandContext ctx,
-	                      InteractionCache interactionCache) {
+	                      ComponentActionCache componentActionCache) {
 		this.id = id;
 		this.allMessagesIds = allMessages.stream().map(Message::getId).collect(Collectors.toList());
 		this.pinnedMessagesIds = pinnedMessages.stream().map(Message::getId).collect(Collectors.toList());
 		this.target = target;
 		this.ctx = ctx;
-		this.interactionCache = interactionCache;
+		this.componentActionCache = componentActionCache;
 	}
 
 	public void processPrompt(PurgeProcessor.PromptAction action) {
-		interactionCache.removeInteraction(this);
+		componentActionCache.removeAction(this);
 
 		switch (action) {
 			case ACCEPT:

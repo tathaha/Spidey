@@ -22,17 +22,17 @@ public interface ComponentAction {
 
 	enum ActionType {
 		// buttons
-		PAGINATOR(ExpirationPolicy.CREATED, 5, TimeUnit.MINUTES, (moveName, interaction) -> {
+		PAGINATOR(ExpirationPolicy.CREATED, 5, TimeUnit.MINUTES, (moveName, action) -> {
 			var move = Paginator.Action.valueOf(moveName);
-			((Paginator) interaction.getObject()).switchPage(move);
+			((Paginator) action.getObject()).switchPage(move);
 		}),
-		PURGE_PROMPT(ExpirationPolicy.CREATED, 1, TimeUnit.MINUTES, (actionName, interaction) -> {
-			var action = PurgeProcessor.PromptAction.valueOf(actionName);
-			((PurgeProcessor) interaction.getObject()).processPrompt(action);
+		PURGE_PROMPT(ExpirationPolicy.CREATED, 1, TimeUnit.MINUTES, (actionName, action) -> {
+			var promptAction = PurgeProcessor.PromptAction.valueOf(actionName);
+			((PurgeProcessor) action.getObject()).processPrompt(promptAction);
 		}),
 		// dropdowns
-		YOUTUBE_SEARCH_DROPDOWN(ExpirationPolicy.CREATED, 1, TimeUnit.MINUTES, (link, interaction) -> {
-			((YouTubeSearchDropdown) interaction.getObject()).loadVideo(link);
+		YOUTUBE_SEARCH_DROPDOWN(ExpirationPolicy.CREATED, 1, TimeUnit.MINUTES, (link, action) -> {
+			((YouTubeSearchDropdown) action.getObject()).loadVideo(link);
 		});
 
 		private final ExpirationPolicy expirationPolicy;

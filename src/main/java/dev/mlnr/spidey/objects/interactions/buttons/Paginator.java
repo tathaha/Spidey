@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.objects.interactions.buttons;
 
-import dev.mlnr.spidey.cache.InteractionCache;
+import dev.mlnr.spidey.cache.ComponentActionCache;
 import dev.mlnr.spidey.objects.I18n;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.interactions.ComponentAction;
@@ -15,18 +15,18 @@ public class Paginator implements ComponentAction {
 	private final int totalPages;
 	private final I18n i18n;
 	private final BiConsumer<Integer, EmbedBuilder> pagesConsumer;
-	private final InteractionCache interactionCache;
+	private final ComponentActionCache componentActionCache;
 
 	private int currentPage;
 
 	public Paginator(String id, CommandContext ctx, int totalPages, BiConsumer<Integer, EmbedBuilder> pagesConsumer,
-	                 InteractionCache interactionCache) {
+	                 ComponentActionCache componentActionCache) {
 		this.id = id;
 		this.ctx = ctx;
 		this.totalPages = totalPages;
 		this.i18n = ctx.getI18n();
 		this.pagesConsumer = pagesConsumer;
-		this.interactionCache = interactionCache;
+		this.componentActionCache = componentActionCache;
 	}
 
 	public void switchPage(Paginator.Action action) {
@@ -51,7 +51,7 @@ public class Paginator implements ComponentAction {
 				currentPage++;
 				break;
 			case REMOVE:
-				interactionCache.removeInteraction(this);
+				componentActionCache.removeAction(this);
 				return;
 		}
 		ctx.editReply(newPageBuilder);

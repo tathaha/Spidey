@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.objects.interactions.dropdowns;
 
-import dev.mlnr.spidey.cache.InteractionCache;
+import dev.mlnr.spidey.cache.ComponentActionCache;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.interactions.ComponentAction;
 import dev.mlnr.spidey.objects.music.AudioLoader;
@@ -11,19 +11,19 @@ public class YouTubeSearchDropdown implements ComponentAction {
 	private final String id;
 	private final CommandContext ctx;
 	private final MusicPlayer musicPlayer;
-	private final InteractionCache interactionCache;
+	private final ComponentActionCache componentActionCache;
 
-	public YouTubeSearchDropdown(String id, CommandContext ctx, MusicPlayer musicPlayer, InteractionCache interactionCache) {
+	public YouTubeSearchDropdown(String id, CommandContext ctx, MusicPlayer musicPlayer, ComponentActionCache componentActionCache) {
 		this.id = id;
 		this.ctx = ctx;
 		this.musicPlayer = musicPlayer;
-		this.interactionCache = interactionCache;
+		this.componentActionCache = componentActionCache;
 	}
 
 	public void loadVideo(String link) {
 		var loader = new AudioLoader(musicPlayer, link, ctx, true);
 		MusicUtils.loadQuery(musicPlayer, link, loader);
-		interactionCache.removeInteraction(this);
+		componentActionCache.removeAction(this);
 	}
 
 	@Override

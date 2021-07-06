@@ -84,7 +84,7 @@ public class StringUtils {
 		var i18n = ctx.getI18n();
 		var pluralized = size == 1 ? i18n.get("commands.queue.text.one") : i18n.get("commands.queue.text.multiple", size);
 
-		ctx.getCache().getInteractionCache().createPaginator(ctx, pages.size(), (page, embedBuilder) -> {
+		ctx.getCache().getComponentActionCache().createPaginator(ctx, pages.size(), (page, embedBuilder) -> {
 			embedBuilder.setAuthor(i18n.get("paginator.queue", ctx.getGuild().getName()));
 			embedBuilder.setDescription(pages.get(page));
 			embedBuilder.appendDescription("\n\n").appendDescription(pluralized).appendDescription(" ")
@@ -100,7 +100,7 @@ public class StringUtils {
 			options[i] = SelectOption.of(trimString(trackInfo.author, 25), trackInfo.uri)
 					.withDescription(trimString(trackInfo.title, 50));
 		}
-		ctx.getCache().getInteractionCache().createYouTubeSearchDropdown(ctx, musicPlayer, options);
+		ctx.getCache().getComponentActionCache().createYouTubeSearchDropdown(ctx, musicPlayer, options);
 	}
 
 	public static String randomString(int length) {

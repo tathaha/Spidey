@@ -28,15 +28,15 @@ public class InteractionEvents extends ListenerAdapter {
 	@Override
 	public void onButtonClick(ButtonClickEvent event) {
 		var splitId = event.getComponentId().split(":");
-		var interaction = cache.getInteractionCache().getInteraction(splitId[0]);
-		processComponentInteraction(splitId[1], interaction, event);
+		var action = cache.getComponentActionCache().getAction(splitId[0]);
+		processComponentInteraction(splitId[1], action, event);
 	}
 
 	@Override
 	public void onSelectionMenu(SelectionMenuEvent event) {
 		var dropdownId = event.getComponentId();
-		var interaction = cache.getInteractionCache().getInteraction(dropdownId);
-		processComponentInteraction(event.getValues().get(0), interaction, event);
+		var action = cache.getComponentActionCache().getAction(dropdownId);
+		processComponentInteraction(event.getValues().get(0), action, event);
 	}
 
 	private void processComponentInteraction(String selectionId, ComponentAction componentAction, GenericComponentInteractionCreateEvent event) {

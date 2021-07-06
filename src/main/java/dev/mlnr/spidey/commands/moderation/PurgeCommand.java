@@ -52,7 +52,7 @@ public class PurgeCommand extends Command {
 			}
 			var pinnedMessages = allMessages.stream().filter(Message::isPinned).collect(Collectors.toList());
 			var purgeProcessorId = StringUtils.randomString(30);
-			var buttonActionCache = ctx.getCache().getInteractionCache();
+			var buttonActionCache = ctx.getCache().getComponentActionCache();
 			var purgeProcessor = new PurgeProcessor(purgeProcessorId, allMessages, pinnedMessages, target, ctx, buttonActionCache);
 
 			if (pinnedMessages.isEmpty()) {

@@ -18,23 +18,23 @@ import net.jodah.expiringmap.ExpiringMap;
 
 import java.util.function.BiConsumer;
 
-public class InteractionCache {
-	private final ExpiringMap<String, ComponentAction> interactionMap = ExpiringMap.builder()
+public class ComponentActionCache {
+	private final ExpiringMap<String, ComponentAction> actionMap = ExpiringMap.builder()
 			.variableExpiration()
-			.asyncExpirationListener((interactionId, interactionObject) -> ((ComponentAction) interactionObject).getCtx().deleteReply())
+			.asyncExpirationListener((actionId, actionObject) -> ((ComponentAction) actionObject).getCtx().deleteReply())
 			.build();
 
-	public void addInteraction(String id, ComponentAction componentAction) {
+	public void addAction(String id, ComponentAction componentAction) {
 		var type = componentAction.getType();
-		interactionMap.put(id, componentAction, type.getExpirationPolicy(), type.getExpirationDuration(), type.getExpirationUnit());
+		actionMap.put(id, componentAction, type.getExpirationPolicy(), type.getExpirationDuration(), type.getExpirationUnit());
 	}
 
-	public ComponentAction getInteraction(String id) {
-		return interactionMap.get(id);
+	public ComponentAction getAction(String id) {
+		return actionMap.get(id);
 	}
 
-	public void removeInteraction(ComponentAction componentAction) {
-		interactionMap.remove(componentAction.getId());
+	public void removeAction(ComponentAction componentAction) {
+		actionMap.remove(componentAction.getId());
 		componentAction.getCtx().deleteReply();
 	}
 
@@ -48,7 +48,7 @@ public class InteractionCache {
 
 		var paginatorId = StringUtils.randomString(30);
 		var paginator = new Paginator(paginatorId, ctx, totalPages, pagesConsumer, this);
-		addInteraction(paginatorId, paginator);
+		addAction(paginatorId, paginator);
 
 		var left = Button.primary(paginatorId + ":BACKWARDS", Emoji.fromUnicode(Emojis.BACKWARDS));
 		var right = Button.primary(paginatorId + ":FORWARD", Emoji.fromUnicode(Emojis.FORWARD));
@@ -58,7 +58,7 @@ public class InteractionCache {
 
 	public void createPurgePrompt(PurgeProcessor purgeProcessor, String content, CommandContext ctx) {
 		var purgeProcessorId = purgeProcessor.getId();
-		addInteraction(purgeProcessorId, purgeProcessor);
+		addAction(purgeProcessorId, purgeProcessor);
 
 		var accept = Button.success(purgeProcessorId + ":ACCEPT", Emoji.fromUnicode(Emojis.CHECK));
 		var wastebasket = Button.primary(purgeProcessorId + ":REMOVE", Emoji.fromUnicode(Emojis.WASTEBASKET));
@@ -71,7 +71,7 @@ public class InteractionCache {
 	public void createYouTubeSearchDropdown(CommandContext ctx, MusicPlayer musicPlayer, SelectOption[] options) {
 		var dropdownId = StringUtils.randomString(30);
 		var dropdown = new YouTubeSearchDropdown(dropdownId, ctx, musicPlayer, this);
-		addInteraction(dropdownId, dropdown);
+		addAction(dropdownId, dropdown);
 
 		var i18n = ctx.getI18n();
 		var choose = i18n.get("selection.text", i18n.get("selection.track"));
