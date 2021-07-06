@@ -2,12 +2,12 @@ package dev.mlnr.spidey.objects.interactions.dropdowns;
 
 import dev.mlnr.spidey.cache.InteractionCache;
 import dev.mlnr.spidey.objects.command.CommandContext;
-import dev.mlnr.spidey.objects.interactions.Interaction;
+import dev.mlnr.spidey.objects.interactions.ComponentAction;
 import dev.mlnr.spidey.objects.music.AudioLoader;
 import dev.mlnr.spidey.objects.music.MusicPlayer;
 import dev.mlnr.spidey.utils.MusicUtils;
 
-public class YouTubeSearchDropdown implements Interaction {
+public class YouTubeSearchDropdown implements ComponentAction {
 	private final String id;
 	private final CommandContext ctx;
 	private final MusicPlayer musicPlayer;
@@ -37,8 +37,8 @@ public class YouTubeSearchDropdown implements Interaction {
 	}
 
 	@Override
-	public InteractionType getType() {
-		return Interaction.InteractionType.YOUTUBE_SEARCH_DROPDOWN;
+	public ActionType getType() {
+		return ComponentAction.ActionType.YOUTUBE_SEARCH_DROPDOWN;
 	}
 
 	@Override

@@ -2,7 +2,7 @@ package dev.mlnr.spidey.events;
 
 import dev.mlnr.spidey.cache.Cache;
 import dev.mlnr.spidey.handlers.command.CommandHandler;
-import dev.mlnr.spidey.objects.interactions.Interaction;
+import dev.mlnr.spidey.objects.interactions.ComponentAction;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.GenericComponentInteractionCreateEvent;
 import net.dv8tion.jda.api.events.interaction.SelectionMenuEvent;
@@ -39,14 +39,14 @@ public class InteractionEvents extends ListenerAdapter {
 		processComponentInteraction(event.getValues().get(0), interaction, event);
 	}
 
-	private void processComponentInteraction(String selectionId, Interaction interaction, GenericComponentInteractionCreateEvent event) {
+	private void processComponentInteraction(String selectionId, ComponentAction componentAction, GenericComponentInteractionCreateEvent event) {
 		event.getInteraction().deferEdit().queue();
-		if (interaction == null) {
+		if (componentAction == null) {
 			return;
 		}
-		if (event.getUser().getIdLong() != interaction.getAuthorId()) {
+		if (event.getUser().getIdLong() != componentAction.getAuthorId()) {
 			return;
 		}
-		interaction.getType().getInteractionConsumer().accept(selectionId, interaction);
+		componentAction.getType().getActionConsumer().accept(selectionId, componentAction);
 	}
 }

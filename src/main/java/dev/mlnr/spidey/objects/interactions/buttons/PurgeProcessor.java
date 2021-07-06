@@ -3,7 +3,7 @@ package dev.mlnr.spidey.objects.interactions.buttons;
 import dev.mlnr.spidey.cache.InteractionCache;
 import dev.mlnr.spidey.objects.I18n;
 import dev.mlnr.spidey.objects.command.CommandContext;
-import dev.mlnr.spidey.objects.interactions.Interaction;
+import dev.mlnr.spidey.objects.interactions.ComponentAction;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-public class PurgeProcessor implements Interaction {
+public class PurgeProcessor implements ComponentAction {
 	private final String id;
 	private final List<String> allMessagesIds;
 	private final List<String> pinnedMessagesIds;
@@ -80,8 +80,8 @@ public class PurgeProcessor implements Interaction {
 	}
 
 	@Override
-	public InteractionType getType() {
-		return Interaction.InteractionType.PURGE_PROMPT;
+	public ActionType getType() {
+		return ComponentAction.ActionType.PURGE_PROMPT;
 	}
 
 	@Override

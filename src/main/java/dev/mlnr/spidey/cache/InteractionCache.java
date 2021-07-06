@@ -2,7 +2,7 @@ package dev.mlnr.spidey.cache;
 
 import dev.mlnr.spidey.objects.Emojis;
 import dev.mlnr.spidey.objects.command.CommandContext;
-import dev.mlnr.spidey.objects.interactions.Interaction;
+import dev.mlnr.spidey.objects.interactions.ComponentAction;
 import dev.mlnr.spidey.objects.interactions.buttons.Paginator;
 import dev.mlnr.spidey.objects.interactions.buttons.PurgeProcessor;
 import dev.mlnr.spidey.objects.interactions.dropdowns.YouTubeSearchDropdown;
@@ -19,23 +19,23 @@ import net.jodah.expiringmap.ExpiringMap;
 import java.util.function.BiConsumer;
 
 public class InteractionCache {
-	private final ExpiringMap<String, Interaction> interactionMap = ExpiringMap.builder()
+	private final ExpiringMap<String, ComponentAction> interactionMap = ExpiringMap.builder()
 			.variableExpiration()
-			.asyncExpirationListener((interactionId, interactionObject) -> ((Interaction) interactionObject).getCtx().deleteReply())
+			.asyncExpirationListener((interactionId, interactionObject) -> ((ComponentAction) interactionObject).getCtx().deleteReply())
 			.build();
 
-	public void addInteraction(String id, Interaction interaction) {
-		var type = interaction.getType();
-		interactionMap.put(id, interaction, type.getExpirationPolicy(), type.getExpirationDuration(), type.getExpirationUnit());
+	public void addInteraction(String id, ComponentAction componentAction) {
+		var type = componentAction.getType();
+		interactionMap.put(id, componentAction, type.getExpirationPolicy(), type.getExpirationDuration(), type.getExpirationUnit());
 	}
 
-	public Interaction getInteraction(String id) {
+	public ComponentAction getInteraction(String id) {
 		return interactionMap.get(id);
 	}
 
-	public void removeInteraction(Interaction interaction) {
-		interactionMap.remove(interaction.getId());
-		interaction.getCtx().deleteReply();
+	public void removeInteraction(ComponentAction componentAction) {
+		interactionMap.remove(componentAction.getId());
+		componentAction.getCtx().deleteReply();
 	}
 
 	// buttons

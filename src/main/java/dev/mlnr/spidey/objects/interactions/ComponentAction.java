@@ -9,18 +9,18 @@ import net.jodah.expiringmap.ExpirationPolicy;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 
-public interface Interaction {
+public interface ComponentAction {
 	String getId();
 
 	CommandContext getCtx();
 
-	InteractionType getType();
+	ActionType getType();
 
 	Object getObject();
 
 	long getAuthorId();
 
-	enum InteractionType {
+	enum ActionType {
 		// buttons
 		PAGINATOR(ExpirationPolicy.CREATED, 5, TimeUnit.MINUTES, (moveName, interaction) -> {
 			var move = Paginator.Action.valueOf(moveName);
@@ -38,13 +38,13 @@ public interface Interaction {
 		private final ExpirationPolicy expirationPolicy;
 		private final long expirationDuration;
 		private final TimeUnit expirationUnit;
-		private final BiConsumer<String, Interaction> interactionConsumer;
+		private final BiConsumer<String, ComponentAction> actionConsumer;
 
-		InteractionType(ExpirationPolicy expirationPolicy, long expirationDuration, TimeUnit expirationUnit, BiConsumer<String, Interaction> interactionConsumer) {
+		ActionType(ExpirationPolicy expirationPolicy, long expirationDuration, TimeUnit expirationUnit, BiConsumer<String, ComponentAction> actionConsumer) {
 			this.expirationPolicy = expirationPolicy;
 			this.expirationDuration = expirationDuration;
 			this.expirationUnit = expirationUnit;
-			this.interactionConsumer = interactionConsumer;
+			this.actionConsumer = actionConsumer;
 		}
 
 		public ExpirationPolicy getExpirationPolicy() {
@@ -59,8 +59,8 @@ public interface Interaction {
 			return expirationUnit;
 		}
 
-		public BiConsumer<String, Interaction> getInteractionConsumer() {
-			return interactionConsumer;
+		public BiConsumer<String, ComponentAction> getActionConsumer() {
+			return actionConsumer;
 		}
 	}
 }

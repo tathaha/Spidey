@@ -3,13 +3,13 @@ package dev.mlnr.spidey.objects.interactions.buttons;
 import dev.mlnr.spidey.cache.InteractionCache;
 import dev.mlnr.spidey.objects.I18n;
 import dev.mlnr.spidey.objects.command.CommandContext;
-import dev.mlnr.spidey.objects.interactions.Interaction;
+import dev.mlnr.spidey.objects.interactions.ComponentAction;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 import java.util.function.BiConsumer;
 
-public class Paginator implements Interaction {
+public class Paginator implements ComponentAction {
 	private final String id;
 	private final CommandContext ctx;
 	private final int totalPages;
@@ -68,8 +68,8 @@ public class Paginator implements Interaction {
 	}
 
 	@Override
-	public InteractionType getType() {
-		return Interaction.InteractionType.PAGINATOR;
+	public ActionType getType() {
+		return ComponentAction.ActionType.PAGINATOR;
 	}
 
 	@Override
