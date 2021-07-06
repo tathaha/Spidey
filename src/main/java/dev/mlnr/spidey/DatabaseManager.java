@@ -22,7 +22,7 @@ import static dev.mlnr.spidey.jooq.Tables.*;
 
 public class DatabaseManager {
 	private static final Logger logger = LoggerFactory.getLogger(DatabaseManager.class);
-	private final Configuration configuration;
+	private final DSLContext ctx;
 
 	public DatabaseManager() {
 		var hikariConfig = new HikariConfig();
@@ -34,14 +34,14 @@ public class DatabaseManager {
 		var defaultConfig = new DefaultConfiguration();
 		defaultConfig.setDataSource(new HikariDataSource(hikariConfig));
 		defaultConfig.setSQLDialect(SQLDialect.POSTGRES);
-		this.configuration = defaultConfig;
+		this.ctx = DSL.using(defaultConfig);
 	}
 
 	// getting settings
 
 	public IGuildSettings retrieveGuildSettings(Table<? extends Record> table, long guildId, Function<Record, IGuildSettings> defaultSettingsTransformer,
 	                                            Function<Record, IGuildSettings> transformer) {
-		try (var selectStep = getCtx().selectFrom(table)) {
+		try (var selectStep = ctx.selectFrom(table)) {
 			try {
 				var result = selectStep.where(guildIdEquals(table, guildId)).fetch();
 				if (result.isEmpty()) {
@@ -91,7 +91,7 @@ public class DatabaseManager {
 	// registering/removing guild
 
 	public void registerGuild(long guildId) {
-		try (var valueStep = getCtx().insertInto(GUILDS).columns(GUILDS.GUILD_ID).values(guildId)) {
+		try (var valueStep = ctx.insertInto(GUILDS).columns(GUILDS.GUILD_ID).values(guildId)) {
 			try {
 				valueStep.onConflictDoNothing().execute();
 			}
@@ -102,7 +102,7 @@ public class DatabaseManager {
 	}
 
 	public void removeGuild(long guildId) {
-		try (var deleteStep = getCtx().deleteFrom(GUILDS)) {
+		try (var deleteStep = ctx.deleteFrom(GUILDS)) {
 			try {
 				deleteStep.where(GUILDS.GUILD_ID.eq(guildId)).execute();
 			}
@@ -115,7 +115,7 @@ public class DatabaseManager {
 	// helper set methods
 
 	public <T> void executeSetQuery(Table<? extends Record> table, Field<T> column, T value, long guildId) {
-		try (var insertStep = getCtx().insertInto(table).columns(GUILDS.GUILD_ID, column)) {
+		try (var insertStep = ctx.insertInto(table).columns(GUILDS.GUILD_ID, column)) {
 			try (var setStep = insertStep.values(guildId, value).onDuplicateKeyUpdate().set(column, value)) {
 				try {
 					setStep.execute();
@@ -186,12 +186,6 @@ public class DatabaseManager {
 	}
 
 	// jooq
-
-	public DSLContext getCtx() {
-		return DSL.using(this.configuration);
-	}
-
-	// helper methods
 
 	private Condition guildIdEquals(Table<? extends Record> table, long guildId) {
 		return table.field("guild_id", Long.class).eq(guildId);
