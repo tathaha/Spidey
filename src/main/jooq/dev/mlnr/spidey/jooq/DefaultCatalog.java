@@ -4,11 +4,11 @@
 package dev.mlnr.spidey.jooq;
 
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.jooq.Schema;
 import org.jooq.impl.CatalogImpl;
+
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -38,7 +38,8 @@ public class DefaultCatalog extends CatalogImpl {
 
     @Override
     public final List<Schema> getSchemas() {
-        return Arrays.<Schema>asList(
-            Public.PUBLIC);
+        return Arrays.asList(
+            Public.PUBLIC
+        );
     }
 }

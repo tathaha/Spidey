@@ -8,9 +8,6 @@ import dev.mlnr.spidey.jooq.Keys;
 import dev.mlnr.spidey.jooq.Public;
 import dev.mlnr.spidey.jooq.tables.records.GuildsRecord;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Name;
@@ -92,17 +89,12 @@ public class Guilds extends TableImpl<GuildsRecord> {
 
     @Override
     public Schema getSchema() {
-        return Public.PUBLIC;
+        return aliased() ? null : Public.PUBLIC;
     }
 
     @Override
     public UniqueKey<GuildsRecord> getPrimaryKey() {
         return Keys.GUILDS_PKEY;
-    }
-
-    @Override
-    public List<UniqueKey<GuildsRecord>> getKeys() {
-        return Arrays.<UniqueKey<GuildsRecord>>asList(Keys.GUILDS_PKEY);
     }
 
     @Override

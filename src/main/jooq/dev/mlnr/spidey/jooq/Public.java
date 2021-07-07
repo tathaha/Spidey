@@ -59,9 +59,10 @@ public class Public extends SchemaImpl {
 
     @Override
     public final List<Table<?>> getTables() {
-        return Arrays.<Table<?>>asList(
+        return Arrays.asList(
             Guilds.GUILDS,
             SettingsMisc.SETTINGS_MISC,
-            SettingsMusic.SETTINGS_MUSIC);
+            SettingsMusic.SETTINGS_MUSIC
+        );
     }
 }
