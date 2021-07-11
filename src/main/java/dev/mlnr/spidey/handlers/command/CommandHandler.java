@@ -7,7 +7,6 @@ import io.github.classgraph.ClassGraph;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,20 +48,16 @@ public class CommandHandler {
 	}
 
 	public static void loadCommands(JDA jda) {
-		var commandsUpdate = jda.updateCommands();
-
 		try (var result = new ClassGraph().acceptPackages("dev.mlnr.spidey.commands").scan()) {
+			var commandsUpdate = jda.updateCommands();
 			var hideOption = new OptionData(OptionType.BOOLEAN, "hide", "Whether to hide the response");
 
 			for (var cls : result.getAllClasses()) {
 				var command = (Command) cls.loadClass().getDeclaredConstructor().newInstance();
-				var commandName = command.getInvoke();
-				COMMANDS.put(commandName, command);
+				COMMANDS.put(command.getName(), command);
 
-				var commandData = new CommandData(commandName, command.getDescription());
-				commandData.addOptions(command.getOptions());
-				commandData.addOptions(hideOption);
-				commandsUpdate.addCommands(commandData);
+				command.addOptions(hideOption);
+				commandsUpdate.addCommands(command);
 			}
 			commandsUpdate.queue();
 		}

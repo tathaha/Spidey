@@ -89,7 +89,7 @@ public class HelpCommand extends Command {
 					: i18n.get("command_failures.invalid.suggestion", similar)));
 			return false;
 		}
-		commandOption = command.getInvoke();
+		commandOption = command.getName();
 		var none = i18n.get("commands.help.command_info.info_none");
 		var requiredPermission = command.getRequiredPermission();
 		var generalSettings = guildSettingsCache.getGeneralSettings(guildId);
@@ -114,7 +114,7 @@ public class HelpCommand extends Command {
 		var builder = new StringBuilder();
 		for (var i = 0; i < commands.size(); i++) {
 			var cmd = commands.get(i);
-			builder.append("`").append(cmd.getInvoke()).append("`");
+			builder.append("`").append(cmd.getName()).append("`");
 			if (i != commands.size() - 1) {
 				builder.append(", ");
 			}
