@@ -1,11 +1,7 @@
 package dev.mlnr.spidey;
 
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory;
-import dev.mlnr.blh.core.api.BLHBuilder;
-import dev.mlnr.blh.core.api.BotList;
-import dev.mlnr.blh.jda.BLHJDAListener;
-import dev.mlnr.spidey.cache.Cache;
-import dev.mlnr.spidey.events.*;
+import dev.mlnr.spidey.events.ReadyEvents;
 import dev.mlnr.spidey.objects.I18n;
 import dev.mlnr.spidey.utils.MusicUtils;
 import net.dv8tion.jda.api.GatewayEncoding;
@@ -40,20 +36,6 @@ public class Spidey {
 		RestAction.setDefaultFailure(null);
 		MessageAction.setDefaultMentions(EnumSet.noneOf(Message.MentionType.class));
 
-		var blh = new BLHBuilder().setDevModePredicate(botId -> botId != 772446532560486410L)
-				.setSuccessLoggingEnabled(false)
-				.setUnavailableEventsEnabled(false)
-				.addBotList(BotList.TOP_GG, System.getenv("topgg"))
-				.addBotList(BotList.DISCORDLIST_SPACE, System.getenv("botlistspace"))
-				.addBotList(BotList.DBOATS, System.getenv("dboats"))
-				.addBotList(BotList.DSERVICES, System.getenv("dservices"))
-				.addBotList(BotList.DBOTS_GG, System.getenv("dbotsgg"))
-				.addBotList(BotList.DBL, System.getenv("dbl"))
-				.addBotList(BotList.DEL, System.getenv("del"))
-				.build();
-
-		var cache = new Cache(this);
-
 		jda = JDABuilder.create(System.getenv("Spidey"),
 				GUILD_BANS,
 				GUILD_INVITES,
@@ -70,14 +52,12 @@ public class Spidey {
 			)
 			.setMemberCachePolicy(MemberCachePolicy.VOICE)
 			.setChunkingFilter(ChunkingFilter.NONE)
-			.addEventListeners(new ReadyEvents(databaseManager, cache), new BanEvents(cache), new DeleteEvents(cache), new GuildEvents(databaseManager, cache),
-					new InviteEvents(cache), new MemberEvents(cache), new MessageEvents(cache), new VoiceEvent(cache), new InteractionEvents(cache), new BLHJDAListener(blh))
+			.addEventListeners(new ReadyEvents(this))
 			.setActivity(Activity.watching("myself load"))
 			.setStatus(OnlineStatus.DO_NOT_DISTURB)
 			.setGatewayEncoding(GatewayEncoding.ETF)
 			.setAudioSendFactory(new NativeAudioSendFactory())
-			.build()
-			.awaitReady();
+			.build();
 	}
 
 	public static void main(String[] args) {
