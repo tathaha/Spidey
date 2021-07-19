@@ -31,7 +31,7 @@ dependencies {
     implementation group: 'org.codehaus.groovy', name: 'groovy-jsr223', version: '3.0.8'
 
     // expiring map for caches
-    implementation group: 'net.jodah', name: 'expiringmap', version: '0.5.9'
+    implementation group: 'net.jodah', name: 'expiringmap', version: '0.5.10'
 
     // jda
     implementation("net.dv8tion:JDA:4.3.0_296") {
