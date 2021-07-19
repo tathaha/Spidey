@@ -4,6 +4,9 @@
   "internal_error": "Unfortunately, I couldn't %s due to an internal error: **%s**. Please report this message to the Developer.",
   "enabled": "enabled",
   "disabled": "disabled",
+  "number": {
+    "range": "Please enter a number from 1-%d."
+  },
   "selection": {
     "text": "Choose the %s",
     "track": "track to play"
