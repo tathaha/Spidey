@@ -7,7 +7,7 @@ public enum VoiceGameType implements ChoicesEnum {
 	POKER_NIGHT("Poker Night", 755827207812677713L),
 	BETRAYAL_IO("Betrayal.io", 773336526917861400L),
 	FISHINGTON_IO("Fishington.io", 814288819477020702L),
-	CHESS("Chess Game", 832012586023256104L);
+	CHESS_IN_THE_PARK("Chess In The Park", 832012774040141894L);
 
 	private final String friendlyName;
 	private final long applicationId;
