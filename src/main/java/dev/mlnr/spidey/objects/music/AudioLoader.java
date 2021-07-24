@@ -14,9 +14,11 @@ import static dev.mlnr.spidey.utils.MusicUtils.formatLength;
 
 public class AudioLoader implements AudioLoadResultHandler {
 	private final MusicPlayer musicPlayer;
-	private final String query;
+	private String query;
 	private final CommandContext ctx;
 	private final boolean useHook;
+
+	private boolean searched;
 
 	public AudioLoader(MusicPlayer musicPlayer, String query, CommandContext ctx, boolean useHook) {
 		this.musicPlayer = musicPlayer;
@@ -71,7 +73,13 @@ public class AudioLoader implements AudioLoadResultHandler {
 
 	@Override
 	public void noMatches() {
-		ctx.replyErrorLocalized("music.messages.failure.no_matches", query.startsWith("ytsearch:") ? query.substring(9) : query);
+		if (!searched) {
+			query = "ytsearch:" + query;
+			MusicUtils.loadQuery(musicPlayer, query, this);
+			searched = true;
+			return;
+		}
+		ctx.replyErrorLocalized("music.messages.failure.no_matches", query.substring(9));
 	}
 
 	@Override

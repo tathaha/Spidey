@@ -22,14 +22,11 @@ import net.dv8tion.jda.api.entities.VoiceChannel;
 
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Pattern;
 
 import static dev.mlnr.spidey.utils.MusicUtils.ConnectFailureReason.*;
 import static dev.mlnr.spidey.utils.MusicUtils.LoadFailureReason.*;
 
 public class MusicUtils {
-	public static final Pattern YOUTUBE_URL_PATTERN = Pattern.compile("^(https?://)?((www|music|m)\\.)?youtu(\\.be|be\\.com)/(playlist\\?list=([a-zA-Z0-9-_]+))?((watch\\?v=)?([a-zA-Z0-9-_]{11})(&list=([a-zA-Z0-9-_]+))?)?");
-
 	public static final int MAX_FAIR_QUEUE = 3;
 	public static final int MAX_QUEUE_SIZE = 150;
 	private static final int MAX_TRACK_LENGTH_HOURS = 2;
