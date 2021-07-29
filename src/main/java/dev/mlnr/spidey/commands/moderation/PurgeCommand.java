@@ -30,7 +30,7 @@ public class PurgeCommand extends Command {
 		}
 		var amount = ctx.getLongOption("amount");
 		if (amount < 1 || amount > 100) {
-			ctx.replyErrorLocalized("number.range", 100);
+			ctx.replyErrorLocalized("number_out_of_range", 100);
 			return false;
 		}
 		respond(ctx, ctx.getUserOption("user"), amount);

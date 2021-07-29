@@ -31,8 +31,8 @@ public class RemoveCommand extends Command {
 		}
 		var trackPosition = ctx.getLongOption("position");
 		var size = queue.size();
-		if (trackPosition == 0 || trackPosition > size) {
-			ctx.replyErrorLocalized("number.range", size);
+		if (trackPosition < 1 || trackPosition > size) {
+			ctx.replyErrorLocalized("number_out_of_range", size);
 			return false;
 		}
 		var actualPosition = (int) (trackPosition - 1);
