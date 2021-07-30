@@ -112,7 +112,7 @@ public class SettingsMusic extends TableImpl<SettingsMusicRecord> {
 
     @Override
     public Schema getSchema() {
-        return Public.PUBLIC;
+        return aliased() ? null : Public.PUBLIC;
     }
 
     @Override
@@ -121,13 +121,8 @@ public class SettingsMusic extends TableImpl<SettingsMusicRecord> {
     }
 
     @Override
-    public List<UniqueKey<SettingsMusicRecord>> getKeys() {
-        return Arrays.<UniqueKey<SettingsMusicRecord>>asList(Keys.SETTINGS_MUSIC_PKEY);
-    }
-
-    @Override
     public List<ForeignKey<SettingsMusicRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<SettingsMusicRecord, ?>>asList(Keys.SETTINGS_MUSIC__SETTINGS_MUSIC_GUILD_ID_FKEY);
+        return Arrays.asList(Keys.SETTINGS_MUSIC__SETTINGS_MUSIC_GUILD_ID_FKEY);
     }
 
     private transient Guilds _guilds;

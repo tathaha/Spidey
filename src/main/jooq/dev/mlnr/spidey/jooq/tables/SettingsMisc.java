@@ -107,7 +107,7 @@ public class SettingsMisc extends TableImpl<SettingsMiscRecord> {
 
     @Override
     public Schema getSchema() {
-        return Public.PUBLIC;
+        return aliased() ? null : Public.PUBLIC;
     }
 
     @Override
@@ -116,13 +116,8 @@ public class SettingsMisc extends TableImpl<SettingsMiscRecord> {
     }
 
     @Override
-    public List<UniqueKey<SettingsMiscRecord>> getKeys() {
-        return Arrays.<UniqueKey<SettingsMiscRecord>>asList(Keys.SETTINGS_MISC_PKEY);
-    }
-
-    @Override
     public List<ForeignKey<SettingsMiscRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<SettingsMiscRecord, ?>>asList(Keys.SETTINGS_MISC__SETTINGS_MISC_GUILD_ID_FKEY);
+        return Arrays.asList(Keys.SETTINGS_MISC__SETTINGS_MISC_GUILD_ID_FKEY);
     }
 
     private transient Guilds _guilds;
