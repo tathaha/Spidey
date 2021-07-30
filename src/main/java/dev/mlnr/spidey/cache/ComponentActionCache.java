@@ -36,8 +36,14 @@ public class ComponentActionCache {
 	}
 
 	public void removeAction(ComponentAction componentAction) {
+		removeAction(componentAction, true);
+	}
+
+	public void removeAction(ComponentAction componentAction, boolean delete) {
 		actionMap.remove(componentAction.getId());
-		componentAction.getCtx().deleteReply();
+		if (delete) {
+			componentAction.getCtx().deleteReply();
+		}
 	}
 
 	// buttons

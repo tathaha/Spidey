@@ -116,6 +116,7 @@ public class AkinatorGame implements ComponentAction {
 		embedBuilder.setDescription(win ? i18n.get("commands.akinator.win") : i18n.get("commands.akinator.lose"));
 		embedBuilder.setImage(null);
 		ctx.editComponents(embedBuilder, Collections.emptyList());
+		componentActionCache.removeAction(this, false);
 	}
 
 	public Guess getNewGuess() {
