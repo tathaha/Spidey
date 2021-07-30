@@ -1,4 +1,4 @@
-package dev.mlnr.spidey.objects.akinator;
+package dev.mlnr.spidey.objects.interactions.buttons;
 
 import com.markozajc.akiwrapper.Akiwrapper;
 import com.markozajc.akiwrapper.core.entities.Guess;

@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.objects.interactions;
 
-import dev.mlnr.spidey.objects.akinator.AkinatorGame;
+import dev.mlnr.spidey.objects.interactions.buttons.AkinatorGame;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.interactions.buttons.Paginator;
 import dev.mlnr.spidey.objects.interactions.buttons.PurgeProcessor;

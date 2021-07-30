@@ -2,7 +2,7 @@ package dev.mlnr.spidey.commands.fun;
 
 import com.markozajc.akiwrapper.AkiwrapperBuilder;
 import com.markozajc.akiwrapper.core.entities.Server;
-import dev.mlnr.spidey.objects.akinator.AkinatorGame;
+import dev.mlnr.spidey.objects.interactions.buttons.AkinatorGame;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;

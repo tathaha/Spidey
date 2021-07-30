@@ -2,7 +2,7 @@ package dev.mlnr.spidey.cache;
 
 import com.markozajc.akiwrapper.Akiwrapper;
 import dev.mlnr.spidey.objects.Emojis;
-import dev.mlnr.spidey.objects.akinator.AkinatorGame;
+import dev.mlnr.spidey.objects.interactions.buttons.AkinatorGame;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.interactions.ComponentAction;
 import dev.mlnr.spidey.objects.interactions.buttons.Paginator;
