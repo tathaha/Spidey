@@ -84,7 +84,7 @@ public class ComponentActionCache {
 		var dontKnow = Button.primary(buttonsId + ":DONT_KNOW", i18n.get("commands.akinator.dont_know"));
 		var probably = Button.primary(buttonsId + ":PROBABLY", i18n.get("commands.akinator.probably"));
 		var probablyNot = Button.primary(buttonsId + ":PROBABLY_NOT", i18n.get("commands.akinator.probably_not"));
-		var dummy = Button.primary(buttonsId + ":DUMMY", " ").asDisabled();
+		var dummy = Button.secondary(buttonsId + ":DUMMY", " ").asDisabled();
 		var undo = Button.primary(buttonsId + ":UNDO", i18n.get("commands.akinator.undo"));
 		var wastebasket = Button.primary(buttonsId + ":REMOVE", Emoji.fromUnicode(Emojis.WASTEBASKET));
 
