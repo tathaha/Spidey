@@ -6,7 +6,12 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.Component;
+
+import java.util.List;
+
+import static dev.mlnr.spidey.utils.Utils.splitComponents;
 
 public class CommandContext {
 	private final SlashCommandEvent event;
@@ -89,7 +94,7 @@ public class CommandContext {
 
 	// reply methods
 
-	private boolean shouldHideResponse() {
+	public boolean shouldHideResponse() {
 		var shouldHide = getBooleanOption("hide");
 		return shouldHide == null ? hideResponse : shouldHide;
 	}
@@ -103,11 +108,11 @@ public class CommandContext {
 	}
 
 	public void replyWithComponents(String content, Component... components) {
-		event.reply(content).addActionRow(components).queue();
+		event.reply(content).addActionRows(splitComponents(components)).queue();
 	}
 
 	public void replyWithComponents(EmbedBuilder embedBuilder, Component... components) {
-		event.replyEmbeds(embedBuilder.build()).addActionRow(components).queue();
+		event.replyEmbeds(embedBuilder.build()).addActionRows(splitComponents(components)).queue();
 	}
 
 	public void replyLocalized(String key, Object... args) {
@@ -122,8 +127,24 @@ public class CommandContext {
 		replyError(i18n.get(key, args));
 	}
 
+	public void sendFollowup(String content) {
+		event.getHook().sendMessage(content).setEphemeral(shouldHideResponse()).queue();
+	}
+
+	public void sendFollowup(EmbedBuilder embedBuilder) {
+		event.getHook().sendMessageEmbeds(embedBuilder.build()).setEphemeral(shouldHideResponse()).queue();
+	}
+
+	public void sendFollowupError(String key, Object... args) {
+		event.getHook().sendMessage(i18n.get(key, args)).queue();
+	}
+
 	public void editReply(EmbedBuilder embedBuilder) {
 		event.getHook().editOriginalEmbeds(embedBuilder.build()).queue();
+	}
+
+	public void editComponents(EmbedBuilder embedBuilder, List<ActionRow> components) {
+		event.getHook().editOriginalComponents(components).setEmbeds(embedBuilder.build()).queue();
 	}
 
 	public void deleteReply() {

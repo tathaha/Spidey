@@ -66,6 +66,21 @@
     "no_message": "There's no %s message to snipe."
   },
   "commands": {
+    "akinator": {
+      "in_game": "You already have an Akinator game running.",
+      "unavailable": "Akinator is unavailable (for this type) at the moment, try again later.",
+      "game_title": "%s's game",
+      "question": "Question **%d**: %s",
+      "yes": "Yes",
+      "no": "No",
+      "dont_know": "Don't know",
+      "probably": "Probably",
+      "probably_not": "Probably not",
+      "undo": "Undo",
+      "guess": "I'm **%.1f**%% sure your character is.. **%s**",
+      "win": "I won! I love playing this game.",
+      "lose": "You win! You got me this time.."
+    },
     "subreddit": {
       "enter_name": "Please enter the name of the subreddit.",
       "description": "A random image from [r/%s](https://reddit.com/r/%1$s)",

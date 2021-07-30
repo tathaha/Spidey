@@ -1,5 +1,6 @@
 package dev.mlnr.spidey.objects.interactions;
 
+import dev.mlnr.spidey.objects.akinator.AkinatorGame;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.interactions.buttons.Paginator;
 import dev.mlnr.spidey.objects.interactions.buttons.PurgeProcessor;
@@ -29,6 +30,10 @@ public interface ComponentAction {
 		PURGE_PROMPT(ExpirationPolicy.CREATED, 1, TimeUnit.MINUTES, (actionName, action) -> {
 			var promptAction = PurgeProcessor.PromptAction.valueOf(actionName);
 			((PurgeProcessor) action.getObject()).processPrompt(promptAction);
+		}),
+		AKINATOR(ExpirationPolicy.CREATED, 10, TimeUnit.MINUTES, (answerName, action) -> {
+			var answer = AkinatorGame.Answer.valueOf(answerName);
+			((AkinatorGame) action.getObject()).answerCurrentQuestion(answer);
 		}),
 		// dropdowns
 		YOUTUBE_SEARCH_DROPDOWN(ExpirationPolicy.CREATED, 1, TimeUnit.MINUTES, (link, action) -> {

@@ -19,7 +19,7 @@ public class I18n {
 		try (var langs = I18n.class.getResourceAsStream("/assets/languages/langs.txt")) {
 			for (var langCode : IOUtils.toString(langs, StandardCharsets.UTF_8).split("\n")) {
 				try (var langJsonStream = I18n.class.getResourceAsStream("/assets/languages/" + langCode + ".json")) {
-					LANGUAGE_MAP.put(langCode, new I18n(DataObject.fromJson(langJsonStream)));
+					LANGUAGE_MAP.put(langCode, new I18n(DataObject.fromJson(langJsonStream), langCode));
 				}
 			}
 		}
@@ -30,13 +30,19 @@ public class I18n {
 	}
 
 	private final DataObject data;
+	private final String langCode;
 
-	private I18n(DataObject data) {
+	private I18n(DataObject data, String langCode) {
 		this.data = data;
+		this.langCode = langCode;
 	}
 
 	public static I18n ofLanguage(String language) {
 		return LANGUAGE_MAP.get(language);
+	}
+
+	public String getLangCode() {
+		return langCode;
 	}
 
 	public String get(String key, Object... args) {

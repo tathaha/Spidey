@@ -40,13 +40,14 @@ public class InteractionEvents extends ListenerAdapter {
 	}
 
 	private void processComponentInteraction(String selectionId, ComponentAction componentAction, GenericComponentInteractionCreateEvent event) {
-		event.getInteraction().deferEdit().queue();
-		if (componentAction == null) {
-			return;
-		}
-		if (event.getUser().getIdLong() != componentAction.getAuthorId()) {
-			return;
-		}
-		componentAction.getType().getActionConsumer().accept(selectionId, componentAction);
+		event.getInteraction().deferEdit().queue(deferred -> {
+			if (componentAction == null) {
+				return;
+			}
+			if (event.getUser().getIdLong() != componentAction.getAuthorId()) {
+				return;
+			}
+			componentAction.getType().getActionConsumer().accept(selectionId, componentAction);
+		});
 	}
 }

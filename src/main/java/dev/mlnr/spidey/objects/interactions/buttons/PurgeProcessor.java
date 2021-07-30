@@ -49,17 +49,17 @@ public class PurgeProcessor implements ComponentAction {
 	}
 
 	public void proceed() {
-		ctx.getEvent().deferReply().queue();
-
-		var channel = ctx.getTextChannel();
-		var future = CompletableFuture.allOf(channel.purgeMessagesById(allMessagesIds).toArray(new CompletableFuture[0]));
-		future.whenCompleteAsync((ignored, throwable) -> {
-			var i18n = ctx.getI18n();
-			if (throwable != null) {
-				ctx.replyErrorLocalized("internal_error", "purge messages", throwable.getMessage());
-				return;
-			}
-			ctx.getEvent().getHook().sendMessage(generateSuccessMessage(allMessagesIds.size(), i18n)).setEphemeral(true).queue();
+		ctx.getEvent().deferReply(true).queue(deferred -> {
+			var channel = ctx.getTextChannel();
+			var future = CompletableFuture.allOf(channel.purgeMessagesById(allMessagesIds).toArray(new CompletableFuture[0]));
+			future.whenCompleteAsync((ignored, throwable) -> {
+				var i18n = ctx.getI18n();
+				if (throwable != null) {
+					ctx.sendFollowupError("internal_error", "purge messages", throwable.getMessage());
+					return;
+				}
+				ctx.sendFollowup(generateSuccessMessage(allMessagesIds.size(), i18n));
+			});
 		});
 	}
 

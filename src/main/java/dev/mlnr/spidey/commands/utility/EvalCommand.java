@@ -33,34 +33,34 @@ public class EvalCommand extends Command {
 			ctx.replyErrorLocalized("command_failures.only_dev");
 			return false;
 		}
-		ctx.getEvent().deferReply(true).queue();
-
-		var jda = ctx.getJDA();
-		var channel = ctx.getTextChannel();
-		SCRIPT_ENGINE.put("guild", channel.getGuild());
-		SCRIPT_ENGINE.put("author", author);
-		SCRIPT_ENGINE.put("member", ctx.getMember());
-		SCRIPT_ENGINE.put("channel", channel);
-		SCRIPT_ENGINE.put("jda", jda);
-		SCRIPT_ENGINE.put("api", jda);
-		SCRIPT_ENGINE.put("cache", ctx.getCache());
-		var embedBuilder = Utils.createEmbedBuilder(author);
-		var toEval = new StringBuilder();
-		DEFAULT_IMPORTS.forEach(imp -> toEval.append("import ").append(imp).append(".*; "));
-		toEval.append(ctx.getStringOption("code"));
-		try {
-			var evaluated = SCRIPT_ENGINE.eval(toEval.toString());
-			if (evaluated == null) {
-				return true;
+		ctx.getEvent().deferReply(ctx.shouldHideResponse()).queue(deferred -> {
+			var jda = ctx.getJDA();
+			var channel = ctx.getTextChannel();
+			SCRIPT_ENGINE.put("guild", channel.getGuild());
+			SCRIPT_ENGINE.put("author", author);
+			SCRIPT_ENGINE.put("member", ctx.getMember());
+			SCRIPT_ENGINE.put("channel", channel);
+			SCRIPT_ENGINE.put("jda", jda);
+			SCRIPT_ENGINE.put("api", jda);
+			SCRIPT_ENGINE.put("cache", ctx.getCache());
+			var embedBuilder = Utils.createEmbedBuilder(author);
+			var toEval = new StringBuilder();
+			DEFAULT_IMPORTS.forEach(imp -> toEval.append("import ").append(imp).append(".*; "));
+			toEval.append(ctx.getStringOption("code"));
+			try {
+				var evaluated = SCRIPT_ENGINE.eval(toEval.toString());
+				if (evaluated == null) {
+					return;
+				}
+				embedBuilder.setColor(Color.GREEN);
+				embedBuilder.setDescription("```" + evaluated + "```");
 			}
-			embedBuilder.setColor(Color.GREEN);
-			embedBuilder.setDescription("```" + evaluated + "```");
-		}
-		catch (ScriptException ex) {
-			embedBuilder.setColor(Color.RED);
-			embedBuilder.setDescription("```" + ex.getMessage() + "```");
-		}
-		ctx.getEvent().getHook().sendMessageEmbeds(embedBuilder.build()).queue();
+			catch (ScriptException ex) {
+				embedBuilder.setColor(Color.RED);
+				embedBuilder.setDescription("```" + ex.getMessage() + "```");
+			}
+			ctx.sendFollowup(embedBuilder);
+		});
 		return true;
 	}
 }
