@@ -1,5 +1,6 @@
 package dev.mlnr.spidey.objects.interactions;
 
+import dev.mlnr.spidey.cache.ComponentActionCache;
 import dev.mlnr.spidey.objects.interactions.buttons.AkinatorGame;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.interactions.buttons.Paginator;
@@ -10,18 +11,48 @@ import net.jodah.expiringmap.ExpirationPolicy;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 
-public interface ComponentAction {
-	String getId();
+public abstract class ComponentAction {
+	private final String id;
+	public final CommandContext ctx;
+	private final ActionType type;
+	private final long authorId;
+	private final ComponentActionCache componentActionCache;
 
-	CommandContext getCtx();
+	protected ComponentAction(String id, CommandContext ctx, ActionType type, ComponentActionCache componentActionCache) {
+		this.id = id;
+		this.ctx = ctx;
+		this.type = type;
+		this.authorId = ctx.getUser().getIdLong();
+		this.componentActionCache = componentActionCache;
+	}
 
-	ActionType getType();
+	public final String getId() {
+		return id;
+	}
 
-	Object getObject();
+	public final CommandContext getCtx() {
+		return ctx;
+	}
 
-	long getAuthorId();
+	public final ActionType getType() {
+		return type;
+	}
 
-	enum ActionType {
+	public final long getAuthorId() {
+		return authorId;
+	}
+
+	public final void uncacheAndDelete() {
+		componentActionCache.removeAction(this);
+	}
+
+	public final void uncache() {
+		componentActionCache.removeAction(this, false);
+	}
+
+	public abstract Object getObject();
+
+	public enum ActionType {
 		// buttons
 		PAGINATOR(ExpirationPolicy.CREATED, 5, TimeUnit.MINUTES, (moveName, action) -> {
 			var move = Paginator.Action.valueOf(moveName);

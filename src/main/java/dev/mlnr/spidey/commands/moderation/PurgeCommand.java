@@ -52,8 +52,8 @@ public class PurgeCommand extends Command {
 			}
 			var pinnedMessages = allMessages.stream().filter(Message::isPinned).collect(Collectors.toList());
 			var purgeProcessorId = StringUtils.randomString(30);
-			var buttonActionCache = ctx.getCache().getComponentActionCache();
-			var purgeProcessor = new PurgeProcessor(purgeProcessorId, allMessages, pinnedMessages, target, ctx, buttonActionCache);
+			var componentActionCache = ctx.getCache().getComponentActionCache();
+			var purgeProcessor = new PurgeProcessor(purgeProcessorId, ctx, allMessages, pinnedMessages, target, componentActionCache);
 
 			if (pinnedMessages.isEmpty()) {
 				purgeProcessor.proceed();
@@ -70,7 +70,7 @@ public class PurgeCommand extends Command {
 					: i18n.get("commands.purge.messages.pinned.middle_text_multiple"));
 			builder.append(i18n.get("commands.purge.messages.pinned.end_text"));
 
-			buttonActionCache.createPurgePrompt(purgeProcessor, builder.toString(), ctx);
+			componentActionCache.createPurgePrompt(purgeProcessor, builder.toString(), ctx);
 		}, throwable -> ctx.replyErrorLocalized("internal_error", "purge messages", throwable.getMessage()));
 	}
 }

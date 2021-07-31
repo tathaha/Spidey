@@ -11,26 +11,21 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-public class PurgeProcessor implements ComponentAction {
-	private final String id;
+public class PurgeProcessor extends ComponentAction {
 	private final List<String> allMessagesIds;
 	private final List<String> pinnedMessagesIds;
 	private final User target;
-	private final CommandContext ctx;
-	private final ComponentActionCache componentActionCache;
 
-	public PurgeProcessor(String id, List<Message> allMessages, List<Message> pinnedMessages, User target, CommandContext ctx,
+	public PurgeProcessor(String id, CommandContext ctx, List<Message> allMessages, List<Message> pinnedMessages, User target,
 	                      ComponentActionCache componentActionCache) {
-		this.id = id;
+		super(id, ctx, ComponentAction.ActionType.PURGE_PROMPT, componentActionCache);
 		this.allMessagesIds = allMessages.stream().map(Message::getId).collect(Collectors.toList());
 		this.pinnedMessagesIds = pinnedMessages.stream().map(Message::getId).collect(Collectors.toList());
 		this.target = target;
-		this.ctx = ctx;
-		this.componentActionCache = componentActionCache;
 	}
 
 	public void processPrompt(PurgeProcessor.PromptAction action) {
-		componentActionCache.removeAction(this);
+		uncacheAndDelete();
 
 		switch (action) {
 			case ACCEPT:
@@ -70,28 +65,8 @@ public class PurgeProcessor implements ComponentAction {
 	}
 
 	@Override
-	public String getId() {
-		return id;
-	}
-
-	@Override
-	public CommandContext getCtx() {
-		return ctx;
-	}
-
-	@Override
-	public ActionType getType() {
-		return ComponentAction.ActionType.PURGE_PROMPT;
-	}
-
-	@Override
 	public Object getObject() {
 		return this;
-	}
-
-	@Override
-	public long getAuthorId() {
-		return ctx.getUser().getIdLong();
 	}
 
 	public enum PromptAction {

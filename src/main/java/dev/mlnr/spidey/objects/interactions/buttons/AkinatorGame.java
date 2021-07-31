@@ -14,14 +14,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class AkinatorGame implements ComponentAction {
-	private final String id;
-	private final CommandContext ctx;
+public class AkinatorGame extends ComponentAction {
 	private final Akiwrapper akiwrapper;
 	private final EmbedBuilder embedBuilder;
 	private final List<ActionRow> originalLayout;
 	private final List<ActionRow> guessLayout;
-	private final ComponentActionCache componentActionCache;
 
 	private final List<Long> declinedGuesses;
 	private Guess currentGuess;
@@ -29,13 +26,11 @@ public class AkinatorGame implements ComponentAction {
 
 	public AkinatorGame(String id, CommandContext ctx, Akiwrapper akiwrapper, EmbedBuilder embedBuilder, List<ActionRow> originalLayout,
 	                    List<ActionRow> guessLayout, ComponentActionCache componentActionCache) {
-		this.id = id;
-		this.ctx = ctx;
+		super(id, ctx, ComponentAction.ActionType.AKINATOR, componentActionCache);
 		this.akiwrapper = akiwrapper;
 		this.embedBuilder = embedBuilder;
 		this.originalLayout = originalLayout;
 		this.guessLayout = guessLayout;
-		this.componentActionCache = componentActionCache;
 
 		this.declinedGuesses = new ArrayList<>();
 	}
@@ -52,7 +47,7 @@ public class AkinatorGame implements ComponentAction {
 			return;
 		}
 		if (answer == Answer.REMOVE) {
-			componentActionCache.removeAction(this);
+			uncacheAndDelete();
 			return;
 		}
 		if (currentGuess != null) {
@@ -116,7 +111,7 @@ public class AkinatorGame implements ComponentAction {
 		embedBuilder.setDescription(win ? i18n.get("commands.akinator.win") : i18n.get("commands.akinator.lose"));
 		embedBuilder.setImage(null);
 		ctx.editComponents(embedBuilder, Collections.emptyList());
-		componentActionCache.removeAction(this, false);
+		uncache();
 	}
 
 	public Guess getNewGuess() {
@@ -128,28 +123,8 @@ public class AkinatorGame implements ComponentAction {
 	}
 
 	@Override
-	public String getId() {
-		return id;
-	}
-
-	@Override
-	public CommandContext getCtx() {
-		return ctx;
-	}
-
-	@Override
-	public ActionType getType() {
-		return ComponentAction.ActionType.AKINATOR;
-	}
-
-	@Override
 	public Object getObject() {
 		return this;
-	}
-
-	@Override
-	public long getAuthorId() {
-		return ctx.getUser().getIdLong();
 	}
 
 	public enum Type implements ChoicesEnum {
