@@ -26,9 +26,9 @@ public class ComponentActionCache {
 			.asyncExpirationListener((actionId, actionObject) -> ((ComponentAction) actionObject).getCtx().deleteReply())
 			.build();
 
-	public void addAction(String id, ComponentAction componentAction) {
+	public void addAction(ComponentAction componentAction) {
 		var type = componentAction.getType();
-		actionMap.put(id, componentAction, type.getExpirationPolicy(), type.getExpirationDuration(), type.getExpirationUnit());
+		actionMap.put(componentAction.getId(), componentAction, type.getExpirationPolicy(), type.getExpirationDuration(), type.getExpirationUnit());
 	}
 
 	public ComponentAction getAction(String id) {
@@ -55,8 +55,7 @@ public class ComponentActionCache {
 		pagesConsumer.accept(0, embedBuilder);
 
 		var paginatorId = StringUtils.randomString(30);
-		var paginator = new Paginator(paginatorId, ctx, totalPages, pagesConsumer, this);
-		addAction(paginatorId, paginator);
+		Paginator.create(new Paginator.Context(paginatorId, ctx, totalPages, pagesConsumer, this));
 
 		var left = Button.primary(paginatorId + ":BACKWARDS", Emoji.fromUnicode(Emojis.BACKWARDS));
 		var right = Button.primary(paginatorId + ":FORWARD", Emoji.fromUnicode(Emojis.FORWARD));
@@ -66,7 +65,6 @@ public class ComponentActionCache {
 
 	public void createPurgePrompt(PurgeProcessor purgeProcessor, String content, CommandContext ctx) {
 		var purgeProcessorId = purgeProcessor.getId();
-		addAction(purgeProcessorId, purgeProcessor);
 
 		var accept = Button.success(purgeProcessorId + ":ACCEPT", Emoji.fromUnicode(Emojis.CHECK));
 		var wastebasket = Button.primary(purgeProcessorId + ":REMOVE", Emoji.fromUnicode(Emojis.WASTEBASKET));
@@ -97,7 +95,7 @@ public class ComponentActionCache {
 		var originalLayout = Utils.splitComponents(yes, no, dontKnow, probably, probablyNot, undo, dummy, dummy, dummy, wastebasket);
 		var guessLayout = Utils.splitComponents(dummy, yes, dummy, no, dummy, dummy, undo, dummy, wastebasket, dummy);
 
-		addAction(buttonsId, new AkinatorGame(buttonsId, ctx, akiwrapper, embedBuilder, originalLayout, guessLayout, this));
+		AkinatorGame.create(new AkinatorGame.Context(buttonsId, ctx, akiwrapper, embedBuilder, originalLayout, guessLayout, this));
 
 		ctx.getEvent().getHook().sendMessageEmbeds(embedBuilder.build()).addActionRows(originalLayout).queue();
 	}
@@ -106,8 +104,8 @@ public class ComponentActionCache {
 
 	public void createYouTubeSearchDropdown(CommandContext ctx, MusicPlayer musicPlayer, SelectOption[] options) {
 		var dropdownId = StringUtils.randomString(30);
-		var dropdown = new YouTubeSearchDropdown(dropdownId, ctx, musicPlayer, this);
-		addAction(dropdownId, dropdown);
+
+		YouTubeSearchDropdown.create(new YouTubeSearchDropdown.Context(dropdownId, ctx, musicPlayer, this));
 
 		var i18n = ctx.getI18n();
 		var choose = i18n.get("selection.text", i18n.get("selection.track"));

@@ -24,6 +24,8 @@ public abstract class ComponentAction {
 		this.type = type;
 		this.authorId = ctx.getUser().getIdLong();
 		this.componentActionCache = componentActionCache;
+
+		componentActionCache.addAction(this);
 	}
 
 	public final String getId() {
@@ -97,6 +99,30 @@ public abstract class ComponentAction {
 
 		public BiConsumer<String, ComponentAction> getActionConsumer() {
 			return actionConsumer;
+		}
+	}
+
+	public static class Context {
+		private final String id;
+		private final CommandContext ctx;
+		private final ComponentActionCache componentActionCache;
+
+		public Context(String id, CommandContext ctx, ComponentActionCache componentActionCache) {
+			this.id = id;
+			this.ctx = ctx;
+			this.componentActionCache = componentActionCache;
+		}
+
+		public final String getId() {
+			return id;
+		}
+
+		public final CommandContext getCtx() {
+			return ctx;
+		}
+
+		public final ComponentActionCache getComponentActionCache() {
+			return componentActionCache;
 		}
 	}
 }

@@ -10,9 +10,13 @@ import dev.mlnr.spidey.utils.MusicUtils;
 public class YouTubeSearchDropdown extends ComponentAction {
 	private final MusicPlayer musicPlayer;
 
-	public YouTubeSearchDropdown(String id, CommandContext ctx, MusicPlayer musicPlayer, ComponentActionCache componentActionCache) {
-		super(id, ctx, ComponentAction.ActionType.YOUTUBE_SEARCH_DROPDOWN, componentActionCache);
-		this.musicPlayer = musicPlayer;
+	public static void create(YouTubeSearchDropdown.Context context) {
+		new YouTubeSearchDropdown(context);
+	}
+
+	private YouTubeSearchDropdown(YouTubeSearchDropdown.Context context) {
+		super(context.getId(), context.getCtx(), ComponentAction.ActionType.YOUTUBE_SEARCH_DROPDOWN, context.getComponentActionCache());
+		this.musicPlayer = context.getMusicPlayer();
 	}
 
 	public void loadVideo(String link) {
@@ -24,5 +28,18 @@ public class YouTubeSearchDropdown extends ComponentAction {
 	@Override
 	public Object getObject() {
 		return this;
+	}
+
+	public static class Context extends ComponentAction.Context {
+		private final MusicPlayer musicPlayer;
+
+		public Context(String id, CommandContext ctx, MusicPlayer musicPlayer, ComponentActionCache componentActionCache) {
+			super(id, ctx, componentActionCache);
+			this.musicPlayer = musicPlayer;
+		}
+
+		public MusicPlayer getMusicPlayer() {
+			return musicPlayer;
+		}
 	}
 }

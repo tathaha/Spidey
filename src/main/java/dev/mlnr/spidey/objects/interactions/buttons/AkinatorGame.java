@@ -24,13 +24,16 @@ public class AkinatorGame extends ComponentAction {
 	private Guess currentGuess;
 	private boolean prompted;
 
-	public AkinatorGame(String id, CommandContext ctx, Akiwrapper akiwrapper, EmbedBuilder embedBuilder, List<ActionRow> originalLayout,
-	                    List<ActionRow> guessLayout, ComponentActionCache componentActionCache) {
-		super(id, ctx, ComponentAction.ActionType.AKINATOR, componentActionCache);
-		this.akiwrapper = akiwrapper;
-		this.embedBuilder = embedBuilder;
-		this.originalLayout = originalLayout;
-		this.guessLayout = guessLayout;
+	public static void create(AkinatorGame.Context context) {
+		new AkinatorGame(context);
+	}
+
+	private AkinatorGame(AkinatorGame.Context context) {
+		super(context.getId(), context.getCtx(), ComponentAction.ActionType.AKINATOR, context.getComponentActionCache());
+		this.akiwrapper = context.getAkiwrapper();
+		this.embedBuilder = context.getEmbedBuilder();
+		this.originalLayout = context.getOriginalLayout();
+		this.guessLayout = context.getGuessLayout();
 
 		this.declinedGuesses = new ArrayList<>();
 	}
@@ -157,6 +160,38 @@ public class AkinatorGame extends ComponentAction {
 
 		public Akiwrapper.Answer getWrapperRepresentative() {
 			return Akiwrapper.Answer.valueOf(name());
+		}
+	}
+
+	public static class Context extends ComponentAction.Context {
+		private final Akiwrapper akiwrapper;
+		private final EmbedBuilder embedBuilder;
+		private final List<ActionRow> originalLayout;
+		private final List<ActionRow> guessLayout;
+
+		public Context(String id, CommandContext ctx, Akiwrapper akiwrapper, EmbedBuilder embedBuilder, List<ActionRow> originalLayout,
+		               List<ActionRow> guessLayout, ComponentActionCache componentActionCache) {
+			super(id, ctx, componentActionCache);
+			this.akiwrapper = akiwrapper;
+			this.embedBuilder = embedBuilder;
+			this.originalLayout = originalLayout;
+			this.guessLayout = guessLayout;
+		}
+
+		public Akiwrapper getAkiwrapper() {
+			return akiwrapper;
+		}
+
+		public EmbedBuilder getEmbedBuilder() {
+			return embedBuilder;
+		}
+
+		public List<ActionRow> getOriginalLayout() {
+			return originalLayout;
+		}
+
+		public List<ActionRow> getGuessLayout() {
+			return guessLayout;
 		}
 	}
 }

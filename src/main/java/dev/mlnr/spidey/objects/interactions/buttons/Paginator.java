@@ -14,11 +14,14 @@ public class Paginator extends ComponentAction {
 
 	private int currentPage;
 
-	public Paginator(String id, CommandContext ctx, int totalPages, BiConsumer<Integer, EmbedBuilder> pagesConsumer,
-	                 ComponentActionCache componentActionCache) {
-		super(id, ctx, ComponentAction.ActionType.PAGINATOR, componentActionCache);
-		this.totalPages = totalPages;
-		this.pagesConsumer = pagesConsumer;
+	public static void create(Paginator.Context context) {
+		new Paginator(context);
+	}
+
+	private Paginator(Paginator.Context context) {
+		super(context.getId(), context.getCtx(), ComponentAction.ActionType.PAGINATOR, context.getComponentActionCache());
+		this.totalPages = context.getTotalPages();
+		this.pagesConsumer = context.getPagesConsumer();
 	}
 
 	public void switchPage(Paginator.Action action) {
@@ -59,5 +62,25 @@ public class Paginator extends ComponentAction {
 		BACKWARDS,
 		FORWARD,
 		REMOVE
+	}
+
+	public static class Context extends ComponentAction.Context {
+		private final int totalPages;
+		private final BiConsumer<Integer, EmbedBuilder> pagesConsumer;
+
+		public Context(String id, CommandContext ctx, int totalPages, BiConsumer<Integer, EmbedBuilder> pagesConsumer,
+		               ComponentActionCache componentActionCache) {
+			super(id, ctx, componentActionCache);
+			this.totalPages = totalPages;
+			this.pagesConsumer = pagesConsumer;
+		}
+
+		public int getTotalPages() {
+			return totalPages;
+		}
+
+		public BiConsumer<Integer, EmbedBuilder> getPagesConsumer() {
+			return pagesConsumer;
+		}
 	}
 }
