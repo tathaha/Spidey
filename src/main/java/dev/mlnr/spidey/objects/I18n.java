@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.UnaryOperator;
 
 public class I18n {
 	private static final Map<String, I18n> LANGUAGE_MAP = new HashMap<>();
@@ -31,10 +32,12 @@ public class I18n {
 
 	private final DataObject data;
 	private final String langCode;
+	private final Map<String, String> stringCache;
 
 	private I18n(DataObject data, String langCode) {
 		this.data = data;
 		this.langCode = langCode;
+		this.stringCache = new HashMap<>();
 	}
 
 	public static I18n ofLanguage(String language) {
@@ -47,17 +50,23 @@ public class I18n {
 
 	public String get(String key, Object... args) {
 		if (!key.contains(".")) {
-			return applyArguments(data.getString(key), args);
+			return applyArguments(computeOrGet(key, data::getString), args);
 		}
-		var object = data;
-		var parts = key.split("\\.");
-		for (var i = 0; i < (parts.length - 1); i++)
-			object = object.getObject(parts[i]);
-		var string = object.getString(parts[parts.length - 1]);
+		var string = computeOrGet(key, k -> {
+			var object = data;
+			var parts = key.split("\\.");
+			for (var i = 0; i < (parts.length - 1); i++)
+				object = object.getObject(parts[i]);
+			return object.getString(parts[parts.length - 1]);
+		});
 		return applyArguments(string, args);
 	}
 
 	private String applyArguments(String string, Object... args) {
 		return args.length == 0 ? string : String.format(string, args);
+	}
+
+	private String computeOrGet(String key, UnaryOperator<String> accumulator) {
+		return stringCache.computeIfAbsent(key, accumulator);
 	}
 }
