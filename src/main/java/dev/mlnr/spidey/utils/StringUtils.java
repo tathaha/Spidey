@@ -97,8 +97,8 @@ public class StringUtils {
 		var options = new SelectOption[size];
 		for (var i = 0; i < size; i++) {
 			var trackInfo = tracks.get(i).getInfo();
-			options[i] = SelectOption.of(trimString(trackInfo.author, 25), trackInfo.uri)
-					.withDescription(trimString(trackInfo.title, 50));
+			options[i] = SelectOption.of(trimString(trackInfo.title, 100), trackInfo.uri)
+					.withDescription(trimString(trackInfo.author, 100));
 		}
 		ctx.getCache().getComponentActionCache().createYouTubeSearchDropdown(ctx, musicPlayer, options);
 	}
