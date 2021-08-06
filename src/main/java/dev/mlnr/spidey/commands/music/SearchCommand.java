@@ -16,7 +16,7 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 @SuppressWarnings("unused")
 public class SearchCommand extends Command {
 	public SearchCommand() {
-		super("search", "Searches a query on YouTube", Category.MUSIC, Permission.UNKNOWN, 4,
+		super("search", "Searches a query on YouTube", Category.MUSIC, Permission.UNKNOWN, 4, false,
 				new OptionData(OptionType.STRING, "query", "The query to search YouTube for", true));
 	}
 
