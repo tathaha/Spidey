@@ -9,6 +9,7 @@ import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.utils.MusicUtils;
 import dev.mlnr.spidey.utils.StringUtils;
+import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
@@ -17,7 +18,9 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 public class SearchCommand extends Command {
 	public SearchCommand() {
 		super("search", "Searches a query on YouTube", Category.MUSIC, Permission.UNKNOWN, 4, false,
-				new OptionData(OptionType.STRING, "query", "The query to search YouTube for", true));
+				new OptionData(OptionType.STRING, "query", "The query to search YouTube for", true),
+				new OptionData(OptionType.STRING, "service", "The service to search the query on")
+						.addChoices(Utils.getChoicesFromEnum(MusicUtils.ServiceType.class)));
 	}
 
 	@Override
@@ -26,8 +29,10 @@ public class SearchCommand extends Command {
 		if (musicPlayer == null) {
 			return false;
 		}
+		var serviceOption = ctx.getStringOption("service");
+		var service = serviceOption == null ? MusicUtils.ServiceType.YOUTUBE : MusicUtils.ServiceType.valueOf(serviceOption);
 		var query = ctx.getStringOption("query");
-		MusicUtils.loadQuery(musicPlayer, "ytsearch:" + query, new AudioLoadResultHandler() {
+		MusicUtils.loadQuery(musicPlayer, service.getSearchPrefix() + query, new AudioLoadResultHandler() {
 			@Override
 			public void trackLoaded(AudioTrack track) {}
 

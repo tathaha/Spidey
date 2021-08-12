@@ -4,6 +4,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
+import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.TrackMarker;
@@ -12,6 +13,7 @@ import dev.mlnr.spidey.cache.music.MusicPlayerCache;
 import dev.mlnr.spidey.cache.music.VideoSegmentCache;
 import dev.mlnr.spidey.handlers.music.SegmentHandler;
 import dev.mlnr.spidey.objects.I18n;
+import dev.mlnr.spidey.objects.command.ChoicesEnum;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.music.MusicPlayer;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -41,6 +43,7 @@ public class MusicUtils {
 
 	public static void registerSources() {
 		AUDIO_PLAYER_MANAGER.registerSourceManager(new YoutubeAudioSourceManager());
+		AUDIO_PLAYER_MANAGER.registerSourceManager(SoundCloudAudioSourceManager.createDefault());
 		AudioSourceManagers.registerRemoteSources(AUDIO_PLAYER_MANAGER);
 	}
 
@@ -224,6 +227,29 @@ public class MusicUtils {
 				break;
 		}
 		return message;
+	}
+
+	public enum ServiceType implements ChoicesEnum {
+		YOUTUBE("YouTube", "ytsearch:"),
+		YOUTUBE_MUSIC("YouTube Music", "ytmsearch:"),
+		SOUNDCLOUD("SoundCloud", "scsearch:");
+
+		private final String friendlyName;
+		private final String searchPrefix;
+
+		ServiceType(String friendlyName, String searchPrefix) {
+			this.friendlyName = friendlyName;
+			this.searchPrefix = searchPrefix;
+		}
+
+		@Override
+		public String getFriendlyName() {
+			return friendlyName;
+		}
+
+		public String getSearchPrefix() {
+			return searchPrefix;
+		}
 	}
 
 	public enum ConnectFailureReason {
