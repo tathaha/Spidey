@@ -52,7 +52,7 @@ dependencies {
     implementation group: 'io.sentry', name: 'sentry-logback', version: '5.0.1'
 
     // music
-    implementation group: 'com.github.caneleex', name: 'lavaplayer-fork', version: 'f862e936a9'
+    implementation group: 'com.github.caneleex', name: 'lavaplayer-fork', version: '26b45f9d02'
     implementation group: 'com.sedmelluq', name: 'jda-nas', version: '1.1.0'
 }
 
