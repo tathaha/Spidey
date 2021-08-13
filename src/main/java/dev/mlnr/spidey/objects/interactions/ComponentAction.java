@@ -70,7 +70,7 @@ public abstract class ComponentAction {
 		}),
 		// dropdowns
 		MUSIC_SEARCH_DROPDOWN(ExpirationPolicy.CREATED, 1, TimeUnit.MINUTES, (link, action) -> {
-			((MusicSearchDropdown) action.getObject()).loadVideo(link);
+			((MusicSearchDropdown) action.getObject()).load(link);
 		});
 
 		private final ExpirationPolicy expirationPolicy;

@@ -19,7 +19,7 @@ public class MusicSearchDropdown extends ComponentAction {
 		this.musicPlayer = context.getMusicPlayer();
 	}
 
-	public void loadVideo(String link) {
+	public void load(String link) {
 		var loader = new AudioLoader(musicPlayer, link, ctx, true);
 		MusicUtils.loadQuery(musicPlayer, link, loader);
 		uncacheAndDelete();
