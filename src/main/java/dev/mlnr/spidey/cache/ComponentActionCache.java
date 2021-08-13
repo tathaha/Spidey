@@ -88,12 +88,16 @@ public class ComponentActionCache {
 		var dontKnow = Button.primary(buttonsId + ":DONT_KNOW", i18n.get("commands.akinator.dont_know"));
 		var probably = Button.primary(buttonsId + ":PROBABLY", i18n.get("commands.akinator.probably"));
 		var probablyNot = Button.primary(buttonsId + ":PROBABLY_NOT", i18n.get("commands.akinator.probably_not"));
-		var dummy = Button.secondary(buttonsId + ":DUMMY", " ").asDisabled();
 		var undo = Button.primary(buttonsId + ":UNDO", i18n.get("commands.akinator.undo"));
 		var wastebasket = Button.primary(buttonsId + ":REMOVE", Emoji.fromUnicode(Emojis.WASTEBASKET));
 
-		var originalLayout = Utils.splitComponents(yes, no, dontKnow, probably, probablyNot, undo, dummy, dummy, dummy, wastebasket);
-		var guessLayout = Utils.splitComponents(dummy, yes, dummy, no, dummy, dummy, undo, dummy, wastebasket, dummy);
+		var dummies = new Button[6];
+		for (var i = 0; i < 6; i++ ) {
+			dummies[i] = Button.secondary(buttonsId + ":DUMMY" + i, " ").asDisabled();
+		}
+
+		var originalLayout = Utils.splitComponents(yes, no, dontKnow, probably, probablyNot, undo, dummies[0], dummies[1], dummies[2], wastebasket);
+		var guessLayout = Utils.splitComponents(dummies[0], yes, dummies[1], no, dummies[2], dummies[3], undo, dummies[4], wastebasket, dummies[5]);
 
 		AkinatorGame.create(new AkinatorGame.Context(buttonsId, ctx, akiwrapper, embedBuilder, originalLayout, guessLayout, this));
 
