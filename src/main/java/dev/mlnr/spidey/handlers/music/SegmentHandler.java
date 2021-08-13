@@ -19,7 +19,7 @@ public class SegmentHandler implements TrackMarkerHandler {
 		if (!(state == MarkerState.REACHED || state == MarkerState.LATE)) {
 			return;
 		}
-		var segments = VideoSegmentCache.getInstance().getVideoSegments(track.getIdentifier());
+		var segments = VideoSegmentCache.getInstance().getVideoSegments(track);
 		track.setPosition(segments.get(this.currentSegment).getSegmentEnd());
 
 		this.currentSegment++;

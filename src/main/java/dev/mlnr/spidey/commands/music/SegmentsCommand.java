@@ -12,7 +12,7 @@ import static dev.mlnr.spidey.utils.MusicUtils.formatDuration;
 @SuppressWarnings("unused")
 public class SegmentsCommand extends Command {
 	public SegmentsCommand() {
-		super("segments", "Lists all non music SponsorBlock segments in this video", Category.MUSIC, Permission.UNKNOWN, 4,
+		super("segments", "Lists all SponsorBlock segments in this video", Category.MUSIC, Permission.UNKNOWN, 4,
 				new OptionData(OptionType.BOOLEAN, "reload", "Whether to force reload the segments"));
 	}
 
@@ -33,10 +33,9 @@ public class SegmentsCommand extends Command {
 		}
 		var reload = ctx.getBooleanOption("reload");
 		var videoSegmentCache = cache.getVideoSegmentCache();
-		var videoId = playingTrack.getIdentifier();
-		var segments = videoSegmentCache.getVideoSegments(videoId);
+		var segments = videoSegmentCache.getVideoSegments(playingTrack);
 		if (reload != null && reload) {
-			segments = videoSegmentCache.getVideoSegments(videoId, true);
+			segments = videoSegmentCache.getVideoSegments(playingTrack, true);
 		}
 		var updatePrompt = i18n.get("commands.segments.prompt");
 		if (segments.isEmpty()) {

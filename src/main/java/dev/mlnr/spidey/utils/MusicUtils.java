@@ -121,7 +121,7 @@ public class MusicUtils {
 		if (!GuildSettingsCache.getInstance().getMusicSettings(guildId).isSegmentSkippingEnabled()) {
 			return;
 		}
-		var segments = VideoSegmentCache.getInstance().getVideoSegments(track.getIdentifier());
+		var segments = VideoSegmentCache.getInstance().getVideoSegments(track);
 		if (!segments.isEmpty()) {
 			track.setMarker(new TrackMarker(segments.get(0).getSegmentStart(), new SegmentHandler(track)));
 		}
@@ -132,7 +132,7 @@ public class MusicUtils {
 		if (!GuildSettingsCache.getInstance().getMusicSettings(guildId).isSegmentSkippingEnabled()) {
 			return length;
 		}
-		var segments = VideoSegmentCache.getInstance().getVideoSegments(track.getIdentifier());
+		var segments = VideoSegmentCache.getInstance().getVideoSegments(track);
 		return segments.isEmpty() ? length : length - segments.stream().mapToLong(segment -> segment.getSegmentEnd() - segment.getSegmentStart()).sum();
 	}
 

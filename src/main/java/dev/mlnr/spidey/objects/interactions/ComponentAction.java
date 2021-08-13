@@ -5,7 +5,7 @@ import dev.mlnr.spidey.objects.interactions.buttons.AkinatorGame;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.interactions.buttons.Paginator;
 import dev.mlnr.spidey.objects.interactions.buttons.PurgeProcessor;
-import dev.mlnr.spidey.objects.interactions.dropdowns.YouTubeSearchDropdown;
+import dev.mlnr.spidey.objects.interactions.dropdowns.MusicSearchDropdown;
 import net.jodah.expiringmap.ExpirationPolicy;
 
 import java.util.concurrent.TimeUnit;
@@ -69,8 +69,8 @@ public abstract class ComponentAction {
 			((AkinatorGame) action.getObject()).answerCurrentQuestion(answer);
 		}),
 		// dropdowns
-		YOUTUBE_SEARCH_DROPDOWN(ExpirationPolicy.CREATED, 1, TimeUnit.MINUTES, (link, action) -> {
-			((YouTubeSearchDropdown) action.getObject()).loadVideo(link);
+		MUSIC_SEARCH_DROPDOWN(ExpirationPolicy.CREATED, 1, TimeUnit.MINUTES, (link, action) -> {
+			((MusicSearchDropdown) action.getObject()).loadVideo(link);
 		});
 
 		private final ExpirationPolicy expirationPolicy;

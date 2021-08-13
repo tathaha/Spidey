@@ -7,7 +7,7 @@ import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.interactions.ComponentAction;
 import dev.mlnr.spidey.objects.interactions.buttons.Paginator;
 import dev.mlnr.spidey.objects.interactions.buttons.PurgeProcessor;
-import dev.mlnr.spidey.objects.interactions.dropdowns.YouTubeSearchDropdown;
+import dev.mlnr.spidey.objects.interactions.dropdowns.MusicSearchDropdown;
 import dev.mlnr.spidey.objects.music.MusicPlayer;
 import dev.mlnr.spidey.utils.StringUtils;
 import dev.mlnr.spidey.utils.Utils;
@@ -102,10 +102,10 @@ public class ComponentActionCache {
 
 	// dropdowns
 
-	public void createYouTubeSearchDropdown(CommandContext ctx, MusicPlayer musicPlayer, SelectOption[] options) {
+	public void createMusicSearchDropdown(CommandContext ctx, MusicPlayer musicPlayer, SelectOption[] options) {
 		var dropdownId = StringUtils.randomString(30);
 
-		YouTubeSearchDropdown.create(new YouTubeSearchDropdown.Context(dropdownId, ctx, musicPlayer, this));
+		MusicSearchDropdown.create(new MusicSearchDropdown.Context(dropdownId, ctx, musicPlayer, this));
 
 		var i18n = ctx.getI18n();
 		var choose = i18n.get("selection.text", i18n.get("selection.track"));

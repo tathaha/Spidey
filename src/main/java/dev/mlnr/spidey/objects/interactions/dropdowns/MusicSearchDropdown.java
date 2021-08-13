@@ -7,15 +7,15 @@ import dev.mlnr.spidey.objects.music.AudioLoader;
 import dev.mlnr.spidey.objects.music.MusicPlayer;
 import dev.mlnr.spidey.utils.MusicUtils;
 
-public class YouTubeSearchDropdown extends ComponentAction {
+public class MusicSearchDropdown extends ComponentAction {
 	private final MusicPlayer musicPlayer;
 
-	public static void create(YouTubeSearchDropdown.Context context) {
-		new YouTubeSearchDropdown(context);
+	public static void create(MusicSearchDropdown.Context context) {
+		new MusicSearchDropdown(context);
 	}
 
-	private YouTubeSearchDropdown(YouTubeSearchDropdown.Context context) {
-		super(context.getId(), context.getCtx(), ComponentAction.ActionType.YOUTUBE_SEARCH_DROPDOWN, context.getComponentActionCache());
+	private MusicSearchDropdown(MusicSearchDropdown.Context context) {
+		super(context.getId(), context.getCtx(), ActionType.MUSIC_SEARCH_DROPDOWN, context.getComponentActionCache());
 		this.musicPlayer = context.getMusicPlayer();
 	}
 

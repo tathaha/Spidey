@@ -1,8 +1,10 @@
 package dev.mlnr.spidey.cache.music;
 
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import dev.mlnr.spidey.objects.music.VideoSegment;
 import dev.mlnr.spidey.utils.requests.Requester;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,11 +20,15 @@ public class VideoSegmentCache {
 		return videoSegmentCache;
 	}
 
-	public List<VideoSegment> getVideoSegments(String videoId) {
-		return getVideoSegments(videoId, false);
+	public List<VideoSegment> getVideoSegments(AudioTrack track) {
+		return getVideoSegments(track, false);
 	}
 
-	public List<VideoSegment> getVideoSegments(String videoId, boolean forceRequest) {
+	public List<VideoSegment> getVideoSegments(AudioTrack track, boolean forceRequest) {
+		if (!track.getSourceManager().getSourceName().equals("youtube")) {
+			return Collections.emptyList();
+		}
+		var videoId = track.getIdentifier();
 		if (segmentMap.containsKey(videoId) && !forceRequest) {
 			return segmentMap.get(videoId);
 		}
