@@ -53,11 +53,6 @@ public class Paginator extends ComponentAction {
 		ctx.editReply(newPageBuilder);
 	}
 
-	@Override
-	public Object getObject() {
-		return this;
-	}
-
 	public enum Action {
 		BACKWARDS,
 		FORWARD,

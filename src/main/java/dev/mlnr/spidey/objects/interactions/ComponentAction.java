@@ -11,7 +11,7 @@ import net.jodah.expiringmap.ExpirationPolicy;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 
-public abstract class ComponentAction {
+public class ComponentAction {
 	private final String id;
 	public final CommandContext ctx;
 	private final ActionType type;
@@ -52,25 +52,23 @@ public abstract class ComponentAction {
 		componentActionCache.removeAction(this, false);
 	}
 
-	public abstract Object getObject();
-
 	public enum ActionType {
 		// buttons
 		PAGINATOR(ExpirationPolicy.CREATED, 5, TimeUnit.MINUTES, (moveName, action) -> {
 			var move = Paginator.Action.valueOf(moveName);
-			((Paginator) action.getObject()).switchPage(move);
+			((Paginator) action).switchPage(move);
 		}),
 		PURGE_PROMPT(ExpirationPolicy.CREATED, 1, TimeUnit.MINUTES, (actionName, action) -> {
 			var promptAction = PurgeProcessor.PromptAction.valueOf(actionName);
-			((PurgeProcessor) action.getObject()).processPrompt(promptAction);
+			((PurgeProcessor) action).processPrompt(promptAction);
 		}),
 		AKINATOR(ExpirationPolicy.CREATED, 10, TimeUnit.MINUTES, (answerName, action) -> {
 			var answer = AkinatorGame.Answer.valueOf(answerName);
-			((AkinatorGame) action.getObject()).answerCurrentQuestion(answer);
+			((AkinatorGame) action).answerCurrentQuestion(answer);
 		}),
 		// dropdowns
 		MUSIC_SEARCH_DROPDOWN(ExpirationPolicy.CREATED, 1, TimeUnit.MINUTES, (link, action) -> {
-			((MusicSearchDropdown) action.getObject()).load(link);
+			((MusicSearchDropdown) action).load(link);
 		});
 
 		private final ExpirationPolicy expirationPolicy;

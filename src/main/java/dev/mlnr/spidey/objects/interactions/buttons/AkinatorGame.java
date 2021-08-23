@@ -125,11 +125,6 @@ public class AkinatorGame extends ComponentAction {
 		return akiwrapper.getGuesses().stream().filter(g -> g.getProbability() > 0.85 && !declinedGuesses.contains(g.getIdLong())).findFirst().orElse(null);
 	}
 
-	@Override
-	public Object getObject() {
-		return this;
-	}
-
 	public enum Type implements ChoicesEnum {
 		ANIMAL("Animal"),
 		MOVIE_TV_SHOW("Movie/TV show"),

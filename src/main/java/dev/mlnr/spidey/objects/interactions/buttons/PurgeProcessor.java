@@ -64,11 +64,6 @@ public class PurgeProcessor extends ComponentAction {
 				+ (target == null ? "." : " " + i18n.get("commands.purge.messages.success.user", target) + ".");
 	}
 
-	@Override
-	public Object getObject() {
-		return this;
-	}
-
 	public enum PromptAction {
 		ACCEPT,
 		DENY,
