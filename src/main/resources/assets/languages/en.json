@@ -331,6 +331,9 @@
         "warning": "As SponsorBlock is a crowdsourced extension, some segments can be placed at wrong timing. Report such submissions on SponsorBlock's Discord, not to the Developer."
       }
     },
+    "editsnipe": {
+      "jump": "Jump to the message"
+    },
     "uploademote": {
       "no_perms": "I don't have permission to upload emotes",
       "provide_url": "Please provide a valid URL.",
