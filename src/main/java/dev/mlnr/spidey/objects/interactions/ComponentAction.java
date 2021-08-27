@@ -45,7 +45,7 @@ public class ComponentAction {
 	}
 
 	public final void uncacheAndDelete() {
-		componentActionCache.removeAction(this);
+		componentActionCache.removeAction(this, true);
 	}
 
 	public final void uncache() {
