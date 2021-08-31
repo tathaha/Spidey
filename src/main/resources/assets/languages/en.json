@@ -133,6 +133,10 @@
           "text": "[Library](https://github.com/DV8FromTheWorld/JDA) version: `%s`"
         },
         "links": "Links",
+        "translate": {
+          "title": "Translate Spidey",
+          "text": "Help translate Spidey on [Crowdin](https://crowdin.com/project/spidey). Any contribution is appreciated, thank you!"
+        },
         "support": {
           "title": "Support",
           "text": "If you want to support the development of Spidey, you can do so by donating using my [PayPal](https://paypal.me/caneleex). Thank you!"
