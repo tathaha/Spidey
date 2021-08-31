@@ -133,6 +133,10 @@
           "text": "[Library](https://github.com/DV8FromTheWorld/JDA) version: `%s`"
         },
         "links": "Links",
+        "translate": {
+          "title": "Translate Spidey",
+          "text": "Help translate Spidey on [Crowdin](https://crowdin.com/project/spidey). Any contribution is appreciated, thank you!"
+        },
         "support": {
           "title": "Support",
           "text": "If you want to support the development of Spidey, you can do so by donating using my [PayPal](https://paypal.me/caneleex). Thank you!"
@@ -330,6 +334,9 @@
         "text": "Segment skipping has been **%s**.",
         "warning": "As SponsorBlock is a crowdsourced extension, some segments can be placed at wrong timing. Report such submissions on SponsorBlock's Discord, not to the Developer."
       }
+    },
+    "editsnipe": {
+      "jump": "Jump to the message"
     },
     "uploademote": {
       "no_perms": "I don't have permission to upload emotes",

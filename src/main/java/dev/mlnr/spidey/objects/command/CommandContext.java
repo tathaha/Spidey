@@ -77,6 +77,11 @@ public class CommandContext {
 		return option == null ? null : option.getAsUser();
 	}
 
+	public Member getMemberOption(String name) {
+		var option = event.getOption(name);
+		return option == null ? null : option.getAsMember();
+	}
+
 	public Role getRoleOption(String name) {
 		var option = event.getOption(name);
 		return option == null ? null : option.getAsRole();

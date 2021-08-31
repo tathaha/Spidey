@@ -35,10 +35,6 @@ public class ComponentActionCache {
 		return actionMap.get(id);
 	}
 
-	public void removeAction(ComponentAction componentAction) {
-		removeAction(componentAction, true);
-	}
-
 	public void removeAction(ComponentAction componentAction, boolean delete) {
 		actionMap.remove(componentAction.getId());
 		if (delete) {

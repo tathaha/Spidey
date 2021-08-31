@@ -25,11 +25,6 @@ public class MusicSearchDropdown extends ComponentAction {
 		uncacheAndDelete();
 	}
 
-	@Override
-	public Object getObject() {
-		return this;
-	}
-
 	public static class Context extends ComponentAction.Context {
 		private final MusicPlayer musicPlayer;
 

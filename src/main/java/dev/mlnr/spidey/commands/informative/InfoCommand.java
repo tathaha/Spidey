@@ -21,11 +21,12 @@ public class InfoCommand extends Command {
 
 		embedBuilder.setAuthor("Spidey", null, avatar);
 		embedBuilder.setThumbnail(avatar);
-		embedBuilder.addField(i18n.get("commands.info.fields.about.title"), i18n.get("commands.info.fields.about.text", "cane#0570"), false);
+		embedBuilder.addField(i18n.get("commands.info.fields.about.title"), i18n.get("commands.info.fields.about.text", "cane#0909"), false);
 		embedBuilder.addField(i18n.get("commands.info.fields.commands.title"), i18n.get("commands.info.fields.commands.text"), false);
 		embedBuilder.addField(i18n.get("commands.info.fields.info.title"), i18n.get("commands.info.fields.info.text", JDAInfo.VERSION), false);
 		embedBuilder.addField(i18n.get("commands.info.fields.links"), "[`Website`](https://spidey.mlnr.dev)\n[`Discord`](https://discord.gg/uJCw7B9fxZ)" +
 				"\n[`GitHub`](https://github.com/caneleex/Spidey)", false);
+		embedBuilder.addField(i18n.get("commands.info.fields.translate.title"), i18n.get("commands.info.fields.translate.text"), false);
 		embedBuilder.addField(i18n.get("commands.info.fields.support.title"), i18n.get("commands.info.fields.support.text"), false);
 		ctx.reply(embedBuilder);
 		return true;
