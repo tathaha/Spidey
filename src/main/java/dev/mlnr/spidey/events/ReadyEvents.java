@@ -29,6 +29,7 @@ public class ReadyEvents extends ListenerAdapter {
 		var blh = new BLHBuilder().setDevModePredicate(botId -> botId != 772446532560486410L)
 				.setSuccessLoggingEnabled(false)
 				.setUnavailableEventsEnabled(false)
+				.setErrorLoggingThreshold(2)
 				.addBotList(BotList.TOP_GG, System.getenv("topgg"))
 				.addBotList(BotList.DISCORDLIST_SPACE, System.getenv("botlistspace"))
 				.addBotList(BotList.DBOATS, System.getenv("dboats"))
@@ -36,6 +37,7 @@ public class ReadyEvents extends ListenerAdapter {
 				.addBotList(BotList.DBOTS_GG, System.getenv("dbotsgg"))
 				.addBotList(BotList.DBL, System.getenv("dbl"))
 				.addBotList(BotList.DEL, System.getenv("del"))
+				.addBotList(BotList.DISCORDS, System.getenv("bfd"))
 				.build();
 
 		var cache = new Cache(spidey);
