@@ -89,7 +89,6 @@
     },
     "voicegame": {
       "not_in_voice": "You're not in a voice channel. Connect to one or specify a channel.",
-      "not_voice": "Selected channel is not a voice channel.",
       "no_perms": "I don't have the **Create Invite** permission for your channel to create a session.",
       "click": "Click [here](https://discord.gg/%s) to join a %s session.",
       "create": "create a game session"
@@ -306,7 +305,6 @@
       "already_set": "The volume is already set to **%d%%**."
     },
     "log": {
-      "not_text": "Selected channel is not a text channel.",
       "reset": ":white_check_mark: The log channel has been reset!",
       "set": ":white_check_mark: The log channel has been set to channel <#%d>!"
     },

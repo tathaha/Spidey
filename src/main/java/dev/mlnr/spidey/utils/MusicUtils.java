@@ -49,19 +49,13 @@ public class MusicUtils {
 
 	private static ConnectFailureReason checkVoiceChannel(CommandContext ctx) {
 		var guild = ctx.getGuild();
-		var voiceState = ctx.getMember().getVoiceState();
-		if (voiceState == null) {
-			return NO_CHANNEL;
-		}
-		var voiceChannel = voiceState.getChannel();
+		var voiceChannel = ctx.getMember().getVoiceState().getChannel();
 		if (voiceChannel == null) {
 			return NO_CHANNEL;
 		}
-
 		if (guild.getAudioManager().isConnected()) {
 			return null;
 		}
-
 		var selfMember = guild.getSelfMember();
 		if (!selfMember.hasAccess(voiceChannel)) {
 			return NO_PERMS;

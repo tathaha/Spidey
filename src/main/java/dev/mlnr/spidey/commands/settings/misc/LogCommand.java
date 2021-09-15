@@ -12,17 +12,14 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 public class LogCommand extends Command {
 	public LogCommand() {
 		super("log", "Sets the log channel", Category.Settings.MISC, Permission.MANAGE_SERVER, 4,
-				new OptionData(OptionType.CHANNEL, "channel", "The channel to set as the log channel"));
+				new OptionData(OptionType.CHANNEL, "channel", "The channel to set as the log channel")
+						.setChannelTypes(ChannelType.TEXT));
 	}
 
 	@Override
 	public boolean execute(CommandContext ctx) {
 		var channelOption = ctx.getChannelOption("channel");
 		var channel = channelOption == null ? ctx.getTextChannel() : channelOption;
-		if (channel.getType() != ChannelType.TEXT) {
-			ctx.replyErrorLocalized("commands.log.not_text");
-			return false;
-		}
 		var guildId = ctx.getGuild().getIdLong();
 		var miscSettings = ctx.getCache().getGuildSettingsCache().getMiscSettings(guildId);
 		var channelId = channel.getIdLong();
