@@ -385,9 +385,10 @@
       },
       "user": {
         "footer": "User join",
-        "invite": {
-          "without": "\uD83D\uDCE5 **%s** (%d) has `joined` the server",
-          "with": " with invite **%s** (**%s**)."
+        "message": {
+          "base": "\uD83D\uDCE5 **%s** (%d) has `joined` the server",
+          "invite": " with invite **%s** (**%s**).",
+          "created": " The user has created his account on %s (%s)."
         }
       }
     },

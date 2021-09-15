@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.audit.ActionType;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.utils.TimeFormat;
 
 import java.time.Instant;
 
@@ -61,10 +62,12 @@ public class MemberEvents extends ListenerAdapter {
 		embedBuilder.setColor(7844437);
 		embedBuilder.setTimestamp(Instant.now());
 		embedBuilder.setFooter(i18n.get("events.member_join.user.footer"), avatarUrl);
-		embedBuilder.setDescription(i18n.get("events.member_join.user.invite.without", escapedTag, userId));
+		embedBuilder.setDescription(i18n.get("events.member_join.user.message.base", escapedTag, userId));
 
+		var created = user.getTimeCreated();
+		var timestamp = i18n.get("events.member_join.user.message.created", Utils.formatDate(created), TimeFormat.RELATIVE.format(created));
 		if (!selfMember.hasPermission(Permission.MANAGE_SERVER)) {
-			embedBuilder.appendDescription(".");
+			embedBuilder.appendDescription(".").appendDescription(timestamp);
 			Utils.sendMessage(channel, embedBuilder.build());
 			return;
 		}
@@ -75,11 +78,13 @@ public class MemberEvents extends ListenerAdapter {
 					continue;
 				}
 				inviteData.incrementUses();
-				embedBuilder.appendDescription(i18n.get("events.member_join.user.invite.with", invite.getUrl(), escape(invite.getInviter().getAsTag())));
+				embedBuilder.appendDescription(i18n.get("events.member_join.user.message.invite", invite.getUrl(), escape(invite.getInviter().getAsTag())));
+				embedBuilder.appendDescription(timestamp);
 				Utils.sendMessage(channel, embedBuilder.build());
 				return;
 			}
 			embedBuilder.appendDescription("."); // no invite was found, send the message either way
+			embedBuilder.appendDescription(timestamp);
 			Utils.sendMessage(channel, embedBuilder.build());
 		});
 	}
