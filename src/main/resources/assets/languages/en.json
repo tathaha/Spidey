@@ -388,7 +388,7 @@
         "message": {
           "base": "\uD83D\uDCE5 **%s** (%d) has `joined` the server",
           "invite": " with invite **%s** (**%s**).",
-          "created": " The user has created his account on %s (%s)."
+          "created": " The user has created their account on %s (%s)."
         }
       }
     },
