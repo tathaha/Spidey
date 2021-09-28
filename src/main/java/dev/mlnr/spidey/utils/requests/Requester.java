@@ -71,7 +71,7 @@ public class Requester {
 		var requestBuilder = new Request.Builder();
 		requestBuilder.url(String.format(SPONSORBLOCK_URL, videoId));
 		try (var response = HTTP_CLIENT.newCall(requestBuilder.build()).execute(); var body = response.body()) {
-			if (response.code() == 404) {
+			if (!response.isSuccessful()) {
 				return Collections.emptyList();
 			}
 			var json = DataArray.fromJson(body.string());

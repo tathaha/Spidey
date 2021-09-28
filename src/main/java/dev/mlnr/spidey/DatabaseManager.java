@@ -30,6 +30,7 @@ public class DatabaseManager {
 		hikariConfig.setJdbcUrl("jdbc:postgresql:spidey");
 		hikariConfig.setUsername("sebo");
 		hikariConfig.setPassword(System.getenv("db"));
+		hikariConfig.setMaximumPoolSize(5);
 
 		var defaultConfig = new DefaultConfiguration();
 		defaultConfig.setDataSource(new HikariDataSource(hikariConfig));

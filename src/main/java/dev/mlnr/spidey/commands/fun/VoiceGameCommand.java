@@ -17,7 +17,8 @@ public class VoiceGameCommand extends Command {
 		super("voicegame", "Creates an invite for a game for a voice channel", Category.FUN, Permission.CREATE_INSTANT_INVITE, 10, false,
 				new OptionData(OptionType.STRING, "game", "The game to create an invite for", true)
 						.addChoices(Utils.getChoicesFromEnum(VoiceGameType.class)),
-				new OptionData(OptionType.CHANNEL, "channel", "The channel to create the game invite for"));
+				new OptionData(OptionType.CHANNEL, "channel", "The channel to create the game invite for")
+						.setChannelTypes(ChannelType.VOICE));
 	}
 
 	@Override
@@ -25,22 +26,12 @@ public class VoiceGameCommand extends Command {
 		var channel = ctx.getChannelOption("channel");
 		var i18n = ctx.getI18n();
 		if (channel == null) {
-			var voiceState = ctx.getMember().getVoiceState();
-			var notInVoice = i18n.get("commands.voicegame.not_in_voice");
-			if (voiceState == null) {
-				ctx.replyError(notInVoice);
-				return false;
-			}
-			var voiceStateChannel = voiceState.getChannel();
+			var voiceStateChannel = ctx.getMember().getVoiceState().getChannel();
 			if (voiceStateChannel == null) {
-				ctx.replyError(notInVoice);
+				ctx.replyErrorLocalized("commands.voicegame.not_in_voice");
 				return false;
 			}
 			channel = voiceStateChannel;
-		}
-		if (channel.getType() != ChannelType.VOICE) {
-			ctx.replyErrorLocalized("commands.voicegame.not_voice");
-			return false;
 		}
 		if (!ctx.getGuild().getSelfMember().hasPermission(channel, Permission.CREATE_INSTANT_INVITE)) {
 			ctx.replyErrorLocalized("commands.voicegame.no_perms");
