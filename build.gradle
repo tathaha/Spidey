@@ -31,7 +31,7 @@ dependencies {
     implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.24'
     implementation group: 'com.zaxxer', name: 'HikariCP', version: '5.0.0'
     implementation group: 'org.jooq', name: 'jooq', version: '3.15.3'
-    jooqGenerator group: 'org.postgresql', name: 'postgresql', version: '42.2.23'
+    jooqGenerator group: 'org.postgresql', name: 'postgresql', version: '42.2.24'
 
     // eval
     implementation group: 'org.codehaus.groovy', name: 'groovy-jsr223', version: '3.0.9'
@@ -57,7 +57,7 @@ dependencies {
 }
 
 jooq {
-    version = '3.15.2'
+    version = '3.15.3'
     configurations {
         main {
             generateSchemaSourceOnCompilation = false
