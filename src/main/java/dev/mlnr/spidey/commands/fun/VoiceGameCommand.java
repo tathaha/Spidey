@@ -39,7 +39,7 @@ public class VoiceGameCommand extends Command {
 		}
 		var embedBuilder = Utils.createEmbedBuilder(ctx.getUser());
 		var voiceGame = VoiceGameType.valueOf(ctx.getStringOption("game"));
-		Requester.launchVoiceGameSession(channel.getId(), voiceGame, code -> {
+		Requester.launchVoiceGameSession(channel, voiceGame, code -> {
 			embedBuilder.setColor(16711680);
 			embedBuilder.setDescription(i18n.get("commands.voicegame.click", code, voiceGame.getFriendlyName()));
 			ctx.reply(embedBuilder);
