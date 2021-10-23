@@ -1,16 +1,12 @@
 package dev.mlnr.spidey.utils.requests;
 
 import dev.mlnr.spidey.objects.command.CommandContext;
-import dev.mlnr.spidey.objects.games.VoiceGameType;
 import dev.mlnr.spidey.objects.music.VideoSegment;
 import dev.mlnr.spidey.utils.Utils;
 import dev.mlnr.spidey.utils.requests.api.API;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.GuildChannel;
 import net.dv8tion.jda.api.utils.data.DataArray;
 import net.dv8tion.jda.api.utils.data.DataObject;
-import net.dv8tion.jda.internal.requests.RestActionImpl;
-import net.dv8tion.jda.internal.requests.Route;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -95,16 +91,5 @@ public class Requester {
 			logger.error("There was an error while executing a segments request:", ex);
 		}
 		return Collections.emptyList();
-	}
-
-	public static void launchVoiceGameSession(GuildChannel channel, VoiceGameType voiceGame, Consumer<String> inviteConsumer, Consumer<Throwable> errorConsumer) {
-		var channelId = channel.getId();
-		var route = Route.Invites.CREATE_INVITE.compile(channelId);
-		var payload = DataObject.empty().put("max_age", 0).put("target_type", 2).put("target_application_id", voiceGame.getApplicationId());
-		var createInvite = new RestActionImpl<String>(channel.getJDA(), route, payload, (response, request) -> response.getObject().getString("code"));
-		createInvite.queue(inviteConsumer, failure -> {
-			logger.error("There was an exception while creating an invite for {} for channel {}", voiceGame.getFriendlyName(), channelId, failure);
-			errorConsumer.accept(failure);
-		});
 	}
 }
