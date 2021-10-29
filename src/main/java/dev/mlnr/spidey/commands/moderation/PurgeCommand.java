@@ -67,7 +67,7 @@ public class PurgeCommand extends Command {
 					: i18n.get("commands.purge.messages.pinned.confirmation.multiple"));
 			builder.append("? ").append(i18n.get("commands.purge.messages.pinned.middle_text.text"));
 			builder.append(" ").append(size == 1 ? i18n.get("commands.purge.messages.pinned.middle_text.one")
-					: i18n.get("commands.purge.messages.pinned.middle_text_multiple"));
+					: i18n.get("commands.purge.messages.pinned.middle_text.multiple"));
 			builder.append(i18n.get("commands.purge.messages.pinned.end_text"));
 
 			componentActionCache.createPurgePrompt(purgeProcessor, builder.toString(), ctx);
