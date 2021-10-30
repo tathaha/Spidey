@@ -99,12 +99,10 @@ public class DatabaseManager {
 
 	public void registerGuild(long guildId) {
 		try (var valueStep = ctx.insertInto(GUILDS).columns(GUILDS.GUILD_ID).values(guildId)) {
-			try {
-				valueStep.onConflictDoNothing().execute();
-			}
-			catch (DataAccessException ex) {
-				logger.error("There was an error while registering guild {}", guildId, ex);
-			}
+			valueStep.onConflictDoNothing().execute();
+		}
+		catch (DataAccessException ex) {
+			logger.error("There was an error while registering guild {}", guildId, ex);
 		}
 	}
 
@@ -120,10 +118,9 @@ public class DatabaseManager {
 	// helper set methods
 
 	public <T> void executeSetQuery(Table<? extends Record> table, Field<T> column, T value, long guildId) {
-		try (var insertStep = ctx.insertInto(table).columns(GUILDS.GUILD_ID, column).values(guildId, value)) {
-			try (var setStep = insertStep.onDuplicateKeyUpdate().set(column, value)) {
-				setStep.execute();
-			}
+		try (var insertStep = ctx.insertInto(table).columns(GUILDS.GUILD_ID, column).values(guildId, value);
+		     var setStep = insertStep.onDuplicateKeyUpdate().set(column, value)) {
+			setStep.execute();
 		}
 		catch (DataAccessException ex) {
 			logger.error("There was an error while setting the {} column in table {} for guild {}", column.getName(), table.getName(), guildId, ex);
