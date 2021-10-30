@@ -220,12 +220,7 @@ public class MusicUtils {
 	}
 
 	public static void saveQueryToHistory(CommandContext ctx, String query) {
-		var guildId = ctx.getGuild().getIdLong();
-		var generalSettings = GuildSettingsCache.getInstance().getGeneralSettings(guildId);
-		if (generalSettings.isVip()) {
-			var userId = ctx.getUser().getIdLong();
-			ctx.getCache().getMusicHistoryCache().saveQuery(userId, query.toLowerCase(), ctx.getEvent().getName());
-		}
+		ctx.getCache().getMusicHistoryCache().saveQuery(ctx.getUser().getIdLong(), query.toLowerCase(), ctx.getEvent().getName());
 	}
 
 	public enum ServiceType implements ChoicesEnum {
