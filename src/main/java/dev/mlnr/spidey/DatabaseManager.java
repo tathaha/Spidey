@@ -69,8 +69,7 @@ public class DatabaseManager {
 	public GuildGeneralSettings retrieveGuildGeneralSettings(long guildId) {
 		return (GuildGeneralSettings) retrieveGuildSettings(GUILDS, guildId,
 				defaultRecord -> new GuildGeneralSettings(guildId, this),
-				settingsRecord ->
-				{
+				settingsRecord -> {
 					var casted = (GuildsRecord) settingsRecord;
 					return new GuildGeneralSettings(guildId, casted.getVip(), this);
 				});
@@ -79,8 +78,7 @@ public class DatabaseManager {
 	public GuildMiscSettings retrieveGuildMiscSettings(long guildId, Spidey spidey) {
 		return (GuildMiscSettings) retrieveGuildSettings(SETTINGS_MISC, guildId,
 				defaultRecord -> new GuildMiscSettings(guildId, spidey),
-				settingsRecord ->
-				{
+				settingsRecord -> {
 					var casted = (SettingsMiscRecord) settingsRecord;
 					return new GuildMiscSettings(guildId, casted.getLogChannelId(), casted.getJoinRoleId(), casted.getLanguage(),
 							casted.getSnipingEnabled(), spidey);
@@ -90,8 +88,7 @@ public class DatabaseManager {
 	public GuildMusicSettings retrieveGuildMusicSettings(long guildId, Spidey spidey) {
 		return (GuildMusicSettings) retrieveGuildSettings(SETTINGS_MUSIC, guildId,
 				defaultRecord -> new GuildMusicSettings(guildId, spidey),
-				settingsRecord ->
-				{
+				settingsRecord -> {
 					var casted = (SettingsMusicRecord) settingsRecord;
 					return new GuildMusicSettings(guildId, casted.getDefaultVolume(), casted.getDjRoleId(), casted.getSegmentSkippingEnabled(),
 							casted.getFairQueueEnabled(), casted.getFairQueueThreshold(), spidey);
@@ -209,7 +206,7 @@ public class DatabaseManager {
 	// adding to user search history
 
 	public void saveToSearchHistory(long userId, String query) {
-		try (var connection = dataSource.getConnection(); var stmt = connection.prepareStatement(SEARCH_HISTORY_QUERY)) {
+		try (var connection = dataSource.getConnection(); var stmt = connection.prepareStatement(SEARCH_HISTORY_QUERY)) { // fuck jooq
 			stmt.setLong(1, userId);
 			stmt.setString(2, query);
 			stmt.setLong(3, userId);
