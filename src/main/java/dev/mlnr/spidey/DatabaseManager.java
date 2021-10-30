@@ -1,30 +1,36 @@
 package dev.mlnr.spidey;
 
-import com.zaxxer.hikari.*;
-import dev.mlnr.spidey.utils.FixedSizeList;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import dev.mlnr.spidey.jooq.tables.records.*;
 import dev.mlnr.spidey.objects.data.guild.settings.*;
 import dev.mlnr.spidey.objects.data.user.UserSearchHistory;
+import dev.mlnr.spidey.utils.FixedSizeList;
 import org.jooq.*;
 import org.jooq.exception.DataAccessException;
-import org.jooq.impl.*;
-import org.slf4j.*;
+import org.jooq.impl.DSL;
+import org.jooq.impl.DefaultConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.sql.DataSource;
+import java.sql.SQLException;
+import java.util.Collections;
 import java.util.function.Function;
 
 import static dev.mlnr.spidey.jooq.Tables.*;
-import static dev.mlnr.spidey.jooq.tables.SearchHistory.SEARCH_HISTORY;
 
 public class DatabaseManager {
 	private static final Logger logger = LoggerFactory.getLogger(DatabaseManager.class);
 	private static final String SEARCH_HISTORY_QUERY = "begin transaction;\n" +
-			"insert into search_history (user_id, query) values (?1, ?2);\n" +
-			"delete from search_history where user_id = ?1 and entry_time <\n" +
+			"insert into search_history (user_id, query) values (?, ?);\n" +
+			"delete from search_history where user_id = ? and entry_time <\n" +
 			"      (select min(entry_time)\n" +
-			"       from (select entry_time from search_history where user_id = ?1 order by entry_time desc limit 100)\n" +
+			"       from (select entry_time from search_history where user_id = ? order by entry_time desc limit 100)\n" +
 			"                as times);\n" +
 			"commit transaction;";
 	private final DSLContext ctx;
+	private final DataSource dataSource;
 
 	public DatabaseManager() {
 		var hikariConfig = new HikariConfig();
@@ -35,9 +41,12 @@ public class DatabaseManager {
 		hikariConfig.setMaximumPoolSize(5);
 
 		var defaultConfig = new DefaultConfiguration();
-		defaultConfig.setDataSource(new HikariDataSource(hikariConfig));
+		var dataSource = new HikariDataSource(hikariConfig);
+		defaultConfig.setDataSource(dataSource);
 		defaultConfig.setSQLDialect(SQLDialect.POSTGRES);
+
 		this.ctx = DSL.using(defaultConfig);
+		this.dataSource = dataSource;
 	}
 
 	// getting settings
@@ -61,32 +70,32 @@ public class DatabaseManager {
 		return (GuildGeneralSettings) retrieveGuildSettings(GUILDS, guildId,
 				defaultRecord -> new GuildGeneralSettings(guildId, this),
 				settingsRecord ->
-		{
-			var casted = (GuildsRecord) settingsRecord;
-			return new GuildGeneralSettings(guildId, casted.getVip(), this);
-		});
+				{
+					var casted = (GuildsRecord) settingsRecord;
+					return new GuildGeneralSettings(guildId, casted.getVip(), this);
+				});
 	}
 
 	public GuildMiscSettings retrieveGuildMiscSettings(long guildId, Spidey spidey) {
 		return (GuildMiscSettings) retrieveGuildSettings(SETTINGS_MISC, guildId,
 				defaultRecord -> new GuildMiscSettings(guildId, spidey),
 				settingsRecord ->
-		{
-			var casted = (SettingsMiscRecord) settingsRecord;
-			return new GuildMiscSettings(guildId, casted.getLogChannelId(), casted.getJoinRoleId(), casted.getLanguage(),
-					casted.getSnipingEnabled(), spidey);
-		});
+				{
+					var casted = (SettingsMiscRecord) settingsRecord;
+					return new GuildMiscSettings(guildId, casted.getLogChannelId(), casted.getJoinRoleId(), casted.getLanguage(),
+							casted.getSnipingEnabled(), spidey);
+				});
 	}
 
 	public GuildMusicSettings retrieveGuildMusicSettings(long guildId, Spidey spidey) {
 		return (GuildMusicSettings) retrieveGuildSettings(SETTINGS_MUSIC, guildId,
 				defaultRecord -> new GuildMusicSettings(guildId, spidey),
 				settingsRecord ->
-		{
-			var casted = (SettingsMusicRecord) settingsRecord;
-			return new GuildMusicSettings(guildId, casted.getDefaultVolume(), casted.getDjRoleId(), casted.getSegmentSkippingEnabled(),
-					casted.getFairQueueEnabled(), casted.getFairQueueThreshold(), spidey);
-		});
+				{
+					var casted = (SettingsMusicRecord) settingsRecord;
+					return new GuildMusicSettings(guildId, casted.getDefaultVolume(), casted.getDjRoleId(), casted.getSegmentSkippingEnabled(),
+							casted.getFairQueueEnabled(), casted.getFairQueueThreshold(), spidey);
+				});
 	}
 
 	// registering/removing guild
@@ -187,7 +196,9 @@ public class DatabaseManager {
 	public UserSearchHistory retrieveSearchHistory(long userId) {
 		var queries = new FixedSizeList<String>(100);
 		try (var selectStep = ctx.selectFrom(SEARCH_HISTORY); var whereStep = selectStep.where(userIdEquals(SEARCH_HISTORY, userId))) {
-			queries.addAll(whereStep.fetch().getValues(SEARCH_HISTORY.QUERY, String.class));
+			var results = whereStep.fetch().getValues(SEARCH_HISTORY.QUERY, String.class);
+			Collections.reverse(results);
+			queries.addAll(results);
 		}
 		catch (DataAccessException ex) {
 			logger.error("There was an error while retrieving the search history for user {}", userId, ex);
@@ -198,10 +209,14 @@ public class DatabaseManager {
 	// adding to user search history
 
 	public void saveToSearchHistory(long userId, String query) {
-		try (var queryStep = ctx.query(SEARCH_HISTORY_QUERY, userId, query)) {
-			queryStep.execute();
+		try (var connection = dataSource.getConnection(); var stmt = connection.prepareStatement(SEARCH_HISTORY_QUERY)) {
+			stmt.setLong(1, userId);
+			stmt.setString(2, query);
+			stmt.setLong(3, userId);
+			stmt.setLong(4, userId);
+			stmt.executeUpdate();
 		}
-		catch (DataAccessException ex) {
+		catch (SQLException ex) {
 			logger.error("There was an error while adding query {} to search history of user {}", query, userId, ex);
 		}
 	}
