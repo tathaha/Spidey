@@ -224,7 +224,7 @@ public class MusicUtils {
 		var generalSettings = GuildSettingsCache.getInstance().getGeneralSettings(guildId);
 		if (generalSettings.isVip()) {
 			var userId = ctx.getUser().getIdLong();
-			ctx.getCache().getSearchHistoryCache().saveQuery(userId, query.toLowerCase(), ctx.getEvent().getName());
+			ctx.getCache().getMusicHistoryCache().saveQuery(userId, query.toLowerCase(), ctx.getEvent().getName());
 		}
 	}
 

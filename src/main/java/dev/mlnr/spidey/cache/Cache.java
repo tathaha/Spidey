@@ -35,7 +35,7 @@ public class Cache {
 		return videoSegmentCache;
 	}
 
-	public MusicHistoryCache getSearchHistoryCache() {
+	public MusicHistoryCache getMusicHistoryCache() {
 		return musicHistoryCache;
 	}
 

@@ -219,7 +219,7 @@ public class DatabaseManager {
 
 	// removing from user music history
 
-	public void removeFromSearchHistory(long userId, String query, String type) {
+	public void removeFromMusicHistory(long userId, String query, String type) {
 		try (var deleteStep = ctx.deleteFrom(MUSIC_HISTORY); var whereStep = deleteStep.where(userIdEquals(MUSIC_HISTORY, userId))
 				.and(MUSIC_HISTORY.QUERY.eq(query)).and(MUSIC_HISTORY.TYPE.eq(type))) {
 			whereStep.execute();

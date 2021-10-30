@@ -34,7 +34,7 @@ public class UserMusicHistory {
 	public void saveQuery(String query) {
 		if (queries.contains(query)) {
 			queries.remove(query);
-			databaseManager.removeFromSearchHistory(userId, query, type);
+			databaseManager.removeFromMusicHistory(userId, query, type);
 		}
 		queries.add(query);
 		databaseManager.saveToMusicHistory(userId, query, type);

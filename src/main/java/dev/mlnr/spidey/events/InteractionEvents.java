@@ -44,12 +44,12 @@ public class InteractionEvents extends ListenerAdapter {
 	public void onApplicationCommandAutocomplete(ApplicationCommandAutocompleteEvent event) {
 		var input = event.getOption("query").getAsString();
 		var userId = event.getUser().getIdLong();
-		var searchHistoryCache = cache.getSearchHistoryCache();
+		var musicHistoryCache = cache.getMusicHistoryCache();
 
 		var type = event.getName();
 		var lastQueries = input.isEmpty()
-				? searchHistoryCache.getLastQueries(userId, type)
-				: searchHistoryCache.getLastQueriesLike(userId, input, type);
+				? musicHistoryCache.getLastQueries(userId, type)
+				: musicHistoryCache.getLastQueriesLike(userId, input, type);
 		var choices = lastQueries
 				.stream()
 				.map(query -> new Command.Choice(Emojis.REPEAT + " " + query, query))
