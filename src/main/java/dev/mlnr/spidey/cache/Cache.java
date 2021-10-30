@@ -1,12 +1,12 @@
 package dev.mlnr.spidey.cache;
 
-import dev.mlnr.spidey.Spidey;
-import dev.mlnr.spidey.cache.music.MusicPlayerCache;
-import dev.mlnr.spidey.cache.music.VideoSegmentCache;
+import dev.mlnr.spidey.*;
+import dev.mlnr.spidey.cache.music.*;
 
 public class Cache {
 	private final MusicPlayerCache musicPlayerCache;
 	private final VideoSegmentCache videoSegmentCache;
+	private final SearchHistoryCache searchHistoryCache;
 
 	private final GeneralCache generalCache;
 	private final GuildSettingsCache guildSettingsCache;
@@ -14,11 +14,14 @@ public class Cache {
 	private final ComponentActionCache componentActionCache;
 
 	public Cache(Spidey spidey) {
+		var databaseManager = spidey.getDatabaseManager();
+
 		this.musicPlayerCache = MusicPlayerCache.getInstance();
 		this.videoSegmentCache = VideoSegmentCache.getInstance();
+		this.searchHistoryCache = new SearchHistoryCache(databaseManager);
 
 		this.guildSettingsCache = GuildSettingsCache.getInstance(spidey);
-		this.generalCache = new GeneralCache(guildSettingsCache, spidey.getDatabaseManager());
+		this.generalCache = new GeneralCache(guildSettingsCache, databaseManager);
 
 		this.messageCache = new MessageCache();
 		this.componentActionCache = new ComponentActionCache();
@@ -30,6 +33,10 @@ public class Cache {
 
 	public VideoSegmentCache getVideoSegmentCache() {
 		return videoSegmentCache;
+	}
+
+	public SearchHistoryCache getSearchHistoryCache() {
+		return searchHistoryCache;
 	}
 
 	public GeneralCache getGeneralCache() {

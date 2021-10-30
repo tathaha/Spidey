@@ -5,6 +5,7 @@ package dev.mlnr.spidey.jooq;
 
 
 import dev.mlnr.spidey.jooq.tables.Guilds;
+import dev.mlnr.spidey.jooq.tables.SearchHistory;
 import dev.mlnr.spidey.jooq.tables.SettingsMisc;
 import dev.mlnr.spidey.jooq.tables.SettingsMusic;
 
@@ -35,6 +36,11 @@ public class Public extends SchemaImpl {
     public final Guilds GUILDS = Guilds.GUILDS;
 
     /**
+     * The table <code>public.search_history</code>.
+     */
+    public final SearchHistory SEARCH_HISTORY = SearchHistory.SEARCH_HISTORY;
+
+    /**
      * The table <code>public.settings_misc</code>.
      */
     public final SettingsMisc SETTINGS_MISC = SettingsMisc.SETTINGS_MISC;
@@ -61,6 +67,7 @@ public class Public extends SchemaImpl {
     public final List<Table<?>> getTables() {
         return Arrays.asList(
             Guilds.GUILDS,
+            SearchHistory.SEARCH_HISTORY,
             SettingsMisc.SETTINGS_MISC,
             SettingsMusic.SETTINGS_MUSIC
         );

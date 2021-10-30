@@ -1,4 +1,4 @@
-package dev.mlnr.spidey.objects.settings.guild;
+package dev.mlnr.spidey.objects.data.guild.settings;
 
 import dev.mlnr.spidey.DatabaseManager;
 

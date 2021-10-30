@@ -2,12 +2,13 @@ package dev.mlnr.spidey.events;
 
 import dev.mlnr.spidey.cache.Cache;
 import dev.mlnr.spidey.handlers.command.CommandHandler;
+import dev.mlnr.spidey.objects.Emojis;
 import dev.mlnr.spidey.objects.interactions.ComponentAction;
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
-import net.dv8tion.jda.api.events.interaction.GenericComponentInteractionCreateEvent;
-import net.dv8tion.jda.api.events.interaction.SelectionMenuEvent;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.*;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.commands.Command;
+
+import java.util.stream.Collectors;
 
 public class InteractionEvents extends ListenerAdapter {
 	private final Cache cache;
@@ -37,6 +38,22 @@ public class InteractionEvents extends ListenerAdapter {
 		var dropdownId = event.getComponentId();
 		var action = cache.getComponentActionCache().getAction(dropdownId);
 		processComponentInteraction(event.getValues().get(0), action, event);
+	}
+
+	@Override
+	public void onApplicationCommandAutocomplete(ApplicationCommandAutocompleteEvent event) {
+		var input = event.getOption("query").getAsString();
+		var userId = event.getUser().getIdLong();
+		var searchHistoryCache = cache.getSearchHistoryCache();
+
+		var lastQueries = input.isEmpty()
+				? searchHistoryCache.getLastQueries(userId)
+				: searchHistoryCache.getLastQueriesLike(userId, input);
+		var choices = lastQueries
+				.stream()
+				.map(query -> new Command.Choice(Emojis.REPEAT + " " + query, query))
+				.collect(Collectors.toList());
+		event.deferChoices(choices).queue();
 	}
 
 	private void processComponentInteraction(String selectionId, ComponentAction componentAction, GenericComponentInteractionCreateEvent event) {

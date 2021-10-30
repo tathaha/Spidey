@@ -5,6 +5,7 @@ package dev.mlnr.spidey.jooq;
 
 
 import dev.mlnr.spidey.jooq.tables.Guilds;
+import dev.mlnr.spidey.jooq.tables.SearchHistory;
 import dev.mlnr.spidey.jooq.tables.SettingsMisc;
 import dev.mlnr.spidey.jooq.tables.SettingsMusic;
 
@@ -19,6 +20,11 @@ public class Tables {
      * The table <code>public.guilds</code>.
      */
     public static final Guilds GUILDS = Guilds.GUILDS;
+
+    /**
+     * The table <code>public.search_history</code>.
+     */
+    public static final SearchHistory SEARCH_HISTORY = SearchHistory.SEARCH_HISTORY;
 
     /**
      * The table <code>public.settings_misc</code>.

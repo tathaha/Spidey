@@ -1,11 +1,9 @@
 package dev.mlnr.spidey.cache;
 
 import dev.mlnr.spidey.Spidey;
-import dev.mlnr.spidey.objects.settings.guild.*;
+import dev.mlnr.spidey.objects.data.guild.settings.*;
 
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class GuildSettingsCache {
 	private final Map<SettingsType, Map<Long, IGuildSettings>> guildSettingsMap = new EnumMap<>(SettingsType.class);

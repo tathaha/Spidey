@@ -63,14 +63,14 @@ public class SettingsMisc extends TableImpl<SettingsMiscRecord> {
     public final TableField<SettingsMiscRecord, Long> JOIN_ROLE_ID = createField(DSL.name("join_role_id"), SQLDataType.BIGINT.defaultValue(DSL.field("'0'::bigint", SQLDataType.BIGINT)), this, "");
 
     /**
-     * The column <code>public.settings_misc.language</code>.
-     */
-    public final TableField<SettingsMiscRecord, String> LANGUAGE = createField(DSL.name("language"), SQLDataType.VARCHAR(2).defaultValue(DSL.field("'en'::character varying", SQLDataType.VARCHAR)), this, "");
-
-    /**
      * The column <code>public.settings_misc.sniping_enabled</code>.
      */
     public final TableField<SettingsMiscRecord, Boolean> SNIPING_ENABLED = createField(DSL.name("sniping_enabled"), SQLDataType.BOOLEAN.defaultValue(DSL.field("true", SQLDataType.BOOLEAN)), this, "");
+
+    /**
+     * The column <code>public.settings_misc.language</code>.
+     */
+    public final TableField<SettingsMiscRecord, String> LANGUAGE = createField(DSL.name("language"), SQLDataType.VARCHAR(2).nullable(false).defaultValue(DSL.field("'en'::character varying", SQLDataType.VARCHAR)), this, "");
 
     private SettingsMisc(Name alias, Table<SettingsMiscRecord> aliased) {
         this(alias, aliased, null);
@@ -160,7 +160,7 @@ public class SettingsMisc extends TableImpl<SettingsMiscRecord> {
     // -------------------------------------------------------------------------
 
     @Override
-    public Row5<Long, Long, Long, String, Boolean> fieldsRow() {
+    public Row5<Long, Long, Long, Boolean, String> fieldsRow() {
         return (Row5) super.fieldsRow();
     }
 }

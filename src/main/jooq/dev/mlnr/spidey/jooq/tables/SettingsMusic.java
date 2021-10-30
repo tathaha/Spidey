@@ -53,11 +53,6 @@ public class SettingsMusic extends TableImpl<SettingsMusicRecord> {
     public final TableField<SettingsMusicRecord, Long> GUILD_ID = createField(DSL.name("guild_id"), SQLDataType.BIGINT.nullable(false), this, "");
 
     /**
-     * The column <code>public.settings_music.default_volume</code>.
-     */
-    public final TableField<SettingsMusicRecord, Integer> DEFAULT_VOLUME = createField(DSL.name("default_volume"), SQLDataType.INTEGER.defaultValue(DSL.field("100", SQLDataType.INTEGER)), this, "");
-
-    /**
      * The column <code>public.settings_music.dj_role_id</code>.
      */
     public final TableField<SettingsMusicRecord, Long> DJ_ROLE_ID = createField(DSL.name("dj_role_id"), SQLDataType.BIGINT.defaultValue(DSL.field("'0'::bigint", SQLDataType.BIGINT)), this, "");
@@ -68,9 +63,14 @@ public class SettingsMusic extends TableImpl<SettingsMusicRecord> {
     public final TableField<SettingsMusicRecord, Boolean> SEGMENT_SKIPPING_ENABLED = createField(DSL.name("segment_skipping_enabled"), SQLDataType.BOOLEAN.defaultValue(DSL.field("false", SQLDataType.BOOLEAN)), this, "");
 
     /**
+     * The column <code>public.settings_music.default_volume</code>.
+     */
+    public final TableField<SettingsMusicRecord, Integer> DEFAULT_VOLUME = createField(DSL.name("default_volume"), SQLDataType.INTEGER.defaultValue(DSL.field("100", SQLDataType.INTEGER)), this, "");
+
+    /**
      * The column <code>public.settings_music.fair_queue_enabled</code>.
      */
-    public final TableField<SettingsMusicRecord, Boolean> FAIR_QUEUE_ENABLED = createField(DSL.name("fair_queue_enabled"), SQLDataType.BOOLEAN.defaultValue(DSL.field("true", SQLDataType.BOOLEAN)), this, "");
+    public final TableField<SettingsMusicRecord, Boolean> FAIR_QUEUE_ENABLED = createField(DSL.name("fair_queue_enabled"), SQLDataType.BOOLEAN.defaultValue(DSL.field("false", SQLDataType.BOOLEAN)), this, "");
 
     /**
      * The column <code>public.settings_music.fair_queue_threshold</code>.
@@ -165,7 +165,7 @@ public class SettingsMusic extends TableImpl<SettingsMusicRecord> {
     // -------------------------------------------------------------------------
 
     @Override
-    public Row6<Long, Integer, Long, Boolean, Boolean, Integer> fieldsRow() {
+    public Row6<Long, Long, Boolean, Integer, Boolean, Integer> fieldsRow() {
         return (Row6) super.fieldsRow();
     }
 }

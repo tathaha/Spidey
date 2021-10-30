@@ -2,14 +2,11 @@ package dev.mlnr.spidey.commands.music;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
-import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import dev.mlnr.spidey.objects.command.Command;
-import dev.mlnr.spidey.objects.command.CommandContext;
+import com.sedmelluq.discord.lavaplayer.track.*;
+import dev.mlnr.spidey.cache.GuildSettingsCache;
+import dev.mlnr.spidey.objects.command.*;
 import dev.mlnr.spidey.objects.command.category.Category;
-import dev.mlnr.spidey.utils.MusicUtils;
-import dev.mlnr.spidey.utils.StringUtils;
-import dev.mlnr.spidey.utils.Utils;
+import dev.mlnr.spidey.utils.*;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
@@ -18,7 +15,8 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 public class SearchCommand extends Command {
 	public SearchCommand() {
 		super("search", "Searches a query on the provided service", Category.MUSIC, Permission.UNKNOWN, 4, false,
-				new OptionData(OptionType.STRING, "query", "The query to search your chosen service for", true),
+				new OptionData(OptionType.STRING, "query", "The query to search your chosen service for", true)
+						.setAutoComplete(true),
 				new OptionData(OptionType.STRING, "service", "The service to search the query on or blank to choose YouTube")
 						.addChoices(Utils.getChoicesFromEnum(MusicUtils.ServiceType.class)));
 	}
@@ -32,6 +30,14 @@ public class SearchCommand extends Command {
 		var serviceOption = ctx.getStringOption("service");
 		var service = serviceOption == null ? MusicUtils.ServiceType.YOUTUBE : MusicUtils.ServiceType.valueOf(serviceOption);
 		var query = ctx.getStringOption("query");
+
+		var guildId = ctx.getGuild().getIdLong();
+		var generalSettings = GuildSettingsCache.getInstance().getGeneralSettings(guildId);
+		if (generalSettings.isVip()) {
+			var userId = ctx.getUser().getIdLong();
+			ctx.getCache().getSearchHistoryCache().saveQuery(userId, query.toLowerCase());
+		}
+
 		MusicUtils.loadQuery(musicPlayer, service.getSearchPrefix() + query, new AudioLoadResultHandler() {
 			@Override
 			public void trackLoaded(AudioTrack track) {}
