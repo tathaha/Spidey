@@ -5,11 +5,11 @@ package dev.mlnr.spidey.jooq;
 
 
 import dev.mlnr.spidey.jooq.tables.Guilds;
-import dev.mlnr.spidey.jooq.tables.SearchHistory;
+import dev.mlnr.spidey.jooq.tables.MusicHistory;
 import dev.mlnr.spidey.jooq.tables.SettingsMisc;
 import dev.mlnr.spidey.jooq.tables.SettingsMusic;
 import dev.mlnr.spidey.jooq.tables.records.GuildsRecord;
-import dev.mlnr.spidey.jooq.tables.records.SearchHistoryRecord;
+import dev.mlnr.spidey.jooq.tables.records.MusicHistoryRecord;
 import dev.mlnr.spidey.jooq.tables.records.SettingsMiscRecord;
 import dev.mlnr.spidey.jooq.tables.records.SettingsMusicRecord;
 
@@ -32,7 +32,7 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     public static final UniqueKey<GuildsRecord> GUILDS_PKEY = Internal.createUniqueKey(Guilds.GUILDS, DSL.name("guilds_pkey"), new TableField[] { Guilds.GUILDS.GUILD_ID }, true);
-    public static final UniqueKey<SearchHistoryRecord> SEARCH_HISTORY_PK = Internal.createUniqueKey(SearchHistory.SEARCH_HISTORY, DSL.name("search_history_pk"), new TableField[] { SearchHistory.SEARCH_HISTORY.PK }, true);
+    public static final UniqueKey<MusicHistoryRecord> SEARCH_HISTORY_PK = Internal.createUniqueKey(MusicHistory.MUSIC_HISTORY, DSL.name("search_history_pk"), new TableField[] { MusicHistory.MUSIC_HISTORY.PK }, true);
     public static final UniqueKey<SettingsMiscRecord> SETTINGS_MISC_PKEY = Internal.createUniqueKey(SettingsMisc.SETTINGS_MISC, DSL.name("settings_misc_pkey"), new TableField[] { SettingsMisc.SETTINGS_MISC.GUILD_ID }, true);
     public static final UniqueKey<SettingsMusicRecord> SETTINGS_MUSIC_PKEY = Internal.createUniqueKey(SettingsMusic.SETTINGS_MUSIC, DSL.name("settings_music_pkey"), new TableField[] { SettingsMusic.SETTINGS_MUSIC.GUILD_ID }, true);
 

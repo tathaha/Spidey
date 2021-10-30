@@ -5,7 +5,7 @@ package dev.mlnr.spidey.jooq;
 
 
 import dev.mlnr.spidey.jooq.tables.Guilds;
-import dev.mlnr.spidey.jooq.tables.SearchHistory;
+import dev.mlnr.spidey.jooq.tables.MusicHistory;
 import dev.mlnr.spidey.jooq.tables.SettingsMisc;
 import dev.mlnr.spidey.jooq.tables.SettingsMusic;
 
@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.jooq.Catalog;
+import org.jooq.Sequence;
 import org.jooq.Table;
 import org.jooq.impl.SchemaImpl;
 
@@ -36,9 +37,9 @@ public class Public extends SchemaImpl {
     public final Guilds GUILDS = Guilds.GUILDS;
 
     /**
-     * The table <code>public.search_history</code>.
+     * The table <code>public.music_history</code>.
      */
-    public final SearchHistory SEARCH_HISTORY = SearchHistory.SEARCH_HISTORY;
+    public final MusicHistory MUSIC_HISTORY = MusicHistory.MUSIC_HISTORY;
 
     /**
      * The table <code>public.settings_misc</code>.
@@ -64,10 +65,17 @@ public class Public extends SchemaImpl {
     }
 
     @Override
+    public final List<Sequence<?>> getSequences() {
+        return Arrays.asList(
+            Sequences.SEARCH_HISTORY_PK_SEQ
+        );
+    }
+
+    @Override
     public final List<Table<?>> getTables() {
         return Arrays.asList(
             Guilds.GUILDS,
-            SearchHistory.SEARCH_HISTORY,
+            MusicHistory.MUSIC_HISTORY,
             SettingsMisc.SETTINGS_MISC,
             SettingsMusic.SETTINGS_MUSIC
         );

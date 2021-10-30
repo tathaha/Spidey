@@ -13,7 +13,8 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 public class PlayCommand extends Command {
 	public PlayCommand() {
 		super("play", "Plays/queues a song", Category.MUSIC, Permission.UNKNOWN, 2, false,
-				new OptionData(OptionType.STRING, "query", "The link or query to play", true));
+				new OptionData(OptionType.STRING, "query", "The link or query to play", true)
+						.setAutoComplete(true));
 	}
 
 	@Override
@@ -24,6 +25,7 @@ public class PlayCommand extends Command {
 		}
 		var query = ctx.getStringOption("query");
 		var loader = new AudioLoader(musicPlayer, query, ctx, false);
+		MusicUtils.saveQueryToHistory(ctx, query);
 		MusicUtils.loadQuery(musicPlayer, query, loader);
 		return true;
 	}

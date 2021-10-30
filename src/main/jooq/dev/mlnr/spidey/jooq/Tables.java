@@ -5,7 +5,7 @@ package dev.mlnr.spidey.jooq;
 
 
 import dev.mlnr.spidey.jooq.tables.Guilds;
-import dev.mlnr.spidey.jooq.tables.SearchHistory;
+import dev.mlnr.spidey.jooq.tables.MusicHistory;
 import dev.mlnr.spidey.jooq.tables.SettingsMisc;
 import dev.mlnr.spidey.jooq.tables.SettingsMusic;
 
@@ -22,9 +22,9 @@ public class Tables {
     public static final Guilds GUILDS = Guilds.GUILDS;
 
     /**
-     * The table <code>public.search_history</code>.
+     * The table <code>public.music_history</code>.
      */
-    public static final SearchHistory SEARCH_HISTORY = SearchHistory.SEARCH_HISTORY;
+    public static final MusicHistory MUSIC_HISTORY = MusicHistory.MUSIC_HISTORY;
 
     /**
      * The table <code>public.settings_misc</code>.

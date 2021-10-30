@@ -6,7 +6,7 @@ import dev.mlnr.spidey.cache.music.*;
 public class Cache {
 	private final MusicPlayerCache musicPlayerCache;
 	private final VideoSegmentCache videoSegmentCache;
-	private final SearchHistoryCache searchHistoryCache;
+	private final MusicHistoryCache musicHistoryCache;
 
 	private final GeneralCache generalCache;
 	private final GuildSettingsCache guildSettingsCache;
@@ -18,7 +18,7 @@ public class Cache {
 
 		this.musicPlayerCache = MusicPlayerCache.getInstance();
 		this.videoSegmentCache = VideoSegmentCache.getInstance();
-		this.searchHistoryCache = new SearchHistoryCache(databaseManager);
+		this.musicHistoryCache = new MusicHistoryCache(databaseManager);
 
 		this.guildSettingsCache = GuildSettingsCache.getInstance(spidey);
 		this.generalCache = new GeneralCache(guildSettingsCache, databaseManager);
@@ -35,8 +35,8 @@ public class Cache {
 		return videoSegmentCache;
 	}
 
-	public SearchHistoryCache getSearchHistoryCache() {
-		return searchHistoryCache;
+	public MusicHistoryCache getSearchHistoryCache() {
+		return musicHistoryCache;
 	}
 
 	public GeneralCache getGeneralCache() {

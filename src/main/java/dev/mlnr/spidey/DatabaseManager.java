@@ -4,7 +4,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import dev.mlnr.spidey.jooq.tables.records.*;
 import dev.mlnr.spidey.objects.data.guild.settings.*;
-import dev.mlnr.spidey.objects.data.user.UserSearchHistory;
+import dev.mlnr.spidey.objects.data.user.UserMusicHistory;
 import dev.mlnr.spidey.utils.FixedSizeList;
 import org.jooq.*;
 import org.jooq.exception.DataAccessException;
@@ -22,11 +22,11 @@ import static dev.mlnr.spidey.jooq.Tables.*;
 
 public class DatabaseManager {
 	private static final Logger logger = LoggerFactory.getLogger(DatabaseManager.class);
-	private static final String SEARCH_HISTORY_QUERY = "begin transaction;\n" +
-			"insert into search_history (user_id, query) values (?, ?);\n" +
-			"delete from search_history where user_id = ? and entry_time <\n" +
+	private static final String MUSIC_HISTORY_INSERT = "begin transaction;\n" +
+			"insert into music_history (user_id, query, type) values (?, ?, ?);\n" +
+			"delete from music_history where user_id = ? and entry_time <\n" +
 			"      (select min(entry_time)\n" +
-			"       from (select entry_time from search_history where user_id = ? order by entry_time desc limit 100)\n" +
+			"       from (select entry_time from music_history where user_id = ? order by entry_time desc limit 100)\n" +
 			"                as times);\n" +
 			"commit transaction;";
 	private final DSLContext ctx;
@@ -188,33 +188,47 @@ public class DatabaseManager {
 		executeMusicSetQuery(SETTINGS_MUSIC.SEGMENT_SKIPPING_ENABLED, enabled, guildId);
 	}
 
-	// getting user search history
+	// getting user music history
 
-	public UserSearchHistory retrieveSearchHistory(long userId) {
+	public UserMusicHistory retrieveMusicHistory(long userId, String type) {
 		var queries = new FixedSizeList<String>(100);
-		try (var selectStep = ctx.selectFrom(SEARCH_HISTORY); var whereStep = selectStep.where(userIdEquals(SEARCH_HISTORY, userId))) {
-			var results = whereStep.fetch().getValues(SEARCH_HISTORY.QUERY, String.class);
+		try (var selectStep = ctx.selectFrom(MUSIC_HISTORY); var whereStep = selectStep.where(userIdEquals(MUSIC_HISTORY, userId))
+				.and(MUSIC_HISTORY.TYPE.eq(type))) {
+			var results = whereStep.fetch().getValues(MUSIC_HISTORY.QUERY, String.class);
 			Collections.reverse(results);
 			queries.addAll(results);
 		}
 		catch (DataAccessException ex) {
-			logger.error("There was an error while retrieving the search history for user {}", userId, ex);
+			logger.error("There was an error while retrieving the music history of type {} for user {}", type, userId, ex);
 		}
-		return new UserSearchHistory(userId, queries, this);
+		return new UserMusicHistory(userId, queries, type, this);
 	}
 
-	// adding to user search history
+	// adding to user music history
 
-	public void saveToSearchHistory(long userId, String query) {
-		try (var connection = dataSource.getConnection(); var stmt = connection.prepareStatement(SEARCH_HISTORY_QUERY)) { // fuck jooq
+	public void saveToMusicHistory(long userId, String query, String type) {
+		try (var connection = dataSource.getConnection(); var stmt = connection.prepareStatement(MUSIC_HISTORY_INSERT)) { // fuck jooq
 			stmt.setLong(1, userId);
 			stmt.setString(2, query);
-			stmt.setLong(3, userId);
+			stmt.setString(3, type);
 			stmt.setLong(4, userId);
+			stmt.setLong(5, userId);
 			stmt.executeUpdate();
 		}
 		catch (SQLException ex) {
-			logger.error("There was an error while adding query {} to search history of user {}", query, userId, ex);
+			logger.error("There was an error while adding query {} to music history of type {} of user {}", query, type, userId, ex);
+		}
+	}
+
+	// removing from user music history
+
+	public void removeFromSearchHistory(long userId, String query, String type) {
+		try (var deleteStep = ctx.deleteFrom(MUSIC_HISTORY); var whereStep = deleteStep.where(userIdEquals(MUSIC_HISTORY, userId))
+				.and(MUSIC_HISTORY.QUERY.eq(query)).and(MUSIC_HISTORY.TYPE.eq(type))) {
+			whereStep.execute();
+		}
+		catch (DataAccessException ex) {
+			logger.error("There was an error while removing query {} from music history of type {} of user {}", query, type, userId, ex);
 		}
 	}
 

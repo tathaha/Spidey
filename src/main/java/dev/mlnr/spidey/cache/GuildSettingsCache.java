@@ -46,12 +46,7 @@ public class GuildSettingsCache {
 
 	private <T extends IGuildSettings> T getSettings(SettingsType type, long guildId) {
 		var cacheMap = guildSettingsMap.computeIfAbsent(type, k -> new HashMap<>());
-		var settings = cacheMap.get(guildId);
-		if (settings == null) {
-			settings = parseSettingsFromType(type, guildId);
-			cacheMap.put(guildId, settings);
-		}
-		return (T) settings;
+		return (T) cacheMap.computeIfAbsent(guildId, k -> parseSettingsFromType(type, guildId));
 	}
 
 	private IGuildSettings parseSettingsFromType(SettingsType type, long guildId) {

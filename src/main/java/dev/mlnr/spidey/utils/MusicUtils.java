@@ -1,8 +1,6 @@
 package dev.mlnr.spidey.utils;
 
-import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
-import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
+import com.sedmelluq.discord.lavaplayer.player.*;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
@@ -18,9 +16,7 @@ import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.music.MusicPlayer;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.VoiceChannel;
+import net.dv8tion.jda.api.entities.*;
 
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
@@ -221,6 +217,15 @@ public class MusicUtils {
 				break;
 		}
 		return message;
+	}
+
+	public static void saveQueryToHistory(CommandContext ctx, String query) {
+		var guildId = ctx.getGuild().getIdLong();
+		var generalSettings = GuildSettingsCache.getInstance().getGeneralSettings(guildId);
+		if (generalSettings.isVip()) {
+			var userId = ctx.getUser().getIdLong();
+			ctx.getCache().getSearchHistoryCache().saveQuery(userId, query.toLowerCase(), ctx.getEvent().getName());
+		}
 	}
 
 	public enum ServiceType implements ChoicesEnum {

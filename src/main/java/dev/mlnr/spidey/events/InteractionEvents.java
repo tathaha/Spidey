@@ -46,9 +46,10 @@ public class InteractionEvents extends ListenerAdapter {
 		var userId = event.getUser().getIdLong();
 		var searchHistoryCache = cache.getSearchHistoryCache();
 
+		var type = event.getName();
 		var lastQueries = input.isEmpty()
-				? searchHistoryCache.getLastQueries(userId)
-				: searchHistoryCache.getLastQueriesLike(userId, input);
+				? searchHistoryCache.getLastQueries(userId, type)
+				: searchHistoryCache.getLastQueriesLike(userId, input, type);
 		var choices = lastQueries
 				.stream()
 				.map(query -> new Command.Choice(Emojis.REPEAT + " " + query, query))

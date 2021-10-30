@@ -6,17 +6,19 @@ import dev.mlnr.spidey.utils.FixedSizeList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class UserSearchHistory {
+public class UserMusicHistory {
 	private final long userId;
 
 	private final FixedSizeList<String> queries;
+	private final String type;
 
 	private final DatabaseManager databaseManager;
 
-	public UserSearchHistory(long userId, FixedSizeList<String> queries, DatabaseManager databaseManager) {
+	public UserMusicHistory(long userId, FixedSizeList<String> queries, String type, DatabaseManager databaseManager) {
 		this.userId = userId;
 
 		this.queries = queries;
+		this.type = type;
 
 		this.databaseManager = databaseManager;
 	}
@@ -30,7 +32,11 @@ public class UserSearchHistory {
 	}
 
 	public void saveQuery(String query) {
+		if (queries.contains(query)) {
+			queries.remove(query);
+			databaseManager.removeFromSearchHistory(userId, query, type);
+		}
 		queries.add(query);
-		databaseManager.saveToSearchHistory(userId, query);
+		databaseManager.saveToMusicHistory(userId, query, type);
 	}
 }

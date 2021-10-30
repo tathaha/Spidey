@@ -2,9 +2,10 @@ package dev.mlnr.spidey.commands.music;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
-import com.sedmelluq.discord.lavaplayer.track.*;
-import dev.mlnr.spidey.cache.GuildSettingsCache;
-import dev.mlnr.spidey.objects.command.*;
+import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import dev.mlnr.spidey.objects.command.Command;
+import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.utils.*;
 import net.dv8tion.jda.api.Permission;
@@ -31,13 +32,7 @@ public class SearchCommand extends Command {
 		var service = serviceOption == null ? MusicUtils.ServiceType.YOUTUBE : MusicUtils.ServiceType.valueOf(serviceOption);
 		var query = ctx.getStringOption("query");
 
-		var guildId = ctx.getGuild().getIdLong();
-		var generalSettings = GuildSettingsCache.getInstance().getGeneralSettings(guildId);
-		if (generalSettings.isVip()) {
-			var userId = ctx.getUser().getIdLong();
-			ctx.getCache().getSearchHistoryCache().saveQuery(userId, query.toLowerCase());
-		}
-
+		MusicUtils.saveQueryToHistory(ctx, query);
 		MusicUtils.loadQuery(musicPlayer, service.getSearchPrefix() + query, new AudioLoadResultHandler() {
 			@Override
 			public void trackLoaded(AudioTrack track) {}
