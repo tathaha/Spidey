@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.function.Function;
 
 import static dev.mlnr.spidey.jooq.Tables.*;
@@ -190,9 +189,8 @@ public class DatabaseManager {
 	public UserMusicHistory retrieveMusicHistory(long userId, String type) {
 		var queries = new FixedSizeList<String>(100);
 		try (var selectStep = ctx.selectFrom(MUSIC_HISTORY); var whereStep = selectStep.where(userIdEquals(MUSIC_HISTORY, userId))
-				.and(MUSIC_HISTORY.TYPE.eq(type))) {
+				.and(MUSIC_HISTORY.TYPE.eq(type)).orderBy(MUSIC_HISTORY.ENTRY_TIME.desc())) {
 			var results = whereStep.fetch().getValues(MUSIC_HISTORY.QUERY, String.class);
-			Collections.reverse(results);
 			queries.addAll(results);
 		}
 		catch (DataAccessException ex) {
