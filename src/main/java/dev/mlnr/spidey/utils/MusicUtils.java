@@ -220,7 +220,7 @@ public class MusicUtils {
 	}
 
 	public static void saveQueryToHistory(CommandContext ctx, String query) {
-		ctx.getCache().getMusicHistoryCache().saveQuery(ctx.getUser().getIdLong(), query.toLowerCase(), ctx.getEvent().getName());
+		ctx.getCache().getMusicHistoryCache().saveQuery(ctx.getUser().getIdLong(), query, ctx.getEvent().getName());
 	}
 
 	public enum ServiceType implements ChoicesEnum {
