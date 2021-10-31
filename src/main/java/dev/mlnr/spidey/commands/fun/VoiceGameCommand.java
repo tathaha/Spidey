@@ -5,7 +5,6 @@ import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.objects.games.VoiceGameType;
 import dev.mlnr.spidey.utils.Utils;
-import dev.mlnr.spidey.utils.requests.Requester;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -39,11 +38,11 @@ public class VoiceGameCommand extends Command {
 		}
 		var embedBuilder = Utils.createEmbedBuilder(ctx.getUser());
 		var voiceGame = VoiceGameType.valueOf(ctx.getStringOption("game"));
-		Requester.launchVoiceGameSession(channel, voiceGame, code -> {
+		channel.createInvite().setTargetApplication(voiceGame.getApplicationId()).queue(invite -> {
 			embedBuilder.setColor(16711680);
-			embedBuilder.setDescription(i18n.get("commands.voicegame.click", code, voiceGame.getFriendlyName()));
+			embedBuilder.setDescription(i18n.get("commands.voicegame.click", invite.getCode(), voiceGame.getFriendlyName()));
 			ctx.reply(embedBuilder);
-		}, error -> ctx.replyErrorLocalized("internal_error", i18n.get("commands.voicegame.create"), error.getMessage()));
+		});
 		return true;
 	}
 }
