@@ -42,7 +42,7 @@ public class InteractionEvents extends ListenerAdapter {
 
 	@Override
 	public void onApplicationCommandAutocomplete(ApplicationCommandAutocompleteEvent event) {
-		var input = event.getOption("query").getAsString();
+		var input = event.getOption("query").getAsString().toLowerCase();
 		var userId = event.getUser().getIdLong();
 		var musicHistoryCache = cache.getMusicHistoryCache();
 
