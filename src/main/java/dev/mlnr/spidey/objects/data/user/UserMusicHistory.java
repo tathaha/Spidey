@@ -28,7 +28,7 @@ public class UserMusicHistory {
 	}
 
 	public List<String> getLastQueriesLike(String input) {
-		return queries.stream().filter(query -> query.startsWith(input)).collect(Collectors.toList());
+		return queries.stream().filter(query -> query.startsWith(input)).limit(25).collect(Collectors.toList());
 	}
 
 	public void saveQuery(String query) {
