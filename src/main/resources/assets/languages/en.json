@@ -16,7 +16,7 @@
     "only_dev": "This command can only be executed by the Developer.",
     "invalid": {
       "message": "**%s** isn't a valid command.",
-      "check_help": "Check `/help` for a list of commands.",
+      "check_help": "Check `/help` for the list of commands.",
       "suggestion": "Did you perhaps mean **%s**?"
     }
   },
@@ -125,7 +125,7 @@
         },
         "commands": {
           "title": "Commands",
-          "text": "Type `/help` for a list of commands."
+          "text": "Type `/help` for the list of commands."
         },
         "info": {
           "title": "Bot info",
