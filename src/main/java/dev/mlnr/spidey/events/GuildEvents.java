@@ -27,7 +27,7 @@ public class GuildEvents extends ListenerAdapter {
 		var defaultChannel = guild.getDefaultChannel();
 		var jda = event.getJDA();
 		if (defaultChannel != null) {
-			Utils.sendMessage(defaultChannel, "Hey! I'm **Spidey**. Thanks for inviting me. To start, check `s!info`.");
+			Utils.sendMessage(defaultChannel, "Hey! I'm **Spidey**. Thanks for inviting me. To start, check `/info`.");
 		}
 		Utils.storeInvites(guild, cache.getGeneralCache());
 		databaseManager.registerGuild(guildId);
