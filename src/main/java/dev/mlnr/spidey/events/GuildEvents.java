@@ -48,7 +48,7 @@ public class GuildEvents extends ListenerAdapter {
 		cache.getMessageCache().pruneCache(guildId);
 		cache.getMusicPlayerCache().destroyMusicPlayer(guild);
 		generalCache.removeGuild(guildId);
-		Utils.sendMessage(jda.getTextChannelById(785630223785787452L), "I've been kicked out of guild **" + guild.getName() + "** (**" + guildId + "**) with **" + guild.getMemberCount() + "** members");
+		Utils.sendMessage(jda.getTextChannelById(785630223785787452L), "I got kicked out of guild **" + guild.getName() + "** (**" + guildId + "**) with **" + guild.getMemberCount() + "** members");
 	}
 
 	@Override
