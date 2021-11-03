@@ -118,6 +118,7 @@
       }
     },
     "info": {
+      "invite": "Invite me to your server!",
       "fields": {
         "about": {
           "title": "About me",
