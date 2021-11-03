@@ -261,7 +261,8 @@
       "text": {
         "one": "There is **1** track in the queue",
         "multiple": "There are **%d** tracks in the queue",
-        "length": "with total length of **%s**"
+        "length": "with total length of **%s**.",
+        "relative_time": " The queue ends %s."
       }
     },
     "remove": {

@@ -5,6 +5,7 @@ import dev.mlnr.spidey.handlers.command.CommandHandler;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.music.MusicPlayer;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
+import net.dv8tion.jda.api.utils.TimeFormat;
 import org.apache.commons.collections4.ListUtils;
 
 import java.util.ArrayList;
@@ -88,7 +89,8 @@ public class StringUtils {
 			embedBuilder.setAuthor(i18n.get("paginator.queue", ctx.getGuild().getName()));
 			embedBuilder.setDescription(pages.get(page));
 			embedBuilder.appendDescription("\n\n").appendDescription(pluralized).appendDescription(" ")
-					.appendDescription(i18n.get("commands.queue.text.length", MusicUtils.formatDuration(length)));
+					.appendDescription(i18n.get("commands.queue.text.length", MusicUtils.formatDuration(length)))
+					.appendDescription(i18n.get("commands.queue.text.relative_time", TimeFormat.RELATIVE.format(System.currentTimeMillis() + length)));
 		});
 	}
 
