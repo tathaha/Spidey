@@ -3,6 +3,7 @@ package dev.mlnr.spidey.objects.command;
 import dev.mlnr.spidey.cache.Cache;
 import dev.mlnr.spidey.objects.Emojis;
 import dev.mlnr.spidey.objects.I18n;
+import dev.mlnr.spidey.utils.ConcurrentUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
@@ -158,6 +159,6 @@ public class CommandContext {
 	}
 
 	public void deferAndRun(boolean ephemeral, Runnable runnable) {
-		event.deferReply().setEphemeral(ephemeral).submit().thenRun(runnable);
+		event.deferReply().setEphemeral(ephemeral).submit().thenRunAsync(runnable, ConcurrentUtils.getScheduler());
 	}
 }
