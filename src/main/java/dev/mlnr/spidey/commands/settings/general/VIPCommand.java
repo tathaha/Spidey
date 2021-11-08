@@ -10,16 +10,12 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 @SuppressWarnings("unused")
 public class VIPCommand extends Command {
 	public VIPCommand() {
-		super("vip", "Enables/disables VIP for a guild", Category.Settings.GENERAL, Permission.UNKNOWN, 0,
+		super("vip", "Enables/disables VIP for a guild", Category.Settings.GENERAL, Permission.UNKNOWN, 0, true, true,
 				new OptionData(OptionType.INTEGER, "guild_id", "The ID of the guild to enable/disable VIP for"));
 	}
 
 	@Override
 	public boolean execute(CommandContext ctx) {
-		if (ctx.getUser().getIdLong() != 394607709741252621L) {
-			ctx.replyErrorLocalized("command_failures.only_dev");
-			return false;
-		}
 		var guildIdOption = ctx.getLongOption("guild_id");
 		var guildId = guildIdOption == null ? ctx.getGuild().getIdLong() : guildIdOption;
 		var generalSettings = ctx.getCache().getGuildSettingsCache().getGeneralSettings(guildId);

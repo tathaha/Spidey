@@ -1,6 +1,7 @@
 package dev.mlnr.spidey.objects.command;
 
 import dev.mlnr.spidey.cache.Cache;
+import dev.mlnr.spidey.objects.Emojis;
 import dev.mlnr.spidey.objects.I18n;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
@@ -125,7 +126,7 @@ public class CommandContext {
 	}
 
 	public void replyError(String error) {
-		reply(":no_entry: " + error);
+		reply(Emojis.NO_ENTRY + " " + error);
 	}
 
 	public void replyErrorLocalized(String key, Object... args) {
@@ -154,5 +155,9 @@ public class CommandContext {
 
 	public void deleteReply() {
 		event.getHook().deleteOriginal().queue();
+	}
+
+	public void deferAndRun(boolean ephemeral, Runnable runnable) {
+		event.deferReply().setEphemeral(ephemeral).submit().thenRun(runnable);
 	}
 }

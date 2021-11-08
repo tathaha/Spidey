@@ -26,7 +26,7 @@ public class AkinatorCommand extends Command {
 			ctx.replyErrorLocalized("commands.akinator.in_game");
 			return false;
 		}
-		ctx.getEvent().deferReply().queue(deferred -> {
+		ctx.deferAndRun(false, () -> {
 			try {
 				var languageCode = ctx.getI18n().getLangCode();
 				var language = Server.Language.getById(languageCode);

@@ -16,10 +16,12 @@ import java.util.Map;
 
 import static dev.mlnr.spidey.handlers.command.CooldownHandler.cooldown;
 import static dev.mlnr.spidey.handlers.command.CooldownHandler.isOnCooldown;
+import static dev.mlnr.spidey.utils.Utils.replyErrorWithoutContext;
 
 public class CommandHandler {
 	private static final Map<String, Command> COMMANDS = new HashMap<>();
 	private static final Logger logger = LoggerFactory.getLogger(CommandHandler.class);
+	private static final long DEV_ID = 394607709741252621L;
 
 	private CommandHandler() {}
 
@@ -32,12 +34,16 @@ public class CommandHandler {
 		var i18n = cache.getGuildSettingsCache().getMiscSettings(guildId).getI18n();
 
 		if (!member.hasPermission(requiredPermission)) {
-			event.reply(i18n.get("command_failures.no_perms", requiredPermission.getName())).setEphemeral(true).queue();
+			replyErrorWithoutContext(event, i18n.get("command_failures.no_perms", requiredPermission.getName()));
 			return;
 		}
 		var userId = member.getIdLong();
+		if (command.isDevOnly() && userId != DEV_ID) {
+			replyErrorWithoutContext(event, i18n.get("command_failures.only_dev"));
+			return;
+		}
 		if (isOnCooldown(userId, command)) {
-			event.reply(i18n.get("command_failures.cooldown")).setEphemeral(true).queue();
+			replyErrorWithoutContext(event, i18n.get("command_failures.cooldown"));
 			return;
 		}
 		var vip = cache.getGuildSettingsCache().getGeneralSettings(guildId).isVip();
