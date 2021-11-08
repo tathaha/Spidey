@@ -159,6 +159,6 @@ public class CommandContext {
 	}
 
 	public void deferAndRun(boolean ephemeral, Runnable runnable) {
-		event.deferReply().setEphemeral(ephemeral).submit().thenRunAsync(runnable, ConcurrentUtils.getScheduler());
+		event.deferReply().setEphemeral(ephemeral).submit().thenRunAsync(runnable, ConcurrentUtils.getExecutor());
 	}
 }
