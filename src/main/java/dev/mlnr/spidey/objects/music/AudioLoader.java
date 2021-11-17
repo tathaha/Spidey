@@ -54,7 +54,7 @@ public class AudioLoader implements AudioLoadResultHandler {
                 continue;
             }
 			if (loadFailure == QUEUE_FULL) {
-				ctx.sendFollowup(i18n.get("music.messages.failure.add") + " " + i18n.get("music.messages.failure.load.queue_full", MusicUtils.MAX_QUEUE_SIZE) + ".");
+				ctx.sendFollowupError(i18n.get("music.messages.failure.add") + " " + i18n.get("music.messages.failure.load.queue_full", MusicUtils.MAX_QUEUE_SIZE) + ".");
 				break;
 			}
 		}
