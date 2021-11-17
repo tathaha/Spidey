@@ -152,8 +152,12 @@ public class CommandContext {
 		event.getHook().sendMessageEmbeds(embedBuilder.build()).addActionRows(components).queue();
 	}
 
-	public void sendFollowupError(String key, Object... args) {
-		event.getHook().sendMessage(i18n.get(key, args)).queue();
+	public void sendFollowupError(String error) {
+		event.getHook().sendMessage(Emojis.NO_ENTRY + " " + error).queue();
+	}
+
+	public void sendFollowupErrorLocalized(String key, Object... args) {
+		sendFollowupError(i18n.get(key, args));
 	}
 
 	// editing

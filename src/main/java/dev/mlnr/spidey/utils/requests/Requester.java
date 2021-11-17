@@ -7,27 +7,26 @@ import dev.mlnr.spidey.utils.requests.api.API;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.utils.data.DataArray;
 import net.dv8tion.jda.api.utils.data.DataObject;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import okhttp3.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 import static java.lang.Float.parseFloat;
 
 public class Requester {
 	private static final Logger logger = LoggerFactory.getLogger(Requester.class);
-	private static final OkHttpClient HTTP_CLIENT = new OkHttpClient();
 	private static final String SPONSORBLOCK_URL = "https://sponsor.ajay.app/api/skipSegments?videoID=%s&categories=[\"sponsor\", \"selfpromo\", \"interaction\", \"intro\", \"outro\", \"preview\", \"music_offtopic\"]";
+	private static final OkHttpClient HTTP_CLIENT = new OkHttpClient.Builder()
+			.connectTimeout(3, TimeUnit.SECONDS)
+			.readTimeout(3, TimeUnit.SECONDS)
+			.writeTimeout(3, TimeUnit.SECONDS)
+			.build();
 
 	private Requester() {}
 

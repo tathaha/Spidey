@@ -38,7 +38,7 @@ public class AkinatorCommand extends Command {
 				componentActionCache.createAkinator(ctx, akiwrapper);
 			}
 			catch (Exception ex) {
-				ctx.sendFollowupError("commands.akinator.unavailable");
+				ctx.sendFollowupErrorLocalized("commands.akinator.unavailable");
 			}
 		});
 		return true;

@@ -54,19 +54,19 @@ public class AudioLoader implements AudioLoadResultHandler {
                 continue;
             }
 			if (loadFailure == QUEUE_FULL) {
-				ctx.replyError(i18n.get("music.messages.failure.add") + " " + i18n.get("music.messages.failure.load.queue_full", MusicUtils.MAX_QUEUE_SIZE) + ".");
+				ctx.sendFollowup(i18n.get("music.messages.failure.add") + " " + i18n.get("music.messages.failure.load.queue_full", MusicUtils.MAX_QUEUE_SIZE) + ".");
 				break;
 			}
 		}
 		if (tracksLoaded == 0) {
-			ctx.replyErrorLocalized("music.messages.failure.load.no_tracks");
+			ctx.sendFollowupErrorLocalized("music.messages.failure.load.no_tracks");
 			return;
 		}
 		var responseEmbedBuilder = createMusicResponseBuilder();
 		var responseDescriptionBuilder = responseEmbedBuilder.getDescriptionBuilder();
 		responseDescriptionBuilder.append(i18n.get("music.messages.queued")).append(" **").append(tracksLoaded).append("** ").append(i18n.get("music.messages.tracks")).append(" ")
 				.append(formatLength(originalLength, lengthWithoutSegments, i18n)).append(" [").append(ctx.getUser().getAsMention()).append("]");
-		ctx.reply(responseEmbedBuilder);
+		ctx.sendFollowup(responseEmbedBuilder);
 	}
 
 	@Override
@@ -77,12 +77,12 @@ public class AudioLoader implements AudioLoadResultHandler {
 			searched = true;
 			return;
 		}
-		ctx.replyErrorLocalized("music.messages.failure.no_matches", query.substring(9));
+		ctx.sendFollowupErrorLocalized("music.messages.failure.no_matches", query.substring(9));
 	}
 
 	@Override
 	public void loadFailed(FriendlyException exception) {
-		ctx.replyErrorLocalized("music.messages.failure.load.error");
+		ctx.sendFollowupErrorLocalized("music.messages.failure.load.error");
 	}
 
 	private void loadSingle(AudioTrack track) {
@@ -99,7 +99,7 @@ public class AudioLoader implements AudioLoadResultHandler {
 		var loadFailure = MusicUtils.checkTrack(track, this.musicPlayer, guildId);
 		if (loadFailure != null) {
             if (!playlist) {
-                ctx.replyError(MusicUtils.formatLoadError(loadFailure, ctx));
+                ctx.sendFollowupError(MusicUtils.formatLoadError(loadFailure, ctx));
             }
 			return loadFailure;
 		}

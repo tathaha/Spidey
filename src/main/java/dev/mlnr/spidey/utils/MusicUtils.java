@@ -220,6 +220,7 @@ public class MusicUtils {
 	}
 
 	public static void saveQueryToHistory(CommandContext ctx, String query) {
+		System.out.println(query);
 		ctx.getCache().getMusicHistoryCache().saveQuery(ctx.getUser().getIdLong(), query, ctx.getEvent().getName());
 	}
 

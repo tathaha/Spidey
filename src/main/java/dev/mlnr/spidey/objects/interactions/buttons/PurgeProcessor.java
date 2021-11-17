@@ -50,7 +50,7 @@ public class PurgeProcessor extends ComponentAction {
 			future.whenCompleteAsync((ignored, throwable) -> {
 				var i18n = ctx.getI18n();
 				if (throwable != null) {
-					ctx.sendFollowupError("internal_error", "purge messages", throwable.getMessage());
+					ctx.sendFollowupErrorLocalized("internal_error", "purge messages", throwable.getMessage());
 					return;
 				}
 				ctx.sendFollowup(generateSuccessMessage(allMessagesIds.size(), i18n));

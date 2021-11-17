@@ -45,12 +45,12 @@ public class SearchCommand extends Command {
 
 				@Override
 				public void noMatches() {
-					ctx.replyErrorLocalized("music.messages.failure.no_matches", query);
+					ctx.sendFollowupErrorLocalized("music.messages.failure.no_matches", query);
 				}
 
 				@Override
 				public void loadFailed(FriendlyException exception) {
-					ctx.replyErrorLocalized("commands.search.error");
+					ctx.sendFollowupErrorLocalized("commands.search.error");
 				}
 			});
 		});
