@@ -4,13 +4,11 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import dev.mlnr.spidey.objects.music.VideoSegment;
 import dev.mlnr.spidey.utils.requests.Requester;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class VideoSegmentCache {
-	private final Map<String, List<VideoSegment>> segmentMap = new HashMap<>();
+	private final Map<String, List<VideoSegment>> segmentMap = new ConcurrentHashMap<>();
 
 	private static VideoSegmentCache videoSegmentCache;
 

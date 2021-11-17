@@ -4,9 +4,10 @@ import dev.mlnr.spidey.Spidey;
 import dev.mlnr.spidey.objects.data.guild.settings.*;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class GuildSettingsCache {
-	private final Map<SettingsType, Map<Long, IGuildSettings>> guildSettingsMap = new EnumMap<>(SettingsType.class);
+	private final Map<SettingsType, Map<Long, IGuildSettings>> guildSettingsMap = new ConcurrentHashMap<>();
 
 	private final Spidey spidey;
 

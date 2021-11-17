@@ -16,15 +16,13 @@ public class AudioLoader implements AudioLoadResultHandler {
 	private final MusicPlayer musicPlayer;
 	private String query;
 	private final CommandContext ctx;
-	private final boolean followup;
 
 	private boolean searched;
 
-	public AudioLoader(MusicPlayer musicPlayer, String query, CommandContext ctx, boolean followup) {
+	public AudioLoader(MusicPlayer musicPlayer, String query, CommandContext ctx) {
 		this.musicPlayer = musicPlayer;
 		this.query = query;
 		this.ctx = ctx;
-		this.followup = followup; // dirty as fuck, I hate this
 	}
 
 	@Override
@@ -124,12 +122,7 @@ public class AudioLoader implements AudioLoadResultHandler {
 		var responseDescriptionBuilder = responseEmbedBuilder.getDescriptionBuilder();
 		responseDescriptionBuilder.append(queue.isEmpty() ? i18n.get("music.messages.playing") : i18n.get("music.messages.queued")).append(" ").append(title)
 				.append(stream ? "" : " " + formatLength(originalLength, lengthWithoutSegments, i18n)).append(" [").append(requester.getAsMention()).append("]");
-		if (followup) { // I hate this so fucking much
-			ctx.sendFollowup(responseEmbedBuilder);
-		}
-		else {
-			ctx.reply(responseEmbedBuilder);
-		}
+		ctx.sendFollowup(responseEmbedBuilder);
 		return null;
 	}
 }
