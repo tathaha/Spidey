@@ -20,7 +20,7 @@ public class EvalCommand extends Command {
 			"java.io", "java.math", "java.util", "java.util.concurrent", "java.time", "java.util.stream");
 
 	public EvalCommand() {
-		super("eval", "Evals java code", Category.UTILITY, Permission.UNKNOWN, 0,
+		super("eval", "Evals java code", Category.UTILITY, Permission.UNKNOWN, 0, true, true,
 				new OptionData(OptionType.STRING, "code", "The code to eval", true));
 	}
 
