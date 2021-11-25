@@ -1,7 +1,9 @@
 package dev.mlnr.spidey.objects.command;
 
 import dev.mlnr.spidey.cache.Cache;
+import dev.mlnr.spidey.objects.Emojis;
 import dev.mlnr.spidey.objects.I18n;
+import dev.mlnr.spidey.utils.ConcurrentUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
@@ -125,12 +127,14 @@ public class CommandContext {
 	}
 
 	public void replyError(String error) {
-		reply(":no_entry: " + error);
+		reply(Emojis.NO_ENTRY + " " + error);
 	}
 
 	public void replyErrorLocalized(String key, Object... args) {
 		replyError(i18n.get(key, args));
 	}
+
+	// followups
 
 	public void sendFollowup(String content) {
 		event.getHook().sendMessage(content).setEphemeral(shouldHideResponse()).queue();
@@ -140,9 +144,23 @@ public class CommandContext {
 		event.getHook().sendMessageEmbeds(embedBuilder.build()).setEphemeral(shouldHideResponse()).queue();
 	}
 
-	public void sendFollowupError(String key, Object... args) {
-		event.getHook().sendMessage(i18n.get(key, args)).queue();
+	public void sendFollowUpWithComponents(String content, Component... components) {
+		event.getHook().sendMessage(content).addActionRows(splitComponents(components)).queue();
 	}
+
+	public void sendFollowUpWithComponents(EmbedBuilder embedBuilder, List<ActionRow> components) {
+		event.getHook().sendMessageEmbeds(embedBuilder.build()).addActionRows(components).queue();
+	}
+
+	public void sendFollowupError(String error) {
+		event.getHook().sendMessage(Emojis.NO_ENTRY + " " + error).queue();
+	}
+
+	public void sendFollowupErrorLocalized(String key, Object... args) {
+		sendFollowupError(i18n.get(key, args));
+	}
+
+	// editing
 
 	public void editReply(EmbedBuilder embedBuilder) {
 		event.getHook().editOriginalEmbeds(embedBuilder.build()).queue();
@@ -152,7 +170,19 @@ public class CommandContext {
 		event.getHook().editOriginalComponents(components).setEmbeds(embedBuilder.build()).queue();
 	}
 
+	// deleting the reply
+
 	public void deleteReply() {
 		event.getHook().deleteOriginal().queue();
+	}
+
+	// deferring
+
+	public void deferAndRun(Runnable runnable) {
+		deferAndRun(false, runnable);
+	}
+
+	public void deferAndRun(boolean ephemeral, Runnable runnable) {
+		event.deferReply().setEphemeral(ephemeral).submit().thenRunAsync(runnable, ConcurrentUtils.getExecutor());
 	}
 }

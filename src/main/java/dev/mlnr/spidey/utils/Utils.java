@@ -1,6 +1,7 @@
 package dev.mlnr.spidey.utils;
 
 import dev.mlnr.spidey.cache.GeneralCache;
+import dev.mlnr.spidey.objects.Emojis;
 import dev.mlnr.spidey.objects.command.ChoicesEnum;
 import dev.mlnr.spidey.objects.guild.InviteData;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -9,6 +10,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.Component;
@@ -71,5 +73,9 @@ public class Utils {
 	public static List<ActionRow> splitComponents(Component... components) {
 		var split = ListUtils.partition(Arrays.asList(components), 5);
 		return split.stream().map(ActionRow::of).collect(Collectors.toList());
+	}
+
+	public static void replyErrorWithoutContext(SlashCommandEvent event, String content) {
+		event.reply(Emojis.NO_ENTRY + " " + content).setEphemeral(true).queue();
 	}
 }

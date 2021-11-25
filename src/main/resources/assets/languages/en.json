@@ -16,7 +16,7 @@
     "only_dev": "This command can only be executed by the Developer.",
     "invalid": {
       "message": "**%s** isn't a valid command.",
-      "check_help": "Check `/help` for a list of commands.",
+      "check_help": "Check `/help` for the list of commands.",
       "suggestion": "Did you perhaps mean **%s**?"
     }
   },
@@ -118,6 +118,7 @@
       }
     },
     "info": {
+      "invite": "Invite me to your server!",
       "fields": {
         "about": {
           "title": "About me",
@@ -125,7 +126,7 @@
         },
         "commands": {
           "title": "Commands",
-          "text": "Type `/help` for a list of commands."
+          "text": "Type `/help` for the list of commands."
         },
         "info": {
           "title": "Bot info",
@@ -261,7 +262,8 @@
       "text": {
         "one": "There is **1** track in the queue",
         "multiple": "There are **%d** tracks in the queue",
-        "length": "with total length of **%s**"
+        "length": "with total length of **%s**.",
+        "relative_time": " The queue ends %s."
       }
     },
     "remove": {

@@ -8,9 +8,7 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
+import javax.script.*;
 import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
@@ -22,18 +20,14 @@ public class EvalCommand extends Command {
 			"java.io", "java.math", "java.util", "java.util.concurrent", "java.time", "java.util.stream");
 
 	public EvalCommand() {
-		super("eval", "Evals java code", Category.UTILITY, Permission.UNKNOWN, 0,
+		super("eval", "Evals java code", Category.UTILITY, Permission.UNKNOWN, 0, true, true,
 				new OptionData(OptionType.STRING, "code", "The code to eval", true));
 	}
 
 	@Override
 	public boolean execute(CommandContext ctx) {
-		var author = ctx.getUser();
-		if (author.getIdLong() != 394607709741252621L) {
-			ctx.replyErrorLocalized("command_failures.only_dev");
-			return false;
-		}
-		ctx.getEvent().deferReply(ctx.shouldHideResponse()).queue(deferred -> {
+		ctx.deferAndRun(ctx.shouldHideResponse(), () -> {
+			var author = ctx.getUser();
 			var jda = ctx.getJDA();
 			var channel = ctx.getTextChannel();
 			SCRIPT_ENGINE.put("guild", channel.getGuild());

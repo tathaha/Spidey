@@ -19,14 +19,16 @@ public class PlayCommand extends Command {
 
 	@Override
 	public boolean execute(CommandContext ctx) {
-		var musicPlayer = MusicUtils.checkPlayability(ctx);
-		if (musicPlayer == null) {
-			return false;
-		}
-		var query = ctx.getStringOption("query");
-		var loader = new AudioLoader(musicPlayer, query, ctx, false);
-		MusicUtils.saveQueryToHistory(ctx, query);
-		MusicUtils.loadQuery(musicPlayer, query, loader);
+		ctx.deferAndRun(() -> {
+			var musicPlayer = MusicUtils.checkPlayability(ctx);
+			if (musicPlayer == null) {
+				return;
+			}
+			var query = ctx.getStringOption("query");
+			var loader = new AudioLoader(musicPlayer, query, ctx);
+			MusicUtils.saveQueryToHistory(ctx, query);
+			MusicUtils.loadQuery(musicPlayer, query, loader);
+		});
 		return true;
 	}
 }

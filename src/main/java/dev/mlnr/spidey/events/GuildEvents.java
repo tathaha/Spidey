@@ -27,7 +27,7 @@ public class GuildEvents extends ListenerAdapter {
 		var defaultChannel = guild.getDefaultChannel();
 		var jda = event.getJDA();
 		if (defaultChannel != null) {
-			Utils.sendMessage(defaultChannel, "Hey! I'm **Spidey**. Thanks for inviting me. To start, check `s!info`.");
+			Utils.sendMessage(defaultChannel, "Hey! I'm **Spidey**. Thanks for inviting me. To start, check `/info`.");
 		}
 		Utils.storeInvites(guild, cache.getGeneralCache());
 		databaseManager.registerGuild(guildId);
@@ -48,7 +48,7 @@ public class GuildEvents extends ListenerAdapter {
 		cache.getMessageCache().pruneCache(guildId);
 		cache.getMusicPlayerCache().destroyMusicPlayer(guild);
 		generalCache.removeGuild(guildId);
-		Utils.sendMessage(jda.getTextChannelById(785630223785787452L), "I've been kicked out of guild **" + guild.getName() + "** (**" + guildId + "**) with **" + guild.getMemberCount() + "** members");
+		Utils.sendMessage(jda.getTextChannelById(785630223785787452L), "I got kicked out of guild **" + guild.getName() + "** (**" + guildId + "**) with **" + guild.getMemberCount() + "** members");
 	}
 
 	@Override

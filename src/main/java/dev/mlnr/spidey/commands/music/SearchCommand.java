@@ -24,33 +24,35 @@ public class SearchCommand extends Command {
 
 	@Override
 	public boolean execute(CommandContext ctx) {
-		var musicPlayer = MusicUtils.checkPlayability(ctx);
-		if (musicPlayer == null) {
-			return false;
-		}
-		var serviceOption = ctx.getStringOption("service");
-		var service = serviceOption == null ? MusicUtils.ServiceType.YOUTUBE : MusicUtils.ServiceType.valueOf(serviceOption);
-		var query = ctx.getStringOption("query");
-
-		MusicUtils.saveQueryToHistory(ctx, query);
-		MusicUtils.loadQuery(musicPlayer, service.getSearchPrefix() + query, new AudioLoadResultHandler() {
-			@Override
-			public void trackLoaded(AudioTrack track) {}
-
-			@Override
-			public void playlistLoaded(AudioPlaylist playlist) {
-				StringUtils.createTrackSelection(ctx, musicPlayer, playlist.getTracks());
+		ctx.deferAndRun(() -> {
+			var musicPlayer = MusicUtils.checkPlayability(ctx);
+			if (musicPlayer == null) {
+				return;
 			}
+			var serviceOption = ctx.getStringOption("service");
+			var service = serviceOption == null ? MusicUtils.ServiceType.YOUTUBE : MusicUtils.ServiceType.valueOf(serviceOption);
+			var query = ctx.getStringOption("query");
 
-			@Override
-			public void noMatches() {
-				ctx.replyErrorLocalized("music.messages.failure.no_matches", query);
-			}
+			MusicUtils.saveQueryToHistory(ctx, query);
+			MusicUtils.loadQuery(musicPlayer, service.getSearchPrefix() + query, new AudioLoadResultHandler() {
+				@Override
+				public void trackLoaded(AudioTrack track) {}
 
-			@Override
-			public void loadFailed(FriendlyException exception) {
-				ctx.replyErrorLocalized("commands.search.error");
-			}
+				@Override
+				public void playlistLoaded(AudioPlaylist playlist) {
+					StringUtils.createTrackSelection(ctx, musicPlayer, playlist.getTracks());
+				}
+
+				@Override
+				public void noMatches() {
+					ctx.sendFollowupErrorLocalized("music.messages.failure.no_matches", query);
+				}
+
+				@Override
+				public void loadFailed(FriendlyException exception) {
+					ctx.sendFollowupErrorLocalized("commands.search.error");
+				}
+			});
 		});
 		return true;
 	}

@@ -44,13 +44,13 @@ public class PurgeProcessor extends ComponentAction {
 	}
 
 	public void proceed() {
-		ctx.getEvent().deferReply(true).queue(deferred -> {
+		ctx.deferAndRun(true, () -> {
 			var channel = ctx.getTextChannel();
 			var future = CompletableFuture.allOf(channel.purgeMessagesById(allMessagesIds).toArray(new CompletableFuture[0]));
 			future.whenCompleteAsync((ignored, throwable) -> {
 				var i18n = ctx.getI18n();
 				if (throwable != null) {
-					ctx.sendFollowupError("internal_error", "purge messages", throwable.getMessage());
+					ctx.sendFollowupErrorLocalized("internal_error", "purge messages", throwable.getMessage());
 					return;
 				}
 				ctx.sendFollowup(generateSuccessMessage(allMessagesIds.size(), i18n));

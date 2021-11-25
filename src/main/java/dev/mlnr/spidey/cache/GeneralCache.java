@@ -3,11 +3,11 @@ package dev.mlnr.spidey.cache;
 import dev.mlnr.spidey.DatabaseManager;
 import dev.mlnr.spidey.objects.guild.InviteData;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class GeneralCache {
-	private final Map<String, InviteData> inviteMap = new HashMap<>();
+	private final Map<String, InviteData> inviteMap = new ConcurrentHashMap<>();
 
 	private final GuildSettingsCache guildSettingsCache;
 	private final DatabaseManager databaseManager;

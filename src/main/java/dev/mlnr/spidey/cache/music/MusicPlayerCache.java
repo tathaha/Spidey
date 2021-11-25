@@ -3,11 +3,11 @@ package dev.mlnr.spidey.cache.music;
 import dev.mlnr.spidey.objects.music.MusicPlayer;
 import net.dv8tion.jda.api.entities.Guild;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class MusicPlayerCache {
-	private final Map<Long, MusicPlayer> musicPlayerMap = new HashMap<>();
+	private final Map<Long, MusicPlayer> musicPlayerMap = new ConcurrentHashMap<>();
 
 	private static MusicPlayerCache musicPlayerCache;
 

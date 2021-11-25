@@ -184,7 +184,7 @@ public class MusicUtils {
 		var i18n = ctx.getI18n();
 		var connectionFailure = checkVoiceChannel(ctx);
 		if (connectionFailure != null) {
-			ctx.replyError(i18n.get("music.messages.failure.connect.cant_play")
+			ctx.sendFollowupError(i18n.get("music.messages.failure.connect.cant_play")
 					+ " " + i18n.get("music.messages.failure.connect." + connectionFailure.name().toLowerCase() + "."));
 			return null;
 		}
@@ -220,7 +220,7 @@ public class MusicUtils {
 	}
 
 	public static void saveQueryToHistory(CommandContext ctx, String query) {
-		ctx.getCache().getMusicHistoryCache().saveQuery(ctx.getUser().getIdLong(), query.toLowerCase(), ctx.getEvent().getName());
+		ctx.getCache().getMusicHistoryCache().saveQuery(ctx.getUser().getIdLong(), query, ctx.getEvent().getName());
 	}
 
 	public enum ServiceType implements ChoicesEnum {

@@ -20,7 +20,7 @@ public class MusicSearchDropdown extends ComponentAction {
 	}
 
 	public void load(String link) {
-		var loader = new AudioLoader(musicPlayer, link, ctx, true);
+		var loader = new AudioLoader(musicPlayer, link, ctx);
 		MusicUtils.loadQuery(musicPlayer, link, loader);
 		uncacheAndDelete();
 	}

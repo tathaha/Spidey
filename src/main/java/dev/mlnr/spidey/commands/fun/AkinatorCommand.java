@@ -26,7 +26,7 @@ public class AkinatorCommand extends Command {
 			ctx.replyErrorLocalized("commands.akinator.in_game");
 			return false;
 		}
-		ctx.getEvent().deferReply().queue(deferred -> {
+		ctx.deferAndRun(() -> {
 			try {
 				var languageCode = ctx.getI18n().getLangCode();
 				var language = Server.Language.getById(languageCode);
@@ -38,7 +38,7 @@ public class AkinatorCommand extends Command {
 				componentActionCache.createAkinator(ctx, akiwrapper);
 			}
 			catch (Exception ex) {
-				ctx.sendFollowupError("commands.akinator.unavailable");
+				ctx.sendFollowupErrorLocalized("commands.akinator.unavailable");
 			}
 		});
 		return true;

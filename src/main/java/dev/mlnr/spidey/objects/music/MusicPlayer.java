@@ -34,7 +34,7 @@ public class MusicPlayer {
 
 	public void scheduleLeave() {
 		cancelLeave();
-		leaveTask = ConcurrentUtils.getScheduler().schedule(() -> MusicPlayerCache.getInstance().disconnectFromChannel(trackScheduler.getGuild()), 2, TimeUnit.MINUTES);
+		leaveTask = ConcurrentUtils.getExecutor().schedule(() -> MusicPlayerCache.getInstance().disconnectFromChannel(trackScheduler.getGuild()), 2, TimeUnit.MINUTES);
 	}
 
 	public void cancelLeave() {

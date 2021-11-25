@@ -97,7 +97,7 @@ public class ComponentActionCache {
 
 		AkinatorGame.create(new AkinatorGame.Context(buttonsId, ctx, akiwrapper, embedBuilder, originalLayout, guessLayout, this));
 
-		ctx.getEvent().getHook().sendMessageEmbeds(embedBuilder.build()).addActionRows(originalLayout).queue();
+		ctx.sendFollowUpWithComponents(embedBuilder, originalLayout);
 	}
 
 	// dropdowns
@@ -113,6 +113,6 @@ public class ComponentActionCache {
 				.setPlaceholder(choose)
 				.setRequiredRange(1, 1)
 				.addOptions(options).build();
-		ctx.replyWithComponents(choose, menu);
+		ctx.sendFollowUpWithComponents(choose, menu);
 	}
 }
