@@ -35,7 +35,7 @@ public class PurgeProcessor extends ComponentAction {
 			case REMOVE:
 				allMessagesIds.removeAll(pinnedMessagesIds);
 				if (allMessagesIds.isEmpty()) {
-					ctx.replyErrorLocalized("commands.purge.messages.failure.no_messages.unpinned");
+					ctx.sendFollowupErrorLocalized("commands.purge.messages.failure.no_messages.unpinned");
 					return;
 				}
 				break;
