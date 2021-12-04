@@ -6,20 +6,15 @@ import dev.mlnr.spidey.objects.command.ChoicesEnum;
 import dev.mlnr.spidey.objects.guild.InviteData;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.Component;
-import net.dv8tion.jda.api.utils.TimeFormat;
 import net.jodah.expiringmap.ExpirationPolicy;
 import net.jodah.expiringmap.ExpiringMap;
 import org.apache.commons.collections4.ListUtils;
 
-import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -52,10 +47,6 @@ public class Utils {
 		if (guild.getSelfMember().hasPermission(Permission.MANAGE_SERVER)) {
 			guild.retrieveInvites().queue(invites -> invites.forEach(invite -> generalCache.getInviteCache().put(invite.getCode(), new InviteData(invite, guild))));
 		}
-	}
-
-	public static String formatDate(OffsetDateTime date) {
-		return TimeFormat.DATE_TIME_LONG.format(date);
 	}
 
 	public static <K, V> ExpiringMap<K, V> createDefaultExpiringMap() {

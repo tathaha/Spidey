@@ -3,6 +3,7 @@ package dev.mlnr.spidey.commands.informative;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
+import dev.mlnr.spidey.utils.StringUtils;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Emote;
@@ -43,7 +44,8 @@ public class ServerCommand extends Command {
 		embedBuilder.addField(i18n.get("commands.server.fields.boost.tier"), String.valueOf(guild.getBoostTier().getKey()), true);
 		embedBuilder.addField(i18n.get("commands.server.fields.boost.amount"), String.valueOf(guild.getBoostCount()), true);
 
-		embedBuilder.addField(i18n.get("commands.server.fields.creation"), Utils.formatDate(guild.getTimeCreated()), true);
+		var timeCreated = guild.getTimeCreated();
+		embedBuilder.addField(i18n.get("commands.server.fields.creation"), StringUtils.formatDate(timeCreated) + StringUtils.formatDateRelative(timeCreated), true);
 
 		var vanityUrl = guild.getVanityUrl();
 		embedBuilder.addField(i18n.get("commands.server.fields.vanity_url.title"), guild.getFeatures().contains("VANITY_URL")

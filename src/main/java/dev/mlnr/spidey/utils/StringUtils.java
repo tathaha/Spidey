@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
 import net.dv8tion.jda.api.utils.TimeFormat;
 import org.apache.commons.collections4.ListUtils;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -120,5 +121,13 @@ public class StringUtils {
 			return string.substring(0, maxLength - 1) + "…";
 		}
 		return string;
+	}
+
+	public static String formatDate(OffsetDateTime date) {
+		return TimeFormat.DATE_TIME_LONG.format(date);
+	}
+
+	public static String formatDateRelative(OffsetDateTime date) {
+		return " (" + TimeFormat.RELATIVE.format(date) + ")";
 	}
 }
