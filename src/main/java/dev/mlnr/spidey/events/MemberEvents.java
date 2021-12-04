@@ -9,7 +9,6 @@ import net.dv8tion.jda.api.audit.ActionType;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.utils.TimeFormat;
 
 import java.time.Instant;
 
@@ -66,7 +65,7 @@ public class MemberEvents extends ListenerAdapter {
 		embedBuilder.setDescription(i18n.get("events.member_join.user.message.base", escapedTag, userId));
 
 		var created = user.getTimeCreated();
-		var timestamp = i18n.get("events.member_join.user.message.created", StringUtils.formatDate(created), TimeFormat.RELATIVE.format(created));
+		var timestamp = i18n.get("events.member_join.user.message.created", StringUtils.formatDate(created), StringUtils.formatDateRelative(created));
 		if (!selfMember.hasPermission(Permission.MANAGE_SERVER)) {
 			embedBuilder.appendDescription(".").appendDescription(timestamp);
 			Utils.sendMessage(channel, embedBuilder.build());
