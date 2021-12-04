@@ -40,7 +40,7 @@ public class Utils {
 	}
 
 	public static EmbedBuilder createEmbedBuilder(User user) {
-		return new EmbedBuilder().setFooter("Command executed by " + user.getAsTag(), user.getEffectiveAvatarUrl()).setColor(0xFEFEFE);
+		return new EmbedBuilder().setFooter("Command executed by " + user.getAsTag(), user.getEffectiveAvatarUrl()).setColor(0xFFFFFF);
 	}
 
 	public static void storeInvites(Guild guild, GeneralCache generalCache) {
