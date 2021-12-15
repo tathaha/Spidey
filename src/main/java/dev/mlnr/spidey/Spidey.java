@@ -2,6 +2,7 @@ package dev.mlnr.spidey;
 
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory;
 import dev.mlnr.spidey.events.ReadyEvents;
+import dev.mlnr.spidey.handlers.command.CommandHandler;
 import dev.mlnr.spidey.objects.I18n;
 import dev.mlnr.spidey.utils.MusicUtils;
 import net.dv8tion.jda.api.GatewayEncoding;
@@ -58,6 +59,7 @@ public class Spidey {
 			.setGatewayEncoding(GatewayEncoding.ETF)
 			.setAudioSendFactory(new NativeAudioSendFactory())
 			.build();
+		CommandHandler.loadCommands(jda);
 	}
 
 	public static void main(String[] args) {

@@ -5,7 +5,6 @@ import dev.mlnr.blh.core.api.BotList;
 import dev.mlnr.blh.jda.BLHJDAListener;
 import dev.mlnr.spidey.Spidey;
 import dev.mlnr.spidey.cache.Cache;
-import dev.mlnr.spidey.handlers.command.CommandHandler;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
@@ -22,8 +21,6 @@ public class ReadyEvents extends ListenerAdapter {
 	@Override
 	public void onReady(ReadyEvent event) {
 		var jda = event.getJDA();
-
-		CommandHandler.loadCommands(jda);
 		jda.getPresence().setPresence(OnlineStatus.ONLINE, Activity.listening("/help"));
 
 		var blh = new BLHBuilder().setDevModePredicate(botId -> botId != 772446532560486410L)
