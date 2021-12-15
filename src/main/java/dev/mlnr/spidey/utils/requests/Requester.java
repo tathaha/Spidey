@@ -2,6 +2,7 @@ package dev.mlnr.spidey.utils.requests;
 
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.music.VideoSegment;
+import dev.mlnr.spidey.utils.StringUtils;
 import dev.mlnr.spidey.utils.Utils;
 import dev.mlnr.spidey.utils.requests.api.API;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -59,7 +60,8 @@ public class Requester {
 				var responseBody = body.string();
 				var json = DataObject.fromJson(responseBody);
 				var embedBuilder = Utils.createEmbedBuilder(event.getUser());
-				embedBuilder.setAuthor(json.getString("title"), json.getString("source"));
+				var title = StringUtils.trimString(json.getString("title"), 256);
+				embedBuilder.setAuthor(title, json.getString("source"));
 				embedBuilder.setImage(json.getString("image_url"));
 				embedBuilder.setDescription(ctx.getI18n().get("commands.subreddit.description", subreddit));
 				embedBuilder.setTimestamp(Instant.ofEpochSecond(json.getInt("created_at")));
