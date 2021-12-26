@@ -9,8 +9,6 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.Command;
-import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.Component;
 import net.jodah.expiringmap.ExpirationPolicy;
@@ -70,9 +68,5 @@ public class Utils {
 
 	public static void replyErrorWithoutContext(SlashCommandEvent event, String content) {
 		event.reply(Emojis.NO_ENTRY + " " + content).setEphemeral(true).queue();
-	}
-
-	public static OptionData createConvenientOption(OptionType type, String name, String description, boolean required) {
-		return new OptionData(type, name, description, required, false);
 	}
 }
