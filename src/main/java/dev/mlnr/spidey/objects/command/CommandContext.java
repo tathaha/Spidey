@@ -185,7 +185,7 @@ public class CommandContext {
 	}
 
 	public void deferAndRun(boolean ephemeral, Runnable runnable) {
-		event.deferReply().setEphemeral(ephemeral).queue(); // JDA handles this async defer action, no need to wait
+		event.deferReply(ephemeral).queue(); // JDA handles this async defer action, no need to wait
 		runnable.run();
 	}
 
@@ -196,6 +196,6 @@ public class CommandContext {
 	}
 
 	public boolean hasSelfChannelPermissions(GuildChannel channel, Permission... permissions) {
-		return getGuild().getSelfMember().hasPermission((IPermissionContainer) channel, permissions);
+		return getGuild().getSelfMember().hasPermission(channel, permissions);
 	}
 }
