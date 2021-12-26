@@ -7,8 +7,10 @@ import dev.mlnr.spidey.objects.guild.InviteData;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.interactions.commands.Command;
+import net.dv8tion.jda.api.events.interaction.commands.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.SlashCommand;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.Component;
 import net.jodah.expiringmap.ExpirationPolicy;
@@ -56,9 +58,9 @@ public class Utils {
 				.build();
 	}
 
-	public static <E extends Enum<E> & ChoicesEnum> List<Command.Choice> getChoicesFromEnum(Class<E> choiceEnum) {
+	public static <E extends Enum<E> & ChoicesEnum> List<SlashCommand.Choice> getChoicesFromEnum(Class<E> choiceEnum) {
 		return Arrays.stream(choiceEnum.getEnumConstants())
-				.map(choicesEnum -> new Command.Choice(choicesEnum.getFriendlyName(), choicesEnum.name())).collect(Collectors.toList());
+				.map(choicesEnum -> new SlashCommand.Choice(choicesEnum.getFriendlyName(), choicesEnum.name())).collect(Collectors.toList());
 	}
 
 	public static List<ActionRow> splitComponents(Component... components) {
@@ -68,5 +70,9 @@ public class Utils {
 
 	public static void replyErrorWithoutContext(SlashCommandEvent event, String content) {
 		event.reply(Emojis.NO_ENTRY + " " + content).setEphemeral(true).queue();
+	}
+
+	public static OptionData createConvenientOption(OptionType type, String name, String description, boolean required) {
+		return new OptionData(type, name, description, required, false);
 	}
 }

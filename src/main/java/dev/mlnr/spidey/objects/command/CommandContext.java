@@ -3,11 +3,10 @@ package dev.mlnr.spidey.objects.command;
 import dev.mlnr.spidey.cache.Cache;
 import dev.mlnr.spidey.objects.Emojis;
 import dev.mlnr.spidey.objects.I18n;
-import dev.mlnr.spidey.utils.ConcurrentUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.commands.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.Component;
 
@@ -183,6 +182,7 @@ public class CommandContext {
 	}
 
 	public void deferAndRun(boolean ephemeral, Runnable runnable) {
-		event.deferReply().setEphemeral(ephemeral).submit().thenRunAsync(runnable, ConcurrentUtils.getExecutor());
+		event.deferReply().setEphemeral(ephemeral).queue(); // JDA handles this async defer action, no need to wait
+		runnable.run();
 	}
 }

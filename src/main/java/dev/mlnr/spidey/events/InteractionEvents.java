@@ -5,8 +5,9 @@ import dev.mlnr.spidey.handlers.command.CommandHandler;
 import dev.mlnr.spidey.objects.Emojis;
 import dev.mlnr.spidey.objects.interactions.ComponentAction;
 import net.dv8tion.jda.api.events.interaction.*;
+import net.dv8tion.jda.api.events.interaction.commands.SlashCommandEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.interactions.commands.Command;
+import net.dv8tion.jda.api.interactions.commands.SlashCommand;
 
 import java.util.stream.Collectors;
 
@@ -41,7 +42,7 @@ public class InteractionEvents extends ListenerAdapter {
 	}
 
 	@Override
-	public void onApplicationCommandAutocomplete(ApplicationCommandAutocompleteEvent event) {
+	public void onCommandAutoComplete(CommandAutoCompleteEvent event) {
 		var input = event.getOption("query").getAsString().toLowerCase();
 		var userId = event.getUser().getIdLong();
 		var musicHistoryCache = cache.getMusicHistoryCache();
@@ -52,9 +53,9 @@ public class InteractionEvents extends ListenerAdapter {
 				: musicHistoryCache.getLastQueriesLike(userId, input, type);
 		var choices = lastQueries
 				.stream()
-				.map(query -> new Command.Choice(Emojis.REPEAT + " " + query, query))
+				.map(query -> new SlashCommand.Choice(Emojis.REPEAT + " " + query, query))
 				.collect(Collectors.toList());
-		event.deferChoices(choices).queue();
+		event.respondChoices(choices).queue();
 	}
 
 	private void processComponentInteraction(String selectionId, ComponentAction componentAction, GenericComponentInteractionCreateEvent event) {

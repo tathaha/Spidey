@@ -6,7 +6,6 @@ import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 import javax.script.*;
 import java.awt.*;
@@ -21,7 +20,7 @@ public class EvalCommand extends Command {
 
 	public EvalCommand() {
 		super("eval", "Evals java code", Category.UTILITY, Permission.UNKNOWN, 0, true, true,
-				new OptionData(OptionType.STRING, "code", "The code to eval", true));
+				Utils.createConvenientOption(OptionType.STRING, "code", "The code to eval", true));
 	}
 
 	@Override

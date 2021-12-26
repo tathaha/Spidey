@@ -20,8 +20,8 @@ import java.util.stream.Collectors;
 @SuppressWarnings("unused")
 public class UploadEmoteCommand extends Command {
 	public UploadEmoteCommand() {
-		super("uploademote", "Uploads the image from the provided url as an emote", Category.UTILITY, Permission.MANAGE_EMOTES, 4,
-				new OptionData(OptionType.STRING, "link", "The link of the emote", true),
+		super("uploademote", "Uploads the image from the provided url as an emote", Category.UTILITY, Permission.MANAGE_EMOTES_AND_STICKERS, 4,
+				Utils.createConvenientOption(OptionType.STRING, "link", "The link of the emote", true),
 				new OptionData(OptionType.STRING, "name", "The emote name"));
 	}
 

@@ -45,10 +45,14 @@ public class MusicUtils {
 
 	private static ConnectFailureReason checkVoiceChannel(CommandContext ctx) {
 		var guild = ctx.getGuild();
-		var voiceChannel = ctx.getMember().getVoiceState().getChannel();
-		if (voiceChannel == null) {
+		var audioChannel = ctx.getMember().getVoiceState().getChannel();
+		if (audioChannel == null) {
 			return NO_CHANNEL;
 		}
+		if (audioChannel instanceof StageChannel) {
+			return STAGE_UNSUPPORTED;
+		}
+		var voiceChannel = (VoiceChannel) audioChannel;
 		if (guild.getAudioManager().isConnected()) {
 			return null;
 		}
@@ -67,7 +71,7 @@ public class MusicUtils {
 		return null;
 	}
 
-	private static void connectToVoiceChannel(VoiceChannel voiceChannel) {
+	private static void connectToVoiceChannel(AudioChannel voiceChannel) {
 		voiceChannel.getGuild().getAudioManager().openAudioConnection(voiceChannel);
 	}
 
@@ -126,7 +130,7 @@ public class MusicUtils {
 		return segments.isEmpty() ? length : length - segments.stream().mapToLong(segment -> segment.getSegmentEnd() - segment.getSegmentStart()).sum();
 	}
 
-	public static VoiceChannel getConnectedChannel(Guild guild) {
+	public static AudioChannel getConnectedChannel(Guild guild) {
 		return guild.getAudioManager().getConnectedChannel();
 	}
 
@@ -185,7 +189,7 @@ public class MusicUtils {
 		var connectionFailure = checkVoiceChannel(ctx);
 		if (connectionFailure != null) {
 			ctx.sendFollowupError(i18n.get("music.messages.failure.connect.cant_play")
-					+ " " + i18n.get("music.messages.failure.connect." + connectionFailure.name().toLowerCase() + "."));
+					+ " " + i18n.get("music.messages.failure.connect." + connectionFailure.name().toLowerCase()) + ".");
 			return null;
 		}
 		var musicPlayer = MusicPlayerCache.getInstance().getMusicPlayer(ctx.getGuild(), true);
@@ -248,6 +252,7 @@ public class MusicUtils {
 
 	public enum ConnectFailureReason {
 		NO_CHANNEL,
+		STAGE_UNSUPPORTED,
 		NO_PERMS,
 		CHANNEL_FULL,
 		CANT_SPEAK

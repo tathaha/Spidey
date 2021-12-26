@@ -12,7 +12,8 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 public class DefaultVolumeCommand extends Command {
 	public DefaultVolumeCommand() {
 		super("defaultvolume", "Sets the default music volume", Category.Settings.MUSIC, Permission.UNKNOWN, 0,
-				new OptionData(OptionType.INTEGER, "volume", "The default music volume for this server or blank to see the current default volume"));
+				new OptionData(OptionType.INTEGER, "volume", "The default music volume for this server or blank to see the current default volume")
+						.setRequiredRange(0, 150));
 	}
 
 	@Override
@@ -21,21 +22,20 @@ public class DefaultVolumeCommand extends Command {
 			ctx.replyErrorLocalized("music.messages.failure.cant_interact", "set the default music volume");
 			return false;
 		}
-		var volumeOption = ctx.getLongOption("volume");
+		var newDefaultVolume = ctx.getLongOption("volume");
 		var guildId = ctx.getGuild().getIdLong();
 		var guildSettingsCache = ctx.getCache().getGuildSettingsCache();
 		var musicSettings = guildSettingsCache.getMusicSettings(guildId);
 		var currentDefaultVolume = musicSettings.getDefaultVolume();
-		if (volumeOption == null) {
+		if (newDefaultVolume == null) {
 			ctx.replyLocalized("commands.defaultvolume.current", currentDefaultVolume);
 			return true;
 		}
-		var newDefaultVolume = (int) Math.min(volumeOption, 150);
 		if (newDefaultVolume == currentDefaultVolume) {
 			ctx.replyErrorLocalized("commands.defaultvolume.already_set", newDefaultVolume);
 			return true;
 		}
-		musicSettings.setDefaultVolume(newDefaultVolume);
+		musicSettings.setDefaultVolume(Math.toIntExact(newDefaultVolume));
 		ctx.replyLocalized("commands.defaultvolume.set", newDefaultVolume);
 		return true;
 	}

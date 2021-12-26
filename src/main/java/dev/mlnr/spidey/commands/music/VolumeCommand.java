@@ -4,15 +4,16 @@ import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.utils.MusicUtils;
+import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 @SuppressWarnings("unused")
 public class VolumeCommand extends Command {
 	public VolumeCommand() {
 		super("volume", "Sets the volume of music", Category.MUSIC, Permission.UNKNOWN, 0,
-				new OptionData(OptionType.INTEGER, "volume", "The new volume", true));
+				Utils.createConvenientOption(OptionType.INTEGER, "volume", "The new volume", true)
+						.setRequiredRange(0, 150));
 	}
 
 	@Override
@@ -35,12 +36,12 @@ public class VolumeCommand extends Command {
 			return false;
 		}
 		var currentVolume = musicPlayer.getVolume();
-		var newVolume = (int) Math.min(ctx.getLongOption("volume"), 150);
+		var newVolume = ctx.getLongOption("volume");
 		if (newVolume == currentVolume) {
 			ctx.replyErrorLocalized("commands.volume.already_set", currentVolume);
 			return false;
 		}
-		musicPlayer.setVolume(newVolume);
+		musicPlayer.setVolume(Math.toIntExact(newVolume));
 		ctx.replyLocalized("commands.volume.set", newVolume);
 		return true;
 	}

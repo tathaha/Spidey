@@ -17,7 +17,7 @@ import java.awt.*;
 public class NsfwCommand extends Command {
 	public NsfwCommand() {
 		super("nsfw", "Sends a NSFW image", Category.NSFW, Permission.UNKNOWN, 4,
-				new OptionData(OptionType.STRING, "type", "The type of the NSFW image", true)
+				Utils.createConvenientOption(OptionType.STRING, "type", "The type of the NSFW image", true)
 						.addChoices(Utils.getChoicesFromEnum(NSFWType.class)),
 				new OptionData(OptionType.STRING, "span", "The timespan to get the post from or blank to choose month")
 						.addChoices(Utils.getChoicesFromEnum(PostSpan.class)));

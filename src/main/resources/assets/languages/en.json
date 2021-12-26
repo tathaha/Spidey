@@ -33,6 +33,7 @@
         "connect": {
           "cant_play": "I can't play music as",
           "no_channel": "you're not connected to any channel",
+          "stage_unsupported": "stage channels are not supported",
           "no_perms": "I don't have permission to join your channel",
           "channel_full": "the voice channel you're in is full",
           "cant_speak": "I can't speak in your channel"
