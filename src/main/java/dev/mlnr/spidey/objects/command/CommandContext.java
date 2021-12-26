@@ -3,10 +3,9 @@ package dev.mlnr.spidey.objects.command;
 import dev.mlnr.spidey.cache.Cache;
 import dev.mlnr.spidey.objects.Emojis;
 import dev.mlnr.spidey.objects.I18n;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.events.interaction.commands.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.Component;
 
@@ -133,6 +132,10 @@ public class CommandContext {
 		replyError(i18n.get(key, args));
 	}
 
+	public void replyErrorNoPerm(Permission permission, String action) {
+		replyErrorLocalized("command_failures.self_no_perms", permission.getName(), action);
+	}
+
 	// followups
 
 	public void sendFollowup(String content) {
@@ -184,5 +187,15 @@ public class CommandContext {
 	public void deferAndRun(boolean ephemeral, Runnable runnable) {
 		event.deferReply().setEphemeral(ephemeral).queue(); // JDA handles this async defer action, no need to wait
 		runnable.run();
+	}
+
+	// utils
+
+	public boolean hasSelfPermission(Permission... permissions) {
+		return getGuild().getSelfMember().hasPermission(permissions);
+	}
+
+	public boolean hasSelfChannelPermissions(GuildChannel channel, Permission... permissions) {
+		return getGuild().getSelfMember().hasPermission((IPermissionContainer) channel, permissions);
 	}
 }

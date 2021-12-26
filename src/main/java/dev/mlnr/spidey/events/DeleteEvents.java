@@ -1,7 +1,7 @@
 package dev.mlnr.spidey.events;
 
 import dev.mlnr.spidey.cache.Cache;
-import net.dv8tion.jda.api.events.channel.text.TextChannelDeleteEvent;
+import net.dv8tion.jda.api.events.channel.ChannelDeleteEvent;
 import net.dv8tion.jda.api.events.role.RoleDeleteEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -13,7 +13,10 @@ public class DeleteEvents extends ListenerAdapter {
 	}
 
 	@Override
-	public void onTextChannelDelete(TextChannelDeleteEvent event) {
+	public void onChannelDelete(ChannelDeleteEvent event) {
+		if (!event.isFromGuild()) {
+			return;
+		}
 		var guildSettingsCache = cache.getGuildSettingsCache();
 		var guildId = event.getGuild().getIdLong();
 		var channel = event.getChannel();

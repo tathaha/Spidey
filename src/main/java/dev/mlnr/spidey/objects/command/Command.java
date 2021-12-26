@@ -2,10 +2,10 @@ package dev.mlnr.spidey.objects.command;
 
 import dev.mlnr.spidey.objects.command.category.ICategory;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.internal.interactions.CommandDataImpl;
 
-public abstract class Command extends CommandData {
+public abstract class Command extends CommandDataImpl {
 	private final ICategory category;
 	private final Permission requiredPermission;
 	private final int cooldown;

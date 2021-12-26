@@ -44,7 +44,6 @@ public class MusicUtils {
 	}
 
 	private static ConnectFailureReason checkVoiceChannel(CommandContext ctx) {
-		var guild = ctx.getGuild();
 		var audioChannel = ctx.getMember().getVoiceState().getChannel();
 		if (audioChannel == null) {
 			return NO_CHANNEL;
@@ -52,6 +51,7 @@ public class MusicUtils {
 		if (audioChannel instanceof StageChannel) {
 			return STAGE_UNSUPPORTED;
 		}
+		var guild = ctx.getGuild();
 		var voiceChannel = (VoiceChannel) audioChannel;
 		if (guild.getAudioManager().isConnected()) {
 			return null;

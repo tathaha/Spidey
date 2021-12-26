@@ -21,16 +21,15 @@ import java.util.stream.Collectors;
 public class UploadEmoteCommand extends Command {
 	public UploadEmoteCommand() {
 		super("uploademote", "Uploads the image from the provided url as an emote", Category.UTILITY, Permission.MANAGE_EMOTES_AND_STICKERS, 4,
-				Utils.createConvenientOption(OptionType.STRING, "link", "The link of the emote", true),
+				new OptionData(OptionType.STRING, "link", "The link of the emote", true),
 				new OptionData(OptionType.STRING, "name", "The emote name"));
 	}
 
 	@Override
 	public boolean execute(CommandContext ctx) {
-		var guild = ctx.getGuild();
-		var i18n = ctx.getI18n();
-		if (!guild.getSelfMember().hasPermission(getRequiredPermission())) {
-			ctx.replyErrorLocalized("commands.uploademote.no_perms");
+		var requiredPermission = getRequiredPermission();
+		if (!ctx.hasSelfPermission(requiredPermission)) {
+			ctx.replyErrorNoPerm(requiredPermission, "upload emotes");
 			return false;
 		}
 		var name = "";
@@ -91,6 +90,7 @@ public class UploadEmoteCommand extends Command {
 			ctx.replyErrorLocalized("commands.uploademote.size");
 			return false;
 		}
+		var guild = ctx.getGuild();
 		var maxEmotes = guild.getMaxEmotes();
 		var animated = byteArray[0] == 'G' && byteArray[1] == 'I' && byteArray[2] == 'F' && byteArray[3] == '8' && byteArray[4] == '9' && byteArray[5] == 'a';
 		var used = guild.getEmoteCache().applyStream(stream -> stream.filter(emote -> !emote.isManaged())
@@ -102,6 +102,7 @@ public class UploadEmoteCommand extends Command {
 		}
 		guild.createEmote(name, Icon.from(byteArray)).queue(emote -> {
 			var left = maxEmotes - used - 1;
+			var i18n = ctx.getI18n();
 			ctx.replyLocalized("commands.uploademote.success.text", emote.getAsMention(),
 					animated ? i18n.get("commands.uploademote.success.animated") : i18n.get("commands.uploademote.success.emote"),
 					(left == 0 ? i18n.get("commands.uploademote.success.none") : left));

@@ -13,6 +13,7 @@
     "cooldown": "This command is on cooldown.",
     "only_nsfw": "You can use nsfw commands only in nsfw channels.",
     "no_perms": "You don't have the **%s** permission to run this command.",
+    "self_no_perms": "I don't have the **%s** permission to %s.",
     "only_dev": "This command can only be executed by the Developer.",
     "invalid": {
       "message": "**%s** isn't a valid command.",
@@ -90,7 +91,6 @@
     },
     "voicegame": {
       "not_in_voice": "You're not in a voice channel. Connect to one or specify a channel.",
-      "no_perms": "I don't have the **Create Invite** permission for your channel to create a session.",
       "click": "Click [here](https://discord.gg/%s) to join a %s session.",
       "create": "create a game session"
     },
@@ -244,6 +244,11 @@
         }
       }
     },
+    "timeout": {
+      "user_not_member": "Provided user is not in this server.",
+      "above_max": "The maximum timeout duration is 28 days.",
+      "success": "You've timed out member %s until %s."
+    },
     "clear": {
       "cleared": ":white_check_mark: The queue has been cleared."
     },
@@ -340,7 +345,6 @@
       "jump": "Jump to the message"
     },
     "uploademote": {
-      "no_perms": "I don't have permission to upload emotes",
       "provide_url": "Please provide a valid URL.",
       "provide_format": "Please provide a URL with a valid format - JP(E)G, PNG, WEBP or GIF.",
       "name_length": "The name of the emote has to be between 2 and 32 in length.",

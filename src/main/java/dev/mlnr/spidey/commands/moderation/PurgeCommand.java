@@ -1,9 +1,9 @@
 package dev.mlnr.spidey.commands.moderation;
 
-import dev.mlnr.spidey.objects.interactions.buttons.PurgeProcessor;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
+import dev.mlnr.spidey.objects.interactions.buttons.PurgeProcessor;
 import dev.mlnr.spidey.utils.StringUtils;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
@@ -24,9 +24,8 @@ public class PurgeCommand extends Command {
 
 	@Override
 	public boolean execute(CommandContext ctx) {
-		var guild = ctx.getGuild();
-		if (!guild.getSelfMember().hasPermission(ctx.getTextChannel(), getRequiredPermission(), Permission.MESSAGE_HISTORY)) {
-			ctx.replyErrorLocalized("commands.purge.messages.failure.no_perms");
+		if (!ctx.hasSelfChannelPermissions(ctx.getTextChannel(), getRequiredPermission(), Permission.MESSAGE_HISTORY)) {
+			ctx.replyErrorLocalized("commands.purge.messages.failure.no_perms"); // TODO CommandContext#replyNoPerms?
 			return false;
 		}
 		var amount = ctx.getLongOption("amount");

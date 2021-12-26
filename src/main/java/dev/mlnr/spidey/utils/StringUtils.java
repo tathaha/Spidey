@@ -9,8 +9,7 @@ import net.dv8tion.jda.api.utils.TimeFormat;
 import org.apache.commons.collections4.ListUtils;
 
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static java.lang.Math.min;
@@ -129,5 +128,10 @@ public class StringUtils {
 
 	public static String formatDateRelative(OffsetDateTime date) {
 		return " (" + TimeFormat.RELATIVE.format(date) + ")";
+	}
+
+	public static <E extends Enum<E>> String humanizeEnumEntry(Enum<E> entry) {
+		var name = entry.name();
+		return name.charAt(0) + name.substring(1).toLowerCase();
 	}
 }

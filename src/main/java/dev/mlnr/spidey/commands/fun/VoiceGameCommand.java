@@ -6,8 +6,7 @@ import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.objects.games.VoiceGameType;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.ChannelType;
-import net.dv8tion.jda.api.entities.VoiceChannel;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
@@ -24,6 +23,11 @@ public class VoiceGameCommand extends Command {
 	@Override
 	public boolean execute(CommandContext ctx) {
 		var channel = ctx.getChannelOption("channel");
+		var requiredPermission = getRequiredPermission();
+		if (!ctx.hasSelfChannelPermissions(channel, requiredPermission)) {
+			ctx.replyErrorNoPerm(requiredPermission, "create a session");
+			return false;
+		}
 		var i18n = ctx.getI18n();
 		if (channel == null) {
 			var voiceStateChannel = ctx.getMember().getVoiceState().getChannel();
@@ -33,13 +37,9 @@ public class VoiceGameCommand extends Command {
 			}
 			channel = voiceStateChannel;
 		}
-		var voiceChannel = (VoiceChannel) channel;
-		if (!ctx.getGuild().getSelfMember().hasPermission(voiceChannel, Permission.CREATE_INSTANT_INVITE)) {
-			ctx.replyErrorLocalized("commands.voicegame.no_perms");
-			return false;
-		}
 		var embedBuilder = Utils.createEmbedBuilder(ctx.getUser());
 		var voiceGame = VoiceGameType.valueOf(ctx.getStringOption("game"));
+		var voiceChannel = (VoiceChannel) channel;
 		voiceChannel.createInvite().setTargetApplication(voiceGame.getApplicationId()).queue(invite -> {
 			embedBuilder.setColor(16711680);
 			embedBuilder.setDescription(i18n.get("commands.voicegame.click", invite.getCode(), voiceGame.getFriendlyName()));

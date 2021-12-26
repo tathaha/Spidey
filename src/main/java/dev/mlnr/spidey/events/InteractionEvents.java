@@ -4,8 +4,9 @@ import dev.mlnr.spidey.cache.Cache;
 import dev.mlnr.spidey.handlers.command.CommandHandler;
 import dev.mlnr.spidey.objects.Emojis;
 import dev.mlnr.spidey.objects.interactions.ComponentAction;
-import net.dv8tion.jda.api.events.interaction.*;
-import net.dv8tion.jda.api.events.interaction.commands.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.component.*;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.SlashCommand;
 
@@ -55,7 +56,7 @@ public class InteractionEvents extends ListenerAdapter {
 				.stream()
 				.map(query -> new SlashCommand.Choice(Emojis.REPEAT + " " + query, query))
 				.collect(Collectors.toList());
-		event.respondChoices(choices).queue();
+		event.replyChoices(choices).queue();
 	}
 
 	private void processComponentInteraction(String selectionId, ComponentAction componentAction, GenericComponentInteractionCreateEvent event) {

@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 public class VolumeCommand extends Command {
 	public VolumeCommand() {
 		super("volume", "Sets the volume of music", Category.MUSIC, Permission.UNKNOWN, 0,
-				Utils.createConvenientOption(OptionType.INTEGER, "volume", "The new volume", true)
+				new OptionData(OptionType.INTEGER, "volume", "The new volume", true)
 						.setRequiredRange(0, 150));
 	}
 

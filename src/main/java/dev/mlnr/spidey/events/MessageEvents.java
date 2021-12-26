@@ -2,9 +2,7 @@ package dev.mlnr.spidey.events;
 
 import dev.mlnr.spidey.cache.Cache;
 import dev.mlnr.spidey.objects.messages.MessageData;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageUpdateEvent;
+import net.dv8tion.jda.api.events.message.*;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 public class MessageEvents extends ListenerAdapter {
@@ -15,7 +13,10 @@ public class MessageEvents extends ListenerAdapter {
 	}
 
 	@Override
-	public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
+	public void onMessageReceived(MessageReceivedEvent event) {
+		if (!event.isFromGuild()) {
+			return;
+		}
 		var guild = event.getGuild();
 		var message = event.getMessage();
 		var content = message.getContentRaw().trim();
@@ -32,7 +33,10 @@ public class MessageEvents extends ListenerAdapter {
 	}
 
 	@Override
-	public void onGuildMessageDelete(GuildMessageDeleteEvent event) {
+	public void onMessageDelete(MessageDeleteEvent event) {
+		if (!event.isFromGuild()) {
+			return;
+		}
 		var messageId = event.getMessageIdLong();
 		var channel = event.getChannel();
 
@@ -47,8 +51,8 @@ public class MessageEvents extends ListenerAdapter {
 	}
 
 	@Override
-	public void onGuildMessageUpdate(GuildMessageUpdateEvent event) {
-		if (!cache.getGuildSettingsCache().getMiscSettings(event.getGuild().getIdLong()).isSnipingEnabled()) {
+	public void onMessageUpdate(MessageUpdateEvent event) {
+		if (!event.isFromGuild() || !cache.getGuildSettingsCache().getMiscSettings(event.getGuild().getIdLong()).isSnipingEnabled()) {
 			return;
 		}
 		var messageCache = cache.getMessageCache();
