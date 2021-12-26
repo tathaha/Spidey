@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class PurgeCommand extends Command {
 	public PurgeCommand() {
 		super("purge", "Purges messages (by entered user)", Category.MODERATION, Permission.MESSAGE_MANAGE, 6,
-				Utils.createConvenientOption(OptionType.INTEGER, "amount", "The amount of messages to purge", true),
+				new OptionData(OptionType.INTEGER, "amount", "The amount of messages to purge", true),
 				new OptionData(OptionType.USER, "user", "The user to delete the messages of"));
 	}
 

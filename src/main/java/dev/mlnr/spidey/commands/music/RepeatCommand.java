@@ -8,12 +8,13 @@ import dev.mlnr.spidey.utils.MusicUtils;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 @SuppressWarnings("unused")
 public class RepeatCommand extends Command {
 	public RepeatCommand() {
 		super("repeat", "Sets the repeat mode", Category.MUSIC, Permission.UNKNOWN, 0,
-				Utils.createConvenientOption(OptionType.STRING, "repeat_mode", "The repeat mode to set", true)
+				new OptionData(OptionType.STRING, "repeat_mode", "The repeat mode to set", true)
 						.addChoices(Utils.getChoicesFromEnum(TrackScheduler.RepeatMode.class)));
 	}
 

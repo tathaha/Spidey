@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandEvent;
 import net.dv8tion.jda.api.events.interaction.component.*;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.interactions.commands.SlashCommand;
+import net.dv8tion.jda.api.interactions.commands.Command;
 
 import java.util.stream.Collectors;
 
@@ -54,7 +54,7 @@ public class InteractionEvents extends ListenerAdapter {
 				: musicHistoryCache.getLastQueriesLike(userId, input, type);
 		var choices = lastQueries
 				.stream()
-				.map(query -> new SlashCommand.Choice(Emojis.REPEAT + " " + query, query))
+				.map(query -> new Command.Choice(Emojis.REPEAT + " " + query, query))
 				.collect(Collectors.toList());
 		event.replyChoices(choices).queue();
 	}

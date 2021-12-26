@@ -9,6 +9,8 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.Command;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.Component;
 import net.jodah.expiringmap.ExpirationPolicy;
@@ -56,9 +58,9 @@ public class Utils {
 				.build();
 	}
 
-	public static <E extends Enum<E> & ChoicesEnum> List<SlashCommand.Choice> getChoicesFromEnum(Class<E> choiceEnum) {
+	public static <E extends Enum<E> & ChoicesEnum> List<Command.Choice> getChoicesFromEnum(Class<E> choiceEnum) {
 		return Arrays.stream(choiceEnum.getEnumConstants())
-				.map(choicesEnum -> new SlashCommand.Choice(choicesEnum.getFriendlyName(), choicesEnum.name())).collect(Collectors.toList());
+				.map(choicesEnum -> new Command.Choice(choicesEnum.getFriendlyName(), choicesEnum.name())).collect(Collectors.toList());
 	}
 
 	public static List<ActionRow> splitComponents(Component... components) {

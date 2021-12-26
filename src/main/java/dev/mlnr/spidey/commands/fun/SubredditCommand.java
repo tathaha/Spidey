@@ -14,7 +14,7 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 public class SubredditCommand extends Command {
 	public SubredditCommand() {
 		super("subreddit", "Sends a random image from given subreddit in the given timespan", Category.FUN, Permission.UNKNOWN, 3,
-				Utils.createConvenientOption(OptionType.STRING, "subreddit", "The subreddit to get a random image from", true),
+				new OptionData(OptionType.STRING, "subreddit", "The subreddit to get a random image from", true),
 				new OptionData(OptionType.STRING, "span", "The timespan to get the post from or blank to choose month")
 						.addChoices(Utils.getChoicesFromEnum(PostSpan.class)));
 	}
