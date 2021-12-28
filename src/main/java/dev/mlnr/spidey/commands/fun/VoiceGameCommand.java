@@ -23,11 +23,6 @@ public class VoiceGameCommand extends Command {
 	@Override
 	public boolean execute(CommandContext ctx) {
 		var channel = ctx.getChannelOption("channel");
-		var requiredPermission = getRequiredPermission();
-		if (!ctx.hasSelfChannelPermissions(channel, requiredPermission)) {
-			ctx.replyErrorNoPerm(requiredPermission, "create a session");
-			return false;
-		}
 		var i18n = ctx.getI18n();
 		if (channel == null) {
 			var voiceStateChannel = ctx.getMember().getVoiceState().getChannel();
@@ -36,6 +31,11 @@ public class VoiceGameCommand extends Command {
 				return false;
 			}
 			channel = voiceStateChannel;
+		}
+		var requiredPermission = getRequiredPermission();
+		if (!ctx.hasSelfChannelPermissions(channel, requiredPermission)) {
+			ctx.replyErrorNoPerm(requiredPermission, "create a session");
+			return false;
 		}
 		var embedBuilder = Utils.createEmbedBuilder(ctx.getUser());
 		var voiceGame = VoiceGameType.valueOf(ctx.getStringOption("game"));
