@@ -31,7 +31,7 @@ public class HelpCommand extends Command {
 		var guildId = ctx.getGuild().getIdLong();
 		var i18n = ctx.getI18n();
 		var embedBuilder = Utils.createEmbedBuilder(author)
-				.setAuthor(i18n.get("commands.help.text"), "https://github.com/caneleex/Spidey", ctx.getJDA().getSelfUser().getEffectiveAvatarUrl());
+				.setAuthor(i18n.get("commands.help.text"), "https://github.com/caneleeex/Spidey", ctx.getJDA().getSelfUser().getEffectiveAvatarUrl());
 		var commandOption = ctx.getStringOption("command");
 
 		if (commandOption == null) {
