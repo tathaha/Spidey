@@ -15,6 +15,7 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
 public class HelpCommand extends Command {
@@ -25,7 +26,7 @@ public class HelpCommand extends Command {
 
 	@Override
 	public boolean execute(CommandContext ctx) {
-		var commandsMap = CommandHandler.getCommands();
+		var allCommands = CommandHandler.getCommands();
 		var author = ctx.getUser();
 		var guildSettingsCache = ctx.getCache().getGuildSettingsCache();
 		var guildId = ctx.getGuild().getIdLong();
@@ -35,13 +36,14 @@ public class HelpCommand extends Command {
 		var commandOption = ctx.getStringOption("command");
 
 		if (commandOption == null) {
-			var commandsCopy = new HashMap<>(commandsMap);
-			var entries = commandsCopy.entrySet();
-			entries.removeIf(entry -> !ctx.getMember().hasPermission(entry.getValue().getRequiredPermission()));
-			var hidden = commandsMap.size() - commandsCopy.size();
+			var commandsWithPerms = allCommands.values()
+					.stream()
+					.filter(command -> ctx.getMember().hasPermission(command.getRequiredPermission()))
+					.collect(Collectors.toList());
+			var hidden = allCommands.size() - commandsWithPerms.size();
 			var categories = new HashMap<ICategory, List<Command>>();
 			var nsfwHidden = false;
-			commandsCopy.values().forEach(cmd -> categories.computeIfAbsent(cmd.getCategory(), k -> new ArrayList<>()).add(cmd));
+			commandsWithPerms.forEach(cmd -> categories.computeIfAbsent(cmd.getCategory(), k -> new ArrayList<>()).add(cmd));
 			if (!ctx.getTextChannel().isNSFW()) {
 				categories.remove(Category.NSFW);
 				nsfwHidden = true;
@@ -81,7 +83,7 @@ public class HelpCommand extends Command {
 			ctx.reply(embedBuilder);
 			return true;
 		}
-		var command = commandsMap.get(commandOption);
+		var command = allCommands.get(commandOption);
 		if (command == null) {
 			var similar = StringUtils.getSimilarCommand(commandOption);
 			ctx.replyError(i18n.get("command_failures.invalid.message", commandOption) + " " + (similar == null
