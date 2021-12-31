@@ -4,6 +4,7 @@ import dev.mlnr.spidey.cache.Cache;
 import dev.mlnr.spidey.handlers.command.CommandHandler;
 import dev.mlnr.spidey.objects.Emojis;
 import dev.mlnr.spidey.objects.interactions.ComponentAction;
+import dev.mlnr.spidey.utils.StringUtils;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandEvent;
 import net.dv8tion.jda.api.events.interaction.component.*;
@@ -54,7 +55,7 @@ public class InteractionEvents extends ListenerAdapter {
 				: musicHistoryCache.getLastQueriesLike(userId, input, type);
 		var choices = lastQueries
 				.stream()
-				.map(query -> new Command.Choice(Emojis.REPEAT + " " + query, query))
+				.map(query -> new Command.Choice(StringUtils.trimString(Emojis.REPEAT + " " + query, 100), query))
 				.collect(Collectors.toList());
 		event.replyChoices(choices).queue();
 	}
