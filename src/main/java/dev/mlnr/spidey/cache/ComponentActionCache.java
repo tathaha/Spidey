@@ -12,8 +12,8 @@ import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.interactions.components.selections.SelectMenu;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
-import net.dv8tion.jda.api.interactions.components.selections.SelectionMenu;
 import net.jodah.expiringmap.ExpiringMap;
 
 import java.util.function.BiConsumer;
@@ -107,7 +107,7 @@ public class ComponentActionCache {
 
 		var i18n = ctx.getI18n();
 		var choose = i18n.get("selection.text", i18n.get("selection.track"));
-		var menu = SelectionMenu.create(dropdownId)
+		var menu = SelectMenu.create(dropdownId)
 				.setPlaceholder(choose)
 				.setRequiredRange(1, 1)
 				.addOptions(options).build();

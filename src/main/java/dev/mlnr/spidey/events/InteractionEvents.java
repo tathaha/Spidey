@@ -5,8 +5,8 @@ import dev.mlnr.spidey.handlers.command.CommandHandler;
 import dev.mlnr.spidey.objects.Emojis;
 import dev.mlnr.spidey.objects.interactions.ComponentAction;
 import dev.mlnr.spidey.utils.StringUtils;
-import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteEvent;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.*;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.Command;
@@ -21,7 +21,7 @@ public class InteractionEvents extends ListenerAdapter {
 	}
 
 	@Override
-	public void onSlashCommand(SlashCommandEvent event) {
+	public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
 		if (!event.isFromGuild()) {
 			event.reply("Spidey only supports commands in servers. Sorry for this inconvenience.").queue();
 			return;
@@ -30,21 +30,21 @@ public class InteractionEvents extends ListenerAdapter {
 	}
 
 	@Override
-	public void onButtonClick(ButtonClickEvent event) {
+	public void onButtonInteraction(ButtonInteractionEvent event) {
 		var splitId = event.getComponentId().split(":");
 		var action = cache.getComponentActionCache().getAction(splitId[0]);
 		processComponentInteraction(splitId[1], action, event);
 	}
 
 	@Override
-	public void onSelectionMenu(SelectionMenuEvent event) {
+	public void onSelectMenuInteraction(SelectMenuInteractionEvent event) {
 		var dropdownId = event.getComponentId();
 		var action = cache.getComponentActionCache().getAction(dropdownId);
 		processComponentInteraction(event.getValues().get(0), action, event);
 	}
 
 	@Override
-	public void onCommandAutoComplete(CommandAutoCompleteEvent event) {
+	public void onCommandAutoCompleteInteraction(CommandAutoCompleteInteractionEvent event) {
 		var input = event.getOption("query").getAsString().toLowerCase();
 		var userId = event.getUser().getIdLong();
 		var musicHistoryCache = cache.getMusicHistoryCache();

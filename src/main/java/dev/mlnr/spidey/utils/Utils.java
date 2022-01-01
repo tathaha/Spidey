@@ -7,10 +7,10 @@ import dev.mlnr.spidey.objects.guild.InviteData;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.Command;
+import net.dv8tion.jda.api.interactions.components.ActionComponent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
-import net.dv8tion.jda.api.interactions.components.Component;
 import net.jodah.expiringmap.ExpirationPolicy;
 import net.jodah.expiringmap.ExpiringMap;
 import org.apache.commons.collections4.ListUtils;
@@ -65,12 +65,12 @@ public class Utils {
 				.map(choicesEnum -> new Command.Choice(choicesEnum.getFriendlyName(), choicesEnum.name())).collect(Collectors.toList());
 	}
 
-	public static List<ActionRow> splitComponents(Component... components) {
+	public static List<ActionRow> splitComponents(ActionComponent... components) {
 		var split = ListUtils.partition(Arrays.asList(components), 5);
 		return split.stream().map(ActionRow::of).collect(Collectors.toList());
 	}
 
-	public static void replyErrorWithoutContext(SlashCommandEvent event, String content) {
+	public static void replyErrorWithoutContext(SlashCommandInteractionEvent event, String content) {
 		event.reply(Emojis.NO_ENTRY + " " + content).setEphemeral(true).queue();
 	}
 }

@@ -5,22 +5,22 @@ import dev.mlnr.spidey.objects.Emojis;
 import dev.mlnr.spidey.objects.I18n;
 import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.components.ActionComponent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
-import net.dv8tion.jda.api.interactions.components.Component;
 
 import java.util.List;
 
 import static dev.mlnr.spidey.utils.Utils.splitComponents;
 
 public class CommandContext {
-	private final SlashCommandEvent event;
+	private final SlashCommandInteractionEvent event;
 	private final boolean hideResponse;
 	private final I18n i18n;
 
 	private final Cache cache;
 
-	public CommandContext(SlashCommandEvent event, boolean hideResponse, I18n i18n, Cache cache) {
+	public CommandContext(SlashCommandInteractionEvent event, boolean hideResponse, I18n i18n, Cache cache) {
 		this.event = event;
 		this.hideResponse = hideResponse;
 		this.i18n = i18n;
@@ -52,7 +52,7 @@ public class CommandContext {
 		return this.i18n;
 	}
 
-	public SlashCommandEvent getEvent() {
+	public SlashCommandInteractionEvent getEvent() {
 		return this.event;
 	}
 
@@ -112,11 +112,11 @@ public class CommandContext {
 		event.replyEmbeds(embedBuilder.build()).setEphemeral(shouldHideResponse()).queue();
 	}
 
-	public void replyWithComponents(String content, Component... components) {
+	public void replyWithComponents(String content, ActionComponent... components) {
 		event.reply(content).addActionRows(splitComponents(components)).queue();
 	}
 
-	public void replyWithComponents(EmbedBuilder embedBuilder, Component... components) {
+	public void replyWithComponents(EmbedBuilder embedBuilder, ActionComponent... components) {
 		event.replyEmbeds(embedBuilder.build()).addActionRows(splitComponents(components)).queue();
 	}
 
@@ -146,7 +146,7 @@ public class CommandContext {
 		event.getHook().sendMessageEmbeds(embedBuilder.build()).setEphemeral(shouldHideResponse()).queue();
 	}
 
-	public void sendFollowUpWithComponents(String content, Component... components) {
+	public void sendFollowUpWithComponents(String content, ActionComponent... components) {
 		event.getHook().sendMessage(content).addActionRows(splitComponents(components)).queue();
 	}
 
