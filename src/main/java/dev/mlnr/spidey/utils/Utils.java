@@ -17,12 +17,13 @@ import org.apache.commons.collections4.ListUtils;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Utils {
 	public static final Pattern TEXT_PATTERN = Pattern.compile("[a-zA-Z0-9-_]+");
+	private static final Executor INVITES_EXECUTOR = Executors.newSingleThreadExecutor();
 	public static final int SPIDEY_COLOR = 3288807;
 
 	private Utils() {}
@@ -45,7 +46,10 @@ public class Utils {
 
 	public static void storeInvites(Guild guild, GeneralCache generalCache) {
 		if (guild.getSelfMember().hasPermission(Permission.MANAGE_SERVER)) {
-			guild.retrieveInvites().queue(invites -> invites.forEach(invite -> generalCache.getInviteCache().put(invite.getCode(), new InviteData(invite, guild))));
+			INVITES_EXECUTOR.execute(() -> {
+				var invites = guild.retrieveInvites().complete();
+				invites.forEach(invite -> generalCache.getInviteCache().put(invite.getCode(), new InviteData(invite, guild)));
+			});
 		}
 	}
 
