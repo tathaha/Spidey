@@ -14,6 +14,7 @@ public class LogCommand extends Command {
 		super("log", "Sets the log channel", Category.Settings.MISC, Permission.MANAGE_SERVER, 4,
 				new OptionData(OptionType.CHANNEL, "channel", "The channel to set as the log channel")
 						.setChannelTypes(ChannelType.TEXT));
+		withFlags(Command.Flags.NO_THREADS);
 	}
 
 	@Override

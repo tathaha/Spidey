@@ -22,6 +22,7 @@ public class HelpCommand extends Command {
 	public HelpCommand() {
 		super("help", "Shows the help message", Category.INFORMATIVE, Permission.UNKNOWN, 0,
 				new OptionData(OptionType.STRING, "command", "The command to get help for"));
+		withFlags(Command.Flags.NO_THREADS);
 	}
 
 	@Override

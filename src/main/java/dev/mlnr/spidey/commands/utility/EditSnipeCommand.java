@@ -1,7 +1,6 @@
 package dev.mlnr.spidey.commands.utility;
 
-import dev.mlnr.spidey.objects.command.Command;
-import dev.mlnr.spidey.objects.command.CommandContext;
+import dev.mlnr.spidey.objects.command.*;
 import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
@@ -12,7 +11,8 @@ import java.awt.*;
 @SuppressWarnings("unused")
 public class EditSnipeCommand extends Command {
 	public EditSnipeCommand() {
-		super("editsnipe", "Snipes an edited message", Category.UTILITY, Permission.UNKNOWN, 6, false);
+		super("editsnipe", "Snipes an edited message", Category.UTILITY, Permission.UNKNOWN, 6);
+		withFlags(Command.Flags.SHOW_RESPONSE);
 	}
 
 	@Override
@@ -23,7 +23,7 @@ public class EditSnipeCommand extends Command {
 			ctx.replyErrorLocalized("sniping.disabled");
 			return false;
 		}
-		var textChannel = ctx.getTextChannel();
+		var textChannel = ctx.getChannel();
 		var channelId = textChannel.getIdLong();
 		var lastEditedMessage = cache.getMessageCache().getLastEditedMessage(channelId);
 		if (lastEditedMessage == null) {

@@ -40,6 +40,10 @@ public class CommandContext {
 		return event.getTextChannel();
 	}
 
+	public MessageChannel getChannel() {
+		return event.getChannel();
+	}
+
 	public Guild getGuild() {
 		return event.getGuild();
 	}

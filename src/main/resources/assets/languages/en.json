@@ -14,6 +14,7 @@
     "only_nsfw": "You can use nsfw commands only in nsfw channels.",
     "no_perms": "You don't have the **%s** permission to run this command.",
     "self_no_perms": "I don't have the **%s** permission to %s.",
+    "no_threads": "This command cannot be run in threads.",
     "only_dev": "This command can only be executed by the Developer.",
     "invalid": {
       "message": "**%s** isn't a valid command.",

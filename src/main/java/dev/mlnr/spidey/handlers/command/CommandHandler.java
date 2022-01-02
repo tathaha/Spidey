@@ -42,6 +42,11 @@ public class CommandHandler {
 			replyErrorWithoutContext(event, i18n.get("command_failures.only_dev"));
 			return;
 		}
+		var channel = event.getChannel();
+		if (channel.getType().isThread() && !command.supportsThreads()) {
+			replyErrorWithoutContext(event, i18n.get("command_failures.no_threads"));
+			return;
+		}
 		if (isOnCooldown(userId, command)) {
 			replyErrorWithoutContext(event, i18n.get("command_failures.cooldown"));
 			return;

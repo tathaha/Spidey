@@ -21,6 +21,7 @@ public class NsfwCommand extends Command {
 						.addChoices(Utils.getChoicesFromEnum(NSFWType.class)),
 				new OptionData(OptionType.STRING, "span", "The timespan to get the post from or blank to choose month")
 						.addChoices(Utils.getChoicesFromEnum(PostSpan.class)));
+		withFlags(Command.Flags.NO_THREADS);
 	}
 
 	@Override

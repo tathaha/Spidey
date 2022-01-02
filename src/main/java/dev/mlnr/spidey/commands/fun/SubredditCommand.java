@@ -17,6 +17,7 @@ public class SubredditCommand extends Command {
 				new OptionData(OptionType.STRING, "subreddit", "The subreddit to get a random image from", true),
 				new OptionData(OptionType.STRING, "span", "The timespan to get the post from or blank to choose month")
 						.addChoices(Utils.getChoicesFromEnum(PostSpan.class)));
+		withFlags(Command.Flags.NO_THREADS);
 	}
 
 	@Override

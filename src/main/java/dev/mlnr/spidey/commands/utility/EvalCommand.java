@@ -1,7 +1,6 @@
 package dev.mlnr.spidey.commands.utility;
 
-import dev.mlnr.spidey.objects.command.Command;
-import dev.mlnr.spidey.objects.command.CommandContext;
+import dev.mlnr.spidey.objects.command.*;
 import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
@@ -20,8 +19,9 @@ public class EvalCommand extends Command {
 			"java.io", "java.math", "java.util", "java.util.concurrent", "java.time", "java.util.stream");
 
 	public EvalCommand() {
-		super("eval", "Evals java code", Category.UTILITY, Permission.UNKNOWN, 0, true, true,
+		super("eval", "Evals java code", Category.UTILITY, Permission.UNKNOWN, 0,
 				new OptionData(OptionType.STRING, "code", "The code to eval", true));
+		withFlags(Command.Flags.DEV_ONLY | Command.Flags.NO_THREADS);
 	}
 
 	@Override

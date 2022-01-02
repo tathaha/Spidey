@@ -15,10 +15,11 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 @SuppressWarnings("unused")
 public class SearchCommand extends Command {
 	public SearchCommand() {
-		super("search", "Searches a query on the provided service", Category.MUSIC, Permission.UNKNOWN, 4, false,
+		super("search", "Searches a query on the provided service", Category.MUSIC, Permission.UNKNOWN, 4,
 				new OptionData(OptionType.STRING, "query", "The query to search your chosen service for", true, true),
 				new OptionData(OptionType.STRING, "service", "The service to search the query on or blank to choose YouTube")
 						.addChoices(Utils.getChoicesFromEnum(MusicUtils.ServiceType.class)));
+		withFlags(Command.Flags.SHOW_RESPONSE);
 	}
 
 	@Override

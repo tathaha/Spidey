@@ -9,26 +9,13 @@ public abstract class Command extends CommandDataImpl {
 	private final ICategory category;
 	private final Permission requiredPermission;
 	private final int cooldown;
-	private final boolean hideResponse;
-	private final boolean devOnly;
+	private final Command.Flags flags = new Command.Flags();
 
 	protected Command(String name, String description, ICategory category, Permission requiredPermission, int cooldown, OptionData... options) {
-		this(name, description, category, requiredPermission, cooldown, true, false, options);
-	}
-
-	protected Command(String name, String description, ICategory category, Permission requiredPermission, int cooldown, boolean hideResponse,
-	                  OptionData... options) {
-		this(name, description, category, requiredPermission, cooldown, hideResponse, false, options);
-	}
-
-	protected Command(String name, String description, ICategory category, Permission requiredPermission, int cooldown, boolean hideResponse,
-	                  boolean devOnly, OptionData... options) {
 		super(name, description);
 		this.category = category;
 		this.requiredPermission = requiredPermission;
 		this.cooldown = cooldown;
-		this.hideResponse = hideResponse;
-		this.devOnly = devOnly;
 
 		addOptions(options);
 	}
@@ -47,11 +34,47 @@ public abstract class Command extends CommandDataImpl {
 		return this.cooldown;
 	}
 
+	public void withFlags(long flags) {
+		this.flags.setFlags(flags);
+	}
+
 	public boolean shouldHideResponse() {
-		return this.hideResponse;
+		return flags.shouldShowResponse(); // counterintuitive but I can live with it for the sake of "backwards compatibility"
 	}
 
 	public boolean isDevOnly() {
-		return this.devOnly;
+		return flags.isDevOnly();
+	}
+
+	public boolean supportsThreads() {
+		return flags.supportsThreads();
+	}
+
+	public static class Flags {
+		public static final long SHOW_RESPONSE = 1 << 0;
+		public static final long DEV_ONLY      = 1 << 1;
+		public static final long NO_THREADS    = 1 << 2;
+
+		private long flags;
+
+		public void setFlags(long flags) {
+			this.flags = flags;
+		}
+
+		public boolean shouldShowResponse() {
+			return hasFlag(SHOW_RESPONSE);
+		}
+
+		public boolean isDevOnly() {
+			return hasFlag(DEV_ONLY);
+		}
+
+		public boolean supportsThreads() {
+			return !hasFlag(NO_THREADS);
+		}
+
+		private boolean hasFlag(long flag) {
+			return (flags & flag) == flag;
+		}
 	}
 }
