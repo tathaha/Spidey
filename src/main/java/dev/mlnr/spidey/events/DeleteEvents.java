@@ -20,11 +20,13 @@ public class DeleteEvents extends ListenerAdapter {
 		var guildSettingsCache = cache.getGuildSettingsCache();
 		var guildId = event.getGuild().getIdLong();
 		var channel = event.getChannel();
+		var channelId = channel.getIdLong();
 
 		var miscSettings = guildSettingsCache.getMiscSettings(guildId);
-		if (channel.getIdLong() == miscSettings.getLogChannelId()) {
+		if (channelId == miscSettings.getLogChannelId()) {
 			miscSettings.removeLogChannel();
 		}
+		cache.getMessageCache().pruneCacheForChannel(channelId);
 	}
 
 	@Override
