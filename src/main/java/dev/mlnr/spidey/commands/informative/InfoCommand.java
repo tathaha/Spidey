@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 @SuppressWarnings("unused")
 public class InfoCommand extends Command {
-	private static final String INVITE_URL = "https://discord.com/oauth2/authorize?client_id=772446532560486410&permissions=1345415329&scope=bot+applications.commands";
+	private static final String INVITE_URL = "https://discord.com/oauth2/authorize?client_id=772446532560486410&permissions=1100857043105&scope=bot+applications.commands";
 
 	public InfoCommand() {
 		super("info", "Shows you info about me", Category.INFORMATIVE, Permission.UNKNOWN, 0);
