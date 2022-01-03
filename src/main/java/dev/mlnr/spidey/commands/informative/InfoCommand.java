@@ -4,14 +4,13 @@ import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.utils.Utils;
+import dev.mlnr.spidey.utils.requests.Requester;
 import net.dv8tion.jda.api.JDAInfo;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 @SuppressWarnings("unused")
 public class InfoCommand extends Command {
-	private static final String INVITE_URL = "https://discord.com/oauth2/authorize?client_id=772446532560486410&permissions=1100857043105&scope=bot+applications.commands";
-
 	public InfoCommand() {
 		super("info", "Shows you info about me", Category.INFORMATIVE, Permission.UNKNOWN, 0);
 	}
@@ -32,8 +31,10 @@ public class InfoCommand extends Command {
 		embedBuilder.addField(i18n.get("commands.info.fields.translate.title"), i18n.get("commands.info.fields.translate.text"), false);
 		embedBuilder.addField(i18n.get("commands.info.fields.support.title"), i18n.get("commands.info.fields.support.text"), false);
 
-		var inviteButton = Button.link(INVITE_URL, i18n.get("commands.info.invite"));
-		ctx.replyWithComponents(embedBuilder, inviteButton);
+		Requester.retrieveInviteUrl(inviteUrl -> {
+			var inviteButton = Button.link(inviteUrl, i18n.get("commands.info.invite"));
+			ctx.replyWithComponents(embedBuilder, inviteButton);
+		});
 		return true;
 	}
 }
