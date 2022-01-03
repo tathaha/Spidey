@@ -9,11 +9,8 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.Command;
-import net.dv8tion.jda.api.interactions.components.ActionComponent;
-import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.jodah.expiringmap.ExpirationPolicy;
 import net.jodah.expiringmap.ExpiringMap;
-import org.apache.commons.collections4.ListUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -63,11 +60,6 @@ public class Utils {
 	public static <E extends Enum<E> & ChoicesEnum> List<Command.Choice> getChoicesFromEnum(Class<E> choiceEnum) {
 		return Arrays.stream(choiceEnum.getEnumConstants())
 				.map(choicesEnum -> new Command.Choice(choicesEnum.getFriendlyName(), choicesEnum.name())).collect(Collectors.toList());
-	}
-
-	public static List<ActionRow> splitComponents(ActionComponent... components) {
-		var split = ListUtils.partition(Arrays.asList(components), 5);
-		return split.stream().map(ActionRow::of).collect(Collectors.toList());
 	}
 
 	public static void replyErrorWithoutContext(SlashCommandInteractionEvent event, String content) {

@@ -11,6 +11,7 @@ import dev.mlnr.spidey.utils.StringUtils;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Emoji;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.selections.SelectMenu;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
@@ -90,8 +91,8 @@ public class ComponentActionCache {
 			dummies[i] = Button.secondary(buttonsId + ":DUMMY" + i, " ").asDisabled();
 		}
 
-		var originalLayout = Utils.splitComponents(yes, no, dontKnow, probably, probablyNot, undo, dummies[0], dummies[1], dummies[2], wastebasket);
-		var guessLayout = Utils.splitComponents(dummies[0], yes, dummies[1], no, dummies[2], dummies[3], undo, dummies[4], wastebasket, dummies[5]);
+		var originalLayout = ActionRow.partitionOf(yes, no, dontKnow, probably, probablyNot, undo, dummies[0], dummies[1], dummies[2], wastebasket);
+		var guessLayout = ActionRow.partitionOf(dummies[0], yes, dummies[1], no, dummies[2], dummies[3], undo, dummies[4], wastebasket, dummies[5]);
 
 		AkinatorGame.create(new AkinatorGame.Context(buttonsId, ctx, akiwrapper, embedBuilder, originalLayout, guessLayout, this));
 

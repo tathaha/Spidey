@@ -11,7 +11,7 @@ import net.dv8tion.jda.api.interactions.components.ActionRow;
 
 import java.util.List;
 
-import static dev.mlnr.spidey.utils.Utils.splitComponents;
+import static net.dv8tion.jda.api.interactions.components.ActionRow.partitionOf;
 
 public class CommandContext {
 	private final SlashCommandInteractionEvent event;
@@ -117,11 +117,11 @@ public class CommandContext {
 	}
 
 	public void replyWithComponents(String content, ActionComponent... components) {
-		event.reply(content).addActionRows(splitComponents(components)).queue();
+		event.reply(content).addActionRows(partitionOf(components)).queue();
 	}
 
 	public void replyWithComponents(EmbedBuilder embedBuilder, ActionComponent... components) {
-		event.replyEmbeds(embedBuilder.build()).addActionRows(splitComponents(components)).queue();
+		event.replyEmbeds(embedBuilder.build()).addActionRows(partitionOf(components)).queue();
 	}
 
 	public void replyLocalized(String key, Object... args) {
@@ -151,7 +151,7 @@ public class CommandContext {
 	}
 
 	public void sendFollowUpWithComponents(String content, ActionComponent... components) {
-		event.getHook().sendMessage(content).addActionRows(splitComponents(components)).queue();
+		event.getHook().sendMessage(content).addActionRows(partitionOf(components)).queue();
 	}
 
 	public void sendFollowUpWithComponents(EmbedBuilder embedBuilder, List<ActionRow> components) {
