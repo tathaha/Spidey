@@ -21,7 +21,7 @@ public class InfoCommand extends Command {
 		var avatar = ctx.getJDA().getSelfUser().getEffectiveAvatarUrl();
 		var i18n = ctx.getI18n();
 
-		embedBuilder.setAuthor("Spidey", null, avatar);
+		embedBuilder.setAuthor("Spidey", "https://spidey.mlnr.dev", avatar);
 		embedBuilder.setThumbnail(avatar);
 		embedBuilder.addField(i18n.get("commands.info.fields.about.title"), i18n.get("commands.info.fields.about.text", "cane#0101"), false);
 		embedBuilder.addField(i18n.get("commands.info.fields.commands.title"), i18n.get("commands.info.fields.commands.text"), false);
@@ -32,8 +32,13 @@ public class InfoCommand extends Command {
 		embedBuilder.addField(i18n.get("commands.info.fields.support.title"), i18n.get("commands.info.fields.support.text"), false);
 
 		Requester.retrieveInviteUrl(inviteUrl -> {
-			var inviteButton = Button.link(inviteUrl, i18n.get("commands.info.invite"));
-			ctx.replyWithComponents(embedBuilder, inviteButton);
+			if (inviteUrl == null) {
+				ctx.reply(embedBuilder);
+			}
+			else {
+				var inviteButton = Button.link(inviteUrl, i18n.get("commands.info.invite"));
+				ctx.replyWithComponents(embedBuilder, inviteButton);
+			}
 		});
 		return true;
 	}

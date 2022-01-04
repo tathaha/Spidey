@@ -101,6 +101,7 @@ public class Requester {
 			@Override
 			public void onFailure(final Call call, final IOException e) {
 				logger.error("There was an error while running the invite request", e);
+				inviteUrlConsumer.accept(null);
 			}
 
 			@Override
@@ -108,6 +109,7 @@ public class Requester {
 				try (var body = response.body()) {
 					if (!response.isSuccessful()) {
 						logger.error("Received code {} when running the invite request", response.code());
+						inviteUrlConsumer.accept(null);
 						return;
 					}
 					var json = DataObject.fromJson(body.string());
@@ -115,6 +117,7 @@ public class Requester {
 				}
 				catch (Exception ex) {
 					logger.error("There was an error while running the invite request", ex);
+					inviteUrlConsumer.accept(null);
 				}
 			}
 		});
