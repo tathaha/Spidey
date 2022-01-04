@@ -34,7 +34,7 @@ public abstract class Command extends CommandDataImpl {
 		return this.cooldown;
 	}
 
-	public void withFlags(long flags) {
+	public void withFlags(long... flags) {
 		this.flags.setFlags(flags);
 	}
 
@@ -57,8 +57,10 @@ public abstract class Command extends CommandDataImpl {
 
 		private long flags;
 
-		public void setFlags(long flags) {
-			this.flags = flags;
+		public void setFlags(long... flags) {
+			for (var flag : flags) {
+				this.flags |= flag;
+			}
 		}
 
 		public boolean shouldShowResponse() {

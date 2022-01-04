@@ -21,7 +21,7 @@ public class EvalCommand extends Command {
 	public EvalCommand() {
 		super("eval", "Evals java code", Category.UTILITY, Permission.UNKNOWN, 0,
 				new OptionData(OptionType.STRING, "code", "The code to eval", true));
-		withFlags(Command.Flags.DEV_ONLY | Command.Flags.NO_THREADS);
+		withFlags(Command.Flags.DEV_ONLY, Command.Flags.NO_THREADS);
 	}
 
 	@Override
