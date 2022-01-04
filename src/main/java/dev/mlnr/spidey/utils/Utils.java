@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.Command;
+import net.dv8tion.jda.internal.utils.concurrent.CountingThreadFactory;
 import net.jodah.expiringmap.ExpirationPolicy;
 import net.jodah.expiringmap.ExpiringMap;
 
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
 
 public class Utils {
 	public static final Pattern TEXT_PATTERN = Pattern.compile("[a-zA-Z0-9-_]+");
-	private static final Executor INVITES_EXECUTOR = Executors.newSingleThreadExecutor();
+	private static final Executor INVITES_EXECUTOR = Executors.newFixedThreadPool(5, new CountingThreadFactory(() -> "Spidey", "Invites"));
 	public static final int SPIDEY_COLOR = 3288807;
 
 	private Utils() {}
