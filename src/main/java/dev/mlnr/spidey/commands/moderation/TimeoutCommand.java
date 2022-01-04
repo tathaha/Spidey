@@ -34,6 +34,10 @@ public class TimeoutCommand extends Command {
 			ctx.replyErrorLocalized("commands.timeout.user_not_member");
 			return false;
 		}
+		if (!ctx.getGuild().getSelfMember().canInteract(member)) {
+			ctx.replyErrorLocalized("commands.timeout.cant_interact");
+			return false;
+		}
 		var length = ctx.getLongOption("length");
 		var unit = ctx.getStringOption("unit");
 		var now = OffsetDateTime.now();

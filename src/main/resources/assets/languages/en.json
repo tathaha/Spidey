@@ -247,6 +247,7 @@
     },
     "timeout": {
       "user_not_member": "Provided user is not in this server.",
+      "cant_interact": "This member has higher or equal highest role than me.",
       "above_max": "The maximum timeout duration is 28 days.",
       "success": "You've timed out member %s until %s."
     },
