@@ -20,7 +20,8 @@ public class TimeoutCommand extends Command {
 				new OptionData(OptionType.USER, "member", "The member to time out", true),
 				new OptionData(OptionType.INTEGER, "length", "The amount of provided unit to time the member out for", true),
 				new OptionData(OptionType.STRING, "unit", "The time unit to time the member out for", true)
-						.addChoices(Utils.getChoicesFromEnum(DurationUnit.class)));
+						.addChoices(Utils.getChoicesFromEnum(DurationUnit.class)),
+				new OptionData(OptionType.STRING, "reason", "The reason for the time out"));
 	}
 	@Override
 	public boolean execute(CommandContext ctx) {
@@ -46,7 +47,8 @@ public class TimeoutCommand extends Command {
 			ctx.replyErrorLocalized("commands.timeout.above_max");
 			return false;
 		}
-		member.timeoutUntil(expiry).queue();
+		var reason = ctx.getStringOption("reason");
+		member.timeoutUntil(expiry).reason(reason).queue();
 		ctx.replyLocalized("commands.timeout.success", member, StringUtils.formatDate(expiry));
 		return true;
 	}
