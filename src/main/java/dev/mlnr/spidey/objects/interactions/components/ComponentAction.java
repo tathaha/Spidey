@@ -1,11 +1,11 @@
-package dev.mlnr.spidey.objects.interactions;
+package dev.mlnr.spidey.objects.interactions.components;
 
 import dev.mlnr.spidey.cache.ComponentActionCache;
-import dev.mlnr.spidey.objects.interactions.buttons.AkinatorGame;
+import dev.mlnr.spidey.objects.interactions.components.buttons.AkinatorGame;
 import dev.mlnr.spidey.objects.command.CommandContext;
-import dev.mlnr.spidey.objects.interactions.buttons.Paginator;
-import dev.mlnr.spidey.objects.interactions.buttons.PurgeProcessor;
-import dev.mlnr.spidey.objects.interactions.dropdowns.MusicSearchDropdown;
+import dev.mlnr.spidey.objects.interactions.components.buttons.Paginator;
+import dev.mlnr.spidey.objects.interactions.components.buttons.PurgeProcessor;
+import dev.mlnr.spidey.objects.interactions.components.dropdowns.MusicSearchDropdown;
 import net.jodah.expiringmap.ExpirationPolicy;
 
 import java.util.concurrent.TimeUnit;

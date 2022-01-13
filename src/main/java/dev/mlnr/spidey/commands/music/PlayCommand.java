@@ -12,8 +12,9 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 @SuppressWarnings("unused")
 public class PlayCommand extends Command {
 	public PlayCommand() {
-		super("play", "Plays/queues a song", Category.MUSIC, Permission.UNKNOWN, 2, false,
+		super("play", "Plays/queues a song", Category.MUSIC, Permission.UNKNOWN, 2,
 				new OptionData(OptionType.STRING, "query", "The link or query to play", true, true));
+		withFlags(Command.Flags.SHOW_RESPONSE);
 	}
 
 	@Override

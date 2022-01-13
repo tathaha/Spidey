@@ -32,6 +32,9 @@ public class UserMusicHistory {
 	}
 
 	public void saveQuery(String query) {
+		if (query.length() > 100) {
+			return; // ignore queries that are over 100 characters, Discord limit for choices
+		}
 		if (queries.contains(query)) {
 			queries.remove(query);
 			databaseManager.removeFromMusicHistory(userId, query, type);

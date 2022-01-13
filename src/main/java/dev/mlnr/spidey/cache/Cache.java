@@ -18,7 +18,7 @@ public class Cache {
 
 		this.musicPlayerCache = MusicPlayerCache.getInstance();
 		this.videoSegmentCache = VideoSegmentCache.getInstance();
-		this.musicHistoryCache = new MusicHistoryCache(databaseManager);
+		this.musicHistoryCache = MusicHistoryCache.getInstance(databaseManager);
 
 		this.guildSettingsCache = GuildSettingsCache.getInstance(spidey);
 		this.generalCache = new GeneralCache(guildSettingsCache, databaseManager);

@@ -6,14 +6,13 @@ import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.objects.command.category.ICategory;
-import dev.mlnr.spidey.utils.StringUtils;
-import dev.mlnr.spidey.utils.Utils;
+import dev.mlnr.spidey.objects.command.category.ICategory.CategoryFlag;
+import dev.mlnr.spidey.utils.*;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,95 +20,73 @@ import java.util.stream.Collectors;
 public class HelpCommand extends Command {
 	public HelpCommand() {
 		super("help", "Shows the help message", Category.INFORMATIVE, Permission.UNKNOWN, 0,
-				new OptionData(OptionType.STRING, "command", "The command to get help for"));
+				new OptionData(OptionType.STRING, "command", "The command to get help for").setAutoComplete(true));
 	}
 
 	@Override
 	public boolean execute(CommandContext ctx) {
-		var allCommands = CommandHandler.getCommands();
-		var author = ctx.getUser();
-		var guildSettingsCache = ctx.getCache().getGuildSettingsCache();
-		var guildId = ctx.getGuild().getIdLong();
+		var chosenCommand = ctx.getStringOption("command");
+		var commands = CommandHandler.getCommands();
+		var embedBuilder = Utils.createEmbedBuilder(ctx.getUser());
 		var i18n = ctx.getI18n();
-		var embedBuilder = Utils.createEmbedBuilder(author)
-				.setAuthor(i18n.get("commands.help.text"), "https://github.com/caneleex/Spidey", ctx.getJDA().getSelfUser().getEffectiveAvatarUrl());
-		var commandOption = ctx.getStringOption("command");
 
-		if (commandOption == null) {
-			var commandsWithPerms = allCommands.values()
+		if (chosenCommand == null) {
+			var member = ctx.getMember();
+			var groupedCommands = commands // TODO figure out sorting the categories so the category order is constant
+					.values()
 					.stream()
-					.filter(command -> ctx.getMember().hasPermission(command.getRequiredPermission()))
-					.collect(Collectors.toList());
-			var hidden = allCommands.size() - commandsWithPerms.size();
-			var categories = new HashMap<ICategory, List<Command>>();
-			var nsfwHidden = false;
-			commandsWithPerms.forEach(cmd -> categories.computeIfAbsent(cmd.getCategory(), k -> new ArrayList<>()).add(cmd));
-			if (!ctx.getTextChannel().isNSFW()) {
-				categories.remove(Category.NSFW);
-				nsfwHidden = true;
-			}
+					.filter(command -> CommandUtils.canRunCommand(command, member))
+					.collect(Collectors.groupingBy(command -> command.getCategory().getFlag(), Collectors.groupingBy(Command::getCategory)));
 
-			var commandsStringBuilder = new StringBuilder();
-			var settingsBuilder = new StringBuilder();
-			settingsBuilder.append("\n\u2699\uFE0F Settings");
+			embedBuilder.setAuthor(i18n.get("commands.help.text"), "https://spidey.mlnr.dev", ctx.getJDA().getSelfUser().getEffectiveAvatarUrl());
+			groupedCommands.get(CategoryFlag.BASE).forEach((category, commandz) -> {
+				embedBuilder.appendDescription("\n");
+				appendCommands(embedBuilder, category, commandz);
+			});
 
-			for (var entry : categories.entrySet()) {
-				var category = entry.getKey();
-				var categoryName = category.getFriendlyName();
-				var commandz = listToString(entry.getValue());
-
-				if (category instanceof Category.Settings) {
-					settingsBuilder.append("\n<:empty:806627051905089576>˪ ");
-					settingsBuilder.append(categoryName);
-					settingsBuilder.append(" ").append("-").append(" ");
-					settingsBuilder.append(commandz);
-					continue;
-				}
-				commandsStringBuilder.append("\n");
-				commandsStringBuilder.append(categoryName);
-				commandsStringBuilder.append(" ").append("-").append(" ");
-				commandsStringBuilder.append(commandz);
-			}
-
-			commandsStringBuilder.append(settingsBuilder);
-
-			embedBuilder.setDescription(i18n.get("commands.help.embed_content", commandsStringBuilder.toString()));
-			if (hidden > 0) {
-				embedBuilder.appendDescription(i18n.get("commands.help.hidden.text", hidden));
-			}
-			if (nsfwHidden) {
-				embedBuilder.appendDescription(i18n.get("commands.help.hidden.nsfw"));
-			}
-			ctx.reply(embedBuilder);
-			return true;
+			embedBuilder.appendDescription("\n\u2699\uFE0F Settings");
+			groupedCommands.get(CategoryFlag.SETTINGS).forEach((category, commandz) -> {
+				embedBuilder.appendDescription("\n<:empty:806627051905089576>˪ ");
+				appendCommands(embedBuilder, category, commandz);
+			});
+			embedBuilder.appendDescription(i18n.get("commands.help.more_info"));
 		}
-		var command = allCommands.get(commandOption);
-		if (command == null) {
-			var similar = StringUtils.getSimilarCommand(commandOption);
-			ctx.replyError(i18n.get("command_failures.invalid.message", commandOption) + " " + (similar == null
-					? i18n.get("command_failures.invalid.check_help")
-					: i18n.get("command_failures.invalid.suggestion", similar)));
-			return false;
-		}
-		commandOption = command.getName();
-		var none = i18n.get("commands.help.command_info.info_none");
-		var requiredPermission = command.getRequiredPermission();
-		var generalSettings = guildSettingsCache.getGeneralSettings(guildId);
-		var cooldown = CooldownHandler.adjustCooldown(command.getCooldown(), generalSettings.isVip());
+		else {
+			var command = commands.get(chosenCommand);
+			if (command == null) {
+				var similar = StringUtils.getSimilarCommand(chosenCommand);
+				ctx.replyError(i18n.get("commands.help.command_info.invalid.message", chosenCommand) + " " + (similar == null
+						? i18n.get("commands.help.command_info.invalid.check_help")
+						: i18n.get("commands.help.command_info.invalid.suggestion", similar)));
+				return false;
+			}
+			var requiredPermission = command.getRequiredPermission();
+			var none = i18n.get("commands.help.command_info.info_none");
+			var guildSettingsCache = ctx.getCache().getGuildSettingsCache();
+			var guildId = ctx.getGuild().getIdLong();
+			var isVip = guildSettingsCache.getGeneralSettings(guildId).isVip();
+			var cooldown = CooldownHandler.adjustCooldown(command.getCooldown(), isVip);
 
-		embedBuilder.setAuthor(i18n.get("commands.help.viewing") + " - " + commandOption);
-		embedBuilder.addField(i18n.get("commands.help.command_info.category"), command.getCategory().getFriendlyName(), false);
-		embedBuilder.addField(i18n.get("commands.help.command_info.required_permission"), requiredPermission == Permission.UNKNOWN
-				? none : requiredPermission.getName(), false);
-		embedBuilder.addField(i18n.get("commands.help.command_info.cooldown"), cooldown == 0 ? none : cooldown + " " +
-				i18n.get("commands.help.command_info.seconds"), false);
+			embedBuilder.setAuthor(i18n.get("commands.help.viewing", chosenCommand));
+			embedBuilder.addField(i18n.get("commands.help.command_info.category"), command.getCategory().getFriendlyName(), false);
+			embedBuilder.addField(i18n.get("commands.help.command_info.required_permission"), requiredPermission == Permission.UNKNOWN
+					? none : requiredPermission.getName(), false);
+			embedBuilder.addField(i18n.get("commands.help.command_info.cooldown"), cooldown == 0 ? none : cooldown + " " +
+					i18n.get("commands.help.command_info.seconds"), false);
 
-		if (!generalSettings.isVip()) {
-			embedBuilder.addBlankField(false);
-			embedBuilder.addField(i18n.get("commands.help.donate.title"), i18n.get("commands.help.donate.text"), false);
+			if (!isVip) {
+				embedBuilder.addBlankField(false);
+				embedBuilder.addField(i18n.get("commands.help.donate.title"), i18n.get("commands.help.donate.text"), false);
+			}
 		}
 		ctx.reply(embedBuilder);
 		return true;
+	}
+
+	private void appendCommands(EmbedBuilder embedBuilder, ICategory category, List<Command> commands) {
+		embedBuilder.appendDescription(category.getFriendlyName());
+		embedBuilder.appendDescription(" ").appendDescription("-").appendDescription(" ");
+		embedBuilder.appendDescription(listToString(commands));
 	}
 
 	private String listToString(List<Command> commands) {

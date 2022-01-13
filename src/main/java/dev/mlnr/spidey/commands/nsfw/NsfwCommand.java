@@ -5,7 +5,7 @@ import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.objects.nsfw.NSFWType;
 import dev.mlnr.spidey.objects.nsfw.PostSpan;
-import dev.mlnr.spidey.utils.Utils;
+import dev.mlnr.spidey.utils.CommandUtils;
 import dev.mlnr.spidey.utils.requests.Requester;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -18,9 +18,10 @@ public class NsfwCommand extends Command {
 	public NsfwCommand() {
 		super("nsfw", "Sends a NSFW image", Category.NSFW, Permission.UNKNOWN, 4,
 				new OptionData(OptionType.STRING, "type", "The type of the NSFW image", true)
-						.addChoices(Utils.getChoicesFromEnum(NSFWType.class)),
+						.addChoices(CommandUtils.getChoicesFromEnum(NSFWType.class)),
 				new OptionData(OptionType.STRING, "span", "The timespan to get the post from or blank to choose month")
-						.addChoices(Utils.getChoicesFromEnum(PostSpan.class)));
+						.addChoices(CommandUtils.getChoicesFromEnum(PostSpan.class)));
+		withFlags(Command.Flags.NO_THREADS);
 	}
 
 	@Override

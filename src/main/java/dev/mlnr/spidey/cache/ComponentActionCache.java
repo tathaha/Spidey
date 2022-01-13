@@ -3,17 +3,18 @@ package dev.mlnr.spidey.cache;
 import com.markozajc.akiwrapper.Akiwrapper;
 import dev.mlnr.spidey.objects.Emojis;
 import dev.mlnr.spidey.objects.command.CommandContext;
-import dev.mlnr.spidey.objects.interactions.ComponentAction;
-import dev.mlnr.spidey.objects.interactions.buttons.*;
-import dev.mlnr.spidey.objects.interactions.dropdowns.MusicSearchDropdown;
+import dev.mlnr.spidey.objects.interactions.components.ComponentAction;
+import dev.mlnr.spidey.objects.interactions.components.buttons.*;
+import dev.mlnr.spidey.objects.interactions.components.dropdowns.MusicSearchDropdown;
 import dev.mlnr.spidey.objects.music.MusicPlayer;
 import dev.mlnr.spidey.utils.StringUtils;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Emoji;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.interactions.components.selections.SelectMenu;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
-import net.dv8tion.jda.api.interactions.components.selections.SelectionMenu;
 import net.jodah.expiringmap.ExpiringMap;
 
 import java.util.function.BiConsumer;
@@ -90,8 +91,8 @@ public class ComponentActionCache {
 			dummies[i] = Button.secondary(buttonsId + ":DUMMY" + i, " ").asDisabled();
 		}
 
-		var originalLayout = Utils.splitComponents(yes, no, dontKnow, probably, probablyNot, undo, dummies[0], dummies[1], dummies[2], wastebasket);
-		var guessLayout = Utils.splitComponents(dummies[0], yes, dummies[1], no, dummies[2], dummies[3], undo, dummies[4], wastebasket, dummies[5]);
+		var originalLayout = ActionRow.partitionOf(yes, no, dontKnow, probably, probablyNot, undo, dummies[0], dummies[1], dummies[2], wastebasket);
+		var guessLayout = ActionRow.partitionOf(dummies[0], yes, dummies[1], no, dummies[2], dummies[3], undo, dummies[4], wastebasket, dummies[5]);
 
 		AkinatorGame.create(new AkinatorGame.Context(buttonsId, ctx, akiwrapper, embedBuilder, originalLayout, guessLayout, this));
 
@@ -107,7 +108,7 @@ public class ComponentActionCache {
 
 		var i18n = ctx.getI18n();
 		var choose = i18n.get("selection.text", i18n.get("selection.track"));
-		var menu = SelectionMenu.create(dropdownId)
+		var menu = SelectMenu.create(dropdownId)
 				.setPlaceholder(choose)
 				.setRequiredRange(1, 1)
 				.addOptions(options).build();

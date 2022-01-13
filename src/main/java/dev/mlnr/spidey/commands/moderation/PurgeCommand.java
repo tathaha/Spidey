@@ -3,9 +3,8 @@ package dev.mlnr.spidey.commands.moderation;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
-import dev.mlnr.spidey.objects.interactions.buttons.PurgeProcessor;
+import dev.mlnr.spidey.objects.interactions.components.buttons.PurgeProcessor;
 import dev.mlnr.spidey.utils.StringUtils;
-import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
@@ -20,6 +19,7 @@ public class PurgeCommand extends Command {
 		super("purge", "Purges messages (by entered user)", Category.MODERATION, Permission.MESSAGE_MANAGE, 6,
 				new OptionData(OptionType.INTEGER, "amount", "The amount of messages to purge", true),
 				new OptionData(OptionType.USER, "user", "The user to delete the messages of"));
+		withFlags(Command.Flags.NO_THREADS);
 	}
 
 	@Override

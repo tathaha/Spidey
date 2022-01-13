@@ -4,7 +4,7 @@ import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
 import dev.mlnr.spidey.objects.nsfw.PostSpan;
-import dev.mlnr.spidey.utils.Utils;
+import dev.mlnr.spidey.utils.CommandUtils;
 import dev.mlnr.spidey.utils.requests.Requester;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -16,7 +16,8 @@ public class SubredditCommand extends Command {
 		super("subreddit", "Sends a random image from given subreddit in the given timespan", Category.FUN, Permission.UNKNOWN, 3,
 				new OptionData(OptionType.STRING, "subreddit", "The subreddit to get a random image from", true),
 				new OptionData(OptionType.STRING, "span", "The timespan to get the post from or blank to choose month")
-						.addChoices(Utils.getChoicesFromEnum(PostSpan.class)));
+						.addChoices(CommandUtils.getChoicesFromEnum(PostSpan.class)));
+		withFlags(Command.Flags.NO_THREADS);
 	}
 
 	@Override

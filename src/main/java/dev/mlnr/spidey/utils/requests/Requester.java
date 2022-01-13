@@ -23,6 +23,7 @@ import static java.lang.Float.parseFloat;
 public class Requester {
 	private static final Logger logger = LoggerFactory.getLogger(Requester.class);
 	private static final String SPONSORBLOCK_URL = "https://sponsor.ajay.app/api/skipSegments?videoID=%s&categories=[\"sponsor\", \"selfpromo\", \"interaction\", \"intro\", \"outro\", \"preview\", \"music_offtopic\"]";
+	private static final String INVITE_API_URL = "http://localhost:7777/invite";
 	private static final OkHttpClient HTTP_CLIENT = new OkHttpClient.Builder()
 			.connectTimeout(3, TimeUnit.SECONDS)
 			.readTimeout(3, TimeUnit.SECONDS)
@@ -92,5 +93,33 @@ public class Requester {
 			logger.error("There was an error while executing a segments request:", ex);
 		}
 		return Collections.emptyList();
+	}
+
+	public static void retrieveInviteUrl(Consumer<String> inviteUrlConsumer) {
+		var requestBuilder = new Request.Builder().url(INVITE_API_URL);
+		HTTP_CLIENT.newCall(requestBuilder.build()).enqueue(new Callback() {
+			@Override
+			public void onFailure(final Call call, final IOException e) {
+				logger.error("There was an error while running the invite request", e);
+				inviteUrlConsumer.accept(null);
+			}
+
+			@Override
+			public void onResponse(final Call call, final Response response) {
+				try (var body = response.body()) {
+					if (!response.isSuccessful()) {
+						logger.error("Received code {} when running the invite request", response.code());
+						inviteUrlConsumer.accept(null);
+						return;
+					}
+					var json = DataObject.fromJson(body.string());
+					inviteUrlConsumer.accept(json.getString("url"));
+				}
+				catch (Exception ex) {
+					logger.error("There was an error while running the invite request", ex);
+					inviteUrlConsumer.accept(null);
+				}
+			}
+		});
 	}
 }

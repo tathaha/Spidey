@@ -3,9 +3,10 @@ package dev.mlnr.spidey.handlers.command;
 import dev.mlnr.spidey.cache.Cache;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
+import dev.mlnr.spidey.utils.CommandUtils;
 import io.github.classgraph.ClassGraph;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.slf4j.Logger;
@@ -21,27 +22,30 @@ import static dev.mlnr.spidey.utils.Utils.replyErrorWithoutContext;
 public class CommandHandler {
 	private static final Map<String, Command> COMMANDS = new HashMap<>();
 	private static final Logger logger = LoggerFactory.getLogger(CommandHandler.class);
-	private static final long DEV_ID = 394607709741252621L;
 
 	private CommandHandler() {}
 
-	public static void handle(SlashCommandEvent event, Cache cache) {
+	public static void handle(SlashCommandInteractionEvent event, Cache cache) {
 		var commandName = event.getName();
 		var command = COMMANDS.get(commandName);
 		var member = event.getMember();
-		var requiredPermission = command.getRequiredPermission();
 		var guildId = event.getGuild().getIdLong();
 		var i18n = cache.getGuildSettingsCache().getMiscSettings(guildId).getI18n();
 
-		if (!member.hasPermission(requiredPermission)) {
-			replyErrorWithoutContext(event, i18n.get("command_failures.no_perms", requiredPermission.getName()));
+		if (!CommandUtils.hasPermission(command, member)) {
+			replyErrorWithoutContext(event, i18n.get("command_failures.no_perms", command.getRequiredPermission().getName()));
 			return;
 		}
-		var userId = member.getIdLong();
-		if (command.isDevOnly() && userId != DEV_ID) {
+		if (!CommandUtils.checkForDevCommand(command, member.getUser())) {
 			replyErrorWithoutContext(event, i18n.get("command_failures.only_dev"));
 			return;
 		}
+		var channel = event.getChannel();
+		if (channel.getType().isThread() && !command.supportsThreads()) {
+			replyErrorWithoutContext(event, i18n.get("command_failures.no_threads"));
+			return;
+		}
+		var userId = member.getIdLong();
 		if (isOnCooldown(userId, command)) {
 			replyErrorWithoutContext(event, i18n.get("command_failures.cooldown"));
 			return;

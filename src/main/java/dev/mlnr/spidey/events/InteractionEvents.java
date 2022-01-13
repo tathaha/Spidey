@@ -2,16 +2,12 @@ package dev.mlnr.spidey.events;
 
 import dev.mlnr.spidey.cache.Cache;
 import dev.mlnr.spidey.handlers.command.CommandHandler;
-import dev.mlnr.spidey.objects.Emojis;
-import dev.mlnr.spidey.objects.interactions.ComponentAction;
-import dev.mlnr.spidey.utils.StringUtils;
-import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteEvent;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandEvent;
+import dev.mlnr.spidey.objects.interactions.autocomplete.AutocompleteAction;
+import dev.mlnr.spidey.objects.interactions.components.ComponentAction;
+import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.*;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.interactions.commands.Command;
-
-import java.util.stream.Collectors;
 
 public class InteractionEvents extends ListenerAdapter {
 	private final Cache cache;
@@ -21,7 +17,7 @@ public class InteractionEvents extends ListenerAdapter {
 	}
 
 	@Override
-	public void onSlashCommand(SlashCommandEvent event) {
+	public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
 		if (!event.isFromGuild()) {
 			event.reply("Spidey only supports commands in servers. Sorry for this inconvenience.").queue();
 			return;
@@ -30,33 +26,24 @@ public class InteractionEvents extends ListenerAdapter {
 	}
 
 	@Override
-	public void onButtonClick(ButtonClickEvent event) {
+	public void onButtonInteraction(ButtonInteractionEvent event) {
 		var splitId = event.getComponentId().split(":");
 		var action = cache.getComponentActionCache().getAction(splitId[0]);
 		processComponentInteraction(splitId[1], action, event);
 	}
 
 	@Override
-	public void onSelectionMenu(SelectionMenuEvent event) {
+	public void onSelectMenuInteraction(SelectMenuInteractionEvent event) {
 		var dropdownId = event.getComponentId();
 		var action = cache.getComponentActionCache().getAction(dropdownId);
 		processComponentInteraction(event.getValues().get(0), action, event);
 	}
 
 	@Override
-	public void onCommandAutoComplete(CommandAutoCompleteEvent event) {
-		var input = event.getOption("query").getAsString().toLowerCase();
-		var userId = event.getUser().getIdLong();
-		var musicHistoryCache = cache.getMusicHistoryCache();
-
-		var type = event.getName();
-		var lastQueries = input.isEmpty()
-				? musicHistoryCache.getLastQueries(userId, type)
-				: musicHistoryCache.getLastQueriesLike(userId, input, type);
-		var choices = lastQueries
-				.stream()
-				.map(query -> new Command.Choice(StringUtils.trimString(Emojis.REPEAT + " " + query, 100), query))
-				.collect(Collectors.toList());
+	public void onCommandAutoCompleteInteraction(CommandAutoCompleteInteractionEvent event) {
+		var focusedOption = event.getFocusedOption();
+		var actionType = AutocompleteAction.fromFocusedOption(focusedOption);
+		var choices = actionType.processTransformer(event, focusedOption);
 		event.replyChoices(choices).queue();
 	}
 

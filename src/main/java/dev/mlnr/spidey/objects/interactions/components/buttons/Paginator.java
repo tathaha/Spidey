@@ -1,8 +1,8 @@
-package dev.mlnr.spidey.objects.interactions.buttons;
+package dev.mlnr.spidey.objects.interactions.components.buttons;
 
 import dev.mlnr.spidey.cache.ComponentActionCache;
 import dev.mlnr.spidey.objects.command.CommandContext;
-import dev.mlnr.spidey.objects.interactions.ComponentAction;
+import dev.mlnr.spidey.objects.interactions.components.ComponentAction;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
 

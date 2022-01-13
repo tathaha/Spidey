@@ -14,12 +14,8 @@
     "only_nsfw": "You can use nsfw commands only in nsfw channels.",
     "no_perms": "You don't have the **%s** permission to run this command.",
     "self_no_perms": "I don't have the **%s** permission to %s.",
-    "only_dev": "This command can only be executed by the Developer.",
-    "invalid": {
-      "message": "**%s** isn't a valid command.",
-      "check_help": "Check `/help` for the list of commands.",
-      "suggestion": "Did you perhaps mean **%s**?"
-    }
+    "no_threads": "This command cannot be run in threads.",
+    "only_dev": "This command can only be executed by the Developer."
   },
   "music": {
     "messages": {
@@ -99,16 +95,16 @@
     },
     "help": {
       "text": "Spidey's commands",
-      "embed_content": "%s\n\nTo see more info about a command, type `/help <command>`.\n",
-      "viewing": "Viewing command info",
-      "hidden": {
-        "text": "\n**%d** commands were hidden as you don't have permissions to use them.",
-        "nsfw": "\nNSFW commands were hidden from the help msg. If you want to see all NSFW commands, type the help command in a NSFW channel."
-      },
+      "more_info": "\n\nTo see more info about a command, type `/help <command>`.\n",
+      "viewing": "Viewing command info - %s",
       "command_info": {
+        "invalid": {
+          "message": "**%s** isn't a valid command.",
+          "check_help": "Check `/help` for the list of commands.",
+          "suggestion": "Did you perhaps mean **%s**?"
+        },
         "category": "Category",
         "required_permission": "Required permission",
-        "aliases": "Aliases",
         "cooldown": "Cooldown",
         "info_none": "None",
         "seconds": "seconds"
@@ -246,6 +242,7 @@
     },
     "timeout": {
       "user_not_member": "Provided user is not in this server.",
+      "cant_interact": "This member has higher or equal highest role than me.",
       "above_max": "The maximum timeout duration is 28 days.",
       "success": "You've timed out member %s until %s."
     },
