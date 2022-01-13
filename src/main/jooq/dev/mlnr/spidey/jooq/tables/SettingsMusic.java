@@ -127,6 +127,9 @@ public class SettingsMusic extends TableImpl<SettingsMusicRecord> {
 
     private transient Guilds _guilds;
 
+    /**
+     * Get the implicit join path to the <code>public.guilds</code> table.
+     */
     public Guilds guilds() {
         if (_guilds == null)
             _guilds = new Guilds(this, Keys.SETTINGS_MUSIC__SETTINGS_MUSIC_GUILD_ID_FKEY);

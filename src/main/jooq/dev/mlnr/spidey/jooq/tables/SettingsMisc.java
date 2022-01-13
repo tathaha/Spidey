@@ -122,6 +122,9 @@ public class SettingsMisc extends TableImpl<SettingsMiscRecord> {
 
     private transient Guilds _guilds;
 
+    /**
+     * Get the implicit join path to the <code>public.guilds</code> table.
+     */
     public Guilds guilds() {
         if (_guilds == null)
             _guilds = new Guilds(this, Keys.SETTINGS_MISC__SETTINGS_MISC_GUILD_ID_FKEY);
