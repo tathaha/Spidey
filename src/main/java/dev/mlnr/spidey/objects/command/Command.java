@@ -39,7 +39,7 @@ public abstract class Command extends CommandDataImpl {
 	}
 
 	public boolean shouldHideResponse() {
-		return flags.shouldShowResponse(); // counterintuitive but I can live with it for the sake of "backwards compatibility"
+		return flags.shouldHideResponse();
 	}
 
 	public boolean isDevOnly() {
@@ -63,8 +63,8 @@ public abstract class Command extends CommandDataImpl {
 			}
 		}
 
-		public boolean shouldShowResponse() {
-			return hasFlag(SHOW_RESPONSE);
+		public boolean shouldHideResponse() {
+			return !hasFlag(SHOW_RESPONSE);
 		}
 
 		public boolean isDevOnly() {

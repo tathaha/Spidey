@@ -2,11 +2,11 @@ package dev.mlnr.spidey.commands.fun;
 
 import com.markozajc.akiwrapper.AkiwrapperBuilder;
 import com.markozajc.akiwrapper.core.entities.Server;
-import dev.mlnr.spidey.objects.interactions.buttons.AkinatorGame;
 import dev.mlnr.spidey.objects.command.Command;
 import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.command.category.Category;
-import dev.mlnr.spidey.utils.Utils;
+import dev.mlnr.spidey.objects.interactions.components.buttons.AkinatorGame;
+import dev.mlnr.spidey.utils.CommandUtils;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
@@ -16,7 +16,7 @@ public class AkinatorCommand extends Command {
 	public AkinatorCommand() {
 		super("akinator", "Creates a new akinator game", Category.FUN, Permission.UNKNOWN, 0,
 				new OptionData(OptionType.STRING, "type", "The type of the subject to have Akinator guess")
-						.addChoices(Utils.getChoicesFromEnum(AkinatorGame.Type.class)));
+						.addChoices(CommandUtils.getChoicesFromEnum(AkinatorGame.Type.class)));
 	}
 
 	@Override

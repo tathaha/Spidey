@@ -1,8 +1,8 @@
-package dev.mlnr.spidey.objects.interactions.dropdowns;
+package dev.mlnr.spidey.objects.interactions.components.dropdowns;
 
 import dev.mlnr.spidey.cache.ComponentActionCache;
 import dev.mlnr.spidey.objects.command.CommandContext;
-import dev.mlnr.spidey.objects.interactions.ComponentAction;
+import dev.mlnr.spidey.objects.interactions.components.ComponentAction;
 import dev.mlnr.spidey.objects.music.AudioLoader;
 import dev.mlnr.spidey.objects.music.MusicPlayer;
 import dev.mlnr.spidey.utils.MusicUtils;

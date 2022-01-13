@@ -16,8 +16,20 @@ public class MusicHistoryCache {
 
 	private final DatabaseManager databaseManager;
 
-	public MusicHistoryCache(DatabaseManager databaseManager) {
+	private static MusicHistoryCache musicHistoryCache;
+
+	private MusicHistoryCache(DatabaseManager databaseManager) {
 		this.databaseManager = databaseManager;
+	}
+
+	public static synchronized MusicHistoryCache getInstance(DatabaseManager databaseManager) {
+		if (musicHistoryCache == null)
+			musicHistoryCache = new MusicHistoryCache(databaseManager);
+		return musicHistoryCache;
+	}
+
+	public static synchronized  MusicHistoryCache getInstance() {
+		return musicHistoryCache;
 	}
 
 	// getting history

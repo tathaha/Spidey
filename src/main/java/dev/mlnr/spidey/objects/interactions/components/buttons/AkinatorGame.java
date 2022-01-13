@@ -1,4 +1,4 @@
-package dev.mlnr.spidey.objects.interactions.buttons;
+package dev.mlnr.spidey.objects.interactions.components.buttons;
 
 import com.markozajc.akiwrapper.Akiwrapper;
 import com.markozajc.akiwrapper.core.entities.Guess;
@@ -6,7 +6,7 @@ import com.markozajc.akiwrapper.core.entities.Question;
 import dev.mlnr.spidey.cache.ComponentActionCache;
 import dev.mlnr.spidey.objects.command.ChoicesEnum;
 import dev.mlnr.spidey.objects.command.CommandContext;
-import dev.mlnr.spidey.objects.interactions.ComponentAction;
+import dev.mlnr.spidey.objects.interactions.components.ComponentAction;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 

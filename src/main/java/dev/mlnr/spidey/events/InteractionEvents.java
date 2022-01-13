@@ -2,16 +2,12 @@ package dev.mlnr.spidey.events;
 
 import dev.mlnr.spidey.cache.Cache;
 import dev.mlnr.spidey.handlers.command.CommandHandler;
-import dev.mlnr.spidey.objects.Emojis;
-import dev.mlnr.spidey.objects.interactions.ComponentAction;
-import dev.mlnr.spidey.utils.StringUtils;
+import dev.mlnr.spidey.objects.interactions.autocomplete.AutocompleteAction;
+import dev.mlnr.spidey.objects.interactions.components.ComponentAction;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.*;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.interactions.commands.Command;
-
-import java.util.stream.Collectors;
 
 public class InteractionEvents extends ListenerAdapter {
 	private final Cache cache;
@@ -45,18 +41,9 @@ public class InteractionEvents extends ListenerAdapter {
 
 	@Override
 	public void onCommandAutoCompleteInteraction(CommandAutoCompleteInteractionEvent event) {
-		var input = event.getOption("query").getAsString().toLowerCase();
-		var userId = event.getUser().getIdLong();
-		var musicHistoryCache = cache.getMusicHistoryCache();
-
-		var type = event.getName();
-		var lastQueries = input.isEmpty()
-				? musicHistoryCache.getLastQueries(userId, type)
-				: musicHistoryCache.getLastQueriesLike(userId, input, type);
-		var choices = lastQueries
-				.stream()
-				.map(query -> new Command.Choice(StringUtils.trimString(Emojis.REPEAT + " " + query, 100), query))
-				.collect(Collectors.toList());
+		var focusedOption = event.getFocusedOption();
+		var actionType = AutocompleteAction.fromFocusedOption(focusedOption);
+		var choices = actionType.processTransformer(event, focusedOption);
 		event.replyChoices(choices).queue();
 	}
 
