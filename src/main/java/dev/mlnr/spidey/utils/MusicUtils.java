@@ -1,5 +1,7 @@
 package dev.mlnr.spidey.utils;
 
+import com.github.topisenpai.plugin.spotify.SpotifyConfig;
+import com.github.topisenpai.plugin.spotify.SpotifySourceManager;
 import com.sedmelluq.discord.lavaplayer.player.*;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceManager;
@@ -38,8 +40,14 @@ public class MusicUtils {
 	private MusicUtils() {}
 
 	public static void registerSources() {
-		AUDIO_PLAYER_MANAGER.registerSourceManager(new YoutubeAudioSourceManager());
+		var youtubeManager = new YoutubeAudioSourceManager();
+		var spotifyConfig = new SpotifyConfig();
+		spotifyConfig.setClientId(System.getenv("spotifyClientId"));
+		spotifyConfig.setClientSecret(System.getenv("spotifyClientSecret"));
+		spotifyConfig.setCountryCode("US");
+		AUDIO_PLAYER_MANAGER.registerSourceManager(youtubeManager);
 		AUDIO_PLAYER_MANAGER.registerSourceManager(SoundCloudAudioSourceManager.createDefault());
+		AUDIO_PLAYER_MANAGER.registerSourceManager(new SpotifySourceManager(spotifyConfig, youtubeManager));
 		AudioSourceManagers.registerRemoteSources(AUDIO_PLAYER_MANAGER);
 	}
 
@@ -227,10 +235,18 @@ public class MusicUtils {
 		ctx.getCache().getMusicHistoryCache().saveQuery(ctx.getUser().getIdLong(), query, ctx.getEvent().getName());
 	}
 
+	public static String getArtworkUrl(AudioTrack track) {
+		if (track instanceof SpotifyTrack) {
+			return ((SpotifyTrack) track).getArtworkURL();
+		}
+		return track.getInfo().artworkUrl;
+	}
+
 	public enum ServiceType implements ChoicesEnum {
 		YOUTUBE("YouTube", "ytsearch:"),
 		YOUTUBE_MUSIC("YouTube Music", "ytmsearch:"),
-		SOUNDCLOUD("SoundCloud", "scsearch:");
+		SOUNDCLOUD("SoundCloud", "scsearch:"),
+		SPOTIFY("Spotify", "spsearch:");
 
 		private final String friendlyName;
 		private final String searchPrefix;

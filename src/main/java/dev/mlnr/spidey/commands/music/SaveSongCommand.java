@@ -35,7 +35,7 @@ public class SaveSongCommand extends Command {
 		var requester = "<@" + MusicUtils.getRequesterId(playingTrack) + ">";
 		embedBuilder.setAuthor("Saved song from server " + guild.getName());
 		embedBuilder.setTitle(trackInfo.title, trackInfo.uri);
-		embedBuilder.setThumbnail(trackInfo.artworkUrl);
+		embedBuilder.setThumbnail(MusicUtils.getArtworkUrl(playingTrack));
 		embedBuilder.setDescription("Length: **" + length + "**\nRequested by " + requester);
 		embedBuilder.setFooter("Saved at");
 		embedBuilder.setTimestamp(Instant.now());

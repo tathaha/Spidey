@@ -50,7 +50,7 @@ public class NowPlayingCommand extends Command {
 		}
 
 		progressBuilder.setAuthor(pausedBuilder.toString(), trackInfo.uri);
-		progressBuilder.setThumbnail(trackInfo.artworkUrl);
+		progressBuilder.setThumbnail(MusicUtils.getArtworkUrl(playingTrack));
 		progressBuilder.setColor(paused ? Color.ORANGE.getRGB() : Utils.SPIDEY_COLOR);
 		progressBuilder.setDescription(stream ? i18n.get("commands.nowplaying.livestream") : MusicUtils.getProgressBar(position, originalLength));
 		progressBuilder.addField(i18n.get("commands.nowplaying.requested"), "<@" + MusicUtils.getRequesterId(playingTrack) + ">", true);
