@@ -20,8 +20,8 @@ public class TimeoutCommand extends Command {
 				new OptionData(OptionType.USER, "member", "The member to time out", true),
 				new OptionData(OptionType.INTEGER, "length", "The amount of provided unit to time the member out for", true),
 				new OptionData(OptionType.STRING, "unit", "The time unit to time the member out for", true)
-						.addChoices(CommandUtils.getChoicesFromEnum(DurationUnit.class)));
-				new OptionData(OptionType.STRING, "reason", "The reason for the time out");
+						.addChoices(CommandUtils.getChoicesFromEnum(DurationUnit.class)),
+				new OptionData(OptionType.STRING, "reason", "The reason for the time out"));
 	}
 	@Override
 	public boolean execute(CommandContext ctx) {
