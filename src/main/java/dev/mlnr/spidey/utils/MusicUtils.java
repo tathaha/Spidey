@@ -1,7 +1,6 @@
 package dev.mlnr.spidey.utils;
 
-import com.github.topisenpai.plugin.spotify.SpotifyConfig;
-import com.github.topisenpai.plugin.spotify.SpotifySourceManager;
+import com.github.topisenpai.plugin.spotify.*;
 import com.sedmelluq.discord.lavaplayer.player.*;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceManager;
