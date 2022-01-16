@@ -10,7 +10,7 @@ Brief list of features:
 
 Music deserves its own section:
 - support for skipping non-music segments through [SponsorBlock](https://sponsor.ajay.app) (disabled by default as it can cause unexpected confusion, can be enabled using `/segskipping`)
-- support for playing from multiple services including YouTube Music
+- support for playing from multiple services including **Spotify and YouTube Music**
 - fair queue which prevents users from queueing the same song over and over again (disabled by default, can be enabled using `/fairqueue`), which also has customizable threshold (min 2 songs, max 10, default is 3 songs)
 - DJ role (allows to stop the entire playback, enable/disable segment skipping, enable/disable fair queue, set the fair queue threshold or set the default music volume)
 
