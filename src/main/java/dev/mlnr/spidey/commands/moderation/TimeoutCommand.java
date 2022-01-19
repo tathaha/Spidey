@@ -18,7 +18,8 @@ public class TimeoutCommand extends Command {
 	public TimeoutCommand() {
 		super("timeout", "Times a member out", Category.MODERATION, Permission.MODERATE_MEMBERS, 2,
 				new OptionData(OptionType.USER, "member", "The member to time out", true),
-				new OptionData(OptionType.INTEGER, "length", "The amount of provided unit to time the member out for", true),
+				new OptionData(OptionType.INTEGER, "length", "The amount of provided unit to time the member out for", true)
+						.setMinValue(1),
 				new OptionData(OptionType.STRING, "unit", "The time unit to time the member out for", true)
 						.addChoices(CommandUtils.getChoicesFromEnum(DurationUnit.class)),
 				new OptionData(OptionType.STRING, "reason", "The reason for the time out"));

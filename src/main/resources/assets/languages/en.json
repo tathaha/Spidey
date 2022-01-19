@@ -4,7 +4,6 @@
   "internal_error": "Unfortunately, I couldn't %s due to an internal error: **%s**. Please report this message to the Developer.",
   "enabled": "enabled",
   "disabled": "disabled",
-  "number_out_of_range": "Please enter a number from 1-%d.",
   "selection": {
     "text": "Choose the %s",
     "track": "track to play"
@@ -270,12 +269,10 @@
       }
     },
     "remove": {
-      "provide": "Please provide the position of the track to remove.",
+      "range": "Please enter a number from 1-%d.",
       "removed": "Track `%s` has been removed from the queue."
     },
     "repeat": {
-      "provide": "Please provide the repeat mode - **song**/**queue**.",
-      "reset": "The repeat mode has been reset.",
       "set": "The repeat mode has been set to **%s**."
     },
     "savesong": {
@@ -283,7 +280,6 @@
       "sent": "I sent the current playing song into your DMs."
     },
     "search": {
-      "searching": "Searching for %s",
       "error": "There was an error while searching your query."
     },
     "segments": {
@@ -323,7 +319,6 @@
     },
     "fairqueue": {
       "provide_argument": "Please provide at least one argument.",
-      "threshold_range": "Please enter a threshold from `2` to `10`.",
       "already_set": "The threshold is already set to **%d**.",
       "already_enabled": "Fair queue is already enabled.",
       "already_disabled": "Fair queue is already disabled.",

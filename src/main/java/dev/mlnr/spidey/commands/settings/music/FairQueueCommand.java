@@ -13,7 +13,8 @@ public class FairQueueCommand extends Command {
 	public FairQueueCommand() {
 		super("fairqueue", "Enables/disables fair queue or sets the threshold", Category.Settings.MUSIC, Permission.UNKNOWN, 4,
 				new OptionData(OptionType.BOOLEAN, "enable", "Whether to enable fair queue"),
-				new OptionData(OptionType.INTEGER, "threshold", "The fair queue threshold"));
+				new OptionData(OptionType.INTEGER, "threshold", "The fair queue threshold")
+						.setRequiredRange(2, 10));
 	}
 
 	@Override
@@ -46,10 +47,6 @@ public class FairQueueCommand extends Command {
 			var currentThreshold = musicSettings.getFairQueueThreshold();
 			if (thresholdOption == currentThreshold) {
 				ctx.replyErrorLocalized("commands.fairqueue.already_set", currentThreshold);
-				return false;
-			}
-			if (thresholdOption < 2 || thresholdOption > 10) {
-				ctx.replyErrorLocalized("commands.fairqueue.threshold_range");
 				return false;
 			}
 			var threshold = thresholdOption.intValue();

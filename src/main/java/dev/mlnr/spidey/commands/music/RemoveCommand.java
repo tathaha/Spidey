@@ -12,7 +12,8 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 public class RemoveCommand extends Command {
 	public RemoveCommand() {
 		super("remove", "Removes a song from the queue based on its position", Category.MUSIC, Permission.UNKNOWN, 0,
-				new OptionData(OptionType.INTEGER, "position", "The position of the track to remove", true));
+				new OptionData(OptionType.INTEGER, "position", "The position of the track to remove", true)
+						.setMinValue(1));
 	}
 
 	@Override
@@ -31,8 +32,8 @@ public class RemoveCommand extends Command {
 		}
 		var trackPosition = ctx.getLongOption("position");
 		var size = queue.size();
-		if (trackPosition < 1 || trackPosition > size) {
-			ctx.replyErrorLocalized("number_out_of_range", size);
+		if (trackPosition > size) {
+			ctx.replyErrorLocalized("commands.remove.range", size);
 			return false;
 		}
 		var actualPosition = (int) (trackPosition - 1);
