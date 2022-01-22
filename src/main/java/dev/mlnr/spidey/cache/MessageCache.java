@@ -73,9 +73,11 @@ public class MessageCache {
 	public void pruneCacheForChannel(long channelId) {
 		var lastDeletedMessageInChannel = lastDeletedInChannelMap.get(channelId);
 		var lastEditedMessageInChannel = lastEditedInChannelMap.get(channelId);
-		if (lastDeletedMessageInChannel != null || lastEditedMessageInChannel != null) { // if the channel has deleted or edited data, remove it
+		if (lastDeletedMessageInChannel != null) {  // if the channel has deleted or edited data, remove it
 			deletedMessagesData.remove(lastDeletedMessageInChannel);
-			editedMessagesData.remove(lastDeletedMessageInChannel);
+		}
+		if (lastEditedMessageInChannel != null) {
+			editedMessagesData.remove(lastEditedMessageInChannel);
 		}
 		lastDeletedInChannelMap.remove(channelId);
 		lastEditedInChannelMap.remove(channelId);
