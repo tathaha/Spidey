@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.utils;
 
-import com.github.topisenpai.plugin.spotify.*;
+import com.github.topislavalinkplugins.spotify.*;
 import com.sedmelluq.discord.lavaplayer.player.*;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceManager;
@@ -46,7 +46,7 @@ public class MusicUtils {
 		spotifyConfig.setCountryCode("US");
 		AUDIO_PLAYER_MANAGER.registerSourceManager(youtubeManager);
 		AUDIO_PLAYER_MANAGER.registerSourceManager(SoundCloudAudioSourceManager.createDefault());
-		AUDIO_PLAYER_MANAGER.registerSourceManager(new SpotifySourceManager(spotifyConfig, youtubeManager));
+		AUDIO_PLAYER_MANAGER.registerSourceManager(new SpotifySourceManager(spotifyConfig, AUDIO_PLAYER_MANAGER));
 		AudioSourceManagers.registerRemoteSources(AUDIO_PLAYER_MANAGER);
 	}
 

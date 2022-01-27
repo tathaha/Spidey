@@ -54,13 +54,8 @@ dependencies {
     // music
     implementation group: 'com.github.walkyst', name: 'lavaplayer-fork', version: '61dc03e'
     implementation group: 'com.sedmelluq', name: 'jda-nas', version: '1.1.0'
+    implementation group: 'com.github.Topis-Lavalink-Plugins', name: 'Spotify-SourceManager', version: '1.0.14'
     implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
-    implementation(group: 'com.github.topisenpai', name: 'spotify-plugin', version: 'v1.0.8') {
-        exclude group: 'com.github.freyacodes.lavalink', module: 'Lavalink-Server'
-    }
-    implementation(group: 'dev.arbjerg.lavalink', name: 'plugin-api', version: '0.9.0') {
-        exclude group: 'com.github.walkyst', module: 'lavaplayer-fork'
-    }
 }
 
 jooq {
