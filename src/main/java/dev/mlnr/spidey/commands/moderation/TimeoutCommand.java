@@ -43,7 +43,7 @@ public class TimeoutCommand extends Command {
 		var length = ctx.getLongOption("length");
 		var unit = ctx.getStringOption("unit");
 		var now = OffsetDateTime.now();
-		var expiry = now.plus(length, ChronoUnit.valueOf(unit)).minusSeconds(1); // -1 second accounts for the method call delay
+		var expiry = now.plus(length, ChronoUnit.valueOf(unit)).minusSeconds(3); // -3 seconds account for the method call delay
 		if (expiry.isAfter(now.plusDays(28))) {
 			ctx.replyErrorLocalized("commands.timeout.above_max");
 			return false;
