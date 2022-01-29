@@ -45,7 +45,7 @@ public class PurgeProcessor extends ComponentAction {
 
 	public void proceed() {
 		ctx.deferAndRun(true, () -> {
-			var channel = ctx.getTextChannel();
+			var channel = ctx.getChannel();
 			var future = CompletableFuture.allOf(channel.purgeMessagesById(allMessagesIds).toArray(new CompletableFuture[0]));
 			future.whenCompleteAsync((ignored, throwable) -> {
 				var i18n = ctx.getI18n();

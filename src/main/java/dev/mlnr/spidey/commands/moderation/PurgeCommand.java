@@ -25,7 +25,7 @@ public class PurgeCommand extends Command {
 
 	@Override
 	public boolean execute(CommandContext ctx) {
-		if (!ctx.hasSelfChannelPermissions(ctx.getTextChannel(), getRequiredPermission(), Permission.MESSAGE_HISTORY)) {
+		if (!ctx.hasSelfChannelPermissions(ctx.getEvent().getGuildChannel(), getRequiredPermission(), Permission.MESSAGE_HISTORY)) {
 			ctx.replyErrorLocalized("commands.purge.messages.failure.no_perms"); // TODO CommandContext#replyNoPerms?
 			return false;
 		}
@@ -34,7 +34,7 @@ public class PurgeCommand extends Command {
 	}
 
 	private void respond(CommandContext ctx, User target, long limit) {
-		var channel = ctx.getTextChannel();
+		var channel = ctx.getChannel();
 		var i18n = ctx.getI18n();
 		channel.getIterableHistory().cache(false).limit(target == null ? (int) limit : 100).queue(messages -> {
 			if (messages.isEmpty()) {
