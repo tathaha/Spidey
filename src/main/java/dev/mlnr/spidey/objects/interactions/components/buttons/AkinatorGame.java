@@ -4,8 +4,8 @@ import com.markozajc.akiwrapper.Akiwrapper;
 import com.markozajc.akiwrapper.core.entities.Guess;
 import com.markozajc.akiwrapper.core.entities.Question;
 import dev.mlnr.spidey.cache.ComponentActionCache;
-import dev.mlnr.spidey.objects.command.ChoicesEnum;
-import dev.mlnr.spidey.objects.command.CommandContext;
+import dev.mlnr.spidey.objects.commands.slash.ChoicesEnum;
+import dev.mlnr.spidey.objects.commands.slash.SlashCommandContext;
 import dev.mlnr.spidey.objects.interactions.components.ComponentAction;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
@@ -164,7 +164,7 @@ public class AkinatorGame extends ComponentAction {
 		private final List<ActionRow> originalLayout;
 		private final List<ActionRow> guessLayout;
 
-		public Context(String id, CommandContext ctx, Akiwrapper akiwrapper, EmbedBuilder embedBuilder, List<ActionRow> originalLayout,
+		public Context(String id, SlashCommandContext ctx, Akiwrapper akiwrapper, EmbedBuilder embedBuilder, List<ActionRow> originalLayout,
 		               List<ActionRow> guessLayout, ComponentActionCache componentActionCache) {
 			super(id, ctx, componentActionCache);
 			this.akiwrapper = akiwrapper;

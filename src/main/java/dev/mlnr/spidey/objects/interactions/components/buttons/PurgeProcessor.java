@@ -2,7 +2,7 @@ package dev.mlnr.spidey.objects.interactions.components.buttons;
 
 import dev.mlnr.spidey.cache.ComponentActionCache;
 import dev.mlnr.spidey.objects.I18n;
-import dev.mlnr.spidey.objects.command.CommandContext;
+import dev.mlnr.spidey.objects.commands.slash.SlashCommandContext;
 import dev.mlnr.spidey.objects.interactions.components.ComponentAction;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
@@ -16,7 +16,7 @@ public class PurgeProcessor extends ComponentAction {
 	private final List<String> pinnedMessagesIds;
 	private final User target;
 
-	public PurgeProcessor(String id, CommandContext ctx, List<Message> allMessages, List<Message> pinnedMessages, User target,
+	public PurgeProcessor(String id, SlashCommandContext ctx, List<Message> allMessages, List<Message> pinnedMessages, User target,
 	                      ComponentActionCache componentActionCache) {
 		super(id, ctx, ComponentAction.ActionType.PURGE_PROMPT, componentActionCache);
 		this.allMessagesIds = allMessages.stream().map(Message::getId).collect(Collectors.toList());

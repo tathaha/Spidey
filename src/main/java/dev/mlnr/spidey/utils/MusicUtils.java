@@ -12,8 +12,8 @@ import dev.mlnr.spidey.cache.music.MusicPlayerCache;
 import dev.mlnr.spidey.cache.music.VideoSegmentCache;
 import dev.mlnr.spidey.handlers.music.SegmentHandler;
 import dev.mlnr.spidey.objects.I18n;
-import dev.mlnr.spidey.objects.command.ChoicesEnum;
-import dev.mlnr.spidey.objects.command.CommandContext;
+import dev.mlnr.spidey.objects.commands.slash.ChoicesEnum;
+import dev.mlnr.spidey.objects.commands.slash.SlashCommandContext;
 import dev.mlnr.spidey.objects.music.MusicPlayer;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
@@ -50,7 +50,7 @@ public class MusicUtils {
 		AudioSourceManagers.registerRemoteSources(AUDIO_PLAYER_MANAGER);
 	}
 
-	private static ConnectFailureReason checkVoiceChannel(CommandContext ctx) {
+	private static ConnectFailureReason checkVoiceChannel(SlashCommandContext ctx) {
 		var audioChannel = ctx.getMember().getVoiceState().getChannel();
 		if (audioChannel == null) {
 			return NO_CHANNEL;
@@ -141,7 +141,7 @@ public class MusicUtils {
 		return guild.getAudioManager().getConnectedChannel();
 	}
 
-	public static boolean isMemberConnected(CommandContext ctx) {
+	public static boolean isMemberConnected(SlashCommandContext ctx) {
 		return getConnectedChannel(ctx.getGuild()).getMembers().contains(ctx.getMember());
 	}
 
@@ -191,7 +191,7 @@ public class MusicUtils {
 		AUDIO_PLAYER_MANAGER.loadItemOrdered(musicPlayer, query, loader);
 	}
 
-	public static MusicPlayer checkPlayability(CommandContext ctx) {
+	public static MusicPlayer checkPlayability(SlashCommandContext ctx) {
 		var i18n = ctx.getI18n();
 		var connectionFailure = checkVoiceChannel(ctx);
 		if (connectionFailure != null) {
@@ -213,7 +213,7 @@ public class MusicUtils {
 		return "[`" + trackInfo.title + "`](" + trackInfo.uri + ") (**" + formatDuration(trackInfo.length) + "**)";
 	}
 
-	public static String formatLoadError(LoadFailureReason loadFailureReason, CommandContext ctx) {
+	public static String formatLoadError(LoadFailureReason loadFailureReason, SlashCommandContext ctx) {
 		var i18n = ctx.getI18n();
 		var message = i18n.get("music.messages.failure.load.cant_load") + " ";
 		switch (loadFailureReason) {
@@ -230,7 +230,7 @@ public class MusicUtils {
 		return message;
 	}
 
-	public static void saveQueryToHistory(CommandContext ctx, String query) {
+	public static void saveQueryToHistory(SlashCommandContext ctx, String query) {
 		ctx.getCache().getMusicHistoryCache().saveQuery(ctx.getUser().getIdLong(), query, ctx.getEvent().getName());
 	}
 

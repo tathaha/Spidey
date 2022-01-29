@@ -1,25 +1,25 @@
 package dev.mlnr.spidey.handlers.command;
 
-import dev.mlnr.spidey.objects.command.Command;
+import dev.mlnr.spidey.objects.commands.slash.SlashCommand;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class CooldownHandler {
-	private static final Map<Command, Map<Long, Long>> COOLDOWN_MAP = new HashMap<>(); // K = Command, V = Map<userId, Timestamp>
+	private static final Map<SlashCommand, Map<Long, Long>> COOLDOWN_MAP = new HashMap<>(); // K = SlashCommand, V = Map<userId, Timestamp>
 
 	private CooldownHandler() {}
 
-	public static void cooldown(long userId, Command command, boolean vip) {
-		var cooldown = command.getCooldown();
+	public static void cooldown(long userId, SlashCommand slashCommand, boolean vip) {
+		var cooldown = slashCommand.getCooldown();
 		if (cooldown != 0) {
 			var adjustedCooldown = adjustCooldown(cooldown, vip) * 1000L;
-			COOLDOWN_MAP.computeIfAbsent(command, k -> new HashMap<>()).put(userId, System.currentTimeMillis() + adjustedCooldown);
+			COOLDOWN_MAP.computeIfAbsent(slashCommand, k -> new HashMap<>()).put(userId, System.currentTimeMillis() + adjustedCooldown);
 		}
 	}
 
-	public static boolean isOnCooldown(long userId, Command command) {
-		var entry = COOLDOWN_MAP.get(command);
+	public static boolean isOnCooldown(long userId, SlashCommand slashCommand) {
+		var entry = COOLDOWN_MAP.get(slashCommand);
 		if (entry == null) {
 			return false;
 		}

@@ -2,7 +2,7 @@ package dev.mlnr.spidey.utils;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import dev.mlnr.spidey.handlers.command.CommandHandler;
-import dev.mlnr.spidey.objects.command.CommandContext;
+import dev.mlnr.spidey.objects.commands.slash.SlashCommandContext;
 import dev.mlnr.spidey.objects.music.MusicPlayer;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
 import net.dv8tion.jda.api.utils.TimeFormat;
@@ -20,7 +20,7 @@ public class StringUtils {
 	private StringUtils() {}
 
 	public static String getSimilarCommand(String command) {
-		return CommandHandler.getCommands().keySet().stream().filter(invoke -> getSimilarity(invoke, command) > 0.5).findFirst().orElse(null);
+		return CommandHandler.getSlashCommands().keySet().stream().filter(invoke -> getSimilarity(invoke, command) > 0.5).findFirst().orElse(null);
 	}
 
 	private static double getSimilarity(String s1, String s2) { // https://stackoverflow.com/a/16018452/9046789
@@ -66,7 +66,7 @@ public class StringUtils {
 		return costs[s2.length()];
 	}
 
-	public static void createQueuePaginator(CommandContext ctx, List<AudioTrack> queue) {
+	public static void createQueuePaginator(SlashCommandContext ctx, List<AudioTrack> queue) {
 		var trackChunks = ListUtils.partition(queue, 10);
 		var pages = new ArrayList<String>(trackChunks.size());
 
@@ -94,7 +94,7 @@ public class StringUtils {
 		});
 	}
 
-	public static void createTrackSelection(CommandContext ctx, MusicPlayer musicPlayer, List<AudioTrack> tracks) {
+	public static void createTrackSelection(SlashCommandContext ctx, MusicPlayer musicPlayer, List<AudioTrack> tracks) {
 		var size = min(tracks.size(), 25);
 		var options = new SelectOption[size];
 		for (var i = 0; i < size; i++) {

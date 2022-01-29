@@ -1,7 +1,7 @@
 package dev.mlnr.spidey.objects.interactions.components.buttons;
 
 import dev.mlnr.spidey.cache.ComponentActionCache;
-import dev.mlnr.spidey.objects.command.CommandContext;
+import dev.mlnr.spidey.objects.commands.slash.SlashCommandContext;
 import dev.mlnr.spidey.objects.interactions.components.ComponentAction;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -63,7 +63,7 @@ public class Paginator extends ComponentAction {
 		private final int totalPages;
 		private final BiConsumer<Integer, EmbedBuilder> pagesConsumer;
 
-		public Context(String id, CommandContext ctx, int totalPages, BiConsumer<Integer, EmbedBuilder> pagesConsumer,
+		public Context(String id, SlashCommandContext ctx, int totalPages, BiConsumer<Integer, EmbedBuilder> pagesConsumer,
 		               ComponentActionCache componentActionCache) {
 			super(id, ctx, componentActionCache);
 			this.totalPages = totalPages;

@@ -5,6 +5,7 @@ import dev.mlnr.blh.core.api.BotList;
 import dev.mlnr.blh.jda.BLHJDAListener;
 import dev.mlnr.spidey.Spidey;
 import dev.mlnr.spidey.cache.Cache;
+import dev.mlnr.spidey.handlers.command.CommandHandler;
 import dev.mlnr.spidey.utils.Utils;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
@@ -23,7 +24,7 @@ public class ReadyEvents extends ListenerAdapter {
 		var jda = event.getJDA();
 		jda.getPresence().setPresence(OnlineStatus.ONLINE, Activity.listening("/help"));
 
-		var blh = new BLHBuilder().setDevModePredicate(botId -> botId != 772446532560486410L)
+		var blh = new BLHBuilder().setDevModePredicate(botId -> botId != Utils.SPIDEY_ID)
 				.setSuccessLoggingEnabled(false)
 				.setUnavailableEventsEnabled(false)
 				.setErrorLoggingThreshold(2)
@@ -39,6 +40,8 @@ public class ReadyEvents extends ListenerAdapter {
 
 		var cache = new Cache(spidey);
 		var databaseManager = spidey.getDatabaseManager();
+
+		CommandHandler.loadCommands(jda);
 
 		jda.addEventListener(new BanEvents(cache), new DeleteEvents(cache), new GuildEvents(databaseManager, cache),
 				new InviteEvents(cache), new MemberEvents(cache), new MessageEvents(cache), new VoiceEvent(cache), new InteractionEvents(cache), new BLHJDAListener(blh));

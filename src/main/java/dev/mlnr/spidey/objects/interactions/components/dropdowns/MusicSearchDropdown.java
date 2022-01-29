@@ -1,7 +1,7 @@
 package dev.mlnr.spidey.objects.interactions.components.dropdowns;
 
 import dev.mlnr.spidey.cache.ComponentActionCache;
-import dev.mlnr.spidey.objects.command.CommandContext;
+import dev.mlnr.spidey.objects.commands.slash.SlashCommandContext;
 import dev.mlnr.spidey.objects.interactions.components.ComponentAction;
 import dev.mlnr.spidey.objects.music.AudioLoader;
 import dev.mlnr.spidey.objects.music.MusicPlayer;
@@ -28,7 +28,7 @@ public class MusicSearchDropdown extends ComponentAction {
 	public static class Context extends ComponentAction.Context {
 		private final MusicPlayer musicPlayer;
 
-		public Context(String id, CommandContext ctx, MusicPlayer musicPlayer, ComponentActionCache componentActionCache) {
+		public Context(String id, SlashCommandContext ctx, MusicPlayer musicPlayer, ComponentActionCache componentActionCache) {
 			super(id, ctx, componentActionCache);
 			this.musicPlayer = musicPlayer;
 		}

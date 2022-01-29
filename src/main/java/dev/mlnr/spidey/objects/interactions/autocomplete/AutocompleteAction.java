@@ -6,8 +6,8 @@ import dev.mlnr.spidey.objects.Emojis;
 import dev.mlnr.spidey.utils.CommandUtils;
 import dev.mlnr.spidey.utils.StringUtils;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
+import net.dv8tion.jda.api.interactions.AutoCompleteQuery;
 import net.dv8tion.jda.api.interactions.commands.Command.Choice;
-import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 import java.util.*;
 import java.util.function.BiFunction;
@@ -27,7 +27,7 @@ public enum AutocompleteAction {
 				.collect(Collectors.toList());
 	}),
 	HELP_COMMAND("command", true, (event, input) -> {
-		var commands = CommandHandler.getCommands();
+		var commands = CommandHandler.getSlashCommands();
 		return commands
 				.values()
 				.stream()
@@ -58,15 +58,15 @@ public enum AutocompleteAction {
 		return optionName;
 	}
 
-	public List<Choice> processTransformer(CommandAutoCompleteInteractionEvent event, OptionMapping focusedOption) {
-		var input = focusedOption.getAsString().toLowerCase();
+	public List<Choice> processTransformer(CommandAutoCompleteInteractionEvent event, AutoCompleteQuery query) {
+		var input = query.getValue().toLowerCase();
 		return input.isEmpty() && ignoreEmptyInput
 				? Collections.emptyList()
 				: transformer.apply(event, input);
 	}
 
-	public static AutocompleteAction fromFocusedOption(OptionMapping option) {
-		var focusedOptionName = option.getName();
+	public static AutocompleteAction fromFocusedOption(AutoCompleteQuery query) {
+		var focusedOptionName = query.getName();
 		for (var actionType : values()) {
 			if (focusedOptionName.equals(actionType.getOptionName())) {
 				return actionType;

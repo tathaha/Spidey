@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.objects.timeout;
 
-import dev.mlnr.spidey.objects.command.ChoicesEnum;
+import dev.mlnr.spidey.objects.commands.slash.ChoicesEnum;
 import dev.mlnr.spidey.utils.StringUtils;
 
 public enum DurationUnit implements ChoicesEnum {

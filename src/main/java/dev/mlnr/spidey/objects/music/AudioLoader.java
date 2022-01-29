@@ -4,7 +4,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import dev.mlnr.spidey.objects.command.CommandContext;
+import dev.mlnr.spidey.objects.commands.slash.SlashCommandContext;
 import dev.mlnr.spidey.utils.MusicUtils;
 
 import static dev.mlnr.spidey.utils.MusicUtils.LoadFailureReason.FAIR_QUEUE;
@@ -15,11 +15,11 @@ import static dev.mlnr.spidey.utils.MusicUtils.formatLength;
 public class AudioLoader implements AudioLoadResultHandler {
 	private final MusicPlayer musicPlayer;
 	private String query;
-	private final CommandContext ctx;
+	private final SlashCommandContext ctx;
 
 	private boolean searched;
 
-	public AudioLoader(MusicPlayer musicPlayer, String query, CommandContext ctx) {
+	public AudioLoader(MusicPlayer musicPlayer, String query, SlashCommandContext ctx) {
 		this.musicPlayer = musicPlayer;
 		this.query = query;
 		this.ctx = ctx;

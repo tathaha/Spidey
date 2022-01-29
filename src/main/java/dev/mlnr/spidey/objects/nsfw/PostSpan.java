@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.objects.nsfw;
 
-import dev.mlnr.spidey.objects.command.ChoicesEnum;
+import dev.mlnr.spidey.objects.commands.slash.ChoicesEnum;
 
 public enum PostSpan implements ChoicesEnum {
 	HOUR("Past hour"),

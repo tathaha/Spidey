@@ -18,6 +18,7 @@ public class Utils {
 	public static final Pattern TEXT_PATTERN = Pattern.compile("[a-zA-Z0-9-_]+");
 	private static final Executor INVITES_EXECUTOR = Executors.newFixedThreadPool(5, new CountingThreadFactory(() -> "Spidey", "Invites"));
 	public static final int SPIDEY_COLOR = 3288807;
+	public static final long SPIDEY_ID = 772446532560486410L;
 
 	private Utils() {}
 

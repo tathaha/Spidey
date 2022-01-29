@@ -4,8 +4,7 @@ import dev.mlnr.spidey.cache.Cache;
 import dev.mlnr.spidey.handlers.command.CommandHandler;
 import dev.mlnr.spidey.objects.interactions.autocomplete.AutocompleteAction;
 import dev.mlnr.spidey.objects.interactions.components.ComponentAction;
-import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.command.*;
 import net.dv8tion.jda.api.events.interaction.component.*;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -22,7 +21,7 @@ public class InteractionEvents extends ListenerAdapter {
 			event.reply("Spidey only supports commands in servers. Sorry for this inconvenience.").queue();
 			return;
 		}
-		CommandHandler.handle(event, cache);
+		CommandHandler.handleSlashCommand(event, cache);
 	}
 
 	@Override
@@ -45,6 +44,15 @@ public class InteractionEvents extends ListenerAdapter {
 		var actionType = AutocompleteAction.fromFocusedOption(focusedOption);
 		var choices = actionType.processTransformer(event, focusedOption);
 		event.replyChoices(choices).queue();
+	}
+
+	@Override
+	public void onGenericContextInteraction(GenericContextInteractionEvent<?> event) {
+		if (!event.isFromGuild()) {
+			event.reply("Spidey only supports commands in servers. Sorry for this inconvenience.").queue();
+			return;
+		}
+		CommandHandler.handleContextCommand(event, cache);
 	}
 
 	private void processComponentInteraction(String selectionId, ComponentAction componentAction, GenericComponentInteractionCreateEvent event) {

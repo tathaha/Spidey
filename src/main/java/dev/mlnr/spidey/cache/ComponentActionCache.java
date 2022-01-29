@@ -2,7 +2,7 @@ package dev.mlnr.spidey.cache;
 
 import com.markozajc.akiwrapper.Akiwrapper;
 import dev.mlnr.spidey.objects.Emojis;
-import dev.mlnr.spidey.objects.command.CommandContext;
+import dev.mlnr.spidey.objects.commands.slash.SlashCommandContext;
 import dev.mlnr.spidey.objects.interactions.components.ComponentAction;
 import dev.mlnr.spidey.objects.interactions.components.buttons.*;
 import dev.mlnr.spidey.objects.interactions.components.dropdowns.MusicSearchDropdown;
@@ -43,7 +43,7 @@ public class ComponentActionCache {
 
 	// buttons
 
-	public void createPaginator(CommandContext ctx, int totalPages, BiConsumer<Integer, EmbedBuilder> pagesConsumer) {
+	public void createPaginator(SlashCommandContext ctx, int totalPages, BiConsumer<Integer, EmbedBuilder> pagesConsumer) {
 		var embedBuilder = new EmbedBuilder().setColor(Utils.SPIDEY_COLOR);
 
 		embedBuilder.setFooter(ctx.getI18n().get("paginator.page", 1, totalPages));
@@ -58,7 +58,7 @@ public class ComponentActionCache {
 		ctx.replyWithComponents(embedBuilder, left, right, wastebasket);
 	}
 
-	public void createPurgePrompt(PurgeProcessor purgeProcessor, String content, CommandContext ctx) {
+	public void createPurgePrompt(PurgeProcessor purgeProcessor, String content, SlashCommandContext ctx) {
 		var purgeProcessorId = purgeProcessor.getId();
 
 		var accept = Button.success(purgeProcessorId + ":ACCEPT", Emoji.fromUnicode(Emojis.CHECK));
@@ -67,7 +67,7 @@ public class ComponentActionCache {
 		ctx.replyWithComponents(content, accept, wastebasket, deny);
 	}
 
-	public void createAkinator(CommandContext ctx, Akiwrapper akiwrapper) {
+	public void createAkinator(SlashCommandContext ctx, Akiwrapper akiwrapper) {
 		var i18n = ctx.getI18n();
 		var user = ctx.getUser();
 		var title = i18n.get("commands.akinator.game_title", user.getAsTag());
@@ -101,7 +101,7 @@ public class ComponentActionCache {
 
 	// dropdowns
 
-	public void createMusicSearchDropdown(CommandContext ctx, MusicPlayer musicPlayer, SelectOption[] options) {
+	public void createMusicSearchDropdown(SlashCommandContext ctx, MusicPlayer musicPlayer, SelectOption[] options) {
 		var dropdownId = StringUtils.randomString(30);
 
 		MusicSearchDropdown.create(new MusicSearchDropdown.Context(dropdownId, ctx, musicPlayer, this));

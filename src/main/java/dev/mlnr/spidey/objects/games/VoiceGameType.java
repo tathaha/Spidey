@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.objects.games;
 
-import dev.mlnr.spidey.objects.command.ChoicesEnum;
+import dev.mlnr.spidey.objects.commands.slash.ChoicesEnum;
 
 public enum VoiceGameType implements ChoicesEnum {
 	POKER_NIGHT("Poker Night", 755827207812677713L),

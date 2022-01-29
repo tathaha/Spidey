@@ -1,7 +1,7 @@
 package dev.mlnr.spidey.utils;
 
-import dev.mlnr.spidey.objects.command.ChoicesEnum;
-import dev.mlnr.spidey.objects.command.Command;
+import dev.mlnr.spidey.objects.commands.slash.ChoicesEnum;
+import dev.mlnr.spidey.objects.commands.slash.SlashCommand;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.interactions.commands.Command.Choice;
@@ -20,15 +20,15 @@ public class CommandUtils {
 				.map(choicesEnum -> new Choice(choicesEnum.getFriendlyName(), choicesEnum.name())).collect(Collectors.toList());
 	}
 
-	public static boolean hasPermission(Command command, Member member) {
-		return member.hasPermission(command.getRequiredPermission());  // filter commands the member can use
+	public static boolean hasPermission(SlashCommand slashCommand, Member member) {
+		return member.hasPermission(slashCommand.getRequiredPermission());  // filter commands the member can use
 	}
 
-	public static boolean checkForDevCommand(Command command, User user) {
-		return !command.isDevOnly() || user.getIdLong() == DEV_ID; // filter dev only commands
+	public static boolean checkForDevCommand(SlashCommand slashCommand, User user) {
+		return !slashCommand.isDevOnly() || user.getIdLong() == DEV_ID; // filter dev only commands
 	}
 
-	public static boolean canRunCommand(Command command, Member member) {
-		return hasPermission(command, member) && checkForDevCommand(command, member.getUser());
+	public static boolean canRunCommand(SlashCommand slashCommand, Member member) {
+		return hasPermission(slashCommand, member) && checkForDevCommand(slashCommand, member.getUser());
 	}
 }

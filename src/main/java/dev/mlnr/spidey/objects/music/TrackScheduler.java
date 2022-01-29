@@ -4,7 +4,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
-import dev.mlnr.spidey.objects.command.ChoicesEnum;
+import dev.mlnr.spidey.objects.commands.slash.ChoicesEnum;
 import dev.mlnr.spidey.utils.MusicUtils;
 import dev.mlnr.spidey.utils.StringUtils;
 import net.dv8tion.jda.api.JDA;

@@ -1,6 +1,6 @@
 package dev.mlnr.spidey.utils.requests;
 
-import dev.mlnr.spidey.objects.command.CommandContext;
+import dev.mlnr.spidey.objects.commands.slash.SlashCommandContext;
 import dev.mlnr.spidey.objects.music.VideoSegment;
 import dev.mlnr.spidey.utils.StringUtils;
 import dev.mlnr.spidey.utils.Utils;
@@ -32,7 +32,7 @@ public class Requester {
 
 	private Requester() {}
 
-	public static void getRandomSubredditImage(String subreddit, String span, CommandContext ctx, Consumer<EmbedBuilder> embedBuilderConsumer) {
+	public static void getRandomSubredditImage(String subreddit, String span, SlashCommandContext ctx, Consumer<EmbedBuilder> embedBuilderConsumer) {
 		var requestBuilder = new Request.Builder();
 		var url = API.KSOFT.getUrl();
 		var event = ctx.getEvent();

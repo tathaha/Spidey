@@ -1,14 +1,19 @@
 package dev.mlnr.spidey.handlers.command;
 
 import dev.mlnr.spidey.cache.Cache;
-import dev.mlnr.spidey.objects.command.Command;
-import dev.mlnr.spidey.objects.command.CommandContext;
+import dev.mlnr.spidey.objects.commands.context.ContextCommand;
+import dev.mlnr.spidey.objects.commands.context.ContextCommandContext;
+import dev.mlnr.spidey.objects.commands.slash.SlashCommand;
+import dev.mlnr.spidey.objects.commands.slash.SlashCommandContext;
 import dev.mlnr.spidey.utils.CommandUtils;
+import dev.mlnr.spidey.utils.Utils;
 import io.github.classgraph.ClassGraph;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.events.interaction.command.GenericContextInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.internal.interactions.CommandDataImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,15 +24,17 @@ import static dev.mlnr.spidey.handlers.command.CooldownHandler.cooldown;
 import static dev.mlnr.spidey.handlers.command.CooldownHandler.isOnCooldown;
 import static dev.mlnr.spidey.utils.Utils.replyErrorWithoutContext;
 
+@SuppressWarnings("StaticCollection")
 public class CommandHandler {
-	private static final Map<String, Command> COMMANDS = new HashMap<>();
+	private static final Map<String, SlashCommand> SLASH_COMMANDS = new HashMap<>();
+	private static final Map<String, ContextCommand<?>> CONTEXT_COMMANDS = new HashMap<>();
 	private static final Logger logger = LoggerFactory.getLogger(CommandHandler.class);
 
 	private CommandHandler() {}
 
-	public static void handle(SlashCommandInteractionEvent event, Cache cache) {
+	public static void handleSlashCommand(SlashCommandInteractionEvent event, Cache cache) {
 		var commandName = event.getName();
-		var command = COMMANDS.get(commandName);
+		var command = SLASH_COMMANDS.get(commandName);
 		var member = event.getMember();
 		var guildId = event.getGuild().getIdLong();
 		var i18n = cache.getGuildSettingsCache().getMiscSettings(guildId).getI18n();
@@ -51,22 +58,38 @@ public class CommandHandler {
 			return;
 		}
 		var vip = cache.getGuildSettingsCache().getGeneralSettings(guildId).isVip();
-		var executed = command.execute(new CommandContext(event, command.shouldHideResponse(), i18n, cache));
+		var executed = command.execute(new SlashCommandContext(event, command.shouldHideResponse(), i18n, cache));
 		if (executed) {
 			cooldown(userId, command, vip);
 		}
 	}
 
+	public static void handleContextCommand(GenericContextInteractionEvent<?> event, Cache cache) {
+		var commandName = event.getName();
+		var command = CONTEXT_COMMANDS.get(commandName);
+		var guildId = event.getGuild().getIdLong();
+		var i18n = cache.getGuildSettingsCache().getMiscSettings(guildId).getI18n();
+		command.execute(new ContextCommandContext(event, i18n, cache));
+	}
+
 	public static void loadCommands(JDA jda) {
+		var commandsUpdate = jda.getSelfUser().getIdLong() == Utils.SPIDEY_ID
+				? jda.updateCommands()
+				: jda.getGuildById(772435739664973825L).updateCommands();
 		try (var result = new ClassGraph().acceptPackages("dev.mlnr.spidey.commands").scan()) {
-			var commandsUpdate = jda.updateCommands();
 			var hideOption = new OptionData(OptionType.BOOLEAN, "hide", "Whether to hide the response");
 
 			for (var cls : result.getAllClasses()) {
-				var command = (Command) cls.loadClass().getDeclaredConstructor().newInstance();
-				COMMANDS.put(command.getName(), command);
-
-				command.addOptions(hideOption);
+				var clazz = cls.loadClass();
+				var command = (CommandDataImpl) clazz.getDeclaredConstructor().newInstance();
+				var commandName = command.getName();
+				if (clazz.getSuperclass() == SlashCommand.class) {
+					SLASH_COMMANDS.put(commandName, (SlashCommand) command);
+					command.addOptions(hideOption);
+				}
+				else {
+					CONTEXT_COMMANDS.put(commandName, (ContextCommand<?>) command);
+				}
 				commandsUpdate.addCommands(command);
 			}
 			commandsUpdate.queue();
@@ -77,7 +100,7 @@ public class CommandHandler {
 		}
 	}
 
-	public static Map<String, Command> getCommands() {
-		return COMMANDS;
+	public static Map<String, SlashCommand> getSlashCommands() {
+		return SLASH_COMMANDS;
 	}
 }

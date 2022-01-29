@@ -1,8 +1,8 @@
 package dev.mlnr.spidey.objects.interactions.components;
 
 import dev.mlnr.spidey.cache.ComponentActionCache;
+import dev.mlnr.spidey.objects.commands.slash.SlashCommandContext;
 import dev.mlnr.spidey.objects.interactions.components.buttons.AkinatorGame;
-import dev.mlnr.spidey.objects.command.CommandContext;
 import dev.mlnr.spidey.objects.interactions.components.buttons.Paginator;
 import dev.mlnr.spidey.objects.interactions.components.buttons.PurgeProcessor;
 import dev.mlnr.spidey.objects.interactions.components.dropdowns.MusicSearchDropdown;
@@ -13,12 +13,12 @@ import java.util.function.BiConsumer;
 
 public class ComponentAction {
 	private final String id;
-	public final CommandContext ctx;
+	public final SlashCommandContext ctx;
 	private final ActionType type;
 	private final long authorId;
 	private final ComponentActionCache componentActionCache;
 
-	protected ComponentAction(String id, CommandContext ctx, ActionType type, ComponentActionCache componentActionCache) {
+	protected ComponentAction(String id, SlashCommandContext ctx, ActionType type, ComponentActionCache componentActionCache) {
 		this.id = id;
 		this.ctx = ctx;
 		this.type = type;
@@ -32,7 +32,7 @@ public class ComponentAction {
 		return id;
 	}
 
-	public final CommandContext getCtx() {
+	public final SlashCommandContext getCtx() {
 		return ctx;
 	}
 
@@ -102,10 +102,10 @@ public class ComponentAction {
 
 	public static class Context {
 		private final String id;
-		private final CommandContext ctx;
+		private final SlashCommandContext ctx;
 		private final ComponentActionCache componentActionCache;
 
-		public Context(String id, CommandContext ctx, ComponentActionCache componentActionCache) {
+		public Context(String id, SlashCommandContext ctx, ComponentActionCache componentActionCache) {
 			this.id = id;
 			this.ctx = ctx;
 			this.componentActionCache = componentActionCache;
@@ -115,7 +115,7 @@ public class ComponentAction {
 			return id;
 		}
 
-		public final CommandContext getCtx() {
+		public final SlashCommandContext getCtx() {
 			return ctx;
 		}
 
