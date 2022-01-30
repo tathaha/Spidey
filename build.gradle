@@ -54,7 +54,7 @@ dependencies {
     // music
     implementation group: 'com.github.walkyst', name: 'lavaplayer-fork', version: '61dc03e'
     implementation group: 'com.sedmelluq', name: 'jda-nas', version: '1.1.0'
-    implementation group: 'com.github.Topis-Lavalink-Plugins', name: 'Spotify-SourceManager', version: '1.0.14'
+    implementation group: 'com.github.Topis-Lavalink-Plugins', name: 'Spotify-SourceManager', version: 'v1.0.17'
     implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
 }
 
