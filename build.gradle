@@ -28,7 +28,7 @@ dependencies {
     implementation group: 'dev.mlnr', name: 'BotListHandler-jda', version: '2.0.0_11'
 
     // database
-    implementation group: 'org.postgresql', name: 'postgresql', version: '42.3.1'
+    implementation group: 'org.postgresql', name: 'postgresql', version: '42.3.2'
     implementation group: 'com.zaxxer', name: 'HikariCP', version: '5.0.1'
     implementation group: 'org.jooq', name: 'jooq', version: '3.16.3'
     jooqGenerator group: 'org.postgresql', name: 'postgresql', version: '42.3.1'
@@ -49,12 +49,12 @@ dependencies {
 
     // logging
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.10'
-    implementation group: 'io.sentry', name: 'sentry-logback', version: '5.6.0'
+    implementation group: 'io.sentry', name: 'sentry-logback', version: '5.6.1'
 
     // music
     implementation group: 'com.github.walkyst', name: 'lavaplayer-fork', version: '61dc03e'
     implementation group: 'com.sedmelluq', name: 'jda-nas', version: '1.1.0'
-    implementation group: 'com.github.Topis-Lavalink-Plugins', name: 'Spotify-SourceManager', version: '1.0.14'
+    implementation group: 'com.github.Topis-Lavalink-Plugins', name: 'Spotify-SourceManager', version: 'v1.0.17'
     implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
 }
 
