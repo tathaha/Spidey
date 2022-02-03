@@ -73,11 +73,6 @@ public class HelpSlashCommand extends SlashCommand {
 					? none : requiredPermission.getName(), false);
 			embedBuilder.addField(i18n.get("commands.help.command_info.cooldown"), cooldown == 0 ? none : cooldown + " " +
 					i18n.get("commands.help.command_info.seconds"), false);
-
-			if (!isVip) {
-				embedBuilder.addBlankField(false);
-				embedBuilder.addField(i18n.get("commands.help.donate.title"), i18n.get("commands.help.donate.text"), false);
-			}
 		}
 		ctx.reply(embedBuilder);
 		return true;
