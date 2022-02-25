@@ -107,10 +107,6 @@
         "cooldown": "Cooldown",
         "info_none": "None",
         "seconds": "seconds"
-      },
-      "donate": {
-        "title": "Reducing commands' cooldown",
-        "text": "If you want to reduce the commands' cooldown by half, you can achieve so by donating at least 2€.\nBy donating, you also support the Developer and help cover hosting fees. Type `/info` for the PayPal link. Thank you!"
       }
     },
     "info": {
@@ -135,7 +131,7 @@
         },
         "support": {
           "title": "Support",
-          "text": "If you want to support the development of Spidey, you can do so by donating using my [PayPal](https://paypal.me/caneleeex). Thank you!"
+          "text": "If you want to support the development of Spidey, you can do so by donating using [Patreon](https://patreon.com/spideythebot) or [PayPal](https://paypal.me/caneleeex). Thank you!"
         }
       }
     },
