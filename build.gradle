@@ -48,7 +48,7 @@ dependencies {
     implementation group: 'io.github.classgraph', name: 'classgraph', version: '4.8.141'
 
     // logging
-    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.10'
+    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.11'
     implementation group: 'io.sentry', name: 'sentry-logback', version: '5.6.2'
 
     // music
