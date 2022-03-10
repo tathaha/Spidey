@@ -2,6 +2,7 @@
   "limit_exceeded": "Limit exceeded",
   "took_too_long": "Sorry, you took too long.",
   "internal_error": "Unfortunately, I couldn't %s due to an internal error: **%s**. Please report this message to the Developer.",
+  "unavailable": "This command is currently unavailable.",
   "enabled": "enabled",
   "disabled": "disabled",
   "selection": {
