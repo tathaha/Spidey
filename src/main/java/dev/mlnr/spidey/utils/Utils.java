@@ -22,13 +22,13 @@ public class Utils {
 
 	private Utils() {}
 
-	public static void sendMessage(TextChannel channel, String toSend) {
+	public static void sendMessage(BaseGuildMessageChannel channel, String toSend) {
 		if (channel.canTalk()) {
 			channel.sendMessage(toSend).queue();
 		}
 	}
 
-	public static void sendMessage(TextChannel channel, MessageEmbed embed) {
+	public static void sendMessage(BaseGuildMessageChannel channel, MessageEmbed embed) {
 		if (channel.canTalk() && channel.getGuild().getSelfMember().hasPermission(channel, Permission.MESSAGE_EMBED_LINKS)) {
 			channel.sendMessageEmbeds(embed).queue();
 		}

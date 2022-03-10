@@ -1,6 +1,8 @@
 package dev.mlnr.spidey.utils;
 
-import com.github.topislavalinkplugins.spotify.*;
+import com.github.topislavalinkplugins.topissourcemanagers.ISRCAudioTrack;
+import com.github.topislavalinkplugins.topissourcemanagers.spotify.SpotifyConfig;
+import com.github.topislavalinkplugins.topissourcemanagers.spotify.SpotifySourceManager;
 import com.sedmelluq.discord.lavaplayer.player.*;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceManager;
@@ -46,7 +48,7 @@ public class MusicUtils {
 		spotifyConfig.setCountryCode("US");
 		AUDIO_PLAYER_MANAGER.registerSourceManager(youtubeManager);
 		AUDIO_PLAYER_MANAGER.registerSourceManager(SoundCloudAudioSourceManager.createDefault());
-		AUDIO_PLAYER_MANAGER.registerSourceManager(new SpotifySourceManager(spotifyConfig, AUDIO_PLAYER_MANAGER));
+		AUDIO_PLAYER_MANAGER.registerSourceManager(new SpotifySourceManager(null, spotifyConfig, AUDIO_PLAYER_MANAGER));
 		AudioSourceManagers.registerRemoteSources(AUDIO_PLAYER_MANAGER);
 	}
 
@@ -235,8 +237,8 @@ public class MusicUtils {
 	}
 
 	public static String getArtworkUrl(AudioTrack track) {
-		if (track instanceof SpotifyTrack) {
-			return ((SpotifyTrack) track).getArtworkURL();
+		if (track instanceof ISRCAudioTrack) {
+			return ((ISRCAudioTrack) track).getArtworkURL();
 		}
 		return track.getInfo().artworkUrl;
 	}
