@@ -30,11 +30,11 @@ dependencies {
     // database
     implementation group: 'org.postgresql', name: 'postgresql', version: '42.3.3'
     implementation group: 'com.zaxxer', name: 'HikariCP', version: '5.0.1'
-    implementation group: 'org.jooq', name: 'jooq', version: '3.16.4'
+    implementation group: 'org.jooq', name: 'jooq', version: '3.16.5'
     jooqGenerator group: 'org.postgresql', name: 'postgresql', version: '42.3.3'
 
     // eval
-    implementation group: 'org.codehaus.groovy', name: 'groovy-jsr223', version: '3.0.9'
+    implementation group: 'org.codehaus.groovy', name: 'groovy-jsr223', version: '3.0.10'
 
     // expiring map for caches
     implementation group: 'net.jodah', name: 'expiringmap', version: '0.5.10'
@@ -45,21 +45,21 @@ dependencies {
     }
 
     // loading commands with reflection
-    implementation group: 'io.github.classgraph', name: 'classgraph', version: '4.8.140'
+    implementation group: 'io.github.classgraph', name: 'classgraph', version: '4.8.141'
 
     // logging
-    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.10'
-    implementation group: 'io.sentry', name: 'sentry-logback', version: '5.6.1'
+    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.11'
+    implementation group: 'io.sentry', name: 'sentry-logback', version: '5.6.2'
 
     // music
     implementation group: 'com.github.walkyst', name: 'lavaplayer-fork', version: '61dc03e'
     implementation group: 'com.sedmelluq', name: 'jda-nas', version: '1.1.0'
-    implementation group: 'com.github.Topis-Lavalink-Plugins', name: 'Spotify-SourceManager', version: '2.0.1'
+    implementation group: 'com.github.Topis-Lavalink-Plugins', name: 'Topis-Source-Managers', version: '2.0.1'
     implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
 }
 
 jooq {
-    version = '3.16.4'
+    version = '3.16.5'
     configurations {
         main {
             generateSchemaSourceOnCompilation = false
