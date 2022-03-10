@@ -5,6 +5,7 @@ Brief list of features:
 - music
 - ability to launch a game session in a voice channel, such as YouTube Together (`/voicegame`)
 - localization support: [![Crowdin](https://badges.crowdin.net/spidey/localized.svg)](https://crowdin.com/project/spidey)
+- logging joins/leaves
 - adding a role to a user after joining
 
 Music deserves its own section:
