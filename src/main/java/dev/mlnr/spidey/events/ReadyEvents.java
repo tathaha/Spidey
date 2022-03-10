@@ -43,11 +43,8 @@ public class ReadyEvents extends ListenerAdapter {
 		CommandHandler.loadCommands(jda);
 
 		jda.addEventListener(new BanEvents(cache), new DeleteEvents(cache), new GuildEvents(databaseManager, cache),
-				new InviteEvents(cache), new MemberEvents(cache), new MessageEvents(cache), new VoiceEvent(cache), new InteractionEvents(cache), new BLHJDAListener(blh));
+				new MemberEvents(cache), new MessageEvents(cache), new VoiceEvent(cache), new InteractionEvents(cache), new BLHJDAListener(blh));
 
-		jda.getGuildCache().forEachUnordered(guild -> {
-			databaseManager.registerGuild(guild.getIdLong());
-			Utils.storeInvites(guild, cache.getGeneralCache());
-		});
+		jda.getGuildCache().forEachUnordered(guild -> databaseManager.registerGuild(guild.getIdLong()));
 	}
 }

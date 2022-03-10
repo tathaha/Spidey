@@ -35,7 +35,6 @@ public class Spidey {
 
 		jda = JDABuilder.create(System.getenv("Spidey"),
 				GUILD_BANS,
-				GUILD_INVITES,
 				GUILD_MEMBERS,
 				GUILD_MESSAGES,
 				GUILD_EMOJIS,

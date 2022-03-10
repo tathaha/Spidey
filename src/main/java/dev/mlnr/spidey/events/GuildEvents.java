@@ -29,7 +29,6 @@ public class GuildEvents extends ListenerAdapter {
 		if (defaultChannel != null) {
 			Utils.sendMessage(defaultChannel, "Hey! I'm **Spidey**. Thanks for inviting me. To start, check `/info`.");
 		}
-		Utils.storeInvites(guild, cache.getGeneralCache());
 		databaseManager.registerGuild(guildId);
 
 		var memberCount = guild.getMemberCount();
@@ -44,7 +43,6 @@ public class GuildEvents extends ListenerAdapter {
 		var guildId = guild.getIdLong();
 		var jda = event.getJDA();
 		var generalCache = cache.getGeneralCache();
-		generalCache.getInviteCache().entrySet().removeIf(entry -> entry.getValue().getGuildId() == guildId);
 		cache.getMessageCache().pruneCache(guildId);
 		cache.getMusicPlayerCache().destroyMusicPlayer(guild);
 		generalCache.removeGuild(guildId);

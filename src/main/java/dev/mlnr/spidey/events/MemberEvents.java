@@ -62,31 +62,12 @@ public class MemberEvents extends ListenerAdapter {
 		embedBuilder.setColor(7844437);
 		embedBuilder.setTimestamp(Instant.now());
 		embedBuilder.setFooter(i18n.get("events.member_join.user.footer"), avatarUrl);
-		embedBuilder.setDescription(i18n.get("events.member_join.user.message.base", escapedTag, userId));
+		embedBuilder.setDescription(i18n.get("events.member_join.user.message.text", escapedTag, userId));
 
 		var created = user.getTimeCreated();
 		var timestamp = i18n.get("events.member_join.user.message.created", StringUtils.formatDate(created), StringUtils.formatDateRelative(created));
-		if (!selfMember.hasPermission(Permission.MANAGE_SERVER)) {
-			embedBuilder.appendDescription(".").appendDescription(timestamp);
-			Utils.sendMessage(channel, embedBuilder.build());
-			return;
-		}
-		guild.retrieveInvites().queue(invites -> {
-			for (var invite : invites) {
-				var inviteData = cache.getGeneralCache().getInviteCache().get(invite.getCode());
-				if (inviteData == null || invite.getUses() == inviteData.getUses()) {
-					continue;
-				}
-				inviteData.incrementUses();
-				embedBuilder.appendDescription(i18n.get("events.member_join.user.message.invite", invite.getUrl(), escape(invite.getInviter().getAsTag())));
-				embedBuilder.appendDescription(timestamp);
-				Utils.sendMessage(channel, embedBuilder.build());
-				return;
-			}
-			embedBuilder.appendDescription("."); // no invite was found, send the message either way
-			embedBuilder.appendDescription(timestamp);
-			Utils.sendMessage(channel, embedBuilder.build());
-		});
+		embedBuilder.appendDescription(timestamp);
+		Utils.sendMessage(channel, embedBuilder.build());
 	}
 
 	@Override
