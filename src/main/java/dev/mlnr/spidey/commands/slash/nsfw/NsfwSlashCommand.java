@@ -6,12 +6,9 @@ import dev.mlnr.spidey.objects.commands.slash.category.Category;
 import dev.mlnr.spidey.objects.nsfw.NSFWType;
 import dev.mlnr.spidey.objects.nsfw.PostSpan;
 import dev.mlnr.spidey.utils.CommandUtils;
-import dev.mlnr.spidey.utils.requests.Requester;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
-
-import java.awt.*;
 
 @SuppressWarnings("unused")
 public class NsfwSlashCommand extends SlashCommand {
@@ -26,17 +23,18 @@ public class NsfwSlashCommand extends SlashCommand {
 
 	@Override
 	public boolean execute(SlashCommandContext ctx) {
-		var channel = ctx.getTextChannel();
-		if (!channel.isNSFW()) {
-			ctx.replyErrorLocalized("command_failures.only_nsfw");
-			return false;
-		}
-		var type = NSFWType.valueOf(ctx.getStringOption("type"));
-		var span = ctx.getStringOption("span");
-		Requester.getRandomSubredditImage(type.getSubreddit(), span, ctx, embedBuilder -> {
-			embedBuilder.setColor(Color.PINK);
-			ctx.reply(embedBuilder);
-		});
+		ctx.replyErrorLocalized("unavailable");
+//		var channel = ctx.getTextChannel();
+//		if (!channel.isNSFW()) {
+//			ctx.replyErrorLocalized("command_failures.only_nsfw");
+//			return false;
+//		}
+//		var type = NSFWType.valueOf(ctx.getStringOption("type"));
+//		var span = ctx.getStringOption("span");
+//		Requester.getRandomSubredditImage(type.getSubreddit(), span, ctx, embedBuilder -> {
+//			embedBuilder.setColor(Color.PINK);
+//			ctx.reply(embedBuilder);
+//		});
 		return true;
 	}
 }

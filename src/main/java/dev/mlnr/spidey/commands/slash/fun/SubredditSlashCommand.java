@@ -5,7 +5,6 @@ import dev.mlnr.spidey.objects.commands.slash.SlashCommandContext;
 import dev.mlnr.spidey.objects.commands.slash.category.Category;
 import dev.mlnr.spidey.objects.nsfw.PostSpan;
 import dev.mlnr.spidey.utils.CommandUtils;
-import dev.mlnr.spidey.utils.requests.Requester;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
@@ -22,7 +21,8 @@ public class SubredditSlashCommand extends SlashCommand {
 
 	@Override
 	public boolean execute(SlashCommandContext ctx) {
-		Requester.getRandomSubredditImage(ctx.getStringOption("subreddit"), ctx.getStringOption("span"), ctx, ctx::reply);
+		ctx.replyErrorLocalized("unavailable");
+//		Requester.getRandomSubredditImage(ctx.getStringOption("subreddit"), ctx.getStringOption("span"), ctx, ctx::reply);
 		return true;
 	}
 }
