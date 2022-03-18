@@ -4,11 +4,14 @@ import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory;
 import dev.mlnr.spidey.events.ReadyEvents;
 import dev.mlnr.spidey.objects.I18n;
 import dev.mlnr.spidey.utils.MusicUtils;
-import net.dv8tion.jda.api.*;
+import net.dv8tion.jda.api.GatewayEncoding;
+import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
+import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import org.slf4j.Logger;
@@ -22,7 +25,7 @@ import static net.dv8tion.jda.api.utils.cache.CacheFlag.*;
 
 public class Spidey {
 	private static final Logger logger = LoggerFactory.getLogger(Spidey.class);
-	private final JDA jda;
+	private final ShardManager shardManager;
 
 	private final DatabaseManager databaseManager = new DatabaseManager();
 
@@ -33,7 +36,7 @@ public class Spidey {
 		RestAction.setDefaultFailure(null);
 		MessageAction.setDefaultMentions(EnumSet.noneOf(Message.MentionType.class));
 
-		jda = JDABuilder.create(System.getenv("Spidey"),
+		shardManager = DefaultShardManagerBuilder.create(System.getenv("Spidey"),
 				GUILD_BANS,
 				GUILD_MEMBERS,
 				GUILD_MESSAGES,
@@ -65,8 +68,8 @@ public class Spidey {
 		}
 	}
 
-	public JDA getJDA() {
-		return jda;
+	public ShardManager getShardManager() {
+		return shardManager;
 	}
 
 	public DatabaseManager getDatabaseManager() {

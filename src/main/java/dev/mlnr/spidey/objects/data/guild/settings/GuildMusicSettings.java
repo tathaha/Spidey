@@ -86,7 +86,7 @@ public class GuildMusicSettings implements IGuildSettings {
 	// helper methods
 
 	public Role getDJRole() {
-		return djRoleId == 0 ? null : spidey.getJDA().getRoleById(djRoleId);
+		return djRoleId == 0 ? null : spidey.getShardManager().getRoleById(djRoleId);
 	}
 
 	public void removeDJRole() {

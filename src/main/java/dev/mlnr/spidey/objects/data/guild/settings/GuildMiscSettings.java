@@ -79,11 +79,11 @@ public class GuildMiscSettings implements IGuildSettings {
 	// helper methods
 
 	public TextChannel getLogChannel() {
-		return logChannelId == 0 ? null : spidey.getJDA().getTextChannelById(logChannelId);
+		return logChannelId == 0 ? null : spidey.getShardManager().getTextChannelById(logChannelId);
 	}
 
 	public Role getJoinRole() {
-		return joinRoleId == 0 ? null : spidey.getJDA().getRoleById(joinRoleId);
+		return joinRoleId == 0 ? null : spidey.getShardManager().getRoleById(joinRoleId);
 	}
 
 	public void removeLogChannel() {
