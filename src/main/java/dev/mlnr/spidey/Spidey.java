@@ -76,6 +76,7 @@ public class Spidey {
 			.setUnavailableEventsEnabled(false)
 			.setErrorLoggingThreshold(2)
 			.setNoUpdateNecessaryLoggingEnabled(false)
+			.setAutoPostInitialDelay(5, TimeUnit.MINUTES)
 			.setAutoPostDelay(5, TimeUnit.MINUTES)
 			.build();
 	}
@@ -86,6 +87,7 @@ public class Spidey {
 		}
 		catch (Exception e) {
 			logger.error("There was an error while building JDA", e);
+			System.exit(1);
 		}
 	}
 
