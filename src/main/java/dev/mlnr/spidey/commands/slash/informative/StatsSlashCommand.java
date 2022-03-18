@@ -26,7 +26,7 @@ public class StatsSlashCommand extends SlashCommand {
 		embedBuilder.setColor(Utils.SPIDEY_COLOR);
 		embedBuilder.setAuthor(i18n.get("commands.stats.title"), "https://spidey.mlnr.dev", jda.getSelfUser().getEffectiveAvatarUrl());
 		embedBuilder.setDescription(i18n.get("commands.stats.more"));
-		embedBuilder.addField(i18n.get("commands.stats.total_servers"), String.valueOf(jda.getGuildCache().size()), true);
+		embedBuilder.addField(i18n.get("commands.stats.total_servers"), String.valueOf(jda.getShardManager().getGuildCache().size()), true);
 		embedBuilder.addField(i18n.get("commands.stats.memory"), memory + "MB / " + (total / 100000) + "MB", true);
 		embedBuilder.addField(i18n.get("commands.stats.threads"), String.valueOf(ManagementFactory.getThreadMXBean().getThreadCount()), true);
 		embedBuilder.setFooter("spidey.mlnr.dev");
