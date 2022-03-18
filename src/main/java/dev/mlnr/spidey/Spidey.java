@@ -70,7 +70,8 @@ public class Spidey {
 			.stream()
 			.filter(entry -> entry.getKey().startsWith(BOTLIST_ENV_PREFIX))
 			.collect(Collectors.toMap(entry -> BotList.valueOf(entry.getKey().substring(BOTLIST_ENV_PREFIX.length())), Map.Entry::getValue));
-		new BLHBuilder(new BLHJDAUpdater(shardManager), botLists).setDevModePredicate(botId -> botId != Utils.SPIDEY_ID)
+		new BLHBuilder(new BLHJDAUpdater(shardManager), botLists)
+			.setDevModePredicate(botId -> botId != Utils.SPIDEY_ID)
 			.setSuccessLoggingEnabled(false)
 			.setUnavailableEventsEnabled(false)
 			.setErrorLoggingThreshold(2)
