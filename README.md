@@ -30,4 +30,4 @@ Other:
 
 ## Support server
 
-[![](https://discord.com/api/guilds/772435739664973825/embed.png?style=banner2)](https://discord.gg/uJCw7B9fxZ)~~
+[![](https://discord.com/api/guilds/772435739664973825/embed.png?style=banner2)](https://discord.gg/uJCw7B9fxZ)
