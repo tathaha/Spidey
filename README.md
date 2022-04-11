@@ -1,3 +1,5 @@
+# Spidey has been discontinued as of April 11th, 2022. It's possible it will come back in the future, however there are no promises on that. To see why this decision had to be made, join the support server: https://discord.gg/uJCw7B9fxZ
+
 # Spidey, a multipurpose Discord bot
 
 Brief list of features:
@@ -28,4 +30,4 @@ Other:
 
 ## Support server
 
-[![](https://discord.com/api/guilds/772435739664973825/embed.png?style=banner2)](https://discord.gg/uJCw7B9fxZ)
+[![](https://discord.com/api/guilds/772435739664973825/embed.png?style=banner2)](https://discord.gg/uJCw7B9fxZ)~~
